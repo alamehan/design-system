@@ -1,0 +1,74 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "logo",
+  "name": "Logo",
+  "figmaName": "[📦]-logo-placeholder",
+  "figmaNodeId": "4736:95199",
+  "category": "foundation",
+  "section": "Foundations",
+  "role": "asset",
+  "implementable": true,
+  "description": "Client/company logo placeholder set. 10 variants (logo-1 to logo-10) representing different client organizations. 64×64px vector logo placeholders. Used in ContentBlock(OptionMenus) as company avatars, in CandidateCard for employer branding, and in AppBar when switching client context.",
+  "assetType": "brand-asset",
+  "dimensions": {
+    "width": 64,
+    "height": 64,
+    "unit": "px"
+  },
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "logo-1",
+        "logo-2",
+        "logo-3",
+        "logo-4",
+        "logo-5",
+        "logo-6",
+        "logo-7",
+        "logo-8",
+        "logo-9",
+        "logo-10"
+      ],
+      "default": "logo-1",
+      "description": "Which placeholder logo to show. In production, replace with the actual client logo image."
+    }
+  },
+  "tokens": {
+    "container-radius": "corner-radius.md",
+    "note": "Logos themselves have no token bindings — they are brand assets. Container shape and size are determined by the parent context."
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "img"
+    },
+    "image": {
+      "element": "img|svg",
+      "optional": false,
+      "note": "Client logo vector"
+    }
+  },
+  "usage": {
+    "generic": "Logo(type='logo-1')",
+    "notes": "In production, these placeholder logos should be replaced with actual client logos fetched from the backend (image URL). Apply corner-radius.md for the container. Fallback to logo-1 (or a generic company icon) if no logo is available."
+  },
+  "a11y": {
+    "role": "img",
+    "aria": {
+      "aria-label": "[Company name] logo"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always fetch the actual client logo from the backend in production.",
+      "Apply corner-radius.md to the wrapper for consistent appearance.",
+      "Show a generic company icon as fallback when logo URL fails to load."
+    ],
+    "dont": [
+      "Don't hardcode placeholder logos in production UI.",
+      "Don't stretch logos — maintain original aspect ratio with object-fit: contain."
+    ]
+  },
+  "code": "asset-09"
+}

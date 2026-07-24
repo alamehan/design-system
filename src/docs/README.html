@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id" data-lang="id" data-tab="start">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Systems Design System — README</title>
+<meta name="author" content="Raihan Allaam (@alamehan)">
+<style>
+:root{--ink:#191919;--sub:#787774;--line:#e9e9e7;--soft:#f7f7f5;--blue:#3B82F6;--blue-d:#1D4ED8;--blue-s:#DBEAFE;--blue-bg:#EFF6FF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",sans-serif;color:var(--ink);background:#fff;line-height:1.65;font-size:15.5px}
+html[data-lang="id"] .e{display:none!important}
+html[data-lang="en"] .i{display:none!important}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px 72px}
+/* top bar */
+.top{display:flex;justify-content:flex-end;padding:16px 20px}
+.lang{background:#fff;border:1px solid var(--line);border-radius:8px;padding:3px;display:flex;gap:2px}
+.lang button{border:0;background:transparent;font:inherit;font-size:13px;font-weight:600;color:var(--sub);padding:3px 12px;border-radius:6px;cursor:pointer}
+.lang button.on{background:var(--blue);color:#fff}
+/* hero */
+.hero{text-align:center;padding:20px 0 6px}
+.badge{display:inline-block;background:var(--blue-bg);color:var(--blue-d);border:1px solid var(--blue-s);font-size:12px;font-weight:600;padding:3px 12px;border-radius:99px;margin-bottom:16px}
+h1{font-size:30px;line-height:1.2;letter-spacing:-.02em;margin-bottom:8px}
+.tagline{font-size:16px;color:var(--sub);max-width:480px;margin:0 auto}
+/* tabs */
+.tabs{display:flex;justify-content:center;gap:6px;border-bottom:1px solid var(--line);margin:32px 0 0}
+.tabs button{border:0;background:none;font:inherit;font-size:14.5px;font-weight:600;color:var(--sub);padding:10px 18px;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tabs button.on{color:var(--blue-d);border-color:var(--blue)}
+section{display:none;padding-top:36px}
+html[data-tab="start"] #tab-start{display:block}
+html[data-tab="recap"] #tab-recap{display:block}
+html[data-tab="detail"] #tab-detail{display:block}
+html[data-tab="owner"] #tab-owner{display:block}
+/* typography */
+h2{font-size:19px;letter-spacing:-.01em;margin:38px 0 14px}
+section>h2:first-child{margin-top:0}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 22px}
+li{margin:5px 0}
+.mut{color:var(--sub);font-size:13.5px}
+code{font-family:ui-monospace,"DM Mono",SFMono-Regular,Consolas,monospace;font-size:.88em;background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:1px 5px;white-space:nowrap}
+pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:ui-monospace,"DM Mono",SFMono-Regular,Consolas,monospace;font-size:12.5px;line-height:1.55;margin:12px 0}
+pre code{background:none;border:0;padding:0;white-space:pre}
+/* callout */
+.callout{background:var(--blue-bg);border:1px solid var(--blue-s);border-radius:10px;padding:16px 18px;margin:16px 0}
+.callout ul{margin:4px 0 0 20px}
+.note{background:var(--soft);border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px;color:var(--sub)}
+/* steps */
+ol.steps{list-style:none;margin:24px 0;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 26px 56px;margin:0}
+ol.steps li:not(:last-child):after{content:"";position:absolute;left:17px;top:40px;bottom:6px;width:2px;background:var(--blue-s)}
+ol.steps li:before{content:counter(s);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center}
+ol.steps b.t{display:block;font-size:16.5px;padding-top:5px}
+ol.steps .d{color:var(--sub);font-size:14.5px;margin-top:2px}
+/* details */
+details{border:1px solid var(--line);border-radius:8px;margin:12px 0}
+details summary{cursor:pointer;font-weight:600;font-size:14px;padding:10px 14px;list-style:none;display:flex;align-items:center;gap:8px;color:var(--sub)}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸";font-size:11px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+details .body{padding:2px 16px 14px;font-size:14px}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:18px 0}
+.stat{border:1px solid var(--line);border-radius:10px;padding:12px 10px;text-align:center}
+.stat b{display:block;font-size:23px;letter-spacing:-.02em;color:var(--blue-d)}
+.stat span{font-size:12px;color:var(--sub);line-height:1.4;display:block}
+/* rules */
+ol.rules{list-style:none;margin:16px 0}
+ol.rules li{border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0;font-size:14.5px}
+ol.rules b{color:var(--blue-d)}
+/* timeline */
+.timeline{list-style:none;margin:16px 0 0;position:relative}
+.timeline:before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--blue-s)}
+.timeline li{margin:0 0 16px;padding-left:28px;position:relative}
+.timeline li:before{content:"";position:absolute;left:0;top:7px;width:10px;height:10px;background:#fff;border:3px solid var(--blue);border-radius:50%}
+.timeline b.v{color:var(--blue-d)}
+/* safety grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+.safe{border:1px solid var(--line);border-radius:8px;padding:10px 13px;font-size:13.5px;color:var(--sub)}
+.safe b{display:block;color:var(--ink);margin-bottom:1px;font-size:14px}
+.proof{background:var(--blue-bg);border:1px solid var(--blue-s);border-radius:10px;padding:16px 18px;margin:16px 0}
+.proof .big{font-size:20px;font-weight:700;color:var(--blue-d)}
+.proof ul{list-style:none;margin:8px 0 0}
+.proof li{font-size:14px;margin:3px 0}
+.proof li:before{content:"✓ ";color:var(--blue-d);font-weight:700}
+footer{border-top:1px solid var(--line);margin-top:48px;padding-top:20px;font-size:13px;color:var(--sub);text-align:center;line-height:1.8}
+footer b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="top"><div class="lang"><button data-l="id" class="on" onclick="setLang(&#39;id&#39;)">ID</button><button data-l="en" onclick="setLang(&#39;en&#39;)">EN</button></div></div>
+<div class="wrap">
+
+<div class="hero">
+<div class="badge">v1.0 · STABLE</div>
+<h1>E-Systems Design System</h1>
+<p class="tagline"><span class="i">Satu sumber kebenaran untuk UI — dipatuhi manusia &amp; AI.</span><span class="e">One source of truth for UI — obeyed by humans &amp; AI.</span></p>
+</div>
+
+<nav class="tabs">
+<button data-t="start" class="on" onclick="setTab(&#39;start&#39;)">🚀 <span class="i">Mulai</span><span class="e">Start</span></button>
+<button data-t="recap" onclick="setTab(&#39;recap&#39;)">📋 Recap</button>
+<button data-t="detail" onclick="setTab(&#39;detail&#39;)">🔍 <span class="i">Detail</span><span class="e">Details</span></button>
+<button data-t="owner" onclick="setTab(&#39;owner&#39;)">👑 <span class="i">Pemilik</span><span class="e">Owner</span></button>
+</nav>
+
+<!-- ============ TAB 1: START ============ -->
+<section id="tab-start">
+<div class="callout">
+<b><span class="i">Yang perlu kamu tahu — 30 detik:</span><span class="e">What you need to know — 30 seconds:</span></b>
+<ul>
+<li><span class="i">Semua warna, spacing, font &amp; komponen UI berasal dari folder <code>design-system/</code>.</span><span class="e">Every color, spacing, font &amp; UI component comes from the <code>design-system/</code> folder.</span></li>
+<li><span class="i"><b>Jangan edit isi folder itu</b> — update selalu datang sebagai zip baru dari pemilik design system.</span><span class="e"><b>Never edit that folder</b> — updates always arrive as a new zip from the design-system owner.</span></li>
+<li><span class="i">AI coding tool (Claude/Cursor) otomatis dapat aturannya — kamu tidak perlu setup apa pun untuk itu.</span><span class="e">AI coding tools (Claude/Cursor) get their rules automatically — nothing for you to set up there.</span></li>
+</ul>
+</div>
+
+<h2><span class="i">Cara install</span><span class="e">How to install</span></h2>
+<ol class="steps">
+<li><b class="t"><span class="i">Extract zip ke root repo</span><span class="e">Extract the zip into the repo root</span></b><div class="d"><span class="i">Folder <code>design-system/</code> harus sejajar dengan <code>package.json</code>.</span><span class="e">The <code>design-system/</code> folder must sit next to <code>package.json</code>.</span></div></li>
+<li><b class="t"><span class="i">Double-click <code>Setup.bat</code> (Windows) / <code>Setup.command</code> (Mac)</span><span class="e">Double-click <code>Setup.bat</code> (Windows) / <code>Setup.command</code> (Mac)</span></b><div class="d"><span class="i">Setup terbuka di <b>browser</b> (tampilan Notion-like, works di Windows &amp; Mac) — lihat analisa repo + rencananya → klik <b>Apply</b>. Bersih, tanpa spam log npm (log lengkap tetap tersimpan di <code>report.txt</code>).</span><span class="e">Setup opens in your <b>browser</b> (Notion-like, works on Windows &amp; Mac) — review the repo analysis + plan → click <b>Apply</b>. Clean, no npm log spam (the full log is still saved to <code>report.txt</code>).</span></div></li>
+<li><b class="t"><code>npm run dev</code></b><div class="d"><span class="i">Selesai. Buka <code>/design-system-example</code> — installer otomatis membuat sample page (<code>pages/design-system-example.vue</code>) berupa showcase 13 halaman (dashboard rekrutmen + 12 halaman produk asli, navigasi FAB kiri-bawah) sebagai bukti hidup semuanya jalan: seluruh 27 komponen Vue kit, token, ikon Tabler, ilustrasi, upload file, panel detail dari kanan, dan modal konfirmasi. Sudah diuji langsung oleh author-nya (Raihan Allaam @alamehan). Aman dihapus kapan saja.</span><span class="e">Done. Open <code>/design-system-example</code> — the installer auto-creates a sample page (<code>pages/design-system-example.vue</code>): a 13-page showcase (a recruitment dashboard + 12 real product pages, with a bottom-left FAB navigator) as living proof everything works — all 27 Vue kit components, tokens, Tabler icons, illustrations, file uploads, a slide-over detail panel, and confirmation modals. Hand-tested by the author (Raihan Allaam @alamehan). Safe to delete anytime.</span></div></li>
+</ol>
+
+<div class="note"><span class="i"><b>Aman:</b> installer tidak pernah menimpa/menghapus file kamu, membackup semua yang disentuh ke <code>.ds-backup/</code>, dan bisa dibatalkan penuh. Dijalankan 2× pun aman.</span><span class="e"><b>Safe:</b> the installer never overwrites/deletes your files, backs up everything it touches to <code>.ds-backup/</code>, and is fully reversible. Running it twice is safe too.</span></div>
+
+<h2><span class="i">Kalau ada masalah</span><span class="e">If something goes wrong</span></h2>
+<p><span class="i">Kirim file <code>.ds-backup/&lt;timestamp&gt;/report.txt</code> ke pemilik design system — isinya analisa + rencana + hasil install kamu.</span><span class="e">Send <code>.ds-backup/&lt;timestamp&gt;/report.txt</code> to the design-system owner — it contains your install’s analysis + plan + result.</span></p><p><span class="i"><b>npm error ERESOLVE?</b> Itu konflik dependency lama bawaan repo (bukan dari design system). Installer otomatis retry dengan <code>--legacy-peer-deps</code>. Kalau install manual: <code>npm i -D @iconify/tailwind @iconify-json/tabler --legacy-peer-deps</code>. Fix permanen: buat <code>.npmrc</code> di root repo berisi <code>legacy-peer-deps=true</code>.</span><span class="e"><b>npm error ERESOLVE?</b> A pre-existing dependency conflict inside the repo (not from the design system). The installer auto-retries with <code>--legacy-peer-deps</code>. Manual install: <code>npm i -D @iconify/tailwind @iconify-json/tabler --legacy-peer-deps</code>. Permanent fix: add a <code>.npmrc</code> at the repo root containing <code>legacy-peer-deps=true</code>.</span></p>
+<details><summary><span class="i">Mode lanjutan (terminal)</span><span class="e">Advanced modes (terminal)</span></summary><div class="body"><pre>node design-system/scripts/install.js           <span class="i"># mode terminal klasik (tanpa browser)</span><span class="e"># plain terminal mode (no browser)</span>
+node design-system/scripts/install.js --dry-run   <span class="i"># simulasi, nol perubahan</span><span class="e"># simulation, zero changes</span>
+node design-system/scripts/install.js --doctor    <span class="i"># cek kesehatan (read-only)</span><span class="e"># health check (read-only)</span>
+node design-system/scripts/install.js --undo      <span class="i"># batalkan install terakhir</span><span class="e"># undo the last install</span></pre><p class="mut"><span class="i">Fallback 6 langkah manual ada di <code>design-system/README.md</code>.</span><span class="e">The 6-step manual fallback lives in <code>design-system/README.md</code>.</span></p></div></details>
+</section>
+
+<!-- ============ TAB 2: RECAP ============ -->
+<section id="tab-recap">
+<h2><span class="i">Apa ini?</span><span class="e">What is this?</span></h2>
+<p><span class="i">Design system <i>AI-grounded</i>: semua token, komponen &amp; aset dipaket rapi — supaya UI konsisten dan AI coding tool <b>tidak bisa mengarang</b> nilai atau class yang tidak ada.</span><span class="e">An <i>AI-grounded</i> design system: every token, component &amp; asset neatly packaged — so the UI stays consistent and AI coding tools <b>cannot invent</b> values or classes that don’t exist.</span></p>
+<div class="stats">
+<div class="stat"><b>483</b><span class="i">token warna</span><span class="e">color tokens</span></div>
+<div class="stat"><b>76</b><span class="i">spec terkatalog (59 komponen + 9 aset + 12 halaman)</span><span class="e">cataloged specs (59 components + 9 assets + 12 pages)</span></div>
+<div class="stat"><b>27</b><span class="i">komponen Vue</span><span class="e">Vue components</span></div>
+<div class="stat"><b>77/77</b><span class="i">test lulus</span><span class="e">tests passing</span></div>
+</div>
+
+<h2><span class="i">Aturan untuk AI (dan manusia)</span><span class="e">Rules for the AI (and humans)</span></h2>
+<ol class="rules">
+<li><b>1.</b> <span class="i">Wajib baca <code>catalog/catalog.md</code> penuh sebelum menyentuh UI.</span><span class="e">Read <code>catalog/catalog.md</code> in full before touching any UI.</span></li>
+<li><b>2.</b> <span class="i">Hanya token/class/komponen yang <b>terdaftar</b> — catalog menulis class persisnya, bukan rumus konversi.</span><span class="e">Only <b>listed</b> tokens/classes/components — the catalog spells out exact classes, no derivation.</span></li>
+<li><b>3.</b> <span class="i">Nol hardcode: tanpa hex, px, atau font manual.</span><span class="e">Zero hardcoding: no raw hex, px, or font values.</span></li>
+<li><b>4.</b> <span class="i">Hanya aset yang benar-benar <b>shipped</b> (daftar eksplisit di catalog).</span><span class="e">Only assets that are actually <b>shipped</b> (explicit lists in the catalog).</span></li>
+<li><b>5.</b> <span class="i">Ragu? <b>STOP &amp; tanya</b> — bukan improvisasi.</span><span class="e">Unsure? <b>STOP &amp; ask</b> — never improvise.</span></li>
+</ol>
+
+<h2><span class="i">Isi paket</span><span class="e">Package contents</span></h2>
+<div class="i"><pre>design-system/
+├─ Setup.bat / Setup.command    setup 1-klik
+├─ scripts/install.js           otak installer (Node murni)
+├─ README.md                    quick setup + fallback manual
+├─ CLAUDE.md                    rulebook untuk AI
+├─ dist/                        preset Tailwind + variables.css
+├─ catalog/                     kamus token &amp; 76 spec (untuk AI)
+├─ adapters/vue/                27 komponen: EButton, EInput, EModal, EPanel, …
+└─ assets/                      100 file SVG: karakter · ikon custom · option-menu</pre></div>
+<div class="e"><pre>design-system/
+├─ Setup.bat / Setup.command    one-click setup
+├─ scripts/install.js           installer brain (pure Node)
+├─ README.md                    quick setup + manual fallback
+├─ CLAUDE.md                    the AI rulebook
+├─ dist/                        Tailwind preset + variables.css
+├─ catalog/                     token lexicon &amp; 76 specs (for the AI)
+├─ adapters/vue/                27 components: EButton, EInput, EModal, EPanel, …
+└─ assets/                      100 SVG files: characters · custom icons · option menus</pre></div>
+<p class="mut"><span class="i">Catatan: ikon Tabler <b>bukan</b> file di paket ini — dirender dari library <code>@iconify-json/tabler</code> (dipasang otomatis oleh installer). Daftar nama ikon yang boleh dipakai ada di catalog (asset-06 &amp; asset-07).</span><span class="e">Note: Tabler icons are <b>not</b> files in this package — they render from the <code>@iconify-json/tabler</code> library (installed automatically by the installer). The allowed icon names are listed in the catalog (asset-06 &amp; asset-07).</span></p>
+
+<h2><span class="i">Kalau ada update</span><span class="e">When an update arrives</span></h2>
+<p><span class="i">Terima zip baru → ganti folder <code>design-system/</code> lama dengan yang baru → jalankan Setup sekali lagi (aman &amp; idempoten — hanya menambal yang berubah).</span><span class="e">Get the new zip → replace the old <code>design-system/</code> folder → run Setup once more (safe &amp; idempotent — it only patches what changed).</span></p>
+</section>
+
+<!-- ============ TAB 3: DETAIL ============ -->
+<section id="tab-detail">
+<h2><span class="i">Arsitektur: 1 sumber → semua output</span><span class="e">Architecture: one source → every output</span></h2>
+<div class="i"><pre>src/ (diedit manusia)          BUILD (1 klik)          hasil (digenerate)
+foundations.json · 76 spec  ──────────────►  dist/tailwind.preset.js → tw-*
+aset SVG · adapters/vue                         dist/variables.css (181 var)
+                                                catalog/catalog.md (kamus AI)
+                                                catalog/index.json (meta+versi)</pre></div>
+<div class="e"><pre>src/ (edited by humans)        BUILD (1 click)         output (generated)
+foundations.json · 76 specs ──────────────►  dist/tailwind.preset.js → tw-*
+SVG assets · adapters/vue                       dist/variables.css (181 vars)
+                                                catalog/catalog.md (AI lexicon)
+                                                catalog/index.json (meta+ver)</pre></div>
+<p class="mut"><span class="i">Output tidak pernah diedit tangan. Build memvalidasi semuanya: <b>491 referensi token, 0 unresolved, 0 nama ilegal</b> — hijau &amp; deterministik.</span><span class="e">Output is never hand-edited. The build validates everything: <b>491 token references, 0 unresolved, 0 illegal names</b> — green &amp; deterministic.</span></p>
+
+<h2><span class="i">Rilis</span><span class="e">Release</span></h2>
+<ul class="timeline">
+<li><b class="v">v1.0</b> — <span class="i">Rilis publik pertama — lengkap sejak hari pertama: 181 token, 76 spec (64 komponen + 12 halaman), kit Vue 27 komponen, installer 1-klik safety-first, dan sample benchmark 13 halaman yang diverifikasi 1:1 terhadap desain Figma author dan diuji live di portal target. Teruji <b>77/77</b>.</span><span class="e">First public release — complete from day one: 181 tokens, 76 specs (64 components + 12 pages), the 27-component Vue kit, a safety-first one-click installer, and a 13-page benchmark sample verified 1:1 against the author's Figma designs and live-tested in the target portal. Tested <b>77/77</b>.</span></li>
+<li><b class="v">QA</b> — <span class="i">Setiap build memvalidasi seluruh referensi token &amp; nama aset (gagal keras bila ada yang salah); checker conformance memverifikasi 27 komponen kit 1:1 terhadap spec-nya (309 ekspektasi / 25 spec); aturan &amp; pembelajaran permanen terkodifikasi di <code>CLAUDE.md</code>.</span><span class="e">Every build validates all token references &amp; asset names (fails loudly on any error); the conformance checker verifies the 27 kit components 1:1 against their specs (309 expectations / 25 specs); permanent rules &amp; lessons are codified in <code>CLAUDE.md</code>.</span></li>
+</ul>
+
+<h2><span class="i">Desain keamanan installer</span><span class="e">Installer safety design</span></h2>
+<div class="grid2">
+<div class="safe"><b>Plan-first</b><span class="i">Analisa &amp; rencana dulu; berubah hanya setelah Enter.</span><span class="e">Analysis &amp; plan first; nothing changes until Enter.</span></div>
+<div class="safe"><b><span class="i">Anti-overwrite</span><span class="e">Never overwrites</span></b><span class="i">File konflik dibiarkan utuh + instruksi manual.</span><span class="e">Conflicting files left untouched + manual instructions.</span></div>
+<div class="safe"><b>Backup + --undo</b><span class="i">Backup ke <code>.ds-backup/</code>; rollback byte-perfect.</span><span class="e">Backed up to <code>.ds-backup/</code>; byte-perfect rollback.</span></div>
+<div class="safe"><b><span class="i">Idempoten</span><span class="e">Idempotent</span></b><span class="i">Dijalankan berapa kali pun, hasil sama.</span><span class="e">Same result no matter how many runs.</span></div>
+<div class="safe"><b>report.txt</b><span class="i">Jejak audit tiap run (analisa + rencana + hasil).</span><span class="e">Audit trail per run (analysis + plan + result).</span></div>
+<div class="safe"><b>--doctor · --dry-run</b><span class="i">Cek &amp; simulasi tanpa menyentuh apa pun.</span><span class="e">Check &amp; simulate without touching anything.</span></div>
+</div>
+<div class="proof"><span class="big">77/77 <span class="i">test otomatis PASS</span><span class="e">automated tests PASS</span></span><span class="mut"> — <span class="i">end-to-end dari zip hasil ship, di mock repo Nuxt 2</span><span class="e">end-to-end from the shipped zip, on a mock Nuxt 2 repo</span></span>
+<ul>
+<li><span class="i">Fresh install: semua ter-wire, config tetap valid</span><span class="e">Fresh install: everything wired, configs still valid</span></li>
+<li><span class="i">Rerun: nol drift · Konflik: tak disentuh se-byte pun</span><span class="e">Rerun: zero drift · Conflicts: not a byte touched</span></li>
+<li><span class="i">Undo: pulih byte-perfect · Paket rusak: berhenti total</span><span class="e">Undo: byte-perfect restore · Broken package: full stop</span></li>
+<li><span class="i">Zip: integritas OK, izin unix benar, dist selalu fresh</span><span class="e">Zip: integrity OK, correct unix perms, always-fresh dist</span></li>
+</ul></div>
+</section>
+
+<!-- ============ TAB 4: OWNER ============ -->
+<section id="tab-owner">
+<div class="callout">
+<b><span class="i">POV pemilik design system:</span><span class="e">Design-system owner’s POV:</span></b>
+<ul>
+<li><span class="i">Kamu hanya mengedit <code>src/</code>. Semua output (<code>dist/</code>, <code>catalog/</code>, zip) digenerate ulang setiap ship.</span><span class="e">You only ever edit <code>src/</code>. Every output (<code>dist/</code>, <code>catalog/</code>, the zip) is regenerated on each ship.</span></li>
+<li><span class="i">Build memvalidasi semua referensi token &amp; nama aset — kalau ada yang salah, ship <b>gagal keras</b>, bukan diam-diam.</span><span class="e">The build validates every token reference &amp; asset name — anything wrong makes the ship <b>fail loudly</b>, never silently.</span></li>
+</ul>
+</div>
+
+<h2><span class="i">Alur ship</span><span class="e">Shipping flow</span></h2>
+<ol class="steps">
+<li><b class="t"><span class="i">Edit isi <code>src/</code></span><span class="e">Edit things inside <code>src/</code></span></b><div class="d"><span class="i">Token di <code>foundations.json</code> · spec di <code>components/</code> · SVG di <code>assets/</code> · aturan AI di <code>CLAUDE.md</code> · guide ini di <code>docs/README.html</code>.</span><span class="e">Tokens in <code>foundations.json</code> · specs in <code>components/</code> · SVGs in <code>assets/</code> · AI rules in <code>CLAUDE.md</code> · this guide in <code>docs/README.html</code>.</span></div></li>
+<li><b class="t">Double-click <code>Ship to Devs.bat</code></b><div class="d"><span class="i">Build + validasi + kemas. Versi &amp; tanggal naik otomatis.</span><span class="e">Build + validate + package. Version &amp; date bump automatically.</span></div></li>
+<li><b class="t"><span class="i">Kirim <code>release/design-system-dev.zip</code></span><span class="e">Send <code>release/design-system-dev.zip</code></span></b><div class="d"><span class="i">Dev tinggal ganti folder <code>design-system/</code> lama dan jalankan Setup sekali lagi.</span><span class="e">Devs just replace their old <code>design-system/</code> folder and run Setup once more.</span></div></li>
+</ol>
+
+<h2><span class="i">Peta folder master</span><span class="e">Master folder map</span></h2>
+<div class="i"><pre>design-system-master/
+├─ Ship to Devs.bat      ⭐ 1-klik: build + validasi + kemas
+├─ README.md             panduan pemilik (lengkap)
+├─ src/                  ✏️ SATU-SATUNYA yang diedit tangan
+│   foundations.json · components/ · assets/ · adapters/vue/
+│   CLAUDE.md (rulebook AI) · docs/README.html (guide ini) · scripts/
+├─ dist/ · catalog/       ⚙️ digenerate build — jangan diedit
+└─ release/              📦 design-system-dev.zip → kirim ini</pre></div>
+<div class="e"><pre>design-system-master/
+├─ Ship to Devs.bat      ⭐ one click: build + validate + package
+├─ README.md             owner guide (full)
+├─ src/                  ✏️ the ONLY thing you hand-edit
+│   foundations.json · components/ · assets/ · adapters/vue/
+│   CLAUDE.md (AI rulebook) · docs/README.html (this guide) · scripts/
+├─ dist/ · catalog/       ⚙️ generated by the build — never edit
+└─ release/              📦 design-system-dev.zip → send this</pre></div>
+<p class="mut"><span class="i">Setiap ship = dist fresh, catalog sinkron, versi naik otomatis. Resep per-tugas (tambah token/komponen/aset) ada di <code>README.md</code> master.</span><span class="e">Every ship = fresh dist, synced catalog, automatic version bump. Per-task recipes (add token/component/asset) live in the master <code>README.md</code>.</span></p>
+</section>
+
+<footer>
+<b>E-Systems Design System v1.0</b> · <span class="i">Juli 2026</span><span class="e">July 2026</span> · Nuxt 2 + Tailwind (<code>tw-</code>) · Fustat &amp; DM Mono · Tabler<br>
+<span class="i">Author: <b>Raihan Allaam</b> (@alamehan) — UI/UX Designer, ITS Elabram</span><span class="e">Author: <b>Raihan Allaam</b> (@alamehan) — UI/UX Designer, ITS Elabram</span>
+</footer>
+</div>
+<script>
+function setLang(l){document.documentElement.setAttribute('data-lang',l);document.documentElement.setAttribute('lang',l);try{localStorage.setItem('ds-lang',l)}catch(e){}
+var bs=document.querySelectorAll('.lang button');for(var i=0;i<bs.length;i++){bs[i].className=bs[i].getAttribute('data-l')===l?'on':''}}
+function setTab(t){document.documentElement.setAttribute('data-tab',t);
+var bs=document.querySelectorAll('.tabs button');for(var i=0;i<bs.length;i++){bs[i].className=bs[i].getAttribute('data-t')===t?'on':''}}
+try{setLang(localStorage.getItem('ds-lang')||'id')}catch(e){setLang('id')}
+</script>
+</body>
+</html>

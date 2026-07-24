@@ -1,0 +1,34 @@
+/* atom-08 Input — single-line field with label/helper/error + focus ring. v-model. Icons via #left/#right. Variants: basic|search|dropdown|date (spec types Basic/Search/SearchWithIcon/Dropdown/DatePicker).
+   Source of truth: src/components/atom-08*.json · token-pure CSS (vars only). */
+
+.es-field { display: flex; flex-direction: column; gap: var(--space-xxs); }
+.es-field__label { color: var(--color-system-text-body); }
+.es-field__req { color: var(--color-semantic-error); }
+.es-field__box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--color-neutral-pure-white);
+  border: var(--stroke-thin) solid var(--color-system-border-soft);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-lg);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.es-field__box:focus-within { border-color: var(--color-brand-brand); box-shadow: var(--shadow-State-Focus); }
+.es-field__box.is-error { border-color: var(--color-semantic-error); box-shadow: var(--shadow-State-Error); }
+.es-field__box.is-disabled { background: var(--color-neutral-muted); border-color: var(--color-system-border-strong); }
+.es-field__box.is-dropdown,
+.es-field__box.is-dropdown .es-field__input { cursor: pointer; }
+.es-field__icon { display: inline-flex; align-items: center; color: var(--color-system-text-body); }
+.es-field__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-system-text-head);
+}
+.es-field__input::placeholder { color: var(--color-system-text-mute); }
+.es-field__input:disabled { color: var(--color-system-text-mute); cursor: not-allowed; }
+.es-field__msg { color: var(--color-system-text-mute); }
+.es-field__msg.is-error { color: var(--color-semantic-error); }

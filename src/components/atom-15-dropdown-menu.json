@@ -1,0 +1,141 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "dropdown-menu",
+  "name": "DropdownMenu",
+  "figmaName": "[⚛️]-context-menu",
+  "figmaNodeId": "4085:23330",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Floating menu panel triggered by button or right-click. Five layout types.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "MenuGeneral",
+        "DropdownList",
+        "DropdownListGrouped",
+        "MenuCheckbox",
+        "MenuExtended"
+      ],
+      "default": "MenuGeneral"
+    },
+    "items": {
+      "type": "array",
+      "default": [
+        {
+          "label": "Action 1"
+        },
+        {
+          "label": "Action 2"
+        }
+      ],
+      "description": "Each item: {label, icon?, isDangerous?, isDivider?, isDisabled?, href?}"
+    },
+    "isOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "placement": {
+      "type": "enum",
+      "values": [
+        "bottom-start",
+        "bottom-end",
+        "top-start",
+        "top-end",
+        "right-start",
+        "left-start"
+      ],
+      "default": "bottom-start"
+    },
+    "maxHeight": {
+      "type": "number",
+      "default": 320
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-soft",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.lg",
+      "padding": "spacing.standard.xxs",
+      "gap": "spacing.standard.none",
+      "shadow": "shadow.Smooth"
+    },
+    "item-tokens": {
+      "item-padding-y": "spacing.standard.sm",
+      "item-padding-x": "spacing.standard.md",
+      "item-gap": "spacing.standard.sm",
+      "item-radius": "corner-radius.md",
+      "item-text": "system.text-head",
+      "item-text-style": "text-styles.bold.body-md",
+      "item-icon": "system.text-body",
+      "item-background-hover": "system.surface-soft",
+      "item-text-disabled": "system.text-mute",
+      "item-text-danger": "semantic.error",
+      "item-icon-danger": "semantic.error",
+      "divider-color": "system.border-soft",
+      "group-label-text": "system.text-mute",
+      "group-label-style": "text-styles.bold.label-sm"
+    }
+  },
+  "subcomponents": [
+    "context-menu-item-master"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "menu",
+      "note": "Positioned absolute/fixed relative to trigger"
+    },
+    "item": {
+      "element": "button",
+      "role": "menuitem"
+    },
+    "item-checkbox": {
+      "element": "button",
+      "role": "menuitemcheckbox",
+      "optional": true
+    },
+    "divider": {
+      "element": "hr",
+      "optional": true
+    },
+    "group-label": {
+      "element": "div",
+      "optional": true
+    }
+  },
+  "usage": {
+    "generic": "DropdownMenu(type='MenuGeneral', isOpen=true, items=[{label:'Edit',icon:'edit'},{label:'Delete',icon:'trash',isDangerous:true}])",
+    "notes": "Render via portal at document.body to avoid z-index issues."
+  },
+  "a11y": {
+    "role": "menu",
+    "keyboard": [
+      "ArrowUp",
+      "ArrowDown",
+      "Enter",
+      "Space",
+      "Escape",
+      "Tab"
+    ],
+    "aria": {
+      "aria-expanded": "on trigger",
+      "aria-haspopup": "menu on trigger"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Keep labels 1-3 words.",
+      "Put destructive actions at bottom with divider."
+    ],
+    "dont": [
+      "Don't nest dropdown menus.",
+      "Don't open on hover."
+    ]
+  },
+  "code": "atom-15"
+}

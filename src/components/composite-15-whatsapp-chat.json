@@ -1,0 +1,90 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "whatsapp-chat",
+  "name": "WhatsAppChat",
+  "figmaName": "[🧱]-whatsapp-chat",
+  "figmaNodeId": "7881:259079",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "component",
+  "implementable": true,
+  "description": "WhatsApp-style chat interface for consent communication. Three variants: Default (generic chat), ConsentRecruiterPOV (recruiter sending consent request), ConsentCandidatePOV (candidate receiving consent). Uses social.social-white background with system border.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "ConsentRecruiterPOV",
+        "ConsentCandidatePOV"
+      ],
+      "default": "Default"
+    },
+    "messages": {
+      "type": "array",
+      "default": [],
+      "description": "Array of {sender, text, timestamp, isRead}"
+    }
+  },
+  "tokens": {
+    "container": {
+      "background": "socials.social-white",
+      "border-color": "system.border-strong",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md"
+    },
+    "bubble-sent": {
+      "background": "paint-style.Others/Bubble Chat",
+      "text-style": "text-styles.regular.body-sm",
+      "text-color": "system.text-head"
+    },
+    "bubble-received": {
+      "background": "neutral.pure-white",
+      "text-style": "text-styles.regular.body-sm",
+      "text-color": "system.text-head"
+    }
+  },
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "header": {
+      "element": "div",
+      "note": "Contact name + avatar"
+    },
+    "messages": {
+      "element": "div",
+      "role": "log",
+      "note": "Scrollable message list"
+    },
+    "bubble": {
+      "element": "div",
+      "optional": false
+    },
+    "input-area": {
+      "element": "div",
+      "optional": true,
+      "note": "Message composer at the bottom"
+    }
+  },
+  "usage": {
+    "generic": "WhatsAppChat(type='ConsentRecruiterPOV', messages=[...])",
+    "notes": "Used inside Panel or Modal to show consent conversation history."
+  },
+  "a11y": {
+    "role": "log",
+    "aria": {
+      "aria-label": "Chat messages",
+      "aria-live": "polite"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show sent messages right-aligned, received left-aligned.",
+      "Use Bubble Chat paint style (#E6FFD1) for sent messages."
+    ],
+    "dont": [
+      "Don't use this for non-WhatsApp communication channels."
+    ]
+  },
+  "code": "composite-15"
+}

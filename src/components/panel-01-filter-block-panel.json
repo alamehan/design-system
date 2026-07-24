@@ -1,0 +1,80 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "filter-block-panel",
+  "name": "FilterBlockPanel",
+  "figmaName": "[🧱]-panel-content-single-fbc",
+  "figmaNodeId": "4164:73949",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content for the filter block panel. Contains a search input at the top, followed by filter category sections. Slots directly into Panel(SingleCard) body — no background/padding of its own.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "FilterBlockContent"
+      ],
+      "default": "FilterBlockContent"
+    },
+    "searchQuery": {
+      "type": "string",
+      "default": ""
+    },
+    "filterSections": {
+      "type": "array",
+      "default": [],
+      "description": "Array of ContentBlock(MenuWithArrow) items"
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null
+    },
+    "gap": "spacing.standard.lg",
+    "search": {
+      "note": "Uses Input(type=SearchWithIcon)"
+    },
+    "section-list": {
+      "note": "Stack of ContentBlock(MenuWithArrow) rows"
+    }
+  },
+  "subcomponents": [
+    "input",
+    "content-block"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "search-input": {
+      "element": "div",
+      "note": "Input(SearchWithIcon) — filters the list below"
+    },
+    "sections": {
+      "element": "div",
+      "note": "Stack of filter category rows"
+    }
+  },
+  "usage": {
+    "generic": "FilterBlockPanel() — place inside Panel(SingleCard) body slot",
+    "notes": "Parent Panel handles header/footer. This component is the body content only."
+  },
+  "a11y": {
+    "role": "group",
+    "aria": {
+      "aria-label": "Filter categories"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Keep search input at the top.",
+      "Use ContentBlock(MenuWithArrow) for each filter category."
+    ],
+    "dont": [
+      "Don't add header/footer inside this component — use the parent Panel's header/footer slots."
+    ]
+  },
+  "code": "panel-01"
+}

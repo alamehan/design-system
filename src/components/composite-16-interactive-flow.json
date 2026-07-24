@@ -1,0 +1,121 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "interactive-flow",
+  "name": "InteractiveFlow",
+  "figmaName": "[🕹️]-interactive-components",
+  "figmaNodeId": "5252:61986",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Multi-step interactive overlay flows for complex operations. 26 variants covering: AI Generate Text (6 steps), Consent Share Link (4 steps), Salary (Edit/Default), Half/Full Address, Email Carbon Copy (2 steps), Generate CV in PDF (3 steps), Sync Candidate Data (4 steps), Notification Filter (2 steps). Each variant is a Modal-like overlay with step-specific content.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "AIGenerateText1",
+        "AIGenerateText2",
+        "AIGenerateText3",
+        "AIGenerateText4",
+        "AIGenerateText5",
+        "AIGenerateText6",
+        "ConsentShareLink1",
+        "ConsentShareLink2",
+        "ConsentShareLink3",
+        "ConsentShareLink4",
+        "SalaryDefault",
+        "SalaryEdit",
+        "HalfAddress",
+        "FullAddress",
+        "EmailCarbonCopy1",
+        "EmailCarbonCopy2",
+        "GenerateCVInPDF1",
+        "GenerateCVInPDF2",
+        "GenerateCVInPDF3",
+        "SyncCandidateData1",
+        "SyncCandidateData2",
+        "SyncCandidateData3",
+        "SyncCandidateData4",
+        "NotificationFilter1",
+        "NotificationFilter2"
+      ],
+      "default": "AIGenerateText1"
+    },
+    "isOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "step": {
+      "type": "number",
+      "default": 1,
+      "description": "Current step number within the flow."
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-soft",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.lg",
+      "shadow": "shadow.2XL",
+      "padding-y": "spacing.standard.xl",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.lg"
+    }
+  },
+  "subcomponents": [
+    "modal",
+    "button",
+    "input",
+    "form-control",
+    "toast"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "dialog"
+    },
+    "header": {
+      "element": "div",
+      "optional": false,
+      "note": "Step title + close"
+    },
+    "body": {
+      "element": "div",
+      "optional": false,
+      "note": "Step-specific content (form, preview, progress)"
+    },
+    "footer": {
+      "element": "div",
+      "optional": false,
+      "note": "Navigation: Back/Next/Cancel/Confirm"
+    }
+  },
+  "usage": {
+    "generic": "InteractiveFlow(type='AIGenerateText1', isOpen=true, step=1)",
+    "notes": "Manage step progression externally. Each step number corresponds to a distinct Figma variant. Render via portal at document.body."
+  },
+  "a11y": {
+    "role": "dialog",
+    "keyboard": [
+      "Escape",
+      "Tab"
+    ],
+    "aria": {
+      "aria-modal": "true",
+      "aria-labelledby": "flow title"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show step progress (e.g. 'Step 2 of 4').",
+      "Allow going back to previous steps.",
+      "Close on Escape key."
+    ],
+    "dont": [
+      "Don't skip steps without user confirmation.",
+      "Don't lose user-entered data when stepping back."
+    ]
+  },
+  "code": "composite-16"
+}

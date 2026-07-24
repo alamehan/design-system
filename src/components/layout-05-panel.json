@@ -1,0 +1,125 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "panel",
+  "name": "Panel",
+  "figmaName": "[🧩]-panel-template",
+  "figmaNodeId": "4178:115653",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Slide-in side panel that displays detailed content alongside the main view. Two layout types: SingleCard (one full-width content card) and MultiCard (grid of cards in the body). Composed of PanelSection parts (header, body, footer).",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "SingleCard",
+        "MultiCard"
+      ],
+      "default": "SingleCard"
+    },
+    "title": {
+      "type": "string",
+      "default": "Panel Title"
+    },
+    "isOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "width": {
+      "type": "number",
+      "default": 480,
+      "description": "Panel width in px."
+    }
+  },
+  "tokens": {
+    "base": {
+      "border": "system.border-strong",
+      "border-width": "stroke.thin"
+    },
+    "header": {
+      "background": "neutral.pure-white",
+      "border-bottom": "system.border-soft",
+      "padding-y": "spacing.standard.xl",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.sm",
+      "title-style": "text-styles.bold.title-md",
+      "title-color": "system.text-head"
+    },
+    "body": {
+      "background": "system.surface-strong",
+      "padding-y": "spacing.standard.lg",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.lg"
+    },
+    "body-card": {
+      "background": "neutral.pure-white",
+      "radius": "corner-radius.md",
+      "padding": "spacing.standard.xxl",
+      "gap": "spacing.standard.lg"
+    },
+    "footer": {
+      "background": "neutral.pure-white",
+      "border-top": "system.border-soft",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.lg"
+    }
+  },
+  "subcomponents": [
+    "panel-section",
+    "pagination"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "aside",
+      "role": "complementary"
+    },
+    "header": {
+      "element": "div",
+      "optional": false,
+      "note": "Uses PanelSection(Header Title or Header Option)"
+    },
+    "sub-header": {
+      "element": "div",
+      "optional": true,
+      "note": "Uses PanelSection(Sub Header) — contains Tabs"
+    },
+    "body": {
+      "element": "div",
+      "optional": false,
+      "note": "Surface-strong background; contains cards"
+    },
+    "card": {
+      "element": "div",
+      "optional": false,
+      "note": "White card with 16px padding inside the body"
+    },
+    "footer": {
+      "element": "div",
+      "optional": false,
+      "note": "Uses PanelSection(Footer Default)"
+    }
+  },
+  "usage": {
+    "generic": "Panel(type='SingleCard', title='Candidate Profile', isOpen=true)",
+    "notes": "Render at page root level with fixed or absolute positioning. Manage open/close via state."
+  },
+  "a11y": {
+    "role": "complementary",
+    "aria": {
+      "aria-label": "Panel title",
+      "aria-hidden": "true when closed"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always include a close button in the panel header.",
+      "Use SingleCard for form/detail views; MultiCard for lists/galleries."
+    ],
+    "dont": [
+      "Don't put critical blocking actions in a panel — use a Modal instead."
+    ]
+  },
+  "code": "layout-05"
+}

@@ -1,0 +1,115 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "custom-button",
+  "name": "CustomButton",
+  "figmaName": "[⚛️]-button-custom",
+  "figmaNodeId": "10743:341745",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Neutral low-emphasis button for navigation and breadcrumb. No brand color — uses system surface. Turns muted gray on hover.",
+  "props": {
+    "state": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Hover"
+      ],
+      "default": "Default"
+    },
+    "label": {
+      "type": "string",
+      "default": "Label"
+    },
+    "hasIconLeft": {
+      "type": "boolean",
+      "default": false
+    },
+    "hasIconRight": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "tokens": {
+    "base": {
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.sm",
+      "font-style": "text-styles.bold.body-md"
+    },
+    "overrides": [
+      {
+        "when": {
+          "state": "Default"
+        },
+        "tokens": {
+          "background": "system.surface-strong",
+          "text": "system.text-body",
+          "icon": "system.text-body"
+        }
+      },
+      {
+        "when": {
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "text": "system.text-head",
+          "icon": "system.text-head"
+        }
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "button",
+      "role": "button"
+    },
+    "icon-left": {
+      "element": "span",
+      "optional": true,
+      "condition": {
+        "prop": "hasIconLeft",
+        "equals": true
+      }
+    },
+    "label": {
+      "element": "span"
+    },
+    "icon-right": {
+      "element": "span",
+      "optional": true,
+      "condition": {
+        "prop": "hasIconRight",
+        "equals": true
+      }
+    }
+  },
+  "usage": {
+    "generic": "CustomButton(label='Home', state='Default')",
+    "notes": "Primary use case: breadcrumb segments."
+  },
+  "a11y": {
+    "role": "button",
+    "focusable": true,
+    "keyboard": [
+      "Enter",
+      "Space"
+    ],
+    "aria": {
+      "aria-current": "page — when current breadcrumb item"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use as breadcrumb segments."
+    ],
+    "dont": [
+      "Don't use as primary action — use Button(Filled).",
+      "Don't apply brand color overrides."
+    ]
+  },
+  "code": "atom-04"
+}

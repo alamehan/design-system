@@ -1,0 +1,66 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "complex-illustration",
+  "name": "ComplexIllustration",
+  "figmaName": "[📦]-complex-illustration",
+  "figmaNodeId": "7376:54216",
+  "category": "foundation",
+  "section": "Foundations",
+  "role": "asset",
+  "implementable": true,
+  "description": "Larger full-scene illustration assets. 2 variants: document-preview (used in document viewer contexts) and privacy-policy (used on privacy/consent pages). Each is a 172×172px layered illustration.",
+  "assetType": "illustration",
+  "dimensions": {
+    "width": 172,
+    "height": 172,
+    "unit": "px"
+  },
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "document-preview",
+        "privacy-policy"
+      ],
+      "default": "document-preview"
+    }
+  },
+  "usageMap": {
+    "document-preview": "Document viewer empty state / preview placeholder",
+    "privacy-policy": "Privacy policy / consent agreement page hero"
+  },
+  "tokens": {
+    "background": "neutral.pure-white"
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "img"
+    },
+    "image": {
+      "element": "img",
+      "optional": false
+    }
+  },
+  "usage": {
+    "generic": "ComplexIllustration(type='document-preview')",
+    "notes": "Export as SVG from Figma for best quality at any size. Use as hero illustration in full-page or modal contexts. Composed of multiple Freepik character + object layers."
+  },
+  "a11y": {
+    "role": "img",
+    "aria": {
+      "aria-label": "[Describe the illustration scene]"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Export as SVG for scalability.",
+      "Use with accompanying title and description text."
+    ],
+    "dont": [
+      "Don't stretch — maintain 1:1 aspect ratio.",
+      "Don't use without surrounding context text."
+    ]
+  },
+  "code": "asset-05"
+}

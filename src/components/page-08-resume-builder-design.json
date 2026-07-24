@@ -1,0 +1,224 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "resume-builder-design",
+  "name": "Sample Pages 8 — Resume Builder (Design)",
+  "figmaNodeId": null,
+  "source": "User-provided screenshot export from Figma (Sample Full-Screen Modal Builder - 2). Node ID not captured.",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "fullscreen-modal-view",
+  "description": "Resume Builder full-screen modal, Design mode. Same modal chrome and toolbar as the Editor view, but with the 'Design' tab active (and 'Editor' inactive). Left sidebar becomes 'Customize Your Template': stacked white cards with dropdown setting rows (Template, Margin, Spacing, Customization). Right preview canvas is identical to the Editor view.",
+  "relatedPage": "resume-builder-editor",
+  "note": "Same shell (fullscreen Browser modal), modal-header and builder-body preview column as page-07. Only the mode-toolbar active tab and the left sidebar differ.",
+  "shell": {
+    "note": "Identical to page-07: full-screen DefaultBrowser modal, size fullscreen.",
+    "modal": {
+      "component": "modal",
+      "props": {
+        "type": "DefaultBrowser",
+        "size": "fullscreen",
+        "title": "Resume Builder"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 0,
+      "y": 0,
+      "width": 1366,
+      "height": 768
+    },
+    "zones": [
+      "modal-header",
+      "mode-toolbar",
+      "builder-body"
+    ]
+  },
+  "zones": {
+    "modal-header": {
+      "note": "Identical to page-07 modal-header (panel-section HeaderTitle 'Resume Builder' + close X)."
+    },
+    "mode-toolbar": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "builder-mode-toolbar",
+      "note": "Same structure as page-07. Tab states flipped: 'Editor' inactive (system.text-mute), 'Design' active.",
+      "slots": {
+        "left": {
+          "component": "tabs",
+          "props": {
+            "type": "BasicIconAndText",
+            "items": [
+              {
+                "label": "Editor",
+                "icon": "pencil",
+                "state": "inactive"
+              },
+              {
+                "label": "Design",
+                "icon": "typography",
+                "state": "active"
+              }
+            ]
+          }
+        },
+        "right": {
+          "note": "Same as page-07: Save Template split button (Outlined) + Download (Filled)"
+        }
+      }
+    },
+    "builder-body": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "builder-body",
+      "layout": {
+        "type": "horizontal"
+      },
+      "columns": {
+        "customize-sidebar": {
+          "width": 440,
+          "component": null,
+          "customElement": true,
+          "customElementId": "template-customize-sidebar",
+          "description": "Design settings sidebar. Sticky header row 'Customize Your Template' (text-styles.bold.body-md, system.text-head, border-bottom system.border-soft). Body on system.surface-soft canvas: stacked setting cards, each a white card (corner-radius.md, border system.border-soft) with a card title row (icon + label, text-styles.bold.body-sm) and setting rows underneath. Each setting row: label left (text-styles.regular.body-sm, system.text-body) + inline dropdown value right (Input type Dropdown, current value shown, e.g. 'Modern Professional').",
+          "tokens": {
+            "background": "neutral.pure-white",
+            "border-right": "system.border-soft",
+            "border-width": "stroke.thin",
+            "card-bg": "neutral.pure-white",
+            "card-border": "system.border-soft",
+            "card-radius": "corner-radius.md",
+            "card-padding": "spacing.standard.lg",
+            "gap": "spacing.standard.md"
+          },
+          "cards": [
+            {
+              "title": "Template",
+              "icon": "file",
+              "rows": [
+                {
+                  "label": "Resume Template",
+                  "component": "input",
+                  "props": {
+                    "type": "Dropdown"
+                  },
+                  "value": "Modern Professional"
+                },
+                {
+                  "label": "Page Size",
+                  "component": "input",
+                  "props": {
+                    "type": "Dropdown"
+                  },
+                  "value": "A4 (210 x 297 mm)"
+                }
+              ]
+            },
+            {
+              "title": "Margin",
+              "icon": "box-margin",
+              "rows": [
+                {
+                  "label": "Top & Bottom",
+                  "component": "input",
+                  "props": {
+                    "type": "Dropdown"
+                  },
+                  "value": "Default"
+                },
+                {
+                  "label": "Side",
+                  "component": "input",
+                  "props": {
+                    "type": "Dropdown"
+                  },
+                  "value": "Default"
+                }
+              ]
+            },
+            {
+              "title": "Spacing",
+              "icon": "line-height",
+              "rows": [
+                {
+                  "label": "Section Spacing",
+                  "component": "input",
+                  "props": {
+                    "type": "Dropdown"
+                  },
+                  "value": "50%"
+                },
+                {
+                  "label": "Line Spacing",
+                  "component": "input",
+                  "props": {
+                    "type": "Dropdown"
+                  },
+                  "value": "Default"
+                }
+              ]
+            },
+            {
+              "title": "Customization",
+              "icon": "adjustments",
+              "rows": [
+                {
+                  "label": "Show Watermark",
+                  "component": "input",
+                  "props": {
+                    "type": "Dropdown"
+                  },
+                  "value": "Style 1"
+                }
+              ]
+            }
+          ]
+        },
+        "preview-canvas": {
+          "note": "Identical to page-07 preview-canvas: system.surface-strong canvas + document-gallery ModernProfessional page card + vertical scroll-bar."
+        }
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "builder-mode-toolbar": "Basic icon+text tabs (Editor/Design) left; Save Template split button + Download filled button right. (shared with page-07)",
+    "builder-body": "Two-column: 330px sidebar + preview canvas. (shared with page-07)",
+    "template-customize-sidebar": "Stacked white setting cards; each row = label + inline Dropdown value. Card border: system.border-soft, radius corner-radius.md."
+  },
+  "code": "page-08",
+  "geometry": {
+    "basis": "1366x768 logical, measured from 2732x1536 @2x author screenshot (builder2-real)",
+    "modal": "fullscreen browser EModal, same shell as page-07",
+    "toolbar": "same as page-07 with Design segment active",
+    "sidebar": {
+      "width": 440,
+      "band": "Customize Your Template (white, border-b)",
+      "body": "gray surface-strong, 4 white cards (Template / Margin / Spacing / Customization)",
+      "card": {
+        "radius": 12,
+        "shadow": "Smooth",
+        "header": "dark icon + bold title"
+      },
+      "row": {
+        "height": 40,
+        "radius": 8,
+        "border": "border-medium",
+        "layout": "label left, value + caret right"
+      }
+    },
+    "canvas": "same as page-07 (blue tint #dbeafe, A4 595x842 paper)"
+  },
+  "_provenance": {
+    "source": "builder2-real.png (Figma export screenshot from author, 2732x1536 @2x)",
+    "method": "same pixel-scan basis as page-07; card/row geometry read from 2x crops",
+    "date": "2026-07-04",
+    "fase": "E",
+    "notes": [
+      "dropdown rows are demo interactions: click cycles through preset options"
+    ]
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "form-input-field",
+  "name": "FormInputField",
+  "figmaName": "[⚛️]-form-input-[🎲]-pattern",
+  "figmaNodeId": "4073:17045",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Reusable field shell used inside Input, Textarea, RichTextEditor. Handles background, border, radius, padding for Single and Multi layouts.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Single",
+        "Multi"
+      ],
+      "default": "Single"
+    },
+    "state": {
+      "type": "enum",
+      "values": [
+        "Inactive",
+        "Active",
+        "Focus",
+        "Error",
+        "Disabled"
+      ],
+      "default": "Inactive"
+    }
+  },
+  "tokens": {
+    "base": {
+      "gap-label-to-field": "spacing.standard.xxs"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": "Single",
+          "state": "Inactive"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "system.border-soft",
+          "border-width": "stroke.thin",
+          "radius": "corner-radius.md",
+          "padding-y": "spacing.standard.sm",
+          "padding-x": "spacing.standard.lg",
+          "gap": "spacing.standard.sm",
+          "shadow": null
+        }
+      },
+      {
+        "when": {
+          "type": "Single",
+          "state": "Active"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "system.border-soft",
+          "border-width": "stroke.thin",
+          "radius": "corner-radius.md",
+          "padding-y": "spacing.standard.sm",
+          "padding-x": "spacing.standard.lg",
+          "gap": "spacing.standard.sm",
+          "shadow": null
+        }
+      },
+      {
+        "when": {
+          "type": "Single",
+          "state": "Focus"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "brand.brand",
+          "border-width": "stroke.thin",
+          "radius": "corner-radius.md",
+          "padding-y": "spacing.standard.sm",
+          "padding-x": "spacing.standard.lg",
+          "gap": "spacing.standard.sm",
+          "shadow": "shadow.State-Focus"
+        }
+      },
+      {
+        "when": {
+          "type": "Single",
+          "state": "Error"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "semantic.error",
+          "border-width": "stroke.thin",
+          "radius": "corner-radius.md",
+          "padding-y": "spacing.standard.sm",
+          "padding-x": "spacing.standard.lg",
+          "gap": "spacing.standard.sm",
+          "shadow": "shadow.State-Error"
+        }
+      },
+      {
+        "when": {
+          "type": "Single",
+          "state": "Disabled"
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "border-color": "system.border-strong",
+          "border-width": "stroke.thin",
+          "radius": "corner-radius.md",
+          "padding-y": "spacing.standard.sm",
+          "padding-x": "spacing.standard.lg",
+          "gap": "spacing.standard.sm",
+          "shadow": null
+        }
+      },
+      {
+        "when": {
+          "type": "Multi",
+          "state": "Inactive"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "system.border-soft",
+          "border-width": "stroke.thin",
+          "radius": "corner-radius.md",
+          "padding-y": "spacing.standard.xxs",
+          "padding-x": "spacing.standard.lg",
+          "gap": "spacing.standard.sm",
+          "shadow": null
+        }
+      },
+      {
+        "when": {
+          "type": "Multi",
+          "state": "Active"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "system.border-soft",
+          "border-width": "stroke.thin",
+          "radius": "corner-radius.md",
+          "padding-y": "spacing.standard.xxs",
+          "padding-x": "spacing.standard.lg",
+          "gap": "spacing.standard.sm",
+          "shadow": null
+        }
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "note": "Styled field shell"
+    },
+    "content": {
+      "element": "div",
+      "note": "Inner slot — input, chips, or editor"
+    }
+  },
+  "usage": {
+    "generic": "FormInputField(type='Single', state='Inactive') { slot: InputElement }",
+    "notes": "Don't use directly in product — use Input/Textarea/RichTextEditor."
+  },
+  "a11y": {
+    "role": "presentation",
+    "focusable": false
+  },
+  "guidelines": {
+    "do": [
+      "Use as base for all field-type components."
+    ],
+    "dont": [
+      "Don't use directly in product UI."
+    ]
+  },
+  "code": "atom-11"
+}

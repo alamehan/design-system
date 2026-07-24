@@ -1,0 +1,94 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "filter-field",
+  "name": "FilterField",
+  "figmaName": "[🧱]-advance-filter-[🎲]-pattern",
+  "figmaNodeId": "4088:29598",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Individual filter row inside FilterPanel. 5 types: General (text/dropdown input + checkbox list + suggestions), Date (date picker variant), Phone (phone input), MaxMin (two side-by-side inputs), Slider (RangeSlider). All share white background with soft border.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "General",
+        "Date",
+        "Phone",
+        "MaxMin",
+        "Slider"
+      ],
+      "default": "General"
+    },
+    "label": {
+      "type": "string",
+      "default": "Filter Name"
+    },
+    "icon": {
+      "type": "string",
+      "default": null
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "neutral.pure-white",
+      "border-bottom": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding-y": "spacing.standard.lg",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.sm"
+    }
+  },
+  "subcomponents": [
+    "info-block",
+    "input",
+    "form-control",
+    "range-slider",
+    "quick-suggest"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "header": {
+      "element": "div",
+      "note": "InfoBlock(TitleMD) — filter name + icon"
+    },
+    "input-area": {
+      "element": "div",
+      "note": "Input or two Inputs (MaxMin) or RangeSlider"
+    },
+    "options-list": {
+      "element": "div",
+      "optional": true,
+      "note": "FormControl checkboxes for quick multi-select"
+    },
+    "suggestions": {
+      "element": "div",
+      "optional": true,
+      "note": "QuickSuggest chips"
+    }
+  },
+  "usage": {
+    "generic": "FilterField(type='General', label='Job Type')",
+    "notes": "Compose inside FilterPanel. Stack multiple FilterField components vertically."
+  },
+  "a11y": {
+    "role": "group",
+    "aria": {
+      "aria-labelledby": "filter header element"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use General for text/keyword filters.",
+      "Use Date for date-range filters.",
+      "Use Slider for numeric range filters (salary, experience years)."
+    ],
+    "dont": [
+      "Don't use MaxMin and Slider for the same filter simultaneously."
+    ]
+  },
+  "code": "composite-04"
+}

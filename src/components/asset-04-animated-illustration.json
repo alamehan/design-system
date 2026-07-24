@@ -1,0 +1,93 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "animated-illustration",
+  "name": "AnimatedIllustration",
+  "figmaName": "[📦]-animated-illustration",
+  "figmaNodeId": "11191:365122",
+  "category": "foundation",
+  "section": "Foundations",
+  "role": "asset",
+  "implementable": true,
+  "description": "GIF animation illustrations for loading states, redirects, and process feedback. 14 variants for specific app states. Each is a 96×96px animated GIF frame (static in Figma). Used in interstitial screens, loading overlays, and step transitions.",
+  "assetType": "animation-gif",
+  "dimensions": {
+    "width": 96,
+    "height": 96,
+    "unit": "px"
+  },
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "GIF-comment",
+        "GIF-animation-resume",
+        "GIF-animation-fetch-data",
+        "GIF-animation-choose-candidate",
+        "GIF-animation-task-completed",
+        "GIF-animation-data-collection",
+        "GIF-animation-multi-factor-authentication",
+        "GIF-animation-redirecting-2",
+        "GIF-animation-change-password",
+        "GIF-animation-link-has-expired",
+        "GIF-animation-reset-password",
+        "GIF-animation-redirecting-1",
+        "GIF-animation-loading",
+        "GIF-animation-magic-wand"
+      ],
+      "default": "GIF-animation-loading",
+      "description": "Which animated GIF to show."
+    }
+  },
+  "usageMap": {
+    "GIF-animation-loading": "Generic loading spinner",
+    "GIF-animation-fetch-data": "Data loading from server",
+    "GIF-animation-task-completed": "Task/action success confirmation",
+    "GIF-animation-resume": "Resume generation in progress",
+    "GIF-animation-choose-candidate": "Candidate selection process",
+    "GIF-animation-data-collection": "Form data being collected",
+    "GIF-animation-multi-factor-authentication": "MFA/2FA verification process",
+    "GIF-animation-redirecting-1": "Page redirect in progress",
+    "GIF-animation-redirecting-2": "Redirect variant 2",
+    "GIF-animation-change-password": "Password change process",
+    "GIF-animation-link-has-expired": "Link expiry error screen",
+    "GIF-animation-reset-password": "Password reset flow",
+    "GIF-animation-magic-wand": "AI magic / generation",
+    "GIF-comment": "Comment/feedback activity"
+  },
+  "tokens": {
+    "background": "neutral.pure-white"
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "img"
+    },
+    "image": {
+      "element": "img",
+      "optional": false,
+      "note": "Animated GIF — 96×96px"
+    }
+  },
+  "usage": {
+    "generic": "AnimatedIllustration(type='GIF-animation-loading')",
+    "notes": "Export as .gif from Figma (static frame is a placeholder). Use as <img> tag or CSS background-image. Always center in its container. Reduce motion: provide a static fallback for prefers-reduced-motion."
+  },
+  "a11y": {
+    "role": "img",
+    "aria": {
+      "aria-label": "[Describe what's happening]",
+      "aria-hidden": "true if purely decorative"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Match the GIF to the specific process (use fetch-data when loading records, not generic loading).",
+      "Provide a static fallback for prefers-reduced-motion."
+    ],
+    "dont": [
+      "Don't autoplay GIFs infinitely — loop max 3 times then stop if possible.",
+      "Don't use on production screens without the actual .gif file."
+    ]
+  },
+  "code": "asset-04"
+}

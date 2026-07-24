@@ -1,0 +1,32 @@
+/* atom-02 IconButton — square, icon-only (via default slot).
+   Source of truth: src/components/atom-02*.json · token-pure CSS (vars only). */
+
+.es-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--stroke-thin) solid transparent;
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  font-size: 1.15em;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.es-iconbtn--Filled { background: var(--color-brand-brand); color: var(--color-neutral-pure-white); }
+.es-iconbtn--Filled:hover:not(:disabled) { background: var(--color-component-button-hover); }
+.es-iconbtn--Outlined { background: var(--color-neutral-pure-white); color: var(--color-brand-brand); border-color: var(--color-brand-brand); }
+.es-iconbtn--Outlined:hover:not(:disabled) { background: var(--color-brand-brand-surface-soft); }
+.es-iconbtn--Tonal { background: var(--color-component-button-tonal); color: var(--color-brand-brand); }
+.es-iconbtn--Tonal:hover:not(:disabled) { background: var(--color-component-button-tonal-hover); }
+.es-iconbtn--Elevated { background: var(--color-neutral-pure-white); color: var(--color-brand-brand); box-shadow: var(--shadow-Base); }
+.es-iconbtn--Elevated:hover:not(:disabled) { background: var(--color-system-surface-soft); }
+.es-iconbtn--Ghost { background: transparent; color: var(--color-brand-brand); }
+.es-iconbtn--Ghost:hover:not(:disabled) { background: var(--color-brand-brand-surface-soft); }
+.es-iconbtn:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+.es-iconbtn:disabled {
+  cursor: not-allowed;
+  background: var(--color-neutral-muted);
+  color: var(--color-system-text-mute);
+  border-color: var(--color-system-border-medium);
+}

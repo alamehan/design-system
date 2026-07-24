@@ -1,0 +1,83 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "workflow-panel",
+  "name": "WorkflowPanel",
+  "figmaName": "[🧱]-panel-content-multi-wc",
+  "figmaNodeId": "13172:394918",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content for candidate workflow/pipeline management. Shows the candidate's current status in the recruitment workflow, stage history, and available workflow actions. Uses Toast for important stage alerts.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default"
+      ],
+      "default": "Default"
+    },
+    "candidateId": {
+      "type": "string",
+      "default": null
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": "spacing.standard.lg"
+    },
+    "status-alert": {
+      "note": "Toast for workflow stage notifications"
+    },
+    "workflow-stages": {
+      "note": "Visual pipeline stages with current position"
+    }
+  },
+  "subcomponents": [
+    "toast",
+    "status-chip",
+    "button",
+    "info-block"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "status-alert": {
+      "element": "div",
+      "optional": true,
+      "note": "Toast(Filled/Warning) for stage alerts"
+    },
+    "stage-list": {
+      "element": "div",
+      "optional": false,
+      "note": "Workflow stage progression display"
+    },
+    "actions": {
+      "element": "div",
+      "optional": true,
+      "note": "Advance/Decline stage buttons"
+    }
+  },
+  "usage": {
+    "generic": "WorkflowPanel(type='Default', candidateId='c-001') — inside Panel(MultiCard) body"
+  },
+  "a11y": {
+    "role": "region",
+    "aria": {
+      "aria-label": "Candidate workflow"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Clearly show the current active stage.",
+      "Show available transitions (next stage options)."
+    ],
+    "dont": [
+      "Don't allow skipping multiple stages without confirmation."
+    ]
+  },
+  "code": "panel-11"
+}

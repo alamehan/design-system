@@ -1,0 +1,87 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "consent-request-panel",
+  "name": "ConsentRequestPanel",
+  "figmaName": "[🧱]-panel-content-single-rc",
+  "figmaNodeId": "6966:238717",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content for sending consent requests. 4 variants: ManualConsent (checkbox acknowledgment + textarea), SendEmail (email form + attachment), RequestConsent1 and RequestConsent2 (different consent request flows). Contains form inputs, file upload, and consent controls.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "ManualConsent",
+        "SendEmail",
+        "RequestConsent1",
+        "RequestConsent2"
+      ],
+      "default": "ManualConsent"
+    },
+    "candidateName": {
+      "type": "string",
+      "default": null
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": "spacing.standard.lg"
+    }
+  },
+  "subcomponents": [
+    "form-control",
+    "input",
+    "textarea",
+    "file-upload",
+    "button"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "form"
+    },
+    "consent-check": {
+      "element": "div",
+      "optional": true,
+      "note": "FormControl(checkbox) for manual consent acknowledgment"
+    },
+    "email-form": {
+      "element": "div",
+      "optional": true,
+      "note": "Input fields for email-based consent"
+    },
+    "attachment": {
+      "element": "div",
+      "optional": true,
+      "note": "FileUpload for consent documents"
+    },
+    "note-area": {
+      "element": "div",
+      "optional": true,
+      "note": "Textarea for custom message"
+    }
+  },
+  "usage": {
+    "generic": "ConsentRequestPanel(type='ManualConsent') — place inside Panel(SingleCard) body"
+  },
+  "a11y": {
+    "role": "form",
+    "aria": {
+      "aria-label": "Consent request form"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always pre-fill candidate name where available.",
+      "Show clear confirmation before sending."
+    ],
+    "dont": [
+      "Don't send consent without explicit form submission."
+    ]
+  },
+  "code": "panel-06"
+}

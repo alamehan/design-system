@@ -1,0 +1,99 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "candidate-info-block",
+  "name": "CandidateInfoBlock",
+  "figmaName": "[🧱]-candidate-info-parts-[🎲]-pattern",
+  "figmaNodeId": "4406:76078",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Data display block for candidate profile fields inside a Panel. 5 types: SingleValue (label + one value + action icon), MultiValue (label + chip array), Grouped (surface-strong card with multiple InfoBlocks), Experience (timeline row with company/role/duration), SingleMulti (label + multiple single-value rows).",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "SingleValue",
+        "MultiValue",
+        "Grouped",
+        "Experience",
+        "SingleMulti"
+      ],
+      "default": "SingleValue"
+    },
+    "label": {
+      "type": "string",
+      "default": "Field Label"
+    },
+    "value": {
+      "type": "string|array",
+      "default": "Field Value"
+    }
+  },
+  "tokens": {
+    "base": {
+      "gap": "spacing.standard.lg"
+    },
+    "label": {
+      "text-style": "text-styles.bold.body-md",
+      "text-color": "system.text-mute"
+    },
+    "value-text": {
+      "text-style": "text-styles.regular.body-md",
+      "text-color": "system.text-head"
+    },
+    "grouped-card": {
+      "background": "system.surface-strong",
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.lg",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.xs"
+    },
+    "experience-title": {
+      "text-style": "text-styles.bold.body-sm",
+      "text-color": "system.text-head"
+    },
+    "experience-subtitle": {
+      "text-style": "text-styles.regular.label-sm",
+      "text-color": "system.text-body"
+    }
+  },
+  "subcomponents": [
+    "chip",
+    "info-block",
+    "icon-button"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "label": {
+      "element": "p"
+    },
+    "value": {
+      "element": "div",
+      "note": "Contains text, chips, or nested InfoBlocks"
+    }
+  },
+  "usage": {
+    "generic": "CandidateInfoBlock(type='SingleValue', label='Email', value='john@example.com')",
+    "notes": "Used inside Panel body cards to display candidate profile data."
+  },
+  "a11y": {
+    "role": "group",
+    "aria": {
+      "aria-label": "label text"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use SingleValue for contact details and single-choice fields.",
+      "Use MultiValue for skills, languages, certifications.",
+      "Use Grouped for related field clusters."
+    ],
+    "dont": [
+      "Don't mix types inside the same row."
+    ]
+  },
+  "code": "composite-06"
+}

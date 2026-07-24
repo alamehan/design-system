@@ -1,0 +1,129 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "bulk-approval-collapsed",
+  "name": "Sample Pages 10 — Bulk Send for Approval (Collapsed Panes)",
+  "figmaNodeId": null,
+  "source": "User-provided screenshot export from Figma (Sample Full-Screen Modal Bulk Task - 2). Node ID not captured.",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "fullscreen-modal-view",
+  "description": "Bulk Send for Approval with both side panes collapsed into narrow icon rails. Left rail: expand icon button, 'Total: 6' caption, then one initials chip per candidate (e.g. AR, BA, CA, DW, EC, FN) stacked vertically — the selected candidate's chip is highlighted. Right rail: expand icon button + a single document icon button. The center approval actions pane stretches across the freed width. Header, center pane content and footer are identical to page-09.",
+  "relatedPage": "bulk-approval",
+  "note": "Same shell, modal-header, approval-actions-pane and modal-footer as page-09. Only the two side panes differ (collapsed state).",
+  "shell": {
+    "note": "Identical to page-09: full-screen DefaultBrowser modal.",
+    "modal": {
+      "component": "modal",
+      "props": {
+        "type": "DefaultBrowser",
+        "size": "fullscreen",
+        "title": "Bulk Send for Approval"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 0,
+      "y": 0,
+      "width": 1366,
+      "height": 768
+    },
+    "zones": [
+      "modal-header",
+      "panes-body",
+      "modal-footer"
+    ]
+  },
+  "zones": {
+    "modal-header": {
+      "note": "Identical to page-09 modal-header."
+    },
+    "panes-body": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "bulk-panes-body",
+      "description": "Same three-pane body as page-09, with left and right panes in collapsed rail state.",
+      "layout": {
+        "type": "horizontal"
+      },
+      "columns": {
+        "candidates-rail": {
+          "width": 56,
+          "component": null,
+          "customElement": true,
+          "customElementId": "collapsible-pane-rail",
+          "description": "Collapsed candidates pane. Top: expand icon button (Ghost). 'Total: 6' caption (text-styles.regular.label-sm, system.text-mute). Vertical stack of candidate initials chips (two-letter initials, text-styles.bold.label-sm): default system.surface-strong background + system.text-body text; selected candidate brand.brand-surface-soft background + brand.brand text + stroke.thin brand.brand border.",
+          "tokens": {
+            "background": "neutral.pure-white",
+            "border": "system.border-soft",
+            "radius": "corner-radius.md",
+            "chip-bg": "system.surface-strong",
+            "chip-selected-bg": "brand.brand-surface-soft",
+            "chip-selected-border": "brand.brand",
+            "gap": "spacing.standard.sm"
+          }
+        },
+        "approval-actions-pane": {
+          "width": "flex",
+          "note": "Identical content to page-09 approval-actions-pane, stretched to the full freed width."
+        },
+        "preview-rail": {
+          "width": 56,
+          "component": null,
+          "customElement": true,
+          "customElementId": "collapsible-pane-rail",
+          "description": "Collapsed preview pane. Top: expand icon button (Ghost). Below: document preview icon button (Outlined, brand.brand icon) that re-opens the contract preview.",
+          "tokens": {
+            "background": "neutral.pure-white",
+            "border": "system.border-soft",
+            "radius": "corner-radius.md"
+          }
+        }
+      }
+    },
+    "modal-footer": {
+      "note": "Identical to page-09 modal-footer (Cancel / Send for Approval disabled)."
+    }
+  },
+  "customElementsRegistry": {
+    "bulk-panes-body": "Three-pane body. (shared with page-09)",
+    "collapsible-pane-rail": "56px collapsed pane rail: expand icon button + stacked initials chips (left) or document icon button (right). Selected chip: brand.brand-surface-soft bg + brand.brand text/border."
+  },
+  "code": "page-10",
+  "geometry": {
+    "basis": "1366x768 (screenshots are @2x); values in px @1x",
+    "canvas": {
+      "padding": 16,
+      "gap": 16,
+      "background": "system-surface-strong"
+    },
+    "panes": {
+      "left": 370,
+      "middle": 558,
+      "right": 376
+    },
+    "collapsedRail": {
+      "width": 58,
+      "initialsChip": 40,
+      "totalBand": "gray-50 w/ hairline"
+    },
+    "paper": {
+      "width": 304,
+      "viewerBackground": "var(--color-brand-brand-surface-soft) (pixel-measured rgb 219,234,254 = existing brand surface token)"
+    },
+    "zoom": {
+      "pill": "gray-100 label between ghost minus/plus",
+      "default": 100
+    }
+  },
+  "_provenance": {
+    "method": "PIL pixel scan of the real Bulk 1 / Bulk 2 screenshots",
+    "date": "2026-07-04",
+    "fase": "F",
+    "notes": "contract text transcribed verbatim incl. 'Contracy Type' typo and 'Systems.Selanjutnya' missing space; paper content below the visible fold was NOT invented; Elabram watermark approximated with low-opacity text; page-10 = both rails collapsed (focus mode)"
+  }
+}

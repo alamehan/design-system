@@ -1,0 +1,30 @@
+/* layout-06 PanelSection — header/sub-header/footer building blocks for Panel, Modal and DataTable shells. Slots: #left (or title prop), default, #right.
+   Source of truth: src/components/layout-06*.json · token-pure CSS (vars only). */
+
+.es-psec {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-neutral-pure-white);
+}
+.es-psec__left { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; }
+.es-psec__right { display: flex; align-items: center; gap: var(--space-sm); }
+.es-psec__title { color: var(--color-system-text-head); }
+
+.es-psec--HeaderTitle,
+.es-psec--HeaderOption,
+.es-psec--SubHeader,
+.es-psec--HeaderDocViewer {
+  padding: var(--space-xl) var(--space-xxl);
+  border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
+}
+.es-psec--SubHeader { padding-top: var(--space-none); padding-bottom: var(--space-none); }
+
+.es-psec--FooterDefault,
+.es-psec--BarVideoPlayer,
+.es-psec--TextEditor {
+  padding: var(--space-sm) var(--space-xxl);
+  border-top: var(--stroke-thin) solid var(--color-system-border-soft);
+}
+.es-psec--FooterDefault .es-psec__left,
+.es-psec--FooterDefault .es-psec__right { gap: var(--space-lg); }

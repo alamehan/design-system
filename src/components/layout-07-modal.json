@@ -1,0 +1,153 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "modal",
+  "name": "Modal",
+  "figmaName": "[🧩]-modals-template",
+  "figmaNodeId": "4814:87049",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Full-screen overlay dialog for critical actions and confirmations. Two types: System (body has surface-strong background with white card inside) and Browser (body is plain white — used for document/file content).",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "DefaultSystem",
+        "ExampleSystem",
+        "DefaultBrowser",
+        "ExampleBrowser"
+      ],
+      "default": "DefaultSystem"
+    },
+    "title": {
+      "type": "string",
+      "default": "Modal Title"
+    },
+    "isOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "size": {
+      "type": "enum",
+      "values": [
+        "sm",
+        "md",
+        "lg",
+        "fullscreen"
+      ],
+      "default": "md"
+    },
+    "hasBackdrop": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "tokens": {
+    "base": {
+      "backdrop": "rgba(0,0,0,0.5)",
+      "modal-radius": "corner-radius.none",
+      "shadow": "shadow.2XL"
+    },
+    "header": {
+      "background": "neutral.pure-white",
+      "border-bottom": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding-y": "spacing.standard.xl",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.sm",
+      "title-style": "text-styles.bold.title-md",
+      "title-color": "system.text-head"
+    },
+    "body-system": {
+      "background": "system.surface-strong",
+      "padding-y": "spacing.standard.lg",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.lg",
+      "content-card-bg": "neutral.pure-white",
+      "content-card-radius": "corner-radius.md",
+      "content-card-padding": "spacing.standard.xxl"
+    },
+    "body-browser": {
+      "background": "neutral.pure-white",
+      "padding-y": "spacing.standard.lg",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.lg"
+    },
+    "footer": {
+      "background": "neutral.pure-white",
+      "border-top": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.lg"
+    }
+  },
+  "subcomponents": [
+    "modal-content",
+    "button"
+  ],
+  "anatomy": {
+    "backdrop": {
+      "element": "div",
+      "optional": true,
+      "note": "Semi-transparent overlay behind the modal"
+    },
+    "root": {
+      "element": "div",
+      "role": "dialog",
+      "optional": false
+    },
+    "header": {
+      "element": "div",
+      "optional": false
+    },
+    "title": {
+      "element": "h2",
+      "optional": false
+    },
+    "close-btn": {
+      "element": "button",
+      "optional": true
+    },
+    "body": {
+      "element": "div",
+      "optional": false,
+      "note": "Slot for ModalContent"
+    },
+    "footer": {
+      "element": "div",
+      "optional": false,
+      "note": "Contains Cancel + primary action buttons"
+    }
+  },
+  "usage": {
+    "generic": "Modal(type='DefaultSystem', title='Confirm Action', isOpen=true)",
+    "notes": "Render via a modal manager/portal at document.body. Trap focus inside while open. Close on backdrop click or Escape."
+  },
+  "a11y": {
+    "role": "dialog",
+    "keyboard": [
+      "Escape",
+      "Tab",
+      "Shift+Tab"
+    ],
+    "aria": {
+      "aria-modal": "true",
+      "aria-labelledby": "modal title id",
+      "aria-describedby": "modal body id"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use System type for confirmation/form modals.",
+      "Use Browser type for file preview modals.",
+      "Always have a clear close mechanism (X button or Cancel)."
+    ],
+    "dont": [
+      "Don't open a modal inside another modal.",
+      "Don't put excessive content — use a Panel instead for complex detail views."
+    ]
+  },
+  "code": "layout-07"
+}

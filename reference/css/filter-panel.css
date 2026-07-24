@@ -1,0 +1,60 @@
+/* composite-07 FilterPanel — vertical filter drawer: sticky header, scrollable stack of EFilterField rows, footer with Clear + Apply. Emits @apply / @clear.
+   Source of truth: src/components/composite-07*.json · token-pure CSS (vars only). */
+
+.es-fpanel {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-neutral-pure-white);
+  border: var(--stroke-thin) solid var(--color-system-border-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.es-fpanel__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--color-neutral-pure-white);
+  border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
+  padding: var(--space-lg) var(--space-xxl);
+}
+.es-fpanel__title { color: var(--color-system-text-head); }
+.es-fpanel__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6em;
+  border-radius: var(--radius-full);
+  padding: 0 var(--space-xxs);
+  background: var(--color-brand-brand-surface-soft);
+  color: var(--color-brand-brand);
+}
+.es-fpanel__body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-none);
+}
+.es-fpanel__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  background: var(--color-neutral-pure-white);
+  border-top: var(--stroke-thin) solid var(--color-system-border-soft);
+  padding: var(--space-sm) var(--space-xxl);
+}
+.es-fpanel__clear {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--color-system-surface-soft);
+  border: var(--stroke-thin) solid var(--color-system-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-lg);
+  color: var(--color-system-text-body);
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.es-fpanel__clear:hover { background: var(--color-system-surface-strong); }
+.es-fpanel__clear:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }

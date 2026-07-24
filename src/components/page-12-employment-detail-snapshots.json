@@ -1,0 +1,186 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "employment-detail-snapshots",
+  "name": "Sample Pages 12 — Employment Detail Side Panel (Snapshots)",
+  "figmaNodeId": null,
+  "source": "User-provided screenshot export from Figma (Sample Side-Panel Modal Detail - 2). Node ID not captured.",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "side-panel-detail-view",
+  "description": "Same employment detail side panel as page-11, showing an in-review contract (V1 · Main) with the Snapshots tab active. Stage stepper: only step 1 (KA REVIEW) reached; steps 2-6 upcoming. Header action becomes a suggested next action ('Next: Edit Contract') split button. Snapshots tab: grouped snapshot timeline — 'MAIN RECORD' group strip, then snapshot rows (CR01-CR04) on a vertical dot timeline; 'REQUEST CHANGE #1' group strip below.",
+  "relatedPage": "employment-detail-summary",
+  "note": "Same shell, panel-header, summary-bar and two-column layout as page-11. Differences: selected version card (V1 · Main, Current), stepper progress (step 1 only), header action, active tab (Snapshots (4)) and tab counts (Timeline (15)).",
+  "shell": {
+    "note": "Identical to page-11: right-anchored Panel MultiCard (1045px) over scrim.",
+    "panel": {
+      "component": "panel",
+      "props": {
+        "type": "MultiCard",
+        "isOpen": true,
+        "width": 1045
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 321,
+      "y": 0,
+      "width": 1045,
+      "height": 768
+    },
+    "zones": [
+      "panel-header",
+      "summary-bar",
+      "detail-columns"
+    ]
+  },
+  "zones": {
+    "panel-header": {
+      "note": "Identical to page-11 panel-detail-header."
+    },
+    "summary-bar": {
+      "note": "Identical to page-11 candidate-summary-bar. Total tenure chip reads 'Total: 0 Years 1 Months 14 Days'."
+    },
+    "detail-columns": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "employment-detail-columns",
+      "columns": {
+        "employment-history": {
+          "width": 370,
+          "note": "Same employment-history-tree as page-11. Single version card: 'V1 · Main' + 'Current' badge, contract number 638/PKWT-PTES/001/VI/2024, date range '01 Jul 2024 – 31 Dec 2024 (Ongoing)', role 'Marketing Specialist', salary 'IDR 9.500.000'. Card selected (brand.brand border)."
+        },
+        "contract-detail": {
+          "width": "flex",
+          "description": "Contract detail card for an in-review contract.",
+          "header": {
+            "title": "638/PKWT-PTES/001/VI/2024",
+            "title-style": "text-styles.bold.body-md",
+            "action": {
+              "component": "split-button",
+              "props": {
+                "type": "Outlined",
+                "label": "Next: Edit Contract"
+              },
+              "note": "Suggested next action; label text in brand.brand"
+            }
+          },
+          "stage-stepper": {
+            "customElement": true,
+            "customElementId": "approval-stage-stepper",
+            "note": "Same element as page-11. Progress: step 1 'KA REVIEW' current (brand.brand); steps 2-6 (KAM, HOD, KA SEND, CANDIDATE, ACTIVE) upcoming (system.surface-strong circles, system.text-mute labels)."
+          },
+          "tabs": {
+            "component": "tabs",
+            "props": {
+              "type": "UnderlineTextOnly",
+              "items": [
+                {
+                  "label": "Summary"
+                },
+                {
+                  "label": "Details"
+                },
+                {
+                  "label": "Snapshots (4)",
+                  "state": "active"
+                },
+                {
+                  "label": "Timeline (15)"
+                }
+              ]
+            }
+          },
+          "tab-snapshots": {
+            "customElement": true,
+            "customElementId": "snapshot-timeline-list",
+            "description": "CUSTOM ELEMENT — grouped snapshot list on a vertical dot timeline. Group strip: full-width label row on system.surface-strong ('MAIN RECORD', 'REQUEST CHANGE #1') in text-styles.regular.label-sm, system.text-mute. Snapshot row: timeline dot column left (radio-style dot; latest/selected dot brand.brand, others system.border-medium; dotted connector line) + row card (stroke.thin system.border-soft border, corner-radius.md): document icon, snapshot code 'CR01' (text-styles.bold.body-sm, system.text-head), snapshot label ('Signed Version', 'Correction Upd...', 'Soft Edit Version', 'Final Version') in text-styles.regular.body-sm system.text-body, 'Digital' with file icon, signer indicator 'No'/'Yes' with person icon, timestamp '02 Jun 24 14:30' (text-styles.regular.label-sm, system.text-mute). Latest row: 'Latest' status-chip Success + selected dot.",
+            "tokens": {
+              "group-strip-bg": "system.surface-strong",
+              "row-border": "system.border-soft",
+              "row-radius": "corner-radius.md",
+              "dot-active": "brand.brand",
+              "dot-inactive": "system.border-medium"
+            },
+            "rows": [
+              {
+                "code": "CR01",
+                "label": "Signed Version",
+                "method": "Digital",
+                "signed": "No",
+                "timestamp": "02 Jun 24 14:30"
+              },
+              {
+                "code": "CR02",
+                "label": "Correction Upd...",
+                "method": "Digital",
+                "signed": "No",
+                "timestamp": "03 Jun 24 09:30"
+              },
+              {
+                "code": "CR03",
+                "label": "Soft Edit Version",
+                "method": "Digital",
+                "signed": "No",
+                "timestamp": "03 Jun 24 10:00"
+              },
+              {
+                "code": "CR04",
+                "label": "Final Version",
+                "method": "Digital",
+                "signed": "Yes",
+                "timestamp": "03 Jun 24 10:30",
+                "badge": {
+                  "component": "status-chip",
+                  "props": {
+                    "type": "Success",
+                    "label": "Latest"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "panel-detail-header": "Candidate switcher + prev/next + collapse + close. (shared with page-11)",
+    "candidate-summary-bar": "Avatar + name + status/info chips. (shared with page-11)",
+    "employment-detail-columns": "Two-column detail body. (shared with page-11)",
+    "employment-history-tree": "Company > contract > version timeline cards. (shared with page-11)",
+    "approval-stage-stepper": "6-step numbered circle stepper. (shared with page-11)",
+    "snapshot-timeline-list": "Grouped snapshot rows on vertical dot timeline. Group strips on system.surface-strong; latest row gets Success 'Latest' chip."
+  },
+  "code": "page-12",
+  "geometry": {
+    "basis": "1366x768 design canvas; measured on 2732x1536 @2x real shots",
+    "panelWidth": 1045,
+    "scrimWidth": 321,
+    "canvasPadding": 12,
+    "historyTreeColumn": 370,
+    "contentColumn": "flex (~637)",
+    "columnGap": 12,
+    "candidateSwitcherWidth": 240,
+    "stepperCircle": 28,
+    "summaryIconTile": 36,
+    "snapshotDot": 16,
+    "snapshotSeparator": "1x16 hairline"
+  },
+  "_provenance": {
+    "method": "PIL pixel scan of real Figma export shot panel2.png (2732x1536 @2x) + spec cross-check",
+    "date": "2026-07-04",
+    "fase": "G",
+    "notes": [
+      "panel 1045px / tree 370px measured as in page-11",
+      "CR01-CR04 rows, methods, signed flags and timestamps transcribed verbatim from the shot; 'Correction Upd...' kept truncated as rendered (full label not visible - not invented)",
+      "REQUEST CHANGE #1 strip ships without rows: its rows are below the fold in the real shot and were not invented",
+      "Summary tab data for this in-review state is not visible in the shot; minimal consistent values are provided and marked",
+      "Timeline (15) / Details tab contents are not visible; the sample keeps a lightweight placeholder"
+    ]
+  }
+}

@@ -1,0 +1,345 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "candidate-card-grid",
+  "name": "Sample Pages 5 \u2014 Candidate Card Grid",
+  "figmaNodeId": null,
+  "source": "User-provided screenshot export from Figma (Sample Pages Index - 3). Node ID not captured.",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "card-grid-view",
+  "description": "Candidate browsing view as a card grid. Left: full FilterPanel drawer with filter fields and quick suggestions. Top: list toolbar with view selector, keyword search, Apply button, compact pagination and view controls. Right: responsive grid of CandidateCard items showing avatar, name, match score, info chips, contact rows, experience entries and result tags.",
+  "shell": {
+    "sidebar": {
+      "component": "sidebar",
+      "isDetached": false,
+      "props": {
+        "state": "Default"
+      },
+      "dimensions": {
+        "width": 58,
+        "height": 768
+      }
+    },
+    "app-bar": {
+      "component": "app-bar",
+      "isDetached": false,
+      "props": {
+        "type": "DefaultUser"
+      },
+      "dimensions": {
+        "width": 1308,
+        "height": 60
+      },
+      "tokens": {
+        "background": "neutral.pure-white"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 58,
+      "y": 60,
+      "width": 1308,
+      "height": 708
+    },
+    "zones": [
+      "page-header",
+      "list-toolbar",
+      "body-columns"
+    ]
+  },
+  "zones": {
+    "page-header": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "page-header-bar",
+      "description": "Page title row. Left: page title 'Candidates'. Right: secondary + primary action buttons.",
+      "dimensions": {
+        "width": 1308,
+        "height": 56
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "padding-y": "spacing.standard.md",
+        "padding-x": "spacing.standard.lg"
+      },
+      "layout": {
+        "type": "horizontal",
+        "justify": "space-between"
+      },
+      "slots": {
+        "left": {
+          "content": [
+            {
+              "element": "page-title",
+              "text": "Candidates",
+              "text-style": "text-styles.bold.title-md",
+              "text-color": "system.text-head"
+            }
+          ]
+        },
+        "right": {
+          "content": [
+            {
+              "component": "button",
+              "props": {
+                "type": "Outlined",
+                "label": "Import Data"
+              }
+            },
+            {
+              "component": "button",
+              "props": {
+                "type": "Filled",
+                "label": "Add Candidate",
+                "hasIconLeft": true,
+                "icon": "plus"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "list-toolbar": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "list-view-toolbar",
+      "description": "Toolbar row above the results area. Left group: filter-toggle icon button (Tonal, shows/hides FilterPanel), view preset dropdown ('Default View'), keyword search input with info icon, Apply button. Right group: result count + compact pagination ('999 Candidates \u00ab \u2039 1 [2] 3 \u203a \u00bb') and view control icon buttons (refresh, settings, layout switch).",
+      "dimensions": {
+        "width": 1308,
+        "height": 56
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-bottom": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.md",
+        "padding-x": "spacing.standard.lg",
+        "gap": "spacing.standard.md"
+      },
+      "layout": {
+        "type": "horizontal",
+        "justify": "space-between"
+      },
+      "slots": {
+        "left": {
+          "content": [
+            {
+              "component": "icon-button",
+              "props": {
+                "type": "Tonal",
+                "icon": "filter",
+                "label": "Toggle filter panel"
+              }
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "placeholder": "Default View"
+              },
+              "note": "View preset selector with grid icon left"
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Basic",
+                "placeholder": "Enter keywords: Job position, Position C..."
+              },
+              "note": "Keyword search with trailing info icon"
+            },
+            {
+              "component": "button",
+              "props": {
+                "type": "Filled",
+                "label": "Apply"
+              }
+            }
+          ]
+        },
+        "right": {
+          "content": [
+            {
+              "component": "pagination",
+              "props": {
+                "type": "Compact"
+              },
+              "note": "Rendered as '999 Candidates' count + page buttons \u00ab \u2039 1 [2] 3 \u203a \u00bb"
+            },
+            {
+              "component": "icon-button",
+              "props": {
+                "type": "Outlined",
+                "icon": "refresh"
+              }
+            },
+            {
+              "component": "icon-button",
+              "props": {
+                "type": "Outlined",
+                "icon": "settings"
+              }
+            },
+            {
+              "component": "icon-button",
+              "props": {
+                "type": "Outlined",
+                "icon": "layout-grid"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "body-columns": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "filter-and-grid-body",
+      "description": "Two-column body. Left: FilterPanel drawer (collapsible via toolbar filter toggle). Right: scrollable candidate card grid.",
+      "dimensions": {
+        "width": 1308,
+        "height": 596
+      },
+      "layout": {
+        "type": "horizontal",
+        "gap": "spacing.standard.lg"
+      },
+      "columns": {
+        "filter-panel": {
+          "width": 280,
+          "component": "filter-panel",
+          "props": {
+            "type": "Default"
+          },
+          "description": "Filter drawer. Header: 'Filter' title + info icon + Reset Filters button + More menu. Body: FilterField rows. Footer: Save Filters button (full width).",
+          "fields": [
+            {
+              "component": "filter-field",
+              "props": {
+                "type": "General",
+                "label": "Candidate Name",
+                "icon": "user"
+              },
+              "note": "Counter chip '99' + toggle. Input placeholder 'e.g. John Doe'"
+            },
+            {
+              "component": "filter-field",
+              "props": {
+                "type": "General",
+                "label": "Candidate ID",
+                "icon": "id"
+              },
+              "note": "Input placeholder 'e.g. 1234567890'"
+            },
+            {
+              "component": "filter-field",
+              "props": {
+                "type": "Phone",
+                "label": "Phone Number",
+                "icon": "phone"
+              },
+              "note": "Country code dropdown '+62' + number input"
+            },
+            {
+              "component": "filter-field",
+              "props": {
+                "type": "General",
+                "label": "Email",
+                "icon": "mail"
+              },
+              "note": "Input placeholder 'e.g. johndoe@gmail.com'"
+            },
+            {
+              "component": "filter-field",
+              "props": {
+                "type": "General",
+                "label": "Location(s)",
+                "icon": "map-pin"
+              },
+              "note": "Input 'e.g. Jakarta, Bandung, etc' + selected location links with plus icons (brand.brand text)"
+            }
+          ],
+          "footer": {
+            "component": "button",
+            "props": {
+              "type": "Outlined",
+              "label": "Save Filters"
+            },
+            "note": "Full-width"
+          }
+        },
+        "card-grid": {
+          "description": "Responsive grid of CandidateCard components. 4 columns at 1366px canvas; wraps responsively at smaller widths.",
+          "tokens": {
+            "gap": "spacing.standard.lg"
+          },
+          "items": {
+            "component": "candidate-card",
+            "props": {
+              "type": "Default"
+            },
+            "anatomy-notes": [
+              "Header: avatar (component: avatar) + name as 2-line max link (text-styles.bold.body-md, brand.brand) + match score chip (chip, style Colored, e.g. '72%', semantic.warning-surface-soft bg)",
+              "Chip rows: location chip, social/counter chips ('PC', 'CC', 'in 1.2k'), experience chip ('6 Years 7 Month'), campaign chip ('Internship Hunt'), 'Fresh Graduate' chip (style Colored, semantic.success tone)",
+              "Contact rows: icon + phone / email / current salary / expected salary (text-styles.regular.body-sm, system.text-body; value type suffix in system.text-mute)",
+              "Experience entries: position title (text-styles.bold.body-sm, system.text-head), company + period (text-styles.regular.body-sm, system.text-mute), 'See More' link (brand.brand)",
+              "Education entry: school name, degree or major",
+              "Footer: result tag chips (chip, style Colored, brand.elabram-orange tone)"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "page-header-bar": "Page title left + action buttons right.",
+    "list-view-toolbar": "Filter toggle + view dropdown + keyword input + Apply left; compact pagination + view icon buttons right. Border-bottom: system.border-soft.",
+    "filter-and-grid-body": "Two-column: 280px FilterPanel + responsive CandidateCard grid (gap spacing.standard.lg)."
+  },
+  "code": "page-05",
+  "geometry": {
+    "logicalBasis": {
+      "widthPx": 1366,
+      "heightPx": 768,
+      "note": "real screenshot is a 2x PNG (2732x1536)"
+    },
+    "appRailWidthPx": 54,
+    "pageHeader": {
+      "heightPx": 56
+    },
+    "listToolbar": {
+      "heightPx": 56,
+      "rightPager": {
+        "countLabel": "999 Candidates",
+        "pages": 3,
+        "activePage": 2
+      }
+    },
+    "filterPanel": {
+      "widthPx": 280,
+      "headerButtons": [
+        "Reset Filters",
+        "More"
+      ],
+      "fieldCounter": "99+",
+      "phonePrefix": "+62",
+      "suggestions": [
+        "+ Jakarta Pusat, Indonesia",
+        "+ Kota Bandung, Indonesia"
+      ],
+      "footerButton": "Save Filters"
+    },
+    "cardGrid": {
+      "columns": 4,
+      "cardWidthPx": 222,
+      "gapPx": 13,
+      "visibleRows": 2,
+      "firstCardSelected": true
+    }
+  },
+  "_provenance": "Geometry measured from the real e-systems screenshot Index 3 (basis 1366x768, 2x PNG 2732x1536)."
+}

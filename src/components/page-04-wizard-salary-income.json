@@ -1,0 +1,382 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "wizard-salary-income",
+  "name": "Sample Pages 4 \u2014 Wizard Form: Salary & Income",
+  "figmaNodeId": "21194:56919",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "wizard-form-view",
+  "description": "Multi-step wizard form for creating an offer. Step 2: Salary & Income. Contains currency selector, basic salary input, wage type selector, working days, payday date, currency conversion toggle, and an allowance table with inline editable rows.",
+  "relatedPage": "wizard-offer-setup",
+  "note": "Same shell and wizard-header/footer structure as SP-03. Only form-content differs.",
+  "shell": {
+    "sidebar": {
+      "component": "sidebar",
+      "isDetached": false,
+      "props": {
+        "state": "Default"
+      },
+      "dimensions": {
+        "width": 58,
+        "height": 768
+      }
+    },
+    "app-bar": {
+      "component": "app-bar",
+      "isDetached": false,
+      "props": {
+        "type": "DefaultUser"
+      },
+      "dimensions": {
+        "width": 1308,
+        "height": 60
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 58,
+      "y": 60,
+      "width": 1244,
+      "height": 708
+    },
+    "zones": [
+      "wizard-header",
+      "wizard-body",
+      "wizard-footer"
+    ]
+  },
+  "zones": {
+    "wizard-header": {
+      "note": "Identical to SP-03 wizard-header. See SP-03-wizard-offer-setup.json."
+    },
+    "wizard-body": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "wizard-body",
+      "dimensions": {
+        "width": 1244,
+        "height": 588
+      },
+      "layout": {
+        "type": "horizontal"
+      },
+      "columns": {
+        "step-navigator": {
+          "width": 280,
+          "note": "Same as SP-03 step-navigator. Active step: step 2 (Salary & Income).",
+          "activeStep": 2
+        },
+        "form-content": {
+          "width": 952,
+          "tokens": {
+            "background": "system.surface-strong",
+            "padding-y": "spacing.standard.lg",
+            "padding-x": "spacing.standard.xxl",
+            "gap": "spacing.standard.lg"
+          },
+          "sections": [
+            {
+              "id": "salary-details",
+              "component": null,
+              "customElement": true,
+              "description": "Salary form section with tabs: Salary Details and Currency Settings.",
+              "tokens": {
+                "background": "neutral.pure-white",
+                "radius": "corner-radius.md",
+                "padding": "spacing.standard.xxl",
+                "gap": "spacing.standard.lg"
+              },
+              "sectionHeader": {
+                "icon": "icon-tabler:cash",
+                "title": "Salary & Income",
+                "subtitle": "Set the base salary and payment schedule"
+              },
+              "tabs": {
+                "component": "tabs",
+                "props": {
+                  "type": "UnderlineTextOnly",
+                  "items": [
+                    {
+                      "label": "Salary Details"
+                    },
+                    {
+                      "label": "Currency Settings"
+                    }
+                  ]
+                }
+              },
+              "tab-salary-details": {
+                "fields": [
+                  {
+                    "id": "currency",
+                    "component": "input",
+                    "props": {
+                      "type": "Dropdown",
+                      "label": "Currency",
+                      "placeholder": "Select Currency"
+                    },
+                    "width": "33%"
+                  },
+                  {
+                    "id": "basic-salary",
+                    "component": "input",
+                    "props": {
+                      "type": "Number",
+                      "label": "Basic Salary",
+                      "placeholder": "e.g. 10,000,000"
+                    },
+                    "width": "33%"
+                  },
+                  {
+                    "id": "wage-type",
+                    "component": "input",
+                    "props": {
+                      "type": "Dropdown",
+                      "label": "Wage Type",
+                      "placeholder": "Select Wage Type"
+                    },
+                    "width": "33%"
+                  },
+                  {
+                    "id": "number-days",
+                    "component": "input",
+                    "props": {
+                      "type": "Number",
+                      "label": "Number Days / Total of Working Days",
+                      "placeholder": "e.g. 7"
+                    },
+                    "width": "50%"
+                  },
+                  {
+                    "id": "payday-date",
+                    "component": "input",
+                    "props": {
+                      "type": "Basic",
+                      "label": "Payday Date",
+                      "placeholder": "e.g. 25"
+                    },
+                    "width": "50%"
+                  }
+                ]
+              },
+              "tab-currency-settings": {
+                "fields": [
+                  {
+                    "id": "apply-currency-conversion",
+                    "component": "form-control",
+                    "props": {
+                      "type": "CheckboxVertical",
+                      "label": "Apply Currency Conversion",
+                      "checked": false
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "allowance",
+              "component": null,
+              "customElement": true,
+              "description": "Allowance section with an inline-editable table for adding benefit allowances.",
+              "tokens": {
+                "background": "neutral.pure-white",
+                "radius": "corner-radius.md",
+                "padding": "spacing.standard.xxl",
+                "gap": "spacing.standard.lg"
+              },
+              "sectionHeader": {
+                "icon": "icon-tabler:gift",
+                "title": "Allowance",
+                "subtitle": "Add some benefits and recurring allowances"
+              },
+              "allowance-table": {
+                "description": "Inline editable table for allowance rows. Each row has editable cells. Add Row button below.",
+                "columns": [
+                  {
+                    "id": "no",
+                    "label": "No",
+                    "type": "text",
+                    "width": 40
+                  },
+                  {
+                    "id": "allowance-label",
+                    "label": "Allowance Label",
+                    "type": "input",
+                    "width": 200,
+                    "placeholder": "e.g. Transportation"
+                  },
+                  {
+                    "id": "allowance-type",
+                    "label": "Allowance Type",
+                    "type": "dropdown",
+                    "width": 180,
+                    "placeholder": "Select Allowance Type"
+                  },
+                  {
+                    "id": "amount",
+                    "label": "Amount",
+                    "type": "number",
+                    "width": 160,
+                    "placeholder": "e.g. 700,000"
+                  },
+                  {
+                    "id": "description",
+                    "label": "Description",
+                    "type": "input",
+                    "width": 200,
+                    "placeholder": "e.g. Subject to policies"
+                  },
+                  {
+                    "id": "action",
+                    "label": "Action",
+                    "type": "icon-delete",
+                    "width": 60
+                  }
+                ],
+                "tokens": {
+                  "header-bg": "system.surface-strong",
+                  "header-border": "system.border-soft",
+                  "row-bg": "neutral.pure-white",
+                  "row-border": "system.border-soft",
+                  "delete-icon-color": "semantic.error"
+                },
+                "add-row-button": {
+                  "component": "button",
+                  "props": {
+                    "type": "Ghost",
+                    "label": "Add Row",
+                    "hasIconLeft": true,
+                    "icon": "plus"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "wizard-footer": {
+      "component": "panel-section",
+      "isDetached": false,
+      "props": {
+        "type": "FooterDefault"
+      },
+      "dimensions": {
+        "width": 952,
+        "height": 60
+      },
+      "content": {
+        "left": {
+          "component": "button",
+          "props": {
+            "type": "Ghost",
+            "label": "Back"
+          }
+        },
+        "right": [
+          {
+            "component": "button",
+            "props": {
+              "type": "Tonal",
+              "label": "Save As Draft"
+            }
+          },
+          {
+            "component": "button",
+            "props": {
+              "type": "Filled",
+              "label": "Next",
+              "state": "Disabled"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "wizard-body": "Two-column: 280px step navigator + 952px form content.",
+    "wizard-step-navigator": "Vertical step list. Active: brand.brand. Inactive: system.text-mute.",
+    "wizard-page-header": "Wizard title + Tonal save button + error-surface icon close button.",
+    "allowance-table": "Inline editable table for allowances. Delete icon: semantic.error."
+  },
+  "code": "page-04",
+  "geometry": {
+    "appIconRailWidth": 54,
+    "headerCard": {
+      "height": 56,
+      "buttons": "close only - Save As Draft lives in the footer (verified against the real screenshot)"
+    },
+    "sidebar": {
+      "width": 340,
+      "progressBar": {
+        "height": 6,
+        "segments": 5
+      },
+      "stepChip": 40,
+      "stepRowHeight": 52,
+      "steps": [
+        "Offer Setup",
+        "Salary & Income",
+        "Offer Terms",
+        "Preview Offer",
+        "Send Offer"
+      ]
+    },
+    "footerCard": {
+      "height": 64,
+      "left": "Back (disabled on step 1)",
+      "right": [
+        "Save As Draft (Tonal)",
+        "Next (Filled, disabled until required fields)"
+      ]
+    },
+    "logicalBasis": {
+      "width": 1366,
+      "height": 768,
+      "note": "measured from the author screenshot Sample_Pages_Form_Wizard_-_2.png (2732x1536 retina @2x)"
+    },
+    "sections": {
+      "tintedBands": [
+        "Salary Details",
+        "Currency Settings"
+      ],
+      "bandHeight": 33,
+      "bandStyle": "purple-soft tint w/ 3px left accent (official semantic sem-purple + sem-purple-surface-soft foundations tokens)",
+      "salaryRowColsPx": [
+        250,
+        336,
+        332
+      ],
+      "secondRowColsPx": [
+        252,
+        258
+      ],
+      "currencyCheckboxBoxHeight": 48
+    },
+    "allowanceTable": {
+      "rows": 2,
+      "bordered": true,
+      "headerHeight": 40,
+      "rowHeight": 56,
+      "columns": [
+        "No",
+        "Allowance Label",
+        "Allowance Type",
+        "Amount",
+        "Description",
+        "Action"
+      ],
+      "addRowButton": false
+    }
+  },
+  "_provenance": {
+    "source": "author screenshot Sample_Pages_Form_Wizard_-_2.png",
+    "method": "measured",
+    "date": "2026-07-04"
+  }
+}

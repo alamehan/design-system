@@ -1,0 +1,170 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "icon-tabler-extended",
+  "name": "Icon (Tabler Extended)",
+  "figmaName": "[📦]-tabler-icons-2",
+  "figmaNodeId": "11504:405053",
+  "category": "foundation",
+  "section": "Foundations",
+  "role": "asset",
+  "implementable": true,
+  "description": "Extended Tabler icon set. 100 additional icons not in the primary set. Same 24×24px format and stroke-based rendering as Icon(Tabler). Both sets together form the complete icon library.",
+  "assetType": "icon-svg",
+  "dimensions": {
+    "width": 24,
+    "height": 24,
+    "unit": "px"
+  },
+  "totalIcons": 105,
+  "props": {
+    "name": {
+      "type": "enum",
+      "values": [
+        "adjustments-horizontal",
+        "archive",
+        "arrow-down",
+        "arrow-merge",
+        "arrow-merge-alt-left",
+        "arrow-merge-alt-right",
+        "arrow-up",
+        "arrows-maximize",
+        "arrows-minimize",
+        "at",
+        "blend-mode",
+        "box",
+        "bug",
+        "building-bank",
+        "building-store",
+        "caret-up",
+        "cash-minus",
+        "cash-plus",
+        "check",
+        "chevrons-down",
+        "chevrons-up",
+        "circle-half",
+        "credit-card",
+        "credit-card-pay",
+        "credit-card-refund",
+        "database-search",
+        "device-desktop",
+        "device-imac",
+        "directions",
+        "exchange-filled",
+        "exchange-outlined",
+        "exclamation-circle",
+        "file-plus",
+        "forms",
+        "health-recognition",
+        "hearts",
+        "inbox",
+        "key",
+        "layers-intersect",
+        "layout-bottombar-collapse-filled",
+        "layout-bottombar-collapse-outlined",
+        "layout-navbar-collapse-filled",
+        "layout-navbar-collapse-outlined",
+        "layout-sidebar-left-collapse-filled",
+        "layout-sidebar-right-collapse-filled",
+        "license",
+        "lifebuoy",
+        "logout-2",
+        "mail-share",
+        "mailbox",
+        "mailbox-off",
+        "message",
+        "message-circle",
+        "message-reply",
+        "messages",
+        "moneybag-minus",
+        "moneybag-plus",
+        "mood-happy",
+        "mood-kid",
+        "mood-plus",
+        "mood-smile",
+        "news",
+        "page-break",
+        "paperclip",
+        "phone-outgoing",
+        "pin-filled",
+        "pin-outlined",
+        "pinned-filled",
+        "pinned-off",
+        "pinned-outlined",
+        "qrcode",
+        "receipt",
+        "receipt-tax",
+        "rubber-stamp",
+        "scan",
+        "shield",
+        "shield-check",
+        "shield-lock",
+        "signature",
+        "sitemap",
+        "status-change",
+        "stethoscope",
+        "sticker",
+        "tags",
+        "thumb-down-filled",
+        "thumb-down-outlined",
+        "thumb-up-filled",
+        "thumb-up-outlined",
+        "toggle-left",
+        "toggle-right",
+        "user-edit",
+        "versions-filled",
+        "versions-outlined",
+        "writing-sign",
+        "writing",
+        "photo-up",
+        "video-plus",
+        "arrows-sort",
+        "filter",
+        "mail-check"
+      ],
+      "default": "filter"
+    },
+    "color": {
+      "type": "string",
+      "default": "inherit"
+    },
+    "size": {
+      "type": "number",
+      "default": 24
+    }
+  },
+  "tokens": {
+    "default-color": "inherit",
+    "default-size": 24
+  },
+  "anatomy": {
+    "root": {
+      "element": "svg",
+      "role": "img"
+    },
+    "paths": {
+      "element": "path|polyline|rect",
+      "optional": false
+    }
+  },
+  "usage": {
+    "generic": "Icon(name='filter', color='system.text-body', size=24)",
+    "notes": "Same usage pattern as Icon(Tabler). Check this set if an icon isn't in the primary 272."
+  },
+  "a11y": {
+    "role": "img",
+    "aria": {
+      "aria-hidden": "true when decorative",
+      "aria-label": "[action] when standalone"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Check primary Icon(Tabler) first before using this extended set.",
+      "Use the same color and size conventions as primary icons."
+    ],
+    "dont": [
+      "Don't duplicate icons across both sets in implementation."
+    ]
+  },
+  "code": "asset-07"
+}

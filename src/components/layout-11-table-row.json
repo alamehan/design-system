@@ -1,0 +1,122 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "table-row",
+  "name": "TableRow",
+  "figmaName": "[🧩]-table-row-[🎲]-pattern",
+  "figmaNodeId": "4086:78973",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Data row cell pattern for DataTable. 17 types covering: text, links, multi-text, chips, status chips, action buttons, checkboxes, photos, indicators, currency, and the ReplaceMe slot. All share white background with soft border.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "TextOnly",
+        "TextLink",
+        "TextMulti",
+        "TextMultiLink",
+        "TextIndicator",
+        "TextCurrency1",
+        "TextCurrency2",
+        "ChipStatus",
+        "ChipMulti",
+        "ActionIcons",
+        "ActionDropdown",
+        "OnlyCheckbox",
+        "OnlyPhoto",
+        "ChooseBox",
+        "ChooseRadio",
+        "EmptyValue",
+        "ReplaceMe"
+      ],
+      "default": "TextOnly"
+    },
+    "value": {
+      "type": "string|number|array",
+      "default": "Value"
+    },
+    "isHovered": {
+      "type": "boolean",
+      "default": false
+    },
+    "isSelected": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "neutral.pure-white",
+      "background-hover": "system.surface-soft",
+      "background-selected": "brand.brand-surface-soft",
+      "border-bottom": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding-x": "spacing.standard.md",
+      "padding-y": "spacing.standard.xl",
+      "text-style": "text-styles.regular.body-md",
+      "text-color": "system.text-head",
+      "text-mute": "system.text-mute"
+    },
+    "text-link": {
+      "text-color": "brand.brand",
+      "text-decoration": "underline"
+    },
+    "action-icons": {
+      "btn-background": "neutral.pure-white",
+      "btn-border": "brand.brand",
+      "btn-border-width": "stroke.thin",
+      "btn-radius": "corner-radius.md",
+      "btn-padding": "spacing.standard.sm",
+      "btn-gap": "spacing.standard.xxs"
+    },
+    "replace-me": {
+      "background": "brand.brand-surface-soft",
+      "border-color": "brand.brand",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md",
+      "text-color": "brand.brand"
+    }
+  },
+  "subcomponents": [
+    "status-chip",
+    "chip",
+    "icon-button",
+    "button",
+    "form-control"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "td",
+      "role": "cell"
+    },
+    "content": {
+      "element": "div",
+      "optional": false,
+      "note": "Inner content — changes by type"
+    }
+  },
+  "usage": {
+    "generic": "TableRow(type='TextOnly', value='John Doe')",
+    "notes": "Compose inside DataTable rows area. Mix types across columns for one row."
+  },
+  "a11y": {
+    "role": "cell",
+    "aria": {
+      "aria-selected": "true when row is selected"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use TextLink only for values the user should navigate to.",
+      "Use ActionIcons (max 3) for row-level actions in the last column.",
+      "Use ChipStatus for status values."
+    ],
+    "dont": [
+      "Don't use ActionDropdown and ActionIcons in the same row.",
+      "Don't put more than 3 action icons per row."
+    ]
+  },
+  "code": "layout-11"
+}

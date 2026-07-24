@@ -1,0 +1,61 @@
+/* layout-05 Panel — slide-in side panel per spec anatomy: header (title-md) / body on surface-strong with white cards / footer. v-model = open. Named slot #header replaces the default title+close pair (used by the page-11 candidate-switcher bar).
+   Source of truth: src/components/layout-05*.json · token-pure CSS (vars only). */
+
+.es-panel__scrim {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--color-neutral-pure-black);
+  opacity: 0.4;
+  z-index: 9000;
+}
+.es-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 92vw;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-neutral-pure-white);
+  border-left: var(--stroke-thin) solid var(--color-system-border-strong);
+  box-shadow: var(--shadow-2XL);
+  z-index: 9001;
+}
+.es-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-xl) var(--space-xxl);
+  background: var(--color-neutral-pure-white);
+  border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
+}
+.es-panel__title { color: var(--color-system-text-head); }
+.es-panel__close { display: inline-flex; align-items: center; border: none; background: transparent; cursor: pointer; color: var(--color-system-text-mute); font-size: 1.15em; line-height: 1; padding: 0; }
+.es-panel__close:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); border-radius: var(--radius-md); }
+.es-panel__subheader { background: var(--color-neutral-pure-white); border-bottom: var(--stroke-thin) solid var(--color-system-border-soft); padding: 0 var(--space-xxl); }
+.es-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--color-system-surface-strong);
+  padding: var(--space-lg) var(--space-xxl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+.es-panel__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-lg);
+  padding: var(--space-sm) var(--space-xxl);
+  background: var(--color-neutral-pure-white);
+  border-top: var(--stroke-thin) solid var(--color-system-border-soft);
+}
+.es-panel-fade-enter-active, .es-panel-fade-leave-active { transition: opacity 0.2s ease; }
+.es-panel-fade-enter, .es-panel-fade-leave-to { opacity: 0; }
+.es-panel-slide-enter-active, .es-panel-slide-leave-active { transition: transform 0.25s ease; }
+.es-panel-slide-enter, .es-panel-slide-leave-to { transform: translateX(100%); }

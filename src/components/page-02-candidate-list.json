@@ -1,0 +1,475 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "candidate-list",
+  "name": "Sample Pages 2 \u2014 Candidate List",
+  "figmaNodeId": "21194:57381",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "table-list-view",
+  "description": "Full-width candidate data table view for a requisition. Shows a filtered list of candidates with their onboarding/pre-boarding status. Has a filter bar with active filter chip row, a DataTable with inline status chips and action columns, and pagination.",
+  "shell": {
+    "sidebar": {
+      "component": "sidebar",
+      "isDetached": false,
+      "props": {
+        "state": "Default"
+      },
+      "dimensions": {
+        "width": 58,
+        "height": 768
+      }
+    },
+    "app-bar": {
+      "component": "app-bar",
+      "isDetached": true,
+      "detachNote": "Detached from [\ud83e\udde9]-top-bar \u2014 tokens and structure identical. Treat as app-bar in code.",
+      "props": {
+        "type": "DefaultUser"
+      },
+      "dimensions": {
+        "width": 1308,
+        "height": 64
+      },
+      "tokens": {
+        "background": "neutral.pure-white"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 58,
+      "y": 64,
+      "width": 1276,
+      "height": 704
+    },
+    "zones": [
+      "page-header",
+      "filter-bar",
+      "filter-active-row",
+      "table-content"
+    ]
+  },
+  "zones": {
+    "page-header": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "requisition-page-header",
+      "description": "Requisition detail header. Left: record identifier (REQ-004), status chip, breadcrumb path. Right: key metrics (Total Candidates count, Progress %) and primary action buttons.",
+      "dimensions": {
+        "width": 1308,
+        "height": 60
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-bottom": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.lg",
+        "padding-x": "spacing.standard.lg"
+      },
+      "layout": {
+        "type": "horizontal",
+        "gap": "spacing.standard.lg"
+      },
+      "slots": {
+        "left": {
+          "description": "Record ID + status chip + breadcrumb path",
+          "content": [
+            {
+              "element": "back-icon-button",
+              "component": "icon-button"
+            },
+            {
+              "element": "record-id",
+              "text": "REQ-004",
+              "text-style": "text-styles.bold.body-lg",
+              "text-color": "system.text-head"
+            },
+            {
+              "element": "status-chip",
+              "component": "status-chip",
+              "props": {
+                "type": "Brand",
+                "label": "Active"
+              }
+            },
+            {
+              "element": "breadcrumb-path",
+              "text-style": "text-styles.regular.body-sm",
+              "text-color": "system.text-mute"
+            }
+          ]
+        },
+        "right": {
+          "description": "Metrics and action buttons",
+          "content": [
+            {
+              "element": "metric",
+              "label": "Total Candidates",
+              "value": "20",
+              "component": "info-block",
+              "props": {
+                "type": "BodySMPlusLabel"
+              }
+            },
+            {
+              "element": "metric",
+              "label": "Progress",
+              "value": "40%",
+              "component": "info-block",
+              "props": {
+                "type": "BodySMPlusLabel"
+              }
+            },
+            {
+              "element": "action-buttons",
+              "components": [
+                {
+                  "component": "button",
+                  "props": {
+                    "type": "Outlined",
+                    "label": "Close Request"
+                  }
+                },
+                {
+                  "component": "button",
+                  "props": {
+                    "type": "Filled",
+                    "label": "Export Resources"
+                  }
+                },
+                {
+                  "component": "icon-button",
+                  "props": {
+                    "type": "Ghost",
+                    "icon": "dots-vertical"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "filter-bar": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "table-filter-bar",
+      "description": "Horizontal filter control bar. Left: search input. Right: multiple dropdown filters for specific data dimensions. Separator between left/right zones.",
+      "dimensions": {
+        "width": 1276,
+        "height": 56
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-bottom": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.md",
+        "padding-x": "spacing.standard.lg"
+      },
+      "layout": {
+        "type": "horizontal",
+        "gap": "spacing.standard.lg"
+      },
+      "slots": {
+        "search": {
+          "component": "input",
+          "props": {
+            "type": "SearchWithIcon",
+            "placeholder": "Search / name / phone / email"
+          }
+        },
+        "filters": {
+          "description": "Array of dropdown filter inputs",
+          "items": [
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "placeholder": "Onboarding Status"
+              }
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "placeholder": "Offer Confirmation"
+              }
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "placeholder": "Profile"
+              }
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "placeholder": "Contract"
+              }
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "placeholder": "Last Activity"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "filter-active-row": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "filter-active-row",
+      "description": "CONDITIONAL \u2014 shown only when active filters exist. Displays a row of removable filter chips on a tinted background. Left: chip array showing active filters. Right: clear-all action.",
+      "isConditional": true,
+      "condition": "shown when activeFilters.length > 0",
+      "dimensions": {
+        "width": 1276,
+        "height": 40
+      },
+      "tokens": {
+        "background": "brand.accent-surface-soft",
+        "padding-y": "spacing.standard.md",
+        "padding-x": "spacing.standard.lg"
+      },
+      "layout": {
+        "type": "horizontal",
+        "gap": "spacing.standard.lg"
+      },
+      "slots": {
+        "active-chips": {
+          "description": "Removable filter chips \u2014 one per active filter",
+          "component": "chip",
+          "props": {
+            "style": "Colored",
+            "hasIconRight": true
+          }
+        },
+        "clear-all": {
+          "component": "button",
+          "props": {
+            "type": "Ghost",
+            "label": "Clear All"
+          }
+        }
+      }
+    },
+    "table-content": {
+      "component": "data-table",
+      "isDetached": true,
+      "detachNote": "DataTable built as custom detached frames \u2014 not using [\ud83e\udde9]-table-full instance. Pagination IS a component instance ([\ud83e\udde9]-pagination). Treat the table area as data-table in code.",
+      "dimensions": {
+        "width": 1276,
+        "height": 550
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "padding": "spacing.standard.xxl"
+      },
+      "columns": [
+        {
+          "id": "checkbox",
+          "component": "table-column",
+          "props": {
+            "type": "OnlyCheckbox"
+          },
+          "width": 40
+        },
+        {
+          "id": "id",
+          "component": "table-column",
+          "props": {
+            "type": "OnlyTitle",
+            "label": "ID"
+          },
+          "width": 80
+        },
+        {
+          "id": "name",
+          "component": "table-column",
+          "props": {
+            "type": "TitleAndSort",
+            "label": "Name"
+          },
+          "width": 200
+        },
+        {
+          "id": "onboarding-status",
+          "component": "table-column",
+          "props": {
+            "type": "TitleAndSort",
+            "label": "Onboarding S..."
+          },
+          "width": 160
+        },
+        {
+          "id": "pre-boarding",
+          "component": "table-column",
+          "props": {
+            "type": "OnlyTitle",
+            "label": "Pre-Boarding Journey"
+          },
+          "width": 400,
+          "note": "Multi-column group header spanning sub-columns"
+        },
+        {
+          "id": "last-activity",
+          "component": "table-column",
+          "props": {
+            "type": "TitleAndSort",
+            "label": "Last A..."
+          },
+          "width": 100
+        },
+        {
+          "id": "action",
+          "component": "table-column",
+          "props": {
+            "type": "OnlyTitle",
+            "label": "Acti..."
+          },
+          "width": 80
+        }
+      ],
+      "row-types": [
+        {
+          "col": "checkbox",
+          "component": "table-row",
+          "props": {
+            "type": "OnlyCheckbox"
+          }
+        },
+        {
+          "col": "id",
+          "component": "table-row",
+          "props": {
+            "type": "TextOnly"
+          }
+        },
+        {
+          "col": "name",
+          "component": "table-row",
+          "props": {
+            "type": "TextMulti",
+            "note": "Name + contact info"
+          }
+        },
+        {
+          "col": "onboarding-status",
+          "component": "table-row",
+          "props": {
+            "type": "ChipStatus"
+          }
+        },
+        {
+          "col": "pre-boarding",
+          "component": null,
+          "customElement": true,
+          "customElementId": "journey-status-cells",
+          "description": "CUSTOM ELEMENT \u2014 three grouped journey sub-cells per row (Offer Confirmation / Profile / Contract), rendered as full-bleed tinted blocks inside the cell, not chips. Each sub-cell: stage label (text-styles.bold.label-sm) + status line (text-styles.bold.body-sm) + status icon right. Background/text by state: Accepted, Verified, Signed = semantic.success-surface-soft bg + semantic.success text; Expired, Overdue = semantic.warning-surface-soft bg + semantic.warning text; Withdraw = semantic.error-surface-soft bg + semantic.error text; Pending Response, Pending KAM Approval = semantic.info-surface-soft bg + semantic.info text; Not Started = system.surface-soft bg + system.text-mute text."
+        },
+        {
+          "col": "last-activity",
+          "component": "table-row",
+          "props": {
+            "type": "TextOnly"
+          }
+        },
+        {
+          "col": "action",
+          "component": "table-row",
+          "props": {
+            "type": "ActionDropdown"
+          }
+        }
+      ],
+      "footer": {
+        "component": "pagination",
+        "isDetached": false,
+        "props": {
+          "type": "Default"
+        }
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "requisition-page-header": "Record ID + status chip + candidate metrics + action buttons.",
+    "table-filter-bar": "SearchWithIcon left + dropdown filter array right.",
+    "filter-active-row": "Conditional. background: brand.accent-surface-soft. Shows removable active filter chips.",
+    "journey-status-cells": "Three tinted status sub-cells per row (label + status + icon). Backgrounds: semantic.*-surface-soft by state; Not Started uses system.surface-soft + system.text-mute."
+  },
+  "code": "page-02",
+  "geometry": {
+    "logicalBasis": {
+      "widthPx": 1366,
+      "heightPx": 768
+    },
+    "appRailWidthPx": 54,
+    "table": {
+      "rowHeightPx": 62,
+      "visibleDataRows": 7,
+      "columns": [
+        {
+          "label": "",
+          "type": "OnlyCheckbox",
+          "widthPx": 44
+        },
+        {
+          "label": "ID",
+          "type": "TitleAndSort",
+          "widthPx": 96
+        },
+        {
+          "label": "Name",
+          "type": "TitleAndSort",
+          "widthPx": 230,
+          "lines": [
+            "name (brand link)",
+            "phone",
+            "email"
+          ]
+        },
+        {
+          "label": "Onboarding Status",
+          "type": "TitleAndSort",
+          "widthPx": 150
+        },
+        {
+          "label": "Pre-Boarding Journey",
+          "type": "TitleWithIcon1",
+          "widthPx": 540,
+          "subCells": [
+            "OFFER CONFIRMATION",
+            "PROFILE",
+            "CONTRACT"
+          ]
+        },
+        {
+          "label": "Last Activity",
+          "type": "TitleAndSort",
+          "widthPx": 110
+        },
+        {
+          "label": "Action",
+          "type": "OnlyTitle",
+          "widthPx": 64
+        }
+      ]
+    },
+    "footer": {
+      "text": "Showing 1-7 of 20 Results",
+      "pages": 3,
+      "activePage": 2,
+      "itemsPerPage": 7
+    }
+  },
+  "_provenance": "Geometry measured from the real e-systems screenshot Index 2 (basis 1366x768, 2x PNG 2732x1536)."
+}

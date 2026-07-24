@@ -1,0 +1,88 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "app-bar",
+  "name": "AppBar",
+  "figmaName": "[🧩]-top-bar",
+  "figmaNodeId": "4113:64969",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Top navigation bar. Fixed at the top of every page. Contains the logo, navigation menu items, user avatar, and notification icon. Two variants: DefaultUser (logged-in user's own session) and OtherUser (viewing as another user).",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "DefaultUser",
+        "OtherUser"
+      ],
+      "default": "DefaultUser",
+      "description": "DefaultUser=standard session; OtherUser=impersonation/viewing as another user."
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "neutral.pure-white",
+      "border-bottom": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding-y": "spacing.standard.lg",
+      "padding-x": 32,
+      "gap": "spacing.standard.md"
+    }
+  },
+  "subcomponents": [
+    "icon-button",
+    "avatar"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "header",
+      "role": "banner"
+    },
+    "logo": {
+      "element": "a",
+      "optional": false,
+      "note": "Brand logo — links to home"
+    },
+    "nav-menus": {
+      "element": "nav",
+      "optional": false,
+      "note": "Horizontal list of navigation links"
+    },
+    "actions": {
+      "element": "div",
+      "optional": false,
+      "note": "Right side: notifications + avatar + quick actions"
+    },
+    "avatar": {
+      "element": "div",
+      "optional": false,
+      "note": "User avatar — opens user menu on click"
+    },
+    "notification": {
+      "element": "button",
+      "optional": true
+    }
+  },
+  "usage": {
+    "generic": "AppBar(type='DefaultUser')",
+    "notes": "Render once at the app root. Position fixed top. Use z-index above panels and modals."
+  },
+  "a11y": {
+    "role": "banner",
+    "aria": {
+      "aria-label": "Main navigation"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Keep logo always visible and linked to home.",
+      "Keep action count in the right area minimal (≤4 icons)."
+    ],
+    "dont": [
+      "Don't add page-specific actions to AppBar — use Panel headers.",
+      "Don't change AppBar background per page."
+    ]
+  },
+  "code": "layout-01"
+}

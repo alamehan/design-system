@@ -1,0 +1,34 @@
+/* layout-03 Pagination — spec footer bar on surface-strong: count label + page buttons. v-model = current page.
+   Source of truth: src/components/layout-03*.json · token-pure CSS (vars only). */
+
+.es-pg {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  background: var(--color-system-surface-strong);
+  border-top: var(--stroke-thin) solid var(--color-system-border-soft);
+  padding: var(--space-sm) var(--space-xxl);
+  color: var(--color-system-text-head);
+}
+.es-pg__count { color: var(--color-system-text-mute); }
+.es-pg__pages { display: inline-flex; align-items: center; gap: var(--space-sm); }
+.es-pg__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 var(--space-xs);
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-system-text-body);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.es-pg__btn:hover:not(:disabled):not(.is-active) { background: var(--color-system-surface-soft); }
+.es-pg__btn:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+.es-pg__btn.is-active { background: var(--color-brand-brand); color: var(--color-neutral-pure-white); }
+.es-pg__btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.es-pg__navbtn svg { display: block; }

@@ -1,0 +1,68 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "document-gallery",
+  "name": "DocumentGallery",
+  "figmaName": "[🧱]-all-documents",
+  "figmaNodeId": "4975:57295",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Multi-page document preview gallery. Shows all pages of a resume/document as a vertical stack of white page cards. Four template styles: ModernProfessional, CreativePortfolio, FreshGraduate, ExampleOfPrivacyPolicy.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "ModernProfessional",
+        "CreativePortfolio",
+        "FreshGraduate",
+        "ExampleOfPrivacyPolicy"
+      ],
+      "default": "ModernProfessional"
+    },
+    "pages": {
+      "type": "number",
+      "default": 3
+    }
+  },
+  "tokens": {
+    "page-card": {
+      "background": "neutral.pure-white",
+      "padding": "spacing.standard.3xl",
+      "gap": 28
+    },
+    "gallery": {
+      "gap": "spacing.standard.lg"
+    }
+  },
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "page-card": {
+      "element": "div",
+      "optional": false,
+      "note": "One element per page, rendered in order"
+    }
+  },
+  "usage": {
+    "generic": "DocumentGallery(type='ModernProfessional', pages=3)",
+    "notes": "Use inside ResumeBuilderPanel or EmbedViewer(DocumentViewer)."
+  },
+  "a11y": {
+    "role": "document",
+    "aria": {
+      "aria-label": "Resume preview"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always show page numbers.",
+      "Render pages in correct order."
+    ],
+    "dont": [
+      "Don't make pages interactive within the gallery — use EmbedViewer for full editing."
+    ]
+  },
+  "code": "composite-13"
+}

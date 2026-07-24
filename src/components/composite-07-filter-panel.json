@@ -1,0 +1,112 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "filter-panel",
+  "name": "FilterPanel",
+  "figmaName": "[🧱]-advance-filter",
+  "figmaNodeId": "4088:32872",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Complete vertical filter drawer composing multiple FilterField rows. Has a sticky header (search/title), a scrollable body of FilterField rows, and a sticky footer with Clear and Apply buttons.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default"
+      ],
+      "default": "Default"
+    },
+    "filters": {
+      "type": "array",
+      "default": [],
+      "description": "Array of filter config: {id, label, type, options}"
+    },
+    "activeFilters": {
+      "type": "object",
+      "default": {},
+      "description": "Current active filter values"
+    },
+    "onApply": {
+      "type": "function",
+      "description": "Called with activeFilters when user clicks Apply"
+    },
+    "onClear": {
+      "type": "function",
+      "description": "Called when user clicks Clear All"
+    }
+  },
+  "tokens": {
+    "container": {
+      "radius": "corner-radius.lg"
+    },
+    "header": {
+      "background": "neutral.pure-white",
+      "border-bottom": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding-y": "spacing.standard.lg",
+      "padding-x": "spacing.standard.xxl"
+    },
+    "body": {
+      "overflow": "auto",
+      "gap": "spacing.standard.none"
+    },
+    "footer": {
+      "background": "neutral.pure-white",
+      "border-top": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.xxl",
+      "gap": "spacing.standard.sm",
+      "clear-btn-bg": "system.surface-soft",
+      "clear-btn-border": "system.border-strong"
+    }
+  },
+  "subcomponents": [
+    "filter-field",
+    "content-block",
+    "input",
+    "button"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "form"
+    },
+    "header": {
+      "element": "div",
+      "optional": false,
+      "note": "Search input or title + active count"
+    },
+    "body": {
+      "element": "div",
+      "optional": false,
+      "note": "Scrollable stack of FilterField components"
+    },
+    "footer": {
+      "element": "div",
+      "optional": false,
+      "note": "Clear All + Apply buttons"
+    }
+  },
+  "usage": {
+    "generic": "FilterPanel(filters=[{id:'jobType', label:'Job Type', type:'General', options:[...]}])"
+  },
+  "a11y": {
+    "role": "form",
+    "aria": {
+      "aria-label": "Filter panel"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always show an Apply button — don't auto-apply on every change.",
+      "Show active filter count in the header.",
+      "Allow clearing all filters from the footer."
+    ],
+    "dont": [
+      "Don't put more than 10 filter sections without grouping or search."
+    ]
+  },
+  "code": "composite-07"
+}

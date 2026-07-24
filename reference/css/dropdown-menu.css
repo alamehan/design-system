@@ -1,0 +1,51 @@
+/* atom-15 DropdownMenu — floating menu panel. Default slot = trigger; v-model = open. Items: [{ label, isDangerous?, isDisabled?, divider?, group? }]. Item icons via #icon scoped slot.
+   Source of truth: src/components/atom-15*.json · token-pure CSS (vars only). */
+
+.es-menu { position: relative; display: inline-flex; }
+.es-menu__triggerwrap { display: inline-flex; }
+.es-menu__panel {
+  position: absolute;
+  z-index: 1000;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-none);
+  overflow-y: auto;
+  background: var(--color-neutral-pure-white);
+  border: var(--stroke-thin) solid var(--color-system-border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xxs);
+  box-shadow: var(--shadow-Smooth);
+}
+.es-menu__panel--bottom-start { top: calc(100% + var(--space-xxs)); left: 0; }
+.es-menu__panel--bottom-end { top: calc(100% + var(--space-xxs)); right: 0; }
+.es-menu__panel--top-start { bottom: calc(100% + var(--space-xxs)); left: 0; }
+.es-menu__panel--top-end { bottom: calc(100% + var(--space-xxs)); right: 0; }
+.es-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-system-text-head);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.es-menu__item:hover:not(:disabled) { background: var(--color-system-surface-soft); }
+.es-menu__item:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+.es-menu__item:disabled,
+.es-menu__item.is-disabled { color: var(--color-system-text-mute); cursor: not-allowed; }
+.es-menu__item.is-danger { color: var(--color-semantic-error); }
+.es-menu__item.is-danger .es-menu__icon { color: var(--color-semantic-error); }
+.es-menu__icon { display: inline-flex; align-items: center; color: var(--color-system-text-body); font-size: 1.15em; }
+.es-menu__label { flex: 1; min-width: 0; }
+.es-menu__divider { border: none; border-top: var(--stroke-thin) solid var(--color-system-border-soft); margin: var(--space-xxs) 0; }
+.es-menu__group { color: var(--color-system-text-mute); padding: var(--space-sm) var(--space-md); }
+.es-menu-enter-active,
+.es-menu-leave-active { transition: opacity 0.12s ease, transform 0.12s ease; }
+.es-menu-enter,
+.es-menu-leave-to { opacity: 0; transform: translateY(calc(-1 * var(--space-xxs))); }

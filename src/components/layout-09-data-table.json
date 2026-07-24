@@ -1,0 +1,131 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "data-table",
+  "name": "DataTable",
+  "figmaName": "[🧩]-table-full",
+  "figmaNodeId": "4086:87163",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Full data table composed of TableColumn headers, TableRow rows, ScrollBar for horizontal scroll, and Pagination footer. ReplaceMe variant is the empty template; Candidates is a pre-filled example.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "ReplaceMe",
+        "Candidates"
+      ],
+      "default": "ReplaceMe"
+    },
+    "columns": {
+      "type": "array",
+      "default": [],
+      "description": "Array of column definitions. Each: {id, label, type, width, sortable}"
+    },
+    "rows": {
+      "type": "array",
+      "default": [],
+      "description": "Array of data rows."
+    },
+    "isLoading": {
+      "type": "boolean",
+      "default": false
+    },
+    "isEmpty": {
+      "type": "boolean",
+      "default": false
+    },
+    "selectedRows": {
+      "type": "array",
+      "default": []
+    },
+    "sortColumn": {
+      "type": "string",
+      "default": null
+    },
+    "sortDirection": {
+      "type": "enum",
+      "values": [
+        "asc",
+        "desc"
+      ],
+      "default": "asc"
+    }
+  },
+  "tokens": {
+    "base": {
+      "column-bg": "system.surface-strong",
+      "column-border": "system.border-soft",
+      "column-padding": "spacing.standard.sm",
+      "row-bg": "neutral.pure-white",
+      "row-bg-hover": "system.surface-soft",
+      "row-bg-selected": "brand.brand-surface-soft",
+      "row-border": "system.border-soft",
+      "row-border-width": "stroke.thin",
+      "scrollbar-track": "system.border-soft",
+      "scrollbar-thumb": "neutral.pure-white"
+    }
+  },
+  "subcomponents": [
+    "table-column",
+    "table-row",
+    "scroll-bar",
+    "pagination",
+    "slot-placeholder"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "optional": false
+    },
+    "table-area": {
+      "element": "div",
+      "optional": false,
+      "note": "Scrollable horizontally; contains column + rows"
+    },
+    "column": {
+      "element": "div",
+      "optional": false,
+      "note": "Fixed header row — array of TableColumn"
+    },
+    "rows": {
+      "element": "div",
+      "optional": false,
+      "note": "Scrollable body — array of TableRow"
+    },
+    "scrollbar": {
+      "element": "div",
+      "optional": true,
+      "note": "Horizontal ScrollBar overlay"
+    },
+    "footer": {
+      "element": "div",
+      "optional": false,
+      "note": "Pagination component"
+    }
+  },
+  "usage": {
+    "generic": "DataTable(columns=[...], rows=[...], isLoading=false)"
+  },
+  "a11y": {
+    "role": "table",
+    "aria": {
+      "aria-label": "Table description",
+      "aria-rowcount": "total rows",
+      "aria-colcount": "total columns"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always show loading state when fetching.",
+      "Show empty state when no rows exist.",
+      "Enable sort on columns that need it only."
+    ],
+    "dont": [
+      "Don't put more than 10 columns without horizontal scroll.",
+      "Don't use DataTable for simple lists — use a Card list instead."
+    ]
+  },
+  "code": "layout-09"
+}

@@ -1,0 +1,130 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "breadcrumb",
+  "name": "Breadcrumb",
+  "figmaName": "[⚛️]-breadcrumb",
+  "figmaNodeId": "10733:301578",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Horizontal navigation trail from root to current page. Built by composing CustomButton items separated by chevron separators.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Basic",
+        "Brand"
+      ],
+      "default": "Basic",
+      "description": "Basic=neutral, Brand=current item uses Tonal style."
+    },
+    "items": {
+      "type": "array",
+      "default": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "Section",
+          "href": "/section"
+        },
+        {
+          "label": "Current",
+          "href": null
+        }
+      ]
+    },
+    "maxVisible": {
+      "type": "number",
+      "default": null
+    }
+  },
+  "tokens": {
+    "base": {
+      "separator-color": "system.text-mute",
+      "gap": "spacing.standard.none"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": "Basic"
+        },
+        "tokens": {
+          "item-background": "system.surface-strong",
+          "item-background-hover": "neutral.muted",
+          "item-text": "system.text-body",
+          "item-text-hover": "system.text-head",
+          "item-radius": "corner-radius.md",
+          "item-padding-y": "spacing.standard.sm",
+          "item-padding-x": "spacing.standard.lg",
+          "item-font-style": "text-styles.bold.body-md"
+        }
+      },
+      {
+        "when": {
+          "type": "Brand"
+        },
+        "tokens": {
+          "item-background": "system.surface-strong",
+          "item-background-current": "component.button-tonal",
+          "item-text": "system.text-body",
+          "item-text-current": "brand.brand",
+          "item-radius": "corner-radius.md"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "custom-button"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "nav",
+      "role": "navigation"
+    },
+    "list": {
+      "element": "ol"
+    },
+    "item": {
+      "element": "li"
+    },
+    "item-link": {
+      "element": "a",
+      "optional": true
+    },
+    "item-current": {
+      "element": "span",
+      "note": "Last item — no href"
+    },
+    "separator": {
+      "element": "span",
+      "note": "Chevron-right icon"
+    },
+    "ellipsis": {
+      "element": "span",
+      "optional": true
+    }
+  },
+  "usage": {
+    "generic": "Breadcrumb(type='Basic', items=[{label:'Home',href:'/'},{label:'Candidates',href:'/candidates'},{label:'John Doe',href:null}])"
+  },
+  "a11y": {
+    "role": "navigation",
+    "aria": {
+      "aria-label": "Breadcrumb — on nav",
+      "aria-current": "page — on last item"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always show current page as last item."
+    ],
+    "dont": [
+      "Don't make current page item a link.",
+      "Don't show more than 5 items without collapsing."
+    ]
+  },
+  "code": "atom-14"
+}

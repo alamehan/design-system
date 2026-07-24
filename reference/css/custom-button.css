@@ -1,0 +1,18 @@
+/* atom-04 CustomButton — neutral low-emphasis button (breadcrumb/navigation). System surface, no brand color. Icons via #left / #right slots.
+   Source of truth: src/components/atom-04*.json · token-pure CSS (vars only). */
+
+.es-custombtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--color-system-surface-strong);
+  color: var(--color-system-text-body);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+.es-custombtn:hover { background: var(--color-neutral-muted); color: var(--color-system-text-head); }
+.es-custombtn:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+.es-custombtn__icon { display: inline-flex; align-items: center; font-size: 1.15em; }

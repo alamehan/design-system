@@ -1,0 +1,305 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "candidate-directory",
+  "name": "Sample Pages 6 \u2014 Candidate Directory Table",
+  "figmaNodeId": null,
+  "source": "User-provided screenshot export from Figma (Sample Pages Index - 4). Node ID not captured.",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "table-list-view",
+  "description": "Flat candidate directory as a wide data table with per-column filters. Same page header and list toolbar as the card grid view. Table: leading Action column with a SplitButton per row, checkbox column, photo column, then data columns whose headers embed inline search inputs (FullSearch) or inline selects (FullSelect). Horizontal scroll for overflow columns.",
+  "relatedPage": "candidate-card-grid",
+  "note": "Same shell, page-header and list-view-toolbar as page-05. Only the results area differs: DataTable instead of card grid, no FilterPanel drawer.",
+  "shell": {
+    "sidebar": {
+      "component": "sidebar",
+      "isDetached": false,
+      "props": {
+        "state": "Default"
+      },
+      "dimensions": {
+        "width": 58,
+        "height": 768
+      }
+    },
+    "app-bar": {
+      "component": "app-bar",
+      "isDetached": false,
+      "props": {
+        "type": "DefaultUser"
+      },
+      "dimensions": {
+        "width": 1308,
+        "height": 60
+      },
+      "tokens": {
+        "background": "neutral.pure-white"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 58,
+      "y": 60,
+      "width": 1308,
+      "height": 708
+    },
+    "zones": [
+      "page-header",
+      "list-toolbar",
+      "table-content"
+    ]
+  },
+  "zones": {
+    "page-header": {
+      "note": "Identical to page-05 page-header-bar ('Candidates' + Import Data + Add Candidate). See page-05-candidate-card-grid.json."
+    },
+    "list-toolbar": {
+      "note": "Identical to page-05 list-view-toolbar. See page-05-candidate-card-grid.json."
+    },
+    "table-content": {
+      "component": "data-table",
+      "isDetached": true,
+      "detachNote": "Table built from detached frames \u2014 structure matches DataTable: TableColumn header row + filter header cells + TableRow body + horizontal ScrollBar. Treat as data-table in code.",
+      "dimensions": {
+        "width": 1308,
+        "height": 592
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "padding": "spacing.standard.xxl"
+      },
+      "columns": [
+        {
+          "id": "checkbox",
+          "component": "table-column",
+          "props": {
+            "type": "OnlyCheckbox"
+          },
+          "width": 40
+        },
+        {
+          "id": "action",
+          "component": "table-column",
+          "props": {
+            "type": "OnlyTitle",
+            "label": "Action"
+          },
+          "width": 120
+        },
+        {
+          "id": "photo",
+          "component": "table-column",
+          "props": {
+            "type": "OnlyTitle",
+            "label": "Photo"
+          },
+          "width": 64
+        },
+        {
+          "id": "id",
+          "component": "table-column",
+          "props": {
+            "type": "FullSearch",
+            "label": "ID"
+          },
+          "width": 110,
+          "note": "Header shows title + sort control, with an inline search input beneath ('Search...')"
+        },
+        {
+          "id": "name",
+          "component": "table-column",
+          "props": {
+            "type": "FullSearch",
+            "label": "Name"
+          },
+          "width": 220
+        },
+        {
+          "id": "city-province",
+          "component": "table-column",
+          "props": {
+            "type": "FullSelect",
+            "label": "City & Province"
+          },
+          "width": 160,
+          "note": "Inline select 'Select an opt...'"
+        },
+        {
+          "id": "country",
+          "component": "table-column",
+          "props": {
+            "type": "FullSelect",
+            "label": "Country"
+          },
+          "width": 120
+        },
+        {
+          "id": "nationality",
+          "component": "table-column",
+          "props": {
+            "type": "FullSelect",
+            "label": "Nationa..."
+          },
+          "width": 120
+        },
+        {
+          "id": "phone",
+          "component": "table-column",
+          "props": {
+            "type": "FullSearch",
+            "label": "Phone Number"
+          },
+          "width": 160
+        },
+        {
+          "id": "email",
+          "component": "table-column",
+          "props": {
+            "type": "FullSearch",
+            "label": "Email"
+          },
+          "width": 180
+        }
+      ],
+      "row-types": [
+        {
+          "col": "checkbox",
+          "component": "table-row",
+          "props": {
+            "type": "OnlyCheckbox"
+          }
+        },
+        {
+          "col": "action",
+          "component": "table-row",
+          "props": {
+            "type": "ActionDropdown"
+          },
+          "content": {
+            "component": "split-button",
+            "props": {
+              "type": "Outlined",
+              "label": "Action"
+            },
+            "note": "Per-row split button: 'Action' + chevron dropdown trigger"
+          }
+        },
+        {
+          "col": "photo",
+          "component": "table-row",
+          "props": {
+            "type": "OnlyPhoto"
+          },
+          "content": {
+            "component": "avatar"
+          }
+        },
+        {
+          "col": "id",
+          "component": "table-row",
+          "props": {
+            "type": "TextOnly"
+          },
+          "note": "e.g. ID-CN-001"
+        },
+        {
+          "col": "name",
+          "component": "table-row",
+          "props": {
+            "type": "TextLink"
+          },
+          "note": "Full name as link (brand.brand), single line with ellipsis"
+        },
+        {
+          "col": "city-province",
+          "component": "table-row",
+          "props": {
+            "type": "TextOnly"
+          }
+        },
+        {
+          "col": "country",
+          "component": "table-row",
+          "props": {
+            "type": "TextOnly"
+          }
+        },
+        {
+          "col": "nationality",
+          "component": "table-row",
+          "props": {
+            "type": "TextOnly"
+          }
+        },
+        {
+          "col": "phone",
+          "component": "table-row",
+          "props": {
+            "type": "TextOnly"
+          }
+        },
+        {
+          "col": "email",
+          "component": "table-row",
+          "props": {
+            "type": "TextOnly"
+          }
+        }
+      ],
+      "horizontal-scroll": {
+        "component": "scroll-bar",
+        "note": "Horizontal variant at the bottom of the table area \u2014 columns overflow the viewport"
+      },
+      "footer": {
+        "component": null,
+        "note": "No footer pagination in the real screen (verified against the real screenshot); the result count and pager live in the shared list toolbar."
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "page-header-bar": "Page title left + action buttons right. (shared with page-05)",
+    "list-view-toolbar": "Filter toggle + view dropdown + keyword input + Apply left; compact pagination + view icon buttons right. (shared with page-05)"
+  },
+  "code": "page-06",
+  "geometry": {
+    "logicalBasis": {
+      "width": 1366,
+      "height": 768,
+      "note": "measured from the author screenshot Sample_Pages_Index_-_4.png (2732x1536 retina @2x)"
+    },
+    "appIconRailWidth": 54,
+    "pageHeaderHeight": 56,
+    "listToolbarHeight": 56,
+    "table": {
+      "minWidth": 1388,
+      "headerTitleRowHeight": 37,
+      "headerFilterRowHeight": 51,
+      "dataRowHeight": 48,
+      "visibleRows": 9,
+      "horizontalScrollbar": true,
+      "footerPagination": false,
+      "columnWidthsPx": {
+        "checkbox": 44,
+        "action": 132,
+        "photo": 72,
+        "id": 120,
+        "name": 230,
+        "cityProvince": 170,
+        "country": 120,
+        "nationality": 120,
+        "phoneNumber": 170,
+        "email": 210
+      }
+    }
+  },
+  "_provenance": {
+    "source": "author screenshot Sample_Pages_Index_-_4.png",
+    "method": "measured",
+    "date": "2026-07-04"
+  }
+}

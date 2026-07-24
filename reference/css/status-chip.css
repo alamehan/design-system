@@ -1,0 +1,22 @@
+/* atom-06 StatusChip — read-only semantic status pill (11 types). SINGLE size per spec: bold.body-md + padding xxs/lg.
+   Source of truth: src/components/atom-06*.json · token-pure CSS (vars only). */
+
+.es-status {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-xxs) var(--space-lg);
+  border: var(--stroke-thin) solid transparent;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.es-status--Default { background: var(--color-system-surface-strong); border-color: var(--color-system-border-strong); color: var(--color-system-text-head); }
+.es-status--Brand { background: var(--color-brand-brand-surface-soft); border-color: var(--color-brand-brand); color: var(--color-brand-brand-strong); }
+.es-status--Success { background: var(--color-semantic-success-surface-soft); border-color: var(--color-semantic-success); color: var(--color-semantic-success-strong); }
+.es-status--Warning { background: var(--color-semantic-warning-surface-soft); border-color: var(--color-semantic-warning); color: var(--color-semantic-warning-strong); }
+.es-status--Error { background: var(--color-semantic-error-surface-soft); border-color: var(--color-semantic-error); color: var(--color-semantic-error-strong); }
+.es-status--Info { background: var(--color-semantic-info-surface-soft); border-color: var(--color-semantic-info); color: var(--color-semantic-info-strong); }
+.es-status--Sem-Teal { background: var(--color-semantic-sem-teal-surface-soft); border-color: var(--color-semantic-sem-teal); color: var(--color-semantic-sem-teal-strong); }
+.es-status--Sem-Lime { background: var(--color-semantic-sem-lime-surface-soft); border-color: var(--color-semantic-sem-lime); color: var(--color-semantic-sem-lime-strong); }
+.es-status--Sem-Indigo { background: var(--color-semantic-sem-indigo-surface-soft); border-color: var(--color-semantic-sem-indigo); color: var(--color-semantic-sem-indigo-strong); }
+.es-status--Sem-Yellow { background: var(--color-semantic-sem-yellow-surface-soft); border-color: var(--color-semantic-sem-yellow); color: var(--color-semantic-sem-yellow-strong); }
+.es-status--Black { background: var(--color-neutral-pure-black); border-color: var(--color-neutral-pure-black); color: var(--color-neutral-pure-white); }

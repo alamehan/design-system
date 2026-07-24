@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>layout-09 — DataTable · E-Systems DS Reference</title>
+<link rel="stylesheet" href="../../dist/variables.css" />
+<link rel="stylesheet" href="../../reference/css/_base.css" />
+<link rel="stylesheet" href="../css/data-table.css" />
+<link rel="stylesheet" href="../css/button.css" />
+<link rel="stylesheet" href="../css/status-chip.css" />
+<link rel="stylesheet" href="../css/avatar.css" />
+<link rel="stylesheet" href="../css/input.css" />
+<link rel="stylesheet" href="../css/icon-button.css" />
+<link rel="stylesheet" href="../css/checkbox.css" />
+<link rel="stylesheet" href="../css/pagination.css" />
+<link rel="stylesheet" href="../css/composed.css" />
+</head>
+<body>
+<p class="ref-stamp">REF v3.1.0 · generated 2026-07-24</p>
+<h1 class="ref-h">layout-09 — DataTable</h1>
+<p class="ref-sub">layout-09 DataTable — table shell: horizontal-scroll area + #columns (ETableColumn row) + default slot (tr > ETableRow cells) + #footer (EPagination). Mark selected rows with class "is-selected" on the tr. <b>Laws:</b> the table always lives inside a white card (never bare on the page) · default 10 rows per page (5–10 ok), pagination beyond · rows-per-page presets + custom input, hard max 50 · row click never opens the detail panel — use the explicit actions cell (see composed-01 in gallery.html).</p>
+<div class="ref-section"><div class="es-card"><div class="es-card__head"><h4 class="es-card__title">Team members</h4><div class="es-card__tools"><span class="cp-search ts-regular-body-md">Search…</span><button type="button" class="es-btn ts-bold-body-md es-btn--Filled">+ Add</button></div></div><div class="es-table">
+  <div class="es-table__scroll">
+    <table class="es-table__table">
+      <thead><tr>
+        <th class="es-col ts-bold-body-md" scope="col"><label class="es-col__center"><input type="checkbox" class="es-col__checkbox" /></label></th>
+        <th class="es-col ts-bold-body-md" scope="col"><button type="button" class="es-col__sortbtn"><span>Name</span><span class="es-col__sorticon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4"></path><path d="M8 15l4 4 4-4"></path></svg></span></button></th>
+        <th class="es-col ts-bold-body-md" scope="col">Role</th>
+        <th class="es-col ts-bold-body-md" scope="col">Status</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md">Raihan Allaam</td><td class="es-cell ts-regular-body-md">Designer</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Success">Active</span></td></tr>
+        <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md">Dhima Tauvik</td><td class="es-cell ts-regular-body-md"><span class="es-cell__mute">—</span></td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Warning">Pending</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="es-table__footer"><nav class="es-pg ts-regular-body-md" aria-label="Pagination"><span class="es-pg__count">1–10 of 128</span><span class="es-rpp ts-regular-body-sm">Rows per page<button type="button" class="es-rpp__btn ts-bold-body-md is-active">10</button><button type="button" class="es-rpp__btn ts-bold-body-md">25</button><button type="button" class="es-rpp__btn ts-bold-body-md">50</button><input class="es-rpp__input ts-regular-body-sm" type="number" min="5" max="50" value="10" aria-label="Custom rows per page (max 50)" /><span>max 50</span></span><span class="es-pg__pages"><button type="button" class="es-pg__btn es-pg__navbtn" disabled><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6l6 6"></path></svg></button><button type="button" class="es-pg__btn ts-bold-body-md is-active">1</button><button type="button" class="es-pg__btn ts-bold-body-md">2</button><button type="button" class="es-pg__btn es-pg__navbtn"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"></path></svg></button></span></nav></div>
+</div></div></div>
+</body>
+</html>

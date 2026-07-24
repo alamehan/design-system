@@ -1,0 +1,410 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "wizard-offer-setup",
+  "name": "Sample Pages 3 \u2014 Wizard Form: Offer Setup",
+  "figmaNodeId": "21194:57169",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "wizard-form-view",
+  "description": "Multi-step wizard form for creating an offer. Step 1: Offer Setup. Contains customer selector, position/department inputs, site location, and contract type selection cards. The wizard has a left step navigator and right form content, with a sticky footer for navigation.",
+  "shell": {
+    "sidebar": {
+      "component": "sidebar",
+      "isDetached": false,
+      "props": {
+        "state": "Default"
+      },
+      "dimensions": {
+        "width": 58,
+        "height": 768
+      }
+    },
+    "app-bar": {
+      "component": "app-bar",
+      "isDetached": false,
+      "props": {
+        "type": "DefaultUser"
+      },
+      "dimensions": {
+        "width": 1308,
+        "height": 60
+      },
+      "tokens": {
+        "background": "neutral.pure-white"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 58,
+      "y": 60,
+      "width": 1244,
+      "height": 708
+    },
+    "zones": [
+      "wizard-header",
+      "wizard-body",
+      "wizard-footer"
+    ]
+  },
+  "zones": {
+    "wizard-header": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "wizard-page-header",
+      "description": "Wizard page title bar. Left: page title. Right: Save As Draft button + Close (X) icon button.",
+      "dimensions": {
+        "width": 1244,
+        "height": 60
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-bottom": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.lg",
+        "padding-x": "spacing.standard.xxl"
+      },
+      "layout": {
+        "type": "horizontal",
+        "gap": "spacing.standard.lg",
+        "justify": "space-between"
+      },
+      "content": {
+        "title": {
+          "text": "Create Offer",
+          "text-style": "text-styles.bold.body-lg",
+          "text-color": "system.text-head"
+        },
+        "actions": [
+          {
+            "component": "button",
+            "props": {
+              "type": "Tonal",
+              "label": "Save As Draft"
+            }
+          },
+          {
+            "component": "icon-button",
+            "props": {
+              "type": "Filled",
+              "icon": "x",
+              "label": "Close wizard"
+            },
+            "tokens": {
+              "background": "semantic.error-surface-soft",
+              "icon": "semantic.error"
+            }
+          }
+        ]
+      }
+    },
+    "wizard-body": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "wizard-body",
+      "description": "Two-column wizard body. Left: vertical step navigator (280px). Right: scrollable form content (952px).",
+      "dimensions": {
+        "width": 1244,
+        "height": 588
+      },
+      "layout": {
+        "type": "horizontal"
+      },
+      "columns": {
+        "step-navigator": {
+          "width": 280,
+          "component": null,
+          "customElement": true,
+          "customElementId": "wizard-step-navigator",
+          "description": "Vertical step list. Each step item shows: step number indicator (circle) + step name. Active step highlighted. Completed steps show checkmark.",
+          "tokens": {
+            "background": "neutral.pure-white",
+            "border-right": "system.border-soft",
+            "border-width": "stroke.thin",
+            "padding-x": "spacing.standard.xxl",
+            "padding-y": "spacing.standard.lg"
+          },
+          "steps": [
+            {
+              "number": 1,
+              "label": "Offer Setup",
+              "state": "active",
+              "token": "brand.brand"
+            },
+            {
+              "number": 2,
+              "label": "Salary & Income",
+              "state": "inactive",
+              "token": "system.text-mute"
+            },
+            {
+              "number": 3,
+              "label": "Offer Terms",
+              "state": "inactive",
+              "token": "system.text-mute"
+            },
+            {
+              "number": 4,
+              "label": "Preview Offer",
+              "state": "inactive",
+              "token": "system.text-mute"
+            },
+            {
+              "number": 5,
+              "label": "Send Offer",
+              "state": "inactive",
+              "token": "system.text-mute"
+            }
+          ],
+          "step-item-tokens": {
+            "active-indicator-bg": "brand.brand",
+            "active-indicator-text": "neutral.pure-white",
+            "active-label-text": "brand.brand",
+            "active-label-style": "text-styles.bold.body-md",
+            "inactive-indicator-bg": "system.surface-strong",
+            "inactive-label-text": "system.text-mute",
+            "inactive-label-style": "text-styles.regular.body-md"
+          }
+        },
+        "form-content": {
+          "width": 952,
+          "description": "Scrollable form area for the active wizard step. Step 1: Offer Setup.",
+          "tokens": {
+            "background": "system.surface-strong",
+            "padding-y": "spacing.standard.lg",
+            "padding-x": "spacing.standard.xxl",
+            "gap": "spacing.standard.lg"
+          },
+          "sections": [
+            {
+              "id": "offer-setup-form",
+              "component": null,
+              "customElement": true,
+              "description": "Form section for offer basic details. White card background.",
+              "tokens": {
+                "background": "neutral.pure-white",
+                "radius": "corner-radius.md",
+                "padding": "spacing.standard.xxl",
+                "gap": "spacing.standard.lg"
+              },
+              "sectionHeader": {
+                "icon": "icon-custom:briefcase",
+                "title": "Offer Setup",
+                "subtitle": "Set the position and placement details",
+                "title-style": "text-styles.bold.title-md",
+                "title-color": "system.text-head",
+                "subtitle-style": "text-styles.regular.body-sm",
+                "subtitle-color": "system.text-mute"
+              },
+              "fields": [
+                {
+                  "id": "customer",
+                  "component": "input",
+                  "props": {
+                    "type": "Dropdown",
+                    "label": "Customer",
+                    "placeholder": "Select Customer"
+                  }
+                },
+                {
+                  "id": "position",
+                  "component": "input",
+                  "props": {
+                    "type": "Basic",
+                    "label": "Position",
+                    "placeholder": "e.g. Project Manager"
+                  }
+                },
+                {
+                  "id": "department",
+                  "component": "input",
+                  "props": {
+                    "type": "Basic",
+                    "label": "Department",
+                    "placeholder": "e.g. IT Solutions"
+                  }
+                },
+                {
+                  "id": "site-location",
+                  "component": "input",
+                  "props": {
+                    "type": "Dropdown",
+                    "label": "Site Location",
+                    "placeholder": "Select Site Location"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "contract-details",
+              "component": null,
+              "customElement": true,
+              "description": "Contract type selection card grid. Shows 4 contract type options as selectable cards.",
+              "tokens": {
+                "background": "neutral.pure-white",
+                "radius": "corner-radius.md",
+                "padding": "spacing.standard.xxl",
+                "gap": "spacing.standard.lg"
+              },
+              "sectionHeader": {
+                "icon": "icon-custom:file-invoice",
+                "title": "Contract Details",
+                "subtitle": "Set the employment terms and schedule"
+              },
+              "contractTypeCards": {
+                "description": "CUSTOM ELEMENT \u2014 horizontal card selector for contract type. 4 options rendered as cards with radio button behavior.",
+                "layout": "horizontal-wrap",
+                "gap": "spacing.standard.lg",
+                "options": [
+                  {
+                    "id": "fixed-term",
+                    "label": "Fixed-Term",
+                    "description": "Temporary or project-based roles with a specified end date"
+                  },
+                  {
+                    "id": "partnership",
+                    "label": "Partnership",
+                    "description": "Partnership-based roles without official employment benefits"
+                  },
+                  {
+                    "id": "daily-worker",
+                    "label": "Daily Worker",
+                    "description": "Paid based on daily rates, post-based on a day-to-day basis"
+                  },
+                  {
+                    "id": "permanent",
+                    "label": "Permanent",
+                    "description": "Long-term full-time roles with complete employment benefits"
+                  }
+                ],
+                "card-tokens": {
+                  "background": "neutral.pure-white",
+                  "border-color": "system.border-soft",
+                  "border-width": "stroke.thin",
+                  "radius": "corner-radius.md",
+                  "padding": "spacing.standard.lg",
+                  "gap": "spacing.standard.sm",
+                  "selected-border": "brand.brand",
+                  "selected-bg": "brand.brand-surface-soft"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "wizard-footer": {
+      "component": "panel-section",
+      "isDetached": false,
+      "props": {
+        "type": "FooterDefault"
+      },
+      "dimensions": {
+        "width": 952,
+        "height": 60
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-top": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.sm",
+        "padding-x": "spacing.standard.xxl"
+      },
+      "layout": {
+        "type": "horizontal",
+        "justify": "space-between"
+      },
+      "content": {
+        "left": {
+          "component": "button",
+          "props": {
+            "type": "Ghost",
+            "label": "Back",
+            "state": "Disabled"
+          }
+        },
+        "right": [
+          {
+            "component": "button",
+            "props": {
+              "type": "Tonal",
+              "label": "Save As Draft"
+            }
+          },
+          {
+            "component": "button",
+            "props": {
+              "type": "Filled",
+              "label": "Next",
+              "state": "Disabled"
+            },
+            "note": "Disabled until form is valid"
+          }
+        ]
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "wizard-body": "Two-column: 280px step navigator + 952px form content.",
+    "wizard-step-navigator": "Vertical step list. Active: brand.brand. Inactive: system.text-mute.",
+    "wizard-page-header": "Wizard title + Tonal save button + error-surface icon close button.",
+    "contract-type-cards": "Horizontal card grid with radio behavior. 4 contract type options. Selected: brand.brand border + brand.brand-surface-soft bg."
+  },
+  "code": "page-03",
+  "geometry": {
+    "appIconRailWidth": 54,
+    "headerCard": {
+      "height": 56,
+      "buttons": "close only - Save As Draft lives in the footer (verified against the real screenshot)"
+    },
+    "sidebar": {
+      "width": 340,
+      "progressBar": {
+        "height": 6,
+        "segments": 5
+      },
+      "stepChip": 40,
+      "stepRowHeight": 52,
+      "steps": [
+        "Offer Setup",
+        "Salary & Income",
+        "Offer Terms",
+        "Preview Offer",
+        "Send Offer"
+      ]
+    },
+    "footerCard": {
+      "height": 64,
+      "left": "Back (disabled on step 1)",
+      "right": [
+        "Save As Draft (Tonal)",
+        "Next (Filled, disabled until required fields)"
+      ]
+    },
+    "logicalBasis": {
+      "width": 1366,
+      "height": 768,
+      "note": "measured from the author screenshot Sample_Pages_Form_Wizard_-_1.png (2732x1536 retina @2x)"
+    },
+    "contentCards": {
+      "gap": 16,
+      "headIconCircle": 48,
+      "offerSetupFields": "single-column full-width (Customer, Position, Department, Site Location)",
+      "contractCards": {
+        "count": 4,
+        "iconTile": 56,
+        "selected": "brand border",
+        "infoIcon": "top-right"
+      }
+    }
+  },
+  "_provenance": {
+    "source": "author screenshot Sample_Pages_Form_Wizard_-_1.png",
+    "method": "measured",
+    "date": "2026-07-04"
+  }
+}

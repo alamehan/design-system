@@ -1,0 +1,43 @@
+/* layout-11 TableRow — data cell (td) for EDataTable. 17 types. value: string | [primary, secondary] | {type,label} | array of chips. Actions via default slot on ActionIcons/ActionDropdown.
+   Source of truth: src/components/layout-11*.json · token-pure CSS (vars only). */
+
+.es-cell {
+  background: var(--color-neutral-pure-white);
+  border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
+  padding: var(--space-xl) var(--space-md);
+  color: var(--color-system-text-head);
+  vertical-align: middle;
+}
+tr:hover > .es-cell { background: var(--color-system-surface-soft); }
+tr.is-selected > .es-cell { background: var(--color-brand-brand-surface-soft); }
+.es-cell__mute { color: var(--color-system-text-mute); }
+.es-cell__primary { color: var(--color-system-text-head); }
+.es-cell__multi { display: flex; flex-direction: column; gap: var(--space-3xs); min-width: 0; }
+.es-cell__link { color: var(--color-brand-brand); text-decoration: underline; cursor: pointer; }
+.es-cell__link:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); border-radius: var(--radius-md); }
+.es-cell__center { display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.es-cell__checkbox { accent-color: var(--color-brand-brand); cursor: pointer; }
+.es-cell__indicator { display: flex; align-items: center; gap: var(--space-sm); }
+.es-cell__dot { width: 0.5em; height: 0.5em; border-radius: var(--radius-full); flex-shrink: 0; }
+.es-cell__dot--success { background: var(--color-semantic-success); }
+.es-cell__dot--warning { background: var(--color-semantic-warning); }
+.es-cell__dot--error { background: var(--color-semantic-error); }
+.es-cell__dot--info { background: var(--color-semantic-info); }
+.es-cell__currency { display: flex; align-items: baseline; gap: var(--space-sm); }
+.es-cell__chips { display: inline-flex; flex-wrap: wrap; gap: var(--space-sm); }
+.es-cell__actions { display: inline-flex; align-items: center; gap: var(--space-xxs); }
+.es-cell--ActionIcons .es-cell__actions > *,
+.es-cell__actionbtn {
+  background: var(--color-neutral-pure-white);
+  border: var(--stroke-thin) solid var(--color-brand-brand);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+}
+.es-cell__replace {
+  background: var(--color-brand-brand-surface-soft);
+  border: var(--stroke-thin) solid var(--color-brand-brand);
+  border-radius: var(--radius-md);
+  color: var(--color-brand-brand);
+  padding: var(--space-sm);
+  text-align: center;
+}

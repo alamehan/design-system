@@ -1,0 +1,41 @@
+/* atom-01 Button — 5 types + states. Icon-agnostic: pass icons via #left / #right slots.
+   Source of truth: src/components/atom-01*.json · token-pure CSS (vars only). */
+
+.es-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border: var(--stroke-thin) solid transparent;
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-lg);
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.es-btn--block { width: 100%; }
+.es-btn__icon { display: inline-flex; align-items: center; font-size: 1.15em; }
+
+.es-btn--Filled { background: var(--color-brand-brand); color: var(--color-neutral-pure-white); }
+.es-btn--Filled:hover:not(:disabled) { background: var(--color-component-button-hover); }
+
+.es-btn--Outlined { background: var(--color-neutral-pure-white); color: var(--color-brand-brand); border-color: var(--color-brand-brand); }
+.es-btn--Outlined:hover:not(:disabled) { background: var(--color-brand-brand-surface-soft); }
+
+.es-btn--Tonal { background: var(--color-component-button-tonal); color: var(--color-brand-brand); }
+.es-btn--Tonal:hover:not(:disabled) { background: var(--color-component-button-tonal-hover); }
+
+.es-btn--Elevated { background: var(--color-neutral-pure-white); color: var(--color-brand-brand); box-shadow: var(--shadow-Base); }
+.es-btn--Elevated:hover:not(:disabled) { background: var(--color-system-surface-soft); }
+
+.es-btn--Ghost { background: transparent; color: var(--color-brand-brand); }
+.es-btn--Ghost:hover:not(:disabled) { background: var(--color-brand-brand-surface-soft); }
+
+.es-btn:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+
+.es-btn:disabled {
+  cursor: not-allowed;
+  background: var(--color-neutral-muted);
+  color: var(--color-system-text-mute);
+  border-color: var(--color-system-border-medium);
+  box-shadow: none;
+}

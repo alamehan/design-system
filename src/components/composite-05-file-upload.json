@@ -1,0 +1,158 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "file-upload",
+  "name": "FileUpload",
+  "figmaName": "[🧱]-upload-files",
+  "figmaNodeId": "5223:205586",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "component",
+  "implementable": true,
+  "description": "File upload area for 5 document types: CV, Photo, Document, Sheet, Archive. Each type has Default (empty dropzone) and Uploaded (showing preview + file info) states. Dropzone uses brand.brand dashed border; uploaded preview uses surface-strong background.",
+  "props": {
+    "fileType": {
+      "type": "enum",
+      "values": [
+        "CV",
+        "Photo",
+        "Document",
+        "Sheet",
+        "Archive"
+      ],
+      "default": "CV"
+    },
+    "state": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Uploaded"
+      ],
+      "default": "Default"
+    },
+    "fileName": {
+      "type": "string",
+      "default": null,
+      "description": "Uploaded file name",
+      "condition": {
+        "prop": "state",
+        "equals": "Uploaded"
+      }
+    },
+    "fileSize": {
+      "type": "string",
+      "default": null,
+      "condition": {
+        "prop": "state",
+        "equals": "Uploaded"
+      }
+    },
+    "isRequired": {
+      "type": "boolean",
+      "default": false
+    },
+    "maxSizeMB": {
+      "type": "number",
+      "default": 5
+    },
+    "acceptedFormats": {
+      "type": "array",
+      "default": [
+        ".pdf",
+        ".doc",
+        ".docx"
+      ]
+    }
+  },
+  "tokens": {
+    "dropzone-default": {
+      "background": "neutral.pure-white",
+      "border-color": "brand.brand",
+      "border-width": "stroke.thin",
+      "border-style": "dashed",
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.3xl",
+      "padding-x": "spacing.standard.xxl"
+    },
+    "dropzone-uploaded": {
+      "background": "system.surface-strong",
+      "border": null,
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.lg",
+      "padding-x": "spacing.standard.xxl",
+      "shadow": "shadow.Base"
+    },
+    "file-info-row": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-soft",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.lg"
+    }
+  },
+  "subcomponents": [
+    "icon-button"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "label": {
+      "element": "label",
+      "optional": true
+    },
+    "info": {
+      "element": "p",
+      "optional": true,
+      "note": "Format and size requirements"
+    },
+    "dropzone": {
+      "element": "div",
+      "optional": false,
+      "note": "Click to open file picker; also accepts drag-and-drop"
+    },
+    "preview": {
+      "element": "div",
+      "optional": true,
+      "note": "Document thumbnail (Uploaded state)"
+    },
+    "file-info": {
+      "element": "div",
+      "optional": false,
+      "note": "File name + size + action buttons"
+    },
+    "input": {
+      "element": "input",
+      "type": "file",
+      "optional": false,
+      "note": "Hidden native file input"
+    }
+  },
+  "usage": {
+    "generic": "FileUpload(fileType='CV', state='Default', acceptedFormats=['.pdf','.doc'])"
+  },
+  "a11y": {
+    "role": "button",
+    "keyboard": [
+      "Enter",
+      "Space"
+    ],
+    "aria": {
+      "aria-label": "Upload CV file",
+      "aria-describedby": "format and size requirements text"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always show accepted formats and max file size.",
+      "Show upload progress while file is uploading.",
+      "Allow drag-and-drop on the dropzone."
+    ],
+    "dont": [
+      "Don't accept files above the stated max size silently — show an error immediately.",
+      "Don't block the form if upload is optional."
+    ]
+  },
+  "code": "composite-05"
+}

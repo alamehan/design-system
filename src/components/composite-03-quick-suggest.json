@@ -1,0 +1,73 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "quick-suggest",
+  "name": "QuickSuggest",
+  "figmaName": "[🧱]-quick-suggest",
+  "figmaNodeId": "4088:29955",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Horizontal row of pre-defined suggestion chips shown below a filter field input. Lets users quickly select common filter values without typing. Always embedded inside FilterField.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default"
+      ],
+      "default": "Default"
+    },
+    "suggestions": {
+      "type": "array",
+      "default": [
+        "Suggestion 1",
+        "Suggestion 2",
+        "Suggestion 3"
+      ]
+    }
+  },
+  "tokens": {
+    "base": {
+      "gap": "spacing.standard.xxs",
+      "chip-gap": "spacing.standard.xxs"
+    }
+  },
+  "subcomponents": [
+    "chip"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "chip-list": {
+      "element": "div",
+      "optional": false,
+      "note": "Horizontal wrapping chip array"
+    },
+    "chip": {
+      "element": "button",
+      "role": "option",
+      "optional": false
+    }
+  },
+  "usage": {
+    "generic": "QuickSuggest(suggestions=['Full-time','Part-time','Remote'])",
+    "notes": "Always place below the filter input field inside FilterField. Chip click applies the suggestion as an active filter."
+  },
+  "a11y": {
+    "role": "listbox",
+    "aria": {
+      "aria-label": "Quick suggestions"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Limit to 5-8 suggestions for readability.",
+      "Show most common filter values as suggestions."
+    ],
+    "dont": [
+      "Don't use standalone — always inside FilterField."
+    ]
+  },
+  "code": "composite-03"
+}

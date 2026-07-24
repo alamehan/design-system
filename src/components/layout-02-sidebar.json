@@ -1,0 +1,106 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "sidebar",
+  "name": "Sidebar",
+  "figmaName": "[🧩]-side-bar",
+  "figmaNodeId": "4113:64882",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Vertical navigation rail on the left side. Default state shows icon-only menu items. Hover state expands to show icon + label. Uses dark theme (component.sidebar-background) inside a near-black outer shell.",
+  "props": {
+    "state": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Hover"
+      ],
+      "default": "Default",
+      "description": "Default=collapsed icon-only; Hover=expanded with labels."
+    }
+  },
+  "tokens": {
+    "base": {
+      "outer-background": "neutral.pure-black",
+      "outer-padding": "spacing.standard.xs",
+      "outer-gap": "spacing.standard.xs",
+      "group-background": "component.sidebar-background",
+      "group-radius": "corner-radius.md",
+      "group-padding": "spacing.standard.xxs",
+      "group-gap": "spacing.standard.xxs",
+      "item-padding": "spacing.standard.sm",
+      "item-gap": "spacing.standard.md",
+      "item-radius": "corner-radius.md"
+    },
+    "overrides": [
+      {
+        "when": {
+          "itemState": "Active"
+        },
+        "tokens": {
+          "item-background": "component.sidebar-active"
+        }
+      },
+      {
+        "when": {
+          "state": "Hover"
+        },
+        "tokens": {
+          "group-padding-right": "spacing.standard.sm",
+          "item-shows-label": true
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "icon-button"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "aside",
+      "role": "navigation"
+    },
+    "menu-group": {
+      "element": "div",
+      "optional": false,
+      "note": "Logical group of related menu items (top, middle, bottom)"
+    },
+    "menu-item": {
+      "element": "button",
+      "role": "menuitem",
+      "optional": false
+    },
+    "item-icon": {
+      "element": "span",
+      "optional": false
+    },
+    "item-label": {
+      "element": "span",
+      "optional": true,
+      "note": "Visible only in Hover/expanded state"
+    }
+  },
+  "usage": {
+    "generic": "Sidebar(state='Default')",
+    "notes": "Use position:fixed, left:0. Manage active state by matching current route to menu item id."
+  },
+  "a11y": {
+    "role": "navigation",
+    "aria": {
+      "aria-label": "Side navigation",
+      "aria-current": "page — on active menu item"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Group related navigation items together.",
+      "Highlight the active item with sidebar-active color."
+    ],
+    "dont": [
+      "Don't put more than 5 items per group.",
+      "Don't show text labels in Default state."
+    ]
+  },
+  "code": "layout-02"
+}

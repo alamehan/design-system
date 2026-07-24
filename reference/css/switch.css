@@ -1,0 +1,31 @@
+/* atom-12 FormControl (Switch) — boolean toggle. v-model.
+   Source of truth: src/components/atom-12*.json · token-pure CSS (vars only). */
+
+.es-switch { display: inline-flex; align-items: center; gap: var(--space-sm); }
+.es-switch.is-disabled { opacity: 0.5; }
+.es-switch__track {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 24px;
+  padding: var(--space-3xs);
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--color-system-text-mute);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.es-switch__track.is-on { background: var(--color-brand-brand); }
+.es-switch__track:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+.es-switch__track:disabled { cursor: not-allowed; background: var(--color-neutral-muted); }
+.es-switch__thumb {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--color-neutral-pure-white);
+  box-shadow: var(--shadow-Base);
+  transition: transform 0.15s ease;
+}
+.es-switch__track.is-on .es-switch__thumb { transform: translateX(16px); }
+.es-switch__label { color: var(--color-system-text-head); }

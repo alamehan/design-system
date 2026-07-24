@@ -1,0 +1,16 @@
+/* composite-06 CandidateInfoBlock — label + value display for panel body cards. Value via prop, default slot (e.g. chips), or `entries` (experience rows).
+   Source of truth: src/components/composite-06*.json · token-pure CSS (vars only). */
+
+.es-info { display: flex; flex-direction: column; gap: var(--space-xxs); }
+.es-info__label { color: var(--color-system-text-mute); }
+.es-info__value { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xxs); color: var(--color-system-text-head); }
+.es-info__entries { display: flex; flex-direction: column; gap: var(--space-xs); }
+.es-info__entry { display: flex; flex-direction: column; }
+.es-info__entry-title { color: var(--color-system-text-head); }
+.es-info__entry-subtitle { color: var(--color-system-text-body); }
+.es-info--grouped {
+  background: var(--color-system-surface-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg) var(--space-xxl);
+  gap: var(--space-xs);
+}

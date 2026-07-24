@@ -1,0 +1,690 @@
+{
+  "designSystem": "E-Systems Design System (Elabram)",
+  "figmaFileKey": "uhJE5ZhaGTYoCQ5lGLVAZW",
+  "generatedAt": "2026-07-24",
+  "version": "1.0",
+  "totalComponents": 64,
+  "totalPages": 12,
+  "categories": {
+    "atom": "Atomic UI elements — button, input, chip, tabs",
+    "layout": "Layout & navigation — appbar, sidebar, modal, table, panel",
+    "composite": "Feature composites — card, filter, notification",
+    "panel": "Domain panel content (HR/recruitment)",
+    "asset": "Foundation assets — icons, avatars, illustrations, logos (catalog of names; Tabler icons via @tabler/icons; custom assets exported from Figma)",
+    "page": "Sample page layout blueprints"
+  },
+  "items": [
+    {
+      "code": "asset-01",
+      "name": "Avatar",
+      "type": "component",
+      "category": "foundation",
+      "figmaNodeId": "2451:10899",
+      "description": "User profile picture asset. 41 variants: 20 male personas (ava-man-1 to ava-man-20), 20 female personas (ava-woman-1 to ava-woman-20), and 1 placeholder (ava-placeholder-user). Each is a 128×128px frame with an illustration and a border overlay. Used in AppBar, Sidebar hover state, CandidateCard, ContentBlock(OptionMenus), and NotificationCard.",
+      "file": "src/components/asset-01-avatar.json"
+    },
+    {
+      "code": "asset-02",
+      "name": "OptionMenu",
+      "type": "component",
+      "category": "foundation",
+      "figmaNodeId": "6966:239232",
+      "description": "Action illustration icons for the DropdownMenu(OptionMenus) and ContentBlock(OptionMenus) layouts. 24 variants covering HR workflow actions: email, consent, import, export, reporting, and finance operations. Each is a 64×64px illustration icon.",
+      "file": "src/components/asset-02-option-menu.json"
+    },
+    {
+      "code": "asset-03",
+      "name": "CharacterExpression",
+      "type": "component",
+      "category": "foundation",
+      "figmaNodeId": "4643:75379",
+      "description": "Mascot character illustrations expressing emotions. 40 variants across 14 emotion categories. Used in empty states, loading screens, confirmations, and modal body (ModalContent). Each is a 128×128px illustration.",
+      "file": "src/components/asset-03-character-expression.json"
+    },
+    {
+      "code": "asset-04",
+      "name": "AnimatedIllustration",
+      "type": "component",
+      "category": "foundation",
+      "figmaNodeId": "11191:365122",
+      "description": "GIF animation illustrations for loading states, redirects, and process feedback. 14 variants for specific app states. Each is a 96×96px animated GIF frame (static in Figma). Used in interstitial screens, loading overlays, and step transitions.",
+      "file": "src/components/asset-04-animated-illustration.json"
+    },
+    {
+      "code": "asset-05",
+      "name": "ComplexIllustration",
+      "type": "component",
+      "category": "foundation",
+      "figmaNodeId": "7376:54216",
+      "description": "Larger full-scene illustration assets. 2 variants: document-preview (used in document viewer contexts) and privacy-policy (used on privacy/consent pages). Each is a 172×172px layered illustration.",
+      "file": "src/components/asset-05-complex-illustration.json"
+    },
+    {
+      "code": "asset-06",
+      "name": "Icon (Tabler)",
+      "type": "component",
+      "category": "foundation",
+      "figmaNodeId": "547:87407",
+      "description": "Primary icon library. 272 Tabler icons at 24×24px. Stroke-based vectors — color is set by the parent element's fill/color, not the icon itself. Used across all UI components (buttons, inputs, table rows, menus, etc.).",
+      "file": "src/components/asset-06-icon-tabler.json"
+    },
+    {
+      "code": "asset-07",
+      "name": "Icon (Tabler Extended)",
+      "type": "component",
+      "category": "foundation",
+      "figmaNodeId": "11504:405053",
+      "description": "Extended Tabler icon set. 100 additional icons not in the primary set. Same 24×24px format and stroke-based rendering as Icon(Tabler). Both sets together form the complete icon library.",
+      "file": "src/components/asset-07-icon-tabler-extended.json"
+    },
+    {
+      "code": "asset-08",
+      "name": "Icon (Custom)",
+      "type": "component",
+      "category": "foundation",
+      "figmaNodeId": "1461:18493",
+      "description": "Custom-designed icons specific to Elabram. 94 variants across 7 groups: navigation icons (default + active states), system status icons, social media brand icons, country flags, file type icons, and folder icons. 24×24px SVG format.",
+      "file": "src/components/asset-08-icon-custom.json"
+    },
+    {
+      "code": "asset-09",
+      "name": "Logo",
+      "type": "component",
+      "category": "foundation",
+      "figmaNodeId": "4736:95199",
+      "description": "Client/company logo placeholder set. 10 variants (logo-1 to logo-10) representing different client organizations. 64×64px vector logo placeholders. Used in ContentBlock(OptionMenus) as company avatars, in CandidateCard for employer branding, and in AppBar when switching client context.",
+      "file": "src/components/asset-09-logo.json"
+    },
+    {
+      "code": "atom-01",
+      "name": "Button",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4052:14682",
+      "description": "Primary interactive element for triggering actions. Supports five visual styles and three states.",
+      "file": "src/components/atom-01-button.json"
+    },
+    {
+      "code": "atom-02",
+      "name": "IconButton",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4058:15245",
+      "description": "Square button that contains only an icon. Same styles as Button but no label.",
+      "file": "src/components/atom-02-icon-button.json"
+    },
+    {
+      "code": "atom-03",
+      "name": "SplitButton",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "5178:167856",
+      "description": "Two-part button: primary action (left) + dropdown trigger (right). 2px gap between parts.",
+      "file": "src/components/atom-03-split-button.json"
+    },
+    {
+      "code": "atom-04",
+      "name": "CustomButton",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "10743:341745",
+      "description": "Neutral low-emphasis button for navigation and breadcrumb. No brand color — uses system surface. Turns muted gray on hover.",
+      "file": "src/components/atom-04-custom-button.json"
+    },
+    {
+      "code": "atom-05",
+      "name": "Chip",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4075:16773",
+      "description": "Compact label for tags, filters, selections. Three styles (Neutral/Colored/Gradient), three sizes (MD/SM/CC). Full-radius pill.",
+      "file": "src/components/atom-05-chip.json"
+    },
+    {
+      "code": "atom-06",
+      "name": "StatusChip",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4287:108553",
+      "description": "Read-only status indicator. Semantic color presets per status. Not interactive.",
+      "file": "src/components/atom-06-status-chip.json"
+    },
+    {
+      "code": "atom-07",
+      "name": "Toast",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4165:77218",
+      "description": "Transient notification overlay. Semantic status types × three visual styles. Auto-dismisses.",
+      "file": "src/components/atom-07-toast.json"
+    },
+    {
+      "code": "atom-08",
+      "name": "Input",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4077:15699",
+      "description": "General-purpose single-line text input. Covers Basic, Search, Password, Number, DatePicker, Dropdown. Single and Multi value modes.",
+      "file": "src/components/atom-08-input.json"
+    },
+    {
+      "code": "atom-09",
+      "name": "Textarea",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4081:23108",
+      "description": "Multi-line text input. Same state tokens as Input. Built on FormInputField.",
+      "file": "src/components/atom-09-textarea.json"
+    },
+    {
+      "code": "atom-10",
+      "name": "RichTextEditor",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "5617:197985",
+      "description": "WYSIWYG editor with formatting toolbar. For email composition, cover letters, and formatted long-form content.",
+      "file": "src/components/atom-10-rich-text-editor.json"
+    },
+    {
+      "code": "atom-11",
+      "name": "FormInputField",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4073:17045",
+      "description": "Reusable field shell used inside Input, Textarea, RichTextEditor. Handles background, border, radius, padding for Single and Multi layouts.",
+      "file": "src/components/atom-11-form-input-field.json"
+    },
+    {
+      "code": "atom-12",
+      "name": "FormControl",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4082:24734",
+      "description": "Selection controls: Checkbox, Radio, Switch. Each has Enabled/Disabled states and Selected/Unselected/Indeterminate values.",
+      "file": "src/components/atom-12-form-control.json"
+    },
+    {
+      "code": "atom-13",
+      "name": "RangeSlider",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4084:22888",
+      "description": "Dual-handle range input for selecting a min–max numeric range.",
+      "file": "src/components/atom-13-range-slider.json"
+    },
+    {
+      "code": "atom-14",
+      "name": "Breadcrumb",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "10733:301578",
+      "description": "Horizontal navigation trail from root to current page. Built by composing CustomButton items separated by chevron separators.",
+      "file": "src/components/atom-14-breadcrumb.json"
+    },
+    {
+      "code": "atom-15",
+      "name": "DropdownMenu",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4085:23330",
+      "description": "Floating menu panel triggered by button or right-click. Five layout types.",
+      "file": "src/components/atom-15-dropdown-menu.json"
+    },
+    {
+      "code": "atom-16",
+      "name": "Tabs",
+      "type": "component",
+      "category": "atomic",
+      "figmaNodeId": "4086:23054",
+      "description": "Horizontal tab navigation. Two styles: Basic (pill in container) and Underline (borderless with bottom indicator). Text-only, icon-only, or icon+text items.",
+      "file": "src/components/atom-16-tabs.json"
+    },
+    {
+      "code": "composite-01",
+      "name": "InfoBlock",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4088:23722",
+      "description": "Flexible data display unit. 10 types covering: section titles, icon+body text, icon+body+action, multi-value rich content, label+small body, and experience layout. Used extensively as the building block inside CandidateCard, FilterField, NotificationCard, and CandidateInfoBlock.",
+      "file": "src/components/composite-01-info-block.json"
+    },
+    {
+      "code": "composite-02",
+      "name": "ContentBlock",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4164:70753",
+      "description": "Surface-soft row block pattern for filter panels and lists. 8 types: menu with arrow, accordion (open/closed), option menus with avatar, toggle fields (checkbox list), applied filters chip list, displayed filters, and option menus big.",
+      "file": "src/components/composite-02-content-block.json"
+    },
+    {
+      "code": "composite-03",
+      "name": "QuickSuggest",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4088:29955",
+      "description": "Horizontal row of pre-defined suggestion chips shown below a filter field input. Lets users quickly select common filter values without typing. Always embedded inside FilterField.",
+      "file": "src/components/composite-03-quick-suggest.json"
+    },
+    {
+      "code": "composite-04",
+      "name": "FilterField",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4088:29598",
+      "description": "Individual filter row inside FilterPanel. 5 types: General (text/dropdown input + checkbox list + suggestions), Date (date picker variant), Phone (phone input), MaxMin (two side-by-side inputs), Slider (RangeSlider). All share white background with soft border.",
+      "file": "src/components/composite-04-filter-field.json"
+    },
+    {
+      "code": "composite-05",
+      "name": "FileUpload",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "5223:205586",
+      "description": "File upload area for 5 document types: CV, Photo, Document, Sheet, Archive. Each type has Default (empty dropzone) and Uploaded (showing preview + file info) states. Dropzone uses brand.brand dashed border; uploaded preview uses surface-strong background.",
+      "file": "src/components/composite-05-file-upload.json"
+    },
+    {
+      "code": "composite-06",
+      "name": "CandidateInfoBlock",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4406:76078",
+      "description": "Data display block for candidate profile fields inside a Panel. 5 types: SingleValue (label + one value + action icon), MultiValue (label + chip array), Grouped (surface-strong card with multiple InfoBlocks), Experience (timeline row with company/role/duration), SingleMulti (label + multiple single-value rows).",
+      "file": "src/components/composite-06-candidate-info-block.json"
+    },
+    {
+      "code": "composite-07",
+      "name": "FilterPanel",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4088:32872",
+      "description": "Complete vertical filter drawer composing multiple FilterField rows. Has a sticky header (search/title), a scrollable body of FilterField rows, and a sticky footer with Clear and Apply buttons.",
+      "file": "src/components/composite-07-filter-panel.json"
+    },
+    {
+      "code": "composite-08",
+      "name": "CandidateCard",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4088:23833",
+      "description": "Candidate summary card for list views. Shows avatar, name, headline, key info rows (location, salary, experience), status chips, and action buttons. Uses Shadow/Smooth for card elevation.",
+      "file": "src/components/composite-08-candidate-card.json"
+    },
+    {
+      "code": "composite-09",
+      "name": "ResumeCard",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4557:104183",
+      "description": "Resume template selection card. Shows a visual preview thumbnail, template name, and owner. Hover state reveals action buttons (preview, select, more). Used inside the Resume Template Panel.",
+      "file": "src/components/composite-09-resume-card.json"
+    },
+    {
+      "code": "composite-10",
+      "name": "ConsentToast",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "7237:147093",
+      "description": "Domain-specific toast for data consent notifications. Three copywriting variants with different messaging. Copywriting 1 & 2 use Warning style; Copywriting 3 uses Error style. Built on top of Toast(Filled). Includes action buttons for consent response.",
+      "file": "src/components/composite-10-consent-toast.json"
+    },
+    {
+      "code": "composite-11",
+      "name": "NotificationCard",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "13656:98169",
+      "description": "Individual notification row in the NotificationList. Three states: Default (white), Hover1 (header highlighted), Hover2 (detail highlighted). Each row has a summary header and an expandable detail section.",
+      "file": "src/components/composite-11-notification-card.json"
+    },
+    {
+      "code": "composite-12",
+      "name": "NotificationList",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "13656:372424",
+      "description": "Complete notification feed panel. Sticky header with title and mark-all-read action. Scrollable list of NotificationCard rows.",
+      "file": "src/components/composite-12-notification-list.json"
+    },
+    {
+      "code": "composite-13",
+      "name": "DocumentGallery",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4975:57295",
+      "description": "Multi-page document preview gallery. Shows all pages of a resume/document as a vertical stack of white page cards. Four template styles: ModernProfessional, CreativePortfolio, FreshGraduate, ExampleOfPrivacyPolicy.",
+      "file": "src/components/composite-13-document-gallery.json"
+    },
+    {
+      "code": "composite-14",
+      "name": "EmbedViewer",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "4782:55624",
+      "description": "Dark-theme embedded viewer for VideoPlayer and DocumentViewer. Uses the component.embed-* token set (dark gray UI). Includes a top control bar, a canvas area, and playback/navigation controls.",
+      "file": "src/components/composite-14-embed-viewer.json"
+    },
+    {
+      "code": "composite-15",
+      "name": "WhatsAppChat",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "7881:259079",
+      "description": "WhatsApp-style chat interface for consent communication. Three variants: Default (generic chat), ConsentRecruiterPOV (recruiter sending consent request), ConsentCandidatePOV (candidate receiving consent). Uses social.social-white background with system border.",
+      "file": "src/components/composite-15-whatsapp-chat.json"
+    },
+    {
+      "code": "composite-16",
+      "name": "InteractiveFlow",
+      "type": "component",
+      "category": "advanced",
+      "figmaNodeId": "5252:61986",
+      "description": "Multi-step interactive overlay flows for complex operations. 26 variants covering: AI Generate Text (6 steps), Consent Share Link (4 steps), Salary (Edit/Default), Half/Full Address, Email Carbon Copy (2 steps), Generate CV in PDF (3 steps), Sync Candidate Data (4 steps), Notification Filter (2 steps). Each variant is a Modal-like overlay with step-specific content.",
+      "file": "src/components/composite-16-interactive-flow.json"
+    },
+    {
+      "code": "layout-01",
+      "name": "AppBar",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4113:64969",
+      "description": "Top navigation bar. Fixed at the top of every page. Contains the logo, navigation menu items, user avatar, and notification icon. Two variants: DefaultUser (logged-in user's own session) and OtherUser (viewing as another user).",
+      "file": "src/components/layout-01-app-bar.json"
+    },
+    {
+      "code": "layout-02",
+      "name": "Sidebar",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4113:64882",
+      "description": "Vertical navigation rail on the left side. Default state shows icon-only menu items. Hover state expands to show icon + label. Uses dark theme (component.sidebar-background) inside a near-black outer shell.",
+      "file": "src/components/layout-02-sidebar.json"
+    },
+    {
+      "code": "layout-03",
+      "name": "Pagination",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4113:65367",
+      "description": "Page navigation bar for paginated data. Default shows row count, page buttons, and items-per-page selector. Compact shows only count and prev/next.",
+      "file": "src/components/layout-03-pagination.json"
+    },
+    {
+      "code": "layout-04",
+      "name": "ScrollBar",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4107:20785",
+      "description": "Custom scrollbar overlay for scrollable containers. Vertical and horizontal variants. Track uses system border color; thumb uses white with Smooth shadow for lift effect.",
+      "file": "src/components/layout-04-scroll-bar.json"
+    },
+    {
+      "code": "layout-05",
+      "name": "Panel",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4178:115653",
+      "description": "Slide-in side panel that displays detailed content alongside the main view. Two layout types: SingleCard (one full-width content card) and MultiCard (grid of cards in the body). Composed of PanelSection parts (header, body, footer).",
+      "file": "src/components/layout-05-panel.json"
+    },
+    {
+      "code": "layout-06",
+      "name": "PanelSection",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4250:97061",
+      "description": "Individual section zones of a Panel or DataTable: header, sub-header, footer, document viewer header, video player bar, text editor bar. Used as building blocks inside Panel and DataTable.",
+      "file": "src/components/layout-06-panel-section.json"
+    },
+    {
+      "code": "layout-07",
+      "name": "Modal",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4814:87049",
+      "description": "Full-screen overlay dialog for critical actions and confirmations. Two types: System (body has surface-strong background with white card inside) and Browser (body is plain white — used for document/file content).",
+      "file": "src/components/layout-07-modal.json"
+    },
+    {
+      "code": "layout-08",
+      "name": "ModalContent",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4816:95873",
+      "description": "Content slot patterns for the Modal body. Five types cover: Default (text + illustration), Form (inputs + controls + table), ListCard (selectable items), FileCard (document items with actions), FileContentOnly (file list).",
+      "file": "src/components/layout-08-modal-content.json"
+    },
+    {
+      "code": "layout-09",
+      "name": "DataTable",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4086:87163",
+      "description": "Full data table composed of TableColumn headers, TableRow rows, ScrollBar for horizontal scroll, and Pagination footer. ReplaceMe variant is the empty template; Candidates is a pre-filled example.",
+      "file": "src/components/layout-09-data-table.json"
+    },
+    {
+      "code": "layout-10",
+      "name": "TableColumn",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4086:78480",
+      "description": "Header cell pattern for DataTable columns. 11 types covering: title-only, sortable title, checkbox select-all, inline search, inline select, date picker, and the ReplaceMe slot. All share surface-strong background with border.",
+      "file": "src/components/layout-10-table-column.json"
+    },
+    {
+      "code": "layout-11",
+      "name": "TableRow",
+      "type": "component",
+      "category": "basic",
+      "figmaNodeId": "4086:78973",
+      "description": "Data row cell pattern for DataTable. 17 types covering: text, links, multi-text, chips, status chips, action buttons, checkboxes, photos, indicators, currency, and the ReplaceMe slot. All share white background with soft border.",
+      "file": "src/components/layout-11-table-row.json"
+    },
+    {
+      "code": "page-01",
+      "name": "Sample Pages 1 — Candidate Pipeline",
+      "type": "page",
+      "figmaNodeId": "21194:58231",
+      "description": "Candidate recruitment pipeline view. Shows a horizontal arrow-shaped pipeline stepper above a data table. The stepper visualizes candidates' progression through recruitment stages. Commonly used for requisition-level candidate tracking.",
+      "file": "src/components/page-01-candidate-pipeline.json"
+    },
+    {
+      "code": "page-02",
+      "name": "Sample Pages 2 — Candidate List",
+      "type": "page",
+      "figmaNodeId": "21194:57381",
+      "description": "Full-width candidate data table view for a requisition. Shows a filtered list of candidates with their onboarding/pre-boarding status. Has a filter bar with active filter chip row, a DataTable with inline status chips and action columns, and pagination.",
+      "file": "src/components/page-02-candidate-list.json"
+    },
+    {
+      "code": "page-03",
+      "name": "Sample Pages 3 — Wizard Form: Offer Setup",
+      "type": "page",
+      "figmaNodeId": "21194:57169",
+      "description": "Multi-step wizard form for creating an offer. Step 1: Offer Setup. Contains customer selector, position/department inputs, site location, and contract type selection cards. The wizard has a left step navigator and right form content, with a sticky footer for navigation.",
+      "file": "src/components/page-03-wizard-offer-setup.json"
+    },
+    {
+      "code": "page-04",
+      "name": "Sample Pages 4 — Wizard Form: Salary & Income",
+      "type": "page",
+      "figmaNodeId": "21194:56919",
+      "description": "Multi-step wizard form for creating an offer. Step 2: Salary & Income. Contains currency selector, basic salary input, wage type selector, working days, payday date, currency conversion toggle, and an allowance table with inline editable rows.",
+      "file": "src/components/page-04-wizard-salary-income.json"
+    },
+    {
+      "code": "page-05",
+      "name": "Sample Pages 5 — Candidate Card Grid",
+      "type": "page",
+      "figmaNodeId": null,
+      "description": "Candidate browsing view as a card grid. Left: full FilterPanel drawer with filter fields and quick suggestions. Top: list toolbar with view selector, keyword search, Apply button, compact pagination and view controls. Right: responsive grid of CandidateCard items showing avatar, name, match score, info chips, contact rows, experience entries and result tags.",
+      "file": "src/components/page-05-candidate-card-grid.json"
+    },
+    {
+      "code": "page-06",
+      "name": "Sample Pages 6 — Candidate Directory Table",
+      "type": "page",
+      "figmaNodeId": null,
+      "description": "Flat candidate directory as a wide data table with per-column filters. Same page header and list toolbar as the card grid view. Table: leading Action column with a SplitButton per row, checkbox column, photo column, then data columns whose headers embed inline search inputs (FullSearch) or inline selects (FullSelect). Horizontal scroll for overflow columns.",
+      "file": "src/components/page-06-candidate-directory.json"
+    },
+    {
+      "code": "page-07",
+      "name": "Sample Pages 7 — Resume Builder (Editor)",
+      "type": "page",
+      "figmaNodeId": null,
+      "description": "Resume Builder opened as a full-screen modal (Browser type: plain white chrome). Header: 'Resume Builder' title + close X. Mode toolbar: Editor/Design tab switch left, Save Template split button + Download button right. Body: left editor sidebar (ResumeBuilderPanel Home view with Displayed/Hidden section lists) and right preview canvas on surface-strong showing the rendered resume document.",
+      "file": "src/components/page-07-resume-builder-editor.json"
+    },
+    {
+      "code": "page-08",
+      "name": "Sample Pages 8 — Resume Builder (Design)",
+      "type": "page",
+      "figmaNodeId": null,
+      "description": "Resume Builder full-screen modal, Design mode. Same modal chrome and toolbar as the Editor view, but with the 'Design' tab active (and 'Editor' inactive). Left sidebar becomes 'Customize Your Template': stacked white cards with dropdown setting rows (Template, Margin, Spacing, Customization). Right preview canvas is identical to the Editor view.",
+      "file": "src/components/page-08-resume-builder-design.json"
+    },
+    {
+      "code": "page-09",
+      "name": "Sample Pages 9 — Bulk Send for Approval",
+      "type": "page",
+      "figmaNodeId": null,
+      "description": "Bulk task flow opened as a full-screen modal (Browser type). Header: 'Bulk Send for Approval' + close X. Body: three panes — left candidates list (selectable rows with status chips and remove actions), center approval actions form (apply-mode cards, tabs, contract/approver form cards), right contract document preview with zoom controls. Footer: Cancel left, Send for Approval (disabled until valid) right. Left and right panes are collapsible.",
+      "file": "src/components/page-09-bulk-approval.json"
+    },
+    {
+      "code": "page-10",
+      "name": "Sample Pages 10 — Bulk Send for Approval (Collapsed Panes)",
+      "type": "page",
+      "figmaNodeId": null,
+      "description": "Bulk Send for Approval with both side panes collapsed into narrow icon rails. Left rail: expand icon button, 'Total: 6' caption, then one initials chip per candidate (e.g. AR, BA, CA, DW, EC, FN) stacked vertically — the selected candidate's chip is highlighted. Right rail: expand icon button + a single document icon button. The center approval actions pane stretches across the freed width. Header, center pane content and footer are identical to page-09.",
+      "file": "src/components/page-10-bulk-approval-collapsed.json"
+    },
+    {
+      "code": "page-11",
+      "name": "Sample Pages 11 — Employment Detail Side Panel (Summary)",
+      "type": "page",
+      "figmaNodeId": null,
+      "description": "Employee/candidate employment detail opened as a wide right-anchored side panel (Panel, MultiCard) over a scrimmed base page. Panel header: candidate switcher dropdown + prev/next buttons + collapse + close. Summary bar: avatar + full name + status/info chips. Body: two columns — left Employment History tree (company > contract > version cards), right contract detail card with a 6-step approval stage stepper, underline tabs and a summary grid of icon+label/value blocks.",
+      "file": "src/components/page-11-employment-detail-summary.json"
+    },
+    {
+      "code": "page-12",
+      "name": "Sample Pages 12 — Employment Detail Side Panel (Snapshots)",
+      "type": "page",
+      "figmaNodeId": null,
+      "description": "Same employment detail side panel as page-11, showing an in-review contract (V1 · Main) with the Snapshots tab active. Stage stepper: only step 1 (KA REVIEW) reached; steps 2-6 upcoming. Header action becomes a suggested next action ('Next: Edit Contract') split button. Snapshots tab: grouped snapshot timeline — 'MAIN RECORD' group strip, then snapshot rows (CR01-CR04) on a vertical dot timeline; 'REQUEST CHANGE #1' group strip below.",
+      "file": "src/components/page-12-employment-detail-snapshots.json"
+    },
+    {
+      "code": "panel-01",
+      "name": "FilterBlockPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "4164:73949",
+      "description": "Panel body content for the filter block panel. Contains a search input at the top, followed by filter category sections. Slots directly into Panel(SingleCard) body — no background/padding of its own.",
+      "file": "src/components/panel-01-filter-block-panel.json"
+    },
+    {
+      "code": "panel-02",
+      "name": "ActionPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "7226:255940",
+      "description": "Panel body content for quick-action forms. Two states: Filled (form has data) and Unfilled (empty initial state). Contains stacked form inputs. Domain use: bulk actions, quick-edit, batch assignment on candidate records.",
+      "file": "src/components/panel-02-action-panel.json"
+    },
+    {
+      "code": "panel-03",
+      "name": "CandidateDetailsPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "4782:55680",
+      "description": "The main candidate detail panel body. 8 variants covering the candidate tabs: Profile, Interview, Comment, and History sub-tabs (MH/CA/CH/LA/JA). Each variant shows a different view of the candidate's data using CandidateInfoBlock, Timeline entries, and note/comment sections.",
+      "file": "src/components/panel-03-candidate-details-panel.json"
+    },
+    {
+      "code": "panel-04",
+      "name": "ResumeTemplatePanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "4784:31752",
+      "description": "Panel body content for browsing and selecting resume templates. Three variants: PublicTemplate (community templates), MyTemplate (user's own), PrebuiltTemplate (system defaults). Contains a ResumeCard grid and action buttons.",
+      "file": "src/components/panel-04-resume-template-panel.json"
+    },
+    {
+      "code": "panel-05",
+      "name": "ResumeBuilderPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "4601:132689",
+      "description": "Panel body content for the resume builder editor. 25 variants covering all resume section editors: Home (default view), Personal Information, Working Experience (collapse/expand), Formal Education (collapse/expand), Skills, Courses, Achievements, Additional Information, and a Design Tab for template/style customization. Two-column layout: left navigation + right editor.",
+      "file": "src/components/panel-05-resume-builder-panel.json"
+    },
+    {
+      "code": "panel-06",
+      "name": "ConsentRequestPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "6966:238717",
+      "description": "Panel body content for sending consent requests. 4 variants: ManualConsent (checkbox acknowledgment + textarea), SendEmail (email form + attachment), RequestConsent1 and RequestConsent2 (different consent request flows). Contains form inputs, file upload, and consent controls.",
+      "file": "src/components/panel-06-consent-request-panel.json"
+    },
+    {
+      "code": "panel-07",
+      "name": "SmartContentPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "10102:278857",
+      "description": "AI-powered content generation panel body. 4-step flow: SelectClient → ChooseOptions → ComposeEmail → GenerateResume. Each step shows relevant controls with progress feedback. Uses Toast(Filled) for AI generation status.",
+      "file": "src/components/panel-07-smart-content-panel.json"
+    },
+    {
+      "code": "panel-08",
+      "name": "ConsentInfoPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "7331:197279",
+      "description": "Panel body content showing consent status and history. 21 variants combining: consent method (ShareLink/ManualUpload/SendEmail) × status (Accepted/Pending/Declined) × tab (Details/Events/ProofOfConsent). Shows consent timeline, status details, and proof documentation.",
+      "file": "src/components/panel-08-consent-info-panel.json"
+    },
+    {
+      "code": "panel-09",
+      "name": "ReferencePanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "7560:273201",
+      "description": "Panel body content for viewing candidate reference letters. Two states: Read (letter has been opened) and Unread (not yet viewed). Shows the reference letter document viewer on the left and metadata/actions on the right.",
+      "file": "src/components/panel-09-reference-panel.json"
+    },
+    {
+      "code": "panel-10",
+      "name": "FileInfoPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "10845:292603",
+      "description": "Panel body content for file management actions. 3 variants: FileHistory (shows version history), EditTag (tag editor for a file), LinkTo (links a file to a job/candidate). Each shows relevant file info and action controls.",
+      "file": "src/components/panel-10-file-info-panel.json"
+    },
+    {
+      "code": "panel-11",
+      "name": "WorkflowPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "13172:394918",
+      "description": "Panel body content for candidate workflow/pipeline management. Shows the candidate's current status in the recruitment workflow, stage history, and available workflow actions. Uses Toast for important stage alerts.",
+      "file": "src/components/panel-11-workflow-panel.json"
+    },
+    {
+      "code": "panel-12",
+      "name": "NotificationPanel",
+      "type": "component",
+      "category": "panel-content",
+      "figmaNodeId": "13697:113430",
+      "description": "Panel body content for the notification/activity feed. Shows activity grouped by category: General, Jobs, Contract, Invoice, Payroll. Each category section is a collapsible group of activity items.",
+      "file": "src/components/panel-12-notification-panel.json"
+    }
+  ]
+}

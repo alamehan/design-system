@@ -1,0 +1,23 @@
+/* atom-12 FormControl (Checkbox) — v-model. Supports indeterminate.
+   Source of truth: src/components/atom-12*.json · token-pure CSS (vars only). */
+
+.es-check { display: inline-flex; align-items: center; gap: var(--space-sm); cursor: pointer; }
+.es-check.is-disabled { opacity: 0.5; cursor: not-allowed; }
+.es-check__box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border: var(--stroke-thin) solid var(--color-system-text-mute);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-pure-white);
+  color: var(--color-neutral-pure-white);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.es-check__box.is-on { background: var(--color-brand-brand); border-color: var(--color-brand-brand); }
+.es-check__mark { font-size: 0.8em; line-height: 1; }
+.es-check__native { position: absolute; opacity: 0; width: 0; height: 0; }
+.es-check:focus-within .es-check__box { box-shadow: var(--shadow-State-Focus); }
+.es-check__label { color: var(--color-system-text-head); }

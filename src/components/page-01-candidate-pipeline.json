@@ -1,0 +1,249 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "candidate-pipeline",
+  "name": "Sample Pages 1 \u2014 Candidate Pipeline",
+  "figmaNodeId": "21194:58231",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "pipeline-table-view",
+  "description": "Candidate recruitment pipeline view. Shows a horizontal arrow-shaped pipeline stepper above a data table. The stepper visualizes candidates' progression through recruitment stages. Commonly used for requisition-level candidate tracking.",
+  "shell": {
+    "sidebar": {
+      "component": "sidebar",
+      "figmaNodeId": "present-as-instance",
+      "isDetached": false,
+      "props": {
+        "state": "Default"
+      },
+      "dimensions": {
+        "width": 58,
+        "height": 768
+      }
+    },
+    "app-bar": {
+      "component": "app-bar",
+      "isDetached": true,
+      "detachNote": "top-bar detached from [\ud83e\udde9]-top-bar component \u2014 structure identical, tokens identical. Treat as app-bar in code.",
+      "props": {
+        "type": "DefaultUser"
+      },
+      "dimensions": {
+        "width": 1308,
+        "height": 60
+      },
+      "tokens": {
+        "background": "neutral.pure-white"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 58,
+      "y": 60,
+      "width": 1244,
+      "height": 708
+    },
+    "zones": [
+      "page-header",
+      "pipeline-stepper",
+      "action-bar",
+      "table-content"
+    ]
+  },
+  "zones": {
+    "page-header": {
+      "component": null,
+      "isDetached": false,
+      "customElement": true,
+      "customElementId": "page-header-bar",
+      "description": "Standard page header row: breadcrumb/title on the left, action buttons on the right. Separator line between left and right zones.",
+      "dimensions": {
+        "width": 1244,
+        "height": 56
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-bottom": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.md",
+        "padding-x": "spacing.standard.lg"
+      },
+      "layout": {
+        "type": "horizontal",
+        "gap": "spacing.standard.lg"
+      },
+      "slots": {
+        "left": {
+          "description": "Breadcrumb or page title + subtitle + record identifier",
+          "content": [
+            "breadcrumb or heading text",
+            "optional status chip"
+          ]
+        },
+        "right": {
+          "description": "Primary action buttons for the page",
+          "content": [
+            "button array"
+          ]
+        }
+      }
+    },
+    "pipeline-stepper": {
+      "component": null,
+      "isDetached": false,
+      "customElement": true,
+      "customElementId": "pipeline-stepper",
+      "description": "CUSTOM ELEMENT \u2014 not in component catalog. Horizontal ribbon of arrow-shaped stage segments showing a candidate's recruitment pipeline progression. Each segment = one pipeline stage. Active stage highlighted with brand-surface-strong fill.",
+      "dimensions": {
+        "width": 1244,
+        "height": 66
+      },
+      "tokens": {
+        "stage-active-bg": "brand.brand-surface-strong",
+        "stage-inactive-bg": "neutral.pure-white",
+        "stage-border": "system.border-soft",
+        "stage-border-width": "stroke.thin"
+      },
+      "anatomy": {
+        "stage": {
+          "structure": "Tail (left arrow notch, SVG) + Frame (content area) + Head (right arrow point, SVG)",
+          "dimensions": {
+            "height": 66,
+            "width": "variable (~134-212px)"
+          },
+          "content-frame": {
+            "padding-top": 12,
+            "padding-left": 8,
+            "gap": 2,
+            "layout": "vertical"
+          },
+          "content": {
+            "step-number": {
+              "text-style": "text-styles.bold.label-sm",
+              "text-color": "system.text-head",
+              "description": "Stage sequence number (e.g. '1', '2', '3')"
+            },
+            "step-label": {
+              "text-style": "text-styles.regular.label-sm",
+              "text-color": "system.text-body",
+              "description": "Stage name (e.g. 'Onboarding', 'Pre-boarding', 'Contract')"
+            }
+          },
+          "states": {
+            "active": {
+              "background": "brand.brand-surface-strong",
+              "note": "Current active stage"
+            },
+            "completed": {
+              "background": "brand.brand-surface-soft",
+              "note": "Completed stage variant"
+            },
+            "inactive": {
+              "background": "neutral.pure-white",
+              "note": "Not yet reached"
+            }
+          }
+        }
+      },
+      "implementation-notes": "Build as a flex row of arrow-shaped divs. Each 'Head' is a CSS clip-path or SVG pointing right. The first stage has no Tail. The last stage has no Head. Active stage uses brand.brand-surface-strong fill."
+    },
+    "action-bar": {
+      "component": null,
+      "isDetached": false,
+      "customElement": true,
+      "customElementId": "table-action-bar",
+      "description": "Secondary action bar below the stepper. Contains pagination (left), filter/sort controls (right), and export actions.",
+      "dimensions": {
+        "width": 1244,
+        "height": 60
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-top": "system.border-soft",
+        "padding-y": "spacing.standard.lg",
+        "padding-x": "spacing.standard.lg"
+      },
+      "layout": {
+        "type": "horizontal",
+        "gap": "spacing.standard.lg"
+      },
+      "slots": {
+        "left": {
+          "description": "Left actions: search or quick filter"
+        },
+        "center": {
+          "component": "pagination",
+          "props": {
+            "type": "Compact"
+          }
+        },
+        "right": {
+          "description": "Export and secondary actions"
+        }
+      }
+    },
+    "table-content": {
+      "component": "data-table",
+      "isDetached": true,
+      "detachNote": "Table built from detached frames \u2014 not using [\ud83e\udde9]-table-full instance. Structure matches DataTable: TableColumn header + TableRow body + vertical layout. Treat as data-table in code.",
+      "dimensions": {
+        "width": 1244,
+        "height": 468
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "padding": "spacing.standard.xxl",
+        "content-gap": "spacing.standard.lg"
+      },
+      "props": {
+        "columns": [
+          "custom per page"
+        ],
+        "rows": [
+          "dynamic data"
+        ]
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "pipeline-stepper": "Horizontal arrow-shaped stage ribbon. Active: brand.brand-surface-strong. Inactive: neutral.pure-white.",
+    "page-header-bar": "Page title left + action buttons right. Border-bottom: system.border-soft.",
+    "table-action-bar": "Secondary bar: pagination center, sort/export right."
+  },
+  "code": "page-01",
+  "geometry": {
+    "_provenance": "Measured from the author's Figma screenshot (capture 2732x1536 @2x; logical basis 1366x768).",
+    "logicalBasis": {
+      "width": 1366,
+      "height": 768
+    },
+    "appRailWidthPx": 54,
+    "pipelineStages": 8,
+    "stageCells": {
+      "countOnTop": true,
+      "labelBelow": true,
+      "activeIndexDefault": 0
+    },
+    "table": {
+      "rowHeightPx": "47-50",
+      "visibleDataRows": 7,
+      "headerFilterRow": true,
+      "columns": [
+        "checkbox",
+        "No",
+        "Photo",
+        "Candidate Name",
+        "Last Position",
+        "Matching",
+        "Status",
+        "Interview Schedule",
+        "Interview Form",
+        "Phone Number"
+      ]
+    }
+  }
+}

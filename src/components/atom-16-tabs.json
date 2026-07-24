@@ -1,0 +1,153 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "tabs",
+  "name": "Tabs",
+  "figmaName": "[⚛️]-tab-switch",
+  "figmaNodeId": "4086:23054",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Horizontal tab navigation. Two styles: Basic (pill in container) and Underline (borderless with bottom indicator). Text-only, icon-only, or icon+text items.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "BasicTextOnly",
+        "BasicIconOnly",
+        "BasicIconAndText",
+        "UnderlineTextOnly",
+        "UnderlineIconOnly",
+        "UnderlineIconAndText"
+      ],
+      "default": "BasicTextOnly"
+    },
+    "activeIndex": {
+      "type": "number",
+      "default": 0
+    },
+    "items": {
+      "type": "array",
+      "default": [
+        {
+          "label": "Tab 1"
+        },
+        {
+          "label": "Tab 2"
+        },
+        {
+          "label": "Tab 3"
+        }
+      ],
+      "description": "Each: {label, icon?, isDisabled?}"
+    }
+  },
+  "tokens": {
+    "base": {
+      "item-padding-y": "spacing.standard.sm",
+      "item-padding-x": "spacing.standard.md",
+      "item-gap": "spacing.standard.sm",
+      "item-font-style": "text-styles.bold.body-md"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": [
+            "BasicTextOnly",
+            "BasicIconOnly",
+            "BasicIconAndText"
+          ]
+        },
+        "tokens": {
+          "container-background": "neutral.muted",
+          "container-radius": "corner-radius.lg",
+          "container-padding": "spacing.standard.3xs",
+          "container-gap": "spacing.standard.3xs",
+          "item-background-active": "neutral.pure-white",
+          "item-text-default": "system.text-body",
+          "item-text-active": "system.text-head",
+          "item-icon-default": "system.text-body",
+          "item-icon-active": "system.text-head",
+          "item-radius": "corner-radius.md"
+        }
+      },
+      {
+        "when": {
+          "type": [
+            "UnderlineTextOnly",
+            "UnderlineIconOnly",
+            "UnderlineIconAndText"
+          ]
+        },
+        "tokens": {
+          "container-background": null,
+          "container-padding": "spacing.standard.none",
+          "item-border-bottom-active": "brand.brand",
+          "item-border-bottom-default": "system.border-strong",
+          "item-border-width": "stroke.thin",
+          "item-text-default": "system.text-mute",
+          "item-text-active": "brand.brand",
+          "item-icon-default": "system.text-mute",
+          "item-icon-active": "brand.brand",
+          "item-radius": "corner-radius.none"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "context-menu-item-master"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "tablist"
+    },
+    "tab-item": {
+      "element": "button",
+      "role": "tab"
+    },
+    "tab-icon": {
+      "element": "span",
+      "optional": true
+    },
+    "tab-label": {
+      "element": "span"
+    },
+    "tab-panel": {
+      "element": "div",
+      "role": "tabpanel",
+      "note": "Content below tab list"
+    }
+  },
+  "usage": {
+    "generic": "Tabs(type='BasicTextOnly', activeIndex=0, items=[{label:'Overview'},{label:'History'},{label:'Documents'}])",
+    "notes": "Tabs only renders the bar. Manage panel content separately."
+  },
+  "a11y": {
+    "role": "tablist",
+    "keyboard": [
+      "ArrowLeft",
+      "ArrowRight",
+      "Home",
+      "End",
+      "Enter",
+      "Space"
+    ],
+    "aria": {
+      "aria-selected": "true on active tab",
+      "aria-controls": "points to tabpanel id"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use Basic inside cards/sections.",
+      "Use Underline for top-level navigation.",
+      "Max 5 tabs before overflow."
+    ],
+    "dont": [
+      "Don't use for sequential steps — use stepper.",
+      "Don't mix icon-only and text tabs in same tablist."
+    ]
+  },
+  "code": "atom-16"
+}

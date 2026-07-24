@@ -1,0 +1,86 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "notification-list",
+  "name": "NotificationList",
+  "figmaName": "[🧱]-notification-section",
+  "figmaNodeId": "13656:372424",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Complete notification feed panel. Sticky header with title and mark-all-read action. Scrollable list of NotificationCard rows.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default"
+      ],
+      "default": "Default"
+    },
+    "notifications": {
+      "type": "array",
+      "default": []
+    },
+    "unreadCount": {
+      "type": "number",
+      "default": 0
+    },
+    "onMarkAllRead": {
+      "type": "function"
+    }
+  },
+  "tokens": {
+    "header": {
+      "background": "neutral.pure-white",
+      "border-bottom": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.sm",
+      "title-style": "text-styles.bold.body-md",
+      "title-color": "system.text-head"
+    },
+    "list": {
+      "overflow": "auto"
+    }
+  },
+  "subcomponents": [
+    "notification-card",
+    "info-block"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "feed"
+    },
+    "header": {
+      "element": "div",
+      "optional": false
+    },
+    "list": {
+      "element": "div",
+      "optional": false,
+      "note": "Stack of NotificationCard components"
+    }
+  },
+  "usage": {
+    "generic": "NotificationList(notifications=[...], unreadCount=3)",
+    "notes": "Render inside AppBar notification dropdown or a dedicated Panel."
+  },
+  "a11y": {
+    "role": "feed",
+    "aria": {
+      "aria-label": "Notifications"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show unread count in the header.",
+      "Provide a 'Mark all as read' action."
+    ],
+    "dont": [
+      "Don't load all notifications at once — use infinite scroll or load-more."
+    ]
+  },
+  "code": "composite-12"
+}

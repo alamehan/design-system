@@ -1,0 +1,262 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "button",
+  "name": "Button",
+  "figmaName": "[⚛️]-button-full",
+  "figmaNodeId": "4052:14682",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Primary interactive element for triggering actions. Supports five visual styles and three states.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Filled",
+        "Outlined",
+        "Tonal",
+        "Elevated",
+        "Ghost"
+      ],
+      "default": "Filled",
+      "description": "Visual style."
+    },
+    "state": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Hover",
+        "Disabled"
+      ],
+      "default": "Default",
+      "description": "Interaction state."
+    },
+    "label": {
+      "type": "string",
+      "default": "Button",
+      "description": "Button label text."
+    },
+    "hasIconLeft": {
+      "type": "boolean",
+      "default": false
+    },
+    "hasIconRight": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "tokens": {
+    "base": {
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.sm",
+      "font-style": "text-styles.bold.body-md"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": "Filled"
+        },
+        "tokens": {
+          "background": "brand.brand",
+          "text": "neutral.pure-white",
+          "icon": "neutral.pure-white",
+          "border": null
+        }
+      },
+      {
+        "when": {
+          "type": "Filled",
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "component.button-hover"
+        }
+      },
+      {
+        "when": {
+          "type": "Filled",
+          "state": "Disabled"
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "text": "system.text-mute",
+          "icon": "system.text-mute"
+        }
+      },
+      {
+        "when": {
+          "type": "Outlined"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "text": "brand.brand",
+          "icon": "brand.brand",
+          "border-color": "brand.brand",
+          "border-width": "stroke.thin"
+        }
+      },
+      {
+        "when": {
+          "type": "Outlined",
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "brand.brand-surface-soft"
+        }
+      },
+      {
+        "when": {
+          "type": "Outlined",
+          "state": "Disabled"
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "text": "system.text-mute",
+          "icon": "system.text-mute",
+          "border-color": "system.border-medium"
+        }
+      },
+      {
+        "when": {
+          "type": "Tonal"
+        },
+        "tokens": {
+          "background": "component.button-tonal",
+          "text": "brand.brand",
+          "icon": "brand.brand",
+          "border": null
+        }
+      },
+      {
+        "when": {
+          "type": "Tonal",
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "component.button-tonal-hover"
+        }
+      },
+      {
+        "when": {
+          "type": "Tonal",
+          "state": "Disabled"
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "text": "system.text-mute",
+          "icon": "system.text-mute"
+        }
+      },
+      {
+        "when": {
+          "type": "Elevated"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "text": "brand.brand",
+          "icon": "brand.brand",
+          "border": null,
+          "shadow": "shadow.Base"
+        }
+      },
+      {
+        "when": {
+          "type": "Elevated",
+          "state": "Disabled"
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "text": "system.text-mute",
+          "icon": "system.text-mute",
+          "shadow": null
+        }
+      },
+      {
+        "when": {
+          "type": "Ghost"
+        },
+        "tokens": {
+          "background": null,
+          "text": "brand.brand",
+          "icon": "brand.brand",
+          "border": null
+        }
+      },
+      {
+        "when": {
+          "type": "Ghost",
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "brand.brand-surface-soft"
+        }
+      },
+      {
+        "when": {
+          "type": "Ghost",
+          "state": "Disabled"
+        },
+        "tokens": {
+          "text": "system.text-mute",
+          "icon": "system.text-mute"
+        }
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "button",
+      "role": "button"
+    },
+    "icon-left": {
+      "element": "span",
+      "optional": true,
+      "condition": {
+        "prop": "hasIconLeft",
+        "equals": true
+      }
+    },
+    "label": {
+      "element": "span",
+      "optional": false
+    },
+    "icon-right": {
+      "element": "span",
+      "optional": true,
+      "condition": {
+        "prop": "hasIconRight",
+        "equals": true
+      }
+    }
+  },
+  "usage": {
+    "generic": "Button(type='Filled', label='Save', state='Default')",
+    "notes": "Use Filled for primary action only. Limit to one Filled button per section."
+  },
+  "a11y": {
+    "role": "button",
+    "focusable": true,
+    "keyboard": [
+      "Enter",
+      "Space"
+    ],
+    "aria": {
+      "aria-disabled": "true when state=Disabled"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use Filled for the primary action only.",
+      "Use Outlined/Tonal for secondary.",
+      "Use Ghost for tertiary actions."
+    ],
+    "dont": [
+      "Don't use more than one Filled button per view.",
+      "Don't truncate the label."
+    ]
+  },
+  "code": "atom-01"
+}

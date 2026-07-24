@@ -1,0 +1,65 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "scroll-bar",
+  "name": "ScrollBar",
+  "figmaName": "[🧩]-scroll-bar",
+  "figmaNodeId": "4107:20785",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Custom scrollbar overlay for scrollable containers. Vertical and horizontal variants. Track uses system border color; thumb uses white with Smooth shadow for lift effect.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Vertical",
+        "Horizontal"
+      ],
+      "default": "Vertical"
+    }
+  },
+  "tokens": {
+    "base": {
+      "track-color": "system.border-soft",
+      "track-radius": "corner-radius.full",
+      "thumb-color": "neutral.pure-white",
+      "thumb-radius": "corner-radius.full",
+      "thumb-shadow": "shadow.Smooth"
+    }
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "optional": false,
+      "note": "Track container — full height (vertical) or full width (horizontal)"
+    },
+    "thumb": {
+      "element": "div",
+      "optional": false,
+      "note": "Draggable indicator positioned based on scroll position"
+    }
+  },
+  "usage": {
+    "generic": "ScrollBar(type='Vertical')",
+    "notes": "Overlay the native scrollbar using CSS. Typically implemented via a scroll container library (e.g. overlayscrollbars). Don't use in short containers that don't scroll."
+  },
+  "a11y": {
+    "role": "scrollbar",
+    "aria": {
+      "aria-orientation": "vertical or horizontal",
+      "aria-valuenow": "current scroll position (0-100)",
+      "aria-valuemin": "0",
+      "aria-valuemax": "100"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Make the thumb wide enough to be easily draggable (min 8px)."
+    ],
+    "dont": [
+      "Don't replace native scrollbars in accessibility-critical contexts without fallback."
+    ]
+  },
+  "code": "layout-04"
+}

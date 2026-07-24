@@ -1,0 +1,76 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "smart-content-panel",
+  "name": "SmartContentPanel",
+  "figmaName": "[🧱]-panel-content-single-sctc",
+  "figmaNodeId": "10102:278857",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "AI-powered content generation panel body. 4-step flow: SelectClient → ChooseOptions → ComposeEmail → GenerateResume. Each step shows relevant controls with progress feedback. Uses Toast(Filled) for AI generation status.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "SelectClient",
+        "ChooseOptions",
+        "ComposeEmail",
+        "GenerateResume"
+      ],
+      "default": "SelectClient"
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": "spacing.standard.lg"
+    },
+    "status-toast": {
+      "note": "Toast(Filled) showing AI generation progress"
+    },
+    "attachment": {
+      "note": "Generated content preview or attachment area"
+    }
+  },
+  "subcomponents": [
+    "input",
+    "form-control",
+    "button",
+    "toast",
+    "file-upload"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "status": {
+      "element": "div",
+      "optional": true,
+      "note": "Toast for AI generation feedback"
+    },
+    "content-area": {
+      "element": "div",
+      "optional": false,
+      "note": "Step-specific form or preview"
+    }
+  },
+  "usage": {
+    "generic": "SmartContentPanel(type='SelectClient') — place inside Panel(SingleCard) body",
+    "notes": "Advance through steps via Panel footer 'Next' button."
+  },
+  "a11y": {
+    "role": "form"
+  },
+  "guidelines": {
+    "do": [
+      "Show progress indicator between steps.",
+      "Show AI generation status clearly in the toast."
+    ],
+    "dont": [
+      "Don't allow step progression until current step is valid."
+    ]
+  },
+  "code": "panel-07"
+}

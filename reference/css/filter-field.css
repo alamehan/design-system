@@ -1,0 +1,18 @@
+/* composite-04 FilterField — one filter row inside EFilterPanel. Types: General|Date|Phone|MaxMin|Slider. Inputs go in the default slot; optional #icon, #options (checkbox list), #suggestions (chips).
+   Source of truth: src/components/composite-04*.json · token-pure CSS (vars only). */
+
+.es-ffield {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  background: var(--color-neutral-pure-white);
+  border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
+  padding: var(--space-lg) var(--space-xxl);
+}
+.es-ffield__header { display: flex; align-items: center; gap: var(--space-sm); }
+.es-ffield__icon { display: inline-flex; align-items: center; color: var(--color-system-text-body); }
+.es-ffield__label { color: var(--color-system-text-head); }
+.es-ffield__body { display: flex; flex-direction: column; gap: var(--space-sm); }
+.es-ffield--MaxMin .es-ffield__body { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+.es-ffield__options { display: flex; flex-direction: column; gap: var(--space-sm); }
+.es-ffield__suggestions { display: flex; flex-wrap: wrap; gap: var(--space-sm); }

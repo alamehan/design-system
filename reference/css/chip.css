@@ -1,0 +1,36 @@
+/* atom-05 Chip — tag/filter pill. variant: Neutral|Colored|Gradient. Optional close.
+   Source of truth: src/components/atom-05*.json · token-pure CSS (vars only). */
+
+.es-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xxs);
+  border: var(--stroke-thin) solid transparent;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.es-chip--md { padding: var(--space-xxs) var(--space-lg); }
+.es-chip--sm { padding: var(--space-3xs) var(--space-sm); }
+.es-chip__icon { display: inline-flex; align-items: center; font-size: 1em; }
+.es-chip__close {
+  display: inline-flex;
+  align-items: center;
+  margin-left: var(--space-3xs);
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.95em;
+  line-height: 1;
+  padding: 0;
+}
+.es-chip__close:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); border-radius: var(--radius-full); }
+.es-chip--Neutral { background: var(--color-system-surface-strong); border-color: var(--color-system-border-strong); color: var(--color-system-text-head); }
+.es-chip--Neutral .es-chip__icon { color: var(--color-system-text-body); }
+.es-chip--Colored .es-chip__icon { color: var(--color-brand-brand); }
+.es-chip--Colored { background: var(--color-brand-brand-surface-soft); border-color: var(--color-brand-brand); color: var(--color-brand-brand-strong); }
+.es-chip--Gradient {
+  background: linear-gradient(90deg, var(--color-gradients-gd-amber-start), var(--color-gradients-gd-amber-end));
+  color: var(--color-neutral-pure-white);
+  box-shadow: var(--shadow-Base);
+}

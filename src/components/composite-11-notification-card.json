@@ -1,0 +1,116 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "notification-card",
+  "name": "NotificationCard",
+  "figmaName": "[🧱]-notification-card-[🎲]-pattern",
+  "figmaNodeId": "13656:98169",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Individual notification row in the NotificationList. Three states: Default (white), Hover1 (header highlighted), Hover2 (detail highlighted). Each row has a summary header and an expandable detail section.",
+  "props": {
+    "state": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Hover1",
+        "Hover2"
+      ],
+      "default": "Default"
+    },
+    "isRead": {
+      "type": "boolean",
+      "default": false
+    },
+    "isExpanded": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "tokens": {
+    "base": {
+      "border-bottom": "system.border-soft",
+      "border-width": "stroke.thin"
+    },
+    "header": {
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.sm"
+    },
+    "detail": {
+      "border-top": "system.border-soft",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.md",
+      "gap": "spacing.standard.sm"
+    },
+    "overrides": [
+      {
+        "when": {
+          "state": "Default"
+        },
+        "tokens": {
+          "header-bg": "neutral.pure-white",
+          "detail-bg": "neutral.pure-white"
+        }
+      },
+      {
+        "when": {
+          "state": "Hover1"
+        },
+        "tokens": {
+          "header-bg": "system.surface-medium",
+          "detail-bg": "neutral.pure-white"
+        }
+      },
+      {
+        "when": {
+          "state": "Hover2"
+        },
+        "tokens": {
+          "header-bg": "neutral.pure-white",
+          "detail-bg": "system.surface-medium"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "info-block"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "listitem"
+    },
+    "header": {
+      "element": "div",
+      "optional": false,
+      "note": "Notification title + timestamp + unread indicator"
+    },
+    "detail": {
+      "element": "div",
+      "optional": true,
+      "note": "Expanded detail content"
+    }
+  },
+  "usage": {
+    "generic": "NotificationCard(state='Default', isRead=false)",
+    "notes": "Compose inside NotificationList. Manage expand state externally."
+  },
+  "a11y": {
+    "role": "listitem",
+    "aria": {
+      "aria-expanded": "true when expanded"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Visually distinguish unread notifications (e.g. dot indicator).",
+      "Show relative timestamp."
+    ],
+    "dont": [
+      "Don't show more than 10 expanded detail rows simultaneously."
+    ]
+  },
+  "code": "composite-11"
+}

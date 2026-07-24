@@ -1,0 +1,131 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "avatar",
+  "name": "Avatar",
+  "figmaName": "[📦]-user-avatar",
+  "figmaNodeId": "2451:10899",
+  "category": "foundation",
+  "section": "Foundations",
+  "role": "asset",
+  "implementable": true,
+  "description": "User profile picture asset. 41 variants: 20 male personas (ava-man-1 to ava-man-20), 20 female personas (ava-woman-1 to ava-woman-20), and 1 placeholder (ava-placeholder-user). Each is a 128×128px frame with an illustration and a border overlay. Used in AppBar, Sidebar hover state, CandidateCard, ContentBlock(OptionMenus), and NotificationCard.",
+  "assetType": "illustration",
+  "dimensions": {
+    "width": 128,
+    "height": 128,
+    "unit": "px"
+  },
+  "props": {
+    "variant": {
+      "type": "enum",
+      "values": [
+        "ava-man-1",
+        "ava-man-2",
+        "ava-man-3",
+        "ava-man-4",
+        "ava-man-5",
+        "ava-man-6",
+        "ava-man-7",
+        "ava-man-8",
+        "ava-man-9",
+        "ava-man-10",
+        "ava-man-11",
+        "ava-man-12",
+        "ava-man-13",
+        "ava-man-14",
+        "ava-man-15",
+        "ava-man-16",
+        "ava-man-17",
+        "ava-man-18",
+        "ava-man-19",
+        "ava-man-20",
+        "ava-woman-1",
+        "ava-woman-2",
+        "ava-woman-3",
+        "ava-woman-4",
+        "ava-woman-5",
+        "ava-woman-6",
+        "ava-woman-7",
+        "ava-woman-8",
+        "ava-woman-9",
+        "ava-woman-10",
+        "ava-woman-11",
+        "ava-woman-12",
+        "ava-woman-13",
+        "ava-woman-14",
+        "ava-woman-15",
+        "ava-woman-16",
+        "ava-woman-17",
+        "ava-woman-18",
+        "ava-woman-19",
+        "ava-woman-20",
+        "ava-placeholder-user"
+      ],
+      "default": "ava-placeholder-user",
+      "description": "Which avatar persona to show. Use ava-placeholder-user when no specific user is assigned."
+    },
+    "size": {
+      "type": "enum",
+      "values": [
+        "xs",
+        "sm",
+        "md",
+        "lg",
+        "xl"
+      ],
+      "default": "md",
+      "description": "Display size. The Figma asset is 128px; scale via CSS to the appropriate token size.",
+      "sizeMap": {
+        "xs": 24,
+        "sm": 32,
+        "md": 40,
+        "lg": 64,
+        "xl": 128
+      }
+    }
+  },
+  "tokens": {
+    "border-radius": "corner-radius.full",
+    "border-color": "system.border-soft",
+    "border-width": "stroke.thin",
+    "shadow": null
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "img"
+    },
+    "image": {
+      "element": "img",
+      "optional": false,
+      "note": "Avatar illustration"
+    },
+    "border": {
+      "element": "div",
+      "optional": true,
+      "note": "Overlay border ring — applied via CSS box-shadow or ::after"
+    }
+  },
+  "usage": {
+    "generic": "Avatar(variant='ava-placeholder-user', size='md')",
+    "notes": "Always apply corner-radius.full to get the circular shape. Export as SVG or PNG from Figma for implementation. For user assignment, map user gender + assigned avatar number to the variant ID."
+  },
+  "a11y": {
+    "role": "img",
+    "aria": {
+      "aria-label": "User avatar — [person name]"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always use ava-placeholder-user when no user is assigned.",
+      "Scale using CSS — don't change the Figma asset dimensions.",
+      "Apply corner-radius.full in code to make it circular."
+    ],
+    "dont": [
+      "Don't use avatar illustrations outside of the defined persona set.",
+      "Don't stretch avatars out of their 1:1 aspect ratio."
+    ]
+  },
+  "code": "asset-01"
+}

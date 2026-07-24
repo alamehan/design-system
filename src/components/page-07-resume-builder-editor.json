@@ -1,0 +1,227 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "resume-builder-editor",
+  "name": "Sample Pages 7 — Resume Builder (Editor)",
+  "figmaNodeId": null,
+  "source": "User-provided screenshot export from Figma (Sample Full-Screen Modal Builder - 1). Node ID not captured.",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "fullscreen-modal-view",
+  "description": "Resume Builder opened as a full-screen modal (Browser type: plain white chrome). Header: 'Resume Builder' title + close X. Mode toolbar: Editor/Design tab switch left, Save Template split button + Download button right. Body: left editor sidebar (ResumeBuilderPanel Home view with Displayed/Hidden section lists) and right preview canvas on surface-strong showing the rendered resume document.",
+  "shell": {
+    "note": "Full-screen modal overlays the entire viewport — sidebar and app-bar are covered. Modal chrome is the page shell.",
+    "modal": {
+      "component": "modal",
+      "props": {
+        "type": "DefaultBrowser",
+        "size": "fullscreen",
+        "title": "Resume Builder"
+      },
+      "dimensions": {
+        "width": 1366,
+        "height": 768
+      },
+      "tokens": {
+        "background": "neutral.pure-white"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 0,
+      "y": 0,
+      "width": 1366,
+      "height": 768
+    },
+    "zones": [
+      "modal-header",
+      "mode-toolbar",
+      "builder-body"
+    ]
+  },
+  "zones": {
+    "modal-header": {
+      "component": "panel-section",
+      "props": {
+        "type": "HeaderTitle"
+      },
+      "description": "Modal title bar: 'Resume Builder' (text-styles.bold.body-lg, system.text-head) left, close X icon button right.",
+      "dimensions": {
+        "width": 1366,
+        "height": 52
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-bottom": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.md",
+        "padding-x": "spacing.standard.lg"
+      }
+    },
+    "mode-toolbar": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "builder-mode-toolbar",
+      "description": "Toolbar under the header. Left: mode switch tabs (Basic style, icon + text): 'Editor' (pencil icon, active) and 'Design' (typography icon, inactive/disabled until content valid). Right: 'Save Template' split button (Outlined, with chevron dropdown) + 'Download' button (Filled).",
+      "dimensions": {
+        "width": 1366,
+        "height": 56
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-bottom": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.sm",
+        "padding-x": "spacing.standard.lg"
+      },
+      "layout": {
+        "type": "horizontal",
+        "justify": "space-between"
+      },
+      "slots": {
+        "left": {
+          "component": "tabs",
+          "props": {
+            "type": "BasicIconAndText",
+            "items": [
+              {
+                "label": "Editor",
+                "icon": "pencil",
+                "state": "active"
+              },
+              {
+                "label": "Design",
+                "icon": "typography",
+                "state": "inactive"
+              }
+            ]
+          }
+        },
+        "right": {
+          "content": [
+            {
+              "component": "split-button",
+              "props": {
+                "type": "Outlined",
+                "label": "Save Template"
+              }
+            },
+            {
+              "component": "button",
+              "props": {
+                "type": "Filled",
+                "label": "Download"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "builder-body": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "builder-body",
+      "description": "Two-column builder body. Left: 330px editor sidebar. Right: preview canvas.",
+      "dimensions": {
+        "width": 1366,
+        "height": 660
+      },
+      "layout": {
+        "type": "horizontal"
+      },
+      "columns": {
+        "editor-sidebar": {
+          "width": 440,
+          "component": "resume-builder-panel",
+          "props": {
+            "type": "HomeDefault"
+          },
+          "description": "Resume section manager. Group header row 'Displayed' with count chip (4) on system.surface-strong strip; section rows (Personal Information, Formal Education, Working Experience, Additional Information) each with leading section icon, eye toggle (brand.brand) and chevron. Group 'Hidden' with count chip (3): Course, Skill, Achievement rows with eye-off toggle (system.text-mute). Bottom: helper card with character illustration + caption 'Easily customize your resume...' (text-styles.regular.body-sm, system.text-body).",
+          "tokens": {
+            "background": "neutral.pure-white",
+            "border-right": "system.border-soft",
+            "border-width": "stroke.thin",
+            "group-header-bg": "system.surface-strong",
+            "row-border": "system.border-soft"
+          },
+          "helper-illustration": {
+            "component": "character-expression",
+            "note": "Mascot illustration in the bottom helper card"
+          }
+        },
+        "preview-canvas": {
+          "description": "Scrollable preview area showing the rendered resume as an A4 page card centered on a tinted canvas. Vertical scroll bar at the right edge.",
+          "tokens": {
+            "background": "brand.brand-surface-soft",
+            "padding": "spacing.standard.xxl"
+          },
+          "content": {
+            "component": "document-gallery",
+            "props": {
+              "type": "ModernProfessional"
+            },
+            "note": "White A4 page card (corner-radius.none paper look with shadow): avatar top-left; right column of icon+text personal info rows; sections 'Social Profile', 'Profile Summary', 'About Me' with title (text-styles.bold.body-lg) + divider + body text (text-styles.regular.body-sm)"
+          },
+          "scroll": {
+            "component": "scroll-bar",
+            "note": "Vertical variant"
+          }
+        }
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "builder-mode-toolbar": "Basic icon+text tabs (Editor/Design) left; Save Template split button + Download filled button right. Border-bottom: system.border-soft.",
+    "builder-body": "Two-column: 330px editor sidebar (resume-builder-panel) + preview canvas on system.surface-strong with document-gallery page card."
+  },
+  "code": "page-07",
+  "geometry": {
+    "basis": "1366x768 logical, measured from 2732x1536 @2x author screenshot (builder1-real)",
+    "modal": "fullscreen browser EModal, plain white chrome, title Resume Builder + close X",
+    "toolbar": {
+      "height": 51,
+      "left": "segmented Editor/Design switch (gray container, active seg white)",
+      "right": "Save Template Tonal split button + Download Filled (no icon)"
+    },
+    "sidebar": {
+      "width": 440,
+      "bands": [
+        "Displayed (4)",
+        "Hidden (3)"
+      ],
+      "countChip": {
+        "size": 24,
+        "style": "circle, brand border, brand-soft bg"
+      },
+      "rows": "borderless, icon + label + brand eye / mute eye-off + chevron",
+      "footer": {
+        "maskot": 64,
+        "copy": "Easily customize your resume. Choose which sections to display or hide, and save your personalized version as a PDF."
+      }
+    },
+    "canvas": {
+      "background": "#dbeafe (rgb 219,234,254; token gap - no brand surface-medium token)",
+      "padding": 16
+    },
+    "paper": {
+      "width": 595,
+      "minHeight": 842,
+      "padding": 32,
+      "note": "true A4 at 72dpi, measured x=1191..2381 physical"
+    }
+  },
+  "_provenance": {
+    "source": "builder1-real.png (Figma export screenshot from author, 2732x1536 @2x)",
+    "method": "PIL pixel scan: pane divider x=878-880 (440 logical), paper edges x=1191/2381 (595 logical), canvas rgb(219,234,254), paper top margin 16",
+    "date": "2026-07-04",
+    "fase": "E",
+    "notes": [
+      "real design shows a photo avatar; sample uses initials stand-in (no photo asset in kit)",
+      "sections on paper react live to Displayed/Hidden toggles"
+    ]
+  }
+}

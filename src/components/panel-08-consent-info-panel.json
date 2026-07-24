@@ -1,0 +1,104 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "consent-info-panel",
+  "name": "ConsentInfoPanel",
+  "figmaName": "[🧱]-panel-content-multi-ci",
+  "figmaNodeId": "7331:197279",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content showing consent status and history. 21 variants combining: consent method (ShareLink/ManualUpload/SendEmail) × status (Accepted/Pending/Declined) × tab (Details/Events/ProofOfConsent). Shows consent timeline, status details, and proof documentation.",
+  "props": {
+    "method": {
+      "type": "enum",
+      "values": [
+        "ShareLink",
+        "ManualUpload",
+        "SendEmail"
+      ],
+      "default": "SendEmail"
+    },
+    "status": {
+      "type": "enum",
+      "values": [
+        "Accepted",
+        "Pending",
+        "Declined"
+      ],
+      "default": "Pending"
+    },
+    "tab": {
+      "type": "enum",
+      "values": [
+        "Details",
+        "Events",
+        "ProofOfConsent"
+      ],
+      "default": "Details"
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": "spacing.standard.lg"
+    },
+    "section-information": {
+      "note": "Consent status header + key info rows"
+    },
+    "section-action": {
+      "note": "Action buttons (Revoke, Download, Resend)"
+    },
+    "selected-section": {
+      "note": "Tab-specific content: details / timeline / proof"
+    }
+  },
+  "subcomponents": [
+    "status-chip",
+    "info-block",
+    "button",
+    "candidate-info-block",
+    "toast"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "section-information": {
+      "element": "div",
+      "optional": false,
+      "note": "Consent method + status + key dates"
+    },
+    "section-action": {
+      "element": "div",
+      "optional": true,
+      "note": "Contextual action buttons"
+    },
+    "selected-section": {
+      "element": "div",
+      "optional": false,
+      "note": "Tab content: Details/Events/Proof"
+    }
+  },
+  "usage": {
+    "generic": "ConsentInfoPanel(method='SendEmail', status='Accepted', tab='Details') — inside Panel(MultiCard) body",
+    "notes": "The tab (Details/Events/ProofOfConsent) is driven by Tabs in the Panel sub-header."
+  },
+  "a11y": {
+    "role": "region",
+    "aria": {
+      "aria-label": "Consent information"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show status chip prominently.",
+      "Show timestamps for all consent events."
+    ],
+    "dont": [
+      "Don't allow revoke action on already-declined consent."
+    ]
+  },
+  "code": "panel-08"
+}

@@ -1,0 +1,181 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "icon-button",
+  "name": "IconButton",
+  "figmaName": "[⚛️]-button-icon",
+  "figmaNodeId": "4058:15245",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Square button that contains only an icon. Same styles as Button but no label.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Filled",
+        "Outlined",
+        "Tonal",
+        "Elevated",
+        "Ghost"
+      ],
+      "default": "Filled"
+    },
+    "state": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Hover",
+        "Disabled"
+      ],
+      "default": "Default"
+    },
+    "icon": {
+      "type": "string",
+      "default": "edit",
+      "description": "Icon name from the icon system."
+    }
+  },
+  "tokens": {
+    "base": {
+      "radius": "corner-radius.md",
+      "padding": "spacing.standard.sm",
+      "gap": "spacing.standard.sm"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": "Filled"
+        },
+        "tokens": {
+          "background": "brand.brand",
+          "icon": "neutral.pure-white",
+          "border": null
+        }
+      },
+      {
+        "when": {
+          "type": "Filled",
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "component.button-hover"
+        }
+      },
+      {
+        "when": {
+          "type": "Filled",
+          "state": "Disabled"
+        },
+        "tokens": {
+          "background": "system.text-mute",
+          "icon": "neutral.pure-white"
+        }
+      },
+      {
+        "when": {
+          "type": "Outlined"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "icon": "brand.brand",
+          "border-color": "brand.brand",
+          "border-width": "stroke.thin"
+        }
+      },
+      {
+        "when": {
+          "type": "Outlined",
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "brand.brand-surface-soft"
+        }
+      },
+      {
+        "when": {
+          "type": "Tonal"
+        },
+        "tokens": {
+          "background": "component.button-tonal",
+          "icon": "brand.brand",
+          "border": null
+        }
+      },
+      {
+        "when": {
+          "type": "Tonal",
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "component.button-tonal-hover"
+        }
+      },
+      {
+        "when": {
+          "type": "Elevated"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "icon": "brand.brand",
+          "border": null,
+          "shadow": "shadow.Base"
+        }
+      },
+      {
+        "when": {
+          "type": "Ghost"
+        },
+        "tokens": {
+          "background": null,
+          "icon": "brand.brand",
+          "border": null
+        }
+      },
+      {
+        "when": {
+          "type": "Ghost",
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "brand.brand-surface-soft"
+        }
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "button",
+      "role": "button"
+    },
+    "icon": {
+      "element": "span",
+      "optional": false
+    }
+  },
+  "usage": {
+    "generic": "IconButton(type='Filled', icon='edit')",
+    "notes": "Always provide aria-label."
+  },
+  "a11y": {
+    "role": "button",
+    "focusable": true,
+    "keyboard": [
+      "Enter",
+      "Space"
+    ],
+    "aria": {
+      "aria-label": "REQUIRED — describe the action"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always provide aria-label.",
+      "Use tooltips on hover."
+    ],
+    "dont": [
+      "Don't use for unrecognizable icons."
+    ]
+  },
+  "code": "atom-02"
+}

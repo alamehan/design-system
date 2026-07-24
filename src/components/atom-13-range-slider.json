@@ -1,0 +1,124 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "range-slider",
+  "name": "RangeSlider",
+  "figmaName": "[⚛️]-range-slider",
+  "figmaNodeId": "4084:22888",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Dual-handle range input for selecting a min–max numeric range.",
+  "props": {
+    "state": {
+      "type": "enum",
+      "values": [
+        "Enabled",
+        "Disabled"
+      ],
+      "default": "Enabled"
+    },
+    "min": {
+      "type": "number",
+      "default": 0
+    },
+    "max": {
+      "type": "number",
+      "default": 100
+    },
+    "valueMin": {
+      "type": "number",
+      "default": 10
+    },
+    "valueMax": {
+      "type": "number",
+      "default": 90
+    },
+    "step": {
+      "type": "number",
+      "default": 1
+    },
+    "showLabels": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "tokens": {
+    "base": {},
+    "overrides": [
+      {
+        "when": {
+          "state": "Enabled"
+        },
+        "tokens": {
+          "track-inactive": "neutral.muted",
+          "track-active": "brand.brand",
+          "track-border": "neutral.muted",
+          "label-style": "text-styles.bold.label-sm",
+          "label-color": "system.text-head"
+        }
+      },
+      {
+        "when": {
+          "state": "Disabled"
+        },
+        "tokens": {
+          "track-inactive": "neutral.muted",
+          "track-active": "neutral.muted",
+          "track-border": "neutral.muted",
+          "label-color": "system.text-mute"
+        }
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "track": {
+      "element": "div"
+    },
+    "track-fill": {
+      "element": "div",
+      "note": "Filled portion between thumbs — brand.brand"
+    },
+    "thumb-min": {
+      "element": "input",
+      "type": "range"
+    },
+    "thumb-max": {
+      "element": "input",
+      "type": "range"
+    },
+    "labels": {
+      "element": "div",
+      "optional": true
+    }
+  },
+  "usage": {
+    "generic": "RangeSlider(state='Enabled', min=0, max=100, valueMin=10, valueMax=90)"
+  },
+  "a11y": {
+    "role": "slider",
+    "keyboard": [
+      "ArrowLeft",
+      "ArrowRight",
+      "Home",
+      "End"
+    ],
+    "aria": {
+      "aria-valuemin": "min",
+      "aria-valuemax": "max",
+      "aria-valuenow": "current"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show current values near thumbs."
+    ],
+    "dont": [
+      "Don't use for precise numeric input — use two Number inputs."
+    ]
+  },
+  "code": "atom-13"
+}

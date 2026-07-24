@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build & validate tokens/specs
+        run: node src/scripts/build.js
+
+      - name: Regenerate split catalog
+        run: node src/scripts/split-catalog.js
+
+      - name: Lint reference (token purity)
+        run: node src/scripts/lint-reference.js
+
+      - name: Fail if generated files are out of date
+        run: |
+          git add -A
+          git diff --cached --stat --exit-code || {
+            echo '::error::dist/ or catalog/ is stale. Run build.js + split-catalog.js and commit the result.'; exit 1; }

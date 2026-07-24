@@ -1,0 +1,150 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "split-button",
+  "name": "SplitButton",
+  "figmaName": "[⚛️]-button-split",
+  "figmaNodeId": "5178:167856",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Two-part button: primary action (left) + dropdown trigger (right). 2px gap between parts.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Filled",
+        "Outlined",
+        "Tonal"
+      ],
+      "default": "Filled"
+    },
+    "state": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Hover",
+        "Disabled"
+      ],
+      "default": "Default"
+    },
+    "label": {
+      "type": "string",
+      "default": "Action"
+    },
+    "dropdownItems": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "tokens": {
+    "base": {
+      "gap-between-parts": "spacing.standard.3xs"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": "Filled"
+        },
+        "tokens": {
+          "background": "brand.brand",
+          "text": "neutral.pure-white",
+          "icon": "neutral.pure-white",
+          "border": null
+        }
+      },
+      {
+        "when": {
+          "type": "Filled",
+          "state": "Hover"
+        },
+        "tokens": {
+          "background": "component.button-hover"
+        }
+      },
+      {
+        "when": {
+          "type": "Filled",
+          "state": "Disabled"
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "text": "system.text-mute",
+          "icon": "system.text-mute"
+        }
+      },
+      {
+        "when": {
+          "type": "Outlined"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "text": "brand.brand",
+          "icon": "brand.brand",
+          "border-color": "brand.brand",
+          "border-width": "stroke.thin"
+        }
+      },
+      {
+        "when": {
+          "type": "Tonal"
+        },
+        "tokens": {
+          "background": "component.button-tonal",
+          "text": "brand.brand",
+          "icon": "brand.brand",
+          "border": null
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "button",
+    "icon-button"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "group"
+    },
+    "primary-action": {
+      "element": "button",
+      "role": "button",
+      "note": "Uses Button internally"
+    },
+    "dropdown-trigger": {
+      "element": "button",
+      "role": "button",
+      "note": "Uses IconButton internally"
+    },
+    "dropdown-panel": {
+      "element": "div",
+      "role": "menu",
+      "optional": true
+    }
+  },
+  "usage": {
+    "generic": "SplitButton(type='Filled', label='Export', dropdownItems=['Export PDF','Export CSV'])"
+  },
+  "a11y": {
+    "role": "group",
+    "keyboard": [
+      "Enter",
+      "Space",
+      "ArrowDown"
+    ],
+    "aria": {
+      "aria-haspopup": "true on trigger",
+      "aria-expanded": "reflects open state"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use when there is one clearly primary action with secondary variants."
+    ],
+    "dont": [
+      "Don't use if all actions are equal importance — use DropdownMenu instead."
+    ]
+  },
+  "code": "atom-03"
+}

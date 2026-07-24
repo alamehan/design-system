@@ -1,0 +1,112 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "panel-section",
+  "name": "PanelSection",
+  "figmaName": "[🧩]-panel-parts-[🎲]-pattern",
+  "figmaNodeId": "4250:97061",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Individual section zones of a Panel or DataTable: header, sub-header, footer, document viewer header, video player bar, text editor bar. Used as building blocks inside Panel and DataTable.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "HeaderTitle",
+        "HeaderOption",
+        "SubHeader",
+        "FooterDefault",
+        "HeaderDocViewer",
+        "BarVideoPlayer",
+        "TextEditor"
+      ],
+      "default": "HeaderTitle"
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-soft",
+      "border-width": "stroke.thin"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": [
+            "HeaderTitle",
+            "HeaderOption",
+            "SubHeader",
+            "HeaderDocViewer"
+          ]
+        },
+        "tokens": {
+          "padding-y": "spacing.standard.xl",
+          "padding-x": "spacing.standard.xxl",
+          "gap": "spacing.standard.sm",
+          "title-style": "text-styles.bold.title-md",
+          "title-color": "system.text-head"
+        }
+      },
+      {
+        "when": {
+          "type": "FooterDefault"
+        },
+        "tokens": {
+          "padding-y": "spacing.standard.sm",
+          "padding-x": "spacing.standard.xxl",
+          "gap": "spacing.standard.lg"
+        }
+      },
+      {
+        "when": {
+          "type": "SubHeader"
+        },
+        "tokens": {
+          "contains": "Tabs component"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "button",
+    "icon-button",
+    "split-button",
+    "tabs",
+    "input"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "optional": false
+    },
+    "left": {
+      "element": "div",
+      "optional": false,
+      "note": "Title, breadcrumb, tabs, or search input"
+    },
+    "right": {
+      "element": "div",
+      "optional": false,
+      "note": "Action buttons"
+    }
+  },
+  "usage": {
+    "generic": "PanelSection(type='HeaderTitle')",
+    "notes": "Compose inside Panel. Do not use standalone in product — always as part of Panel or DataTable."
+  },
+  "a11y": {
+    "role": "banner — for HeaderTitle; contentinfo — for FooterDefault"
+  },
+  "guidelines": {
+    "do": [
+      "Use HeaderTitle for the main panel title.",
+      "Use SubHeader for tab switching within a panel.",
+      "Use FooterDefault for action buttons (Cancel/Save)."
+    ],
+    "dont": [
+      "Don't mix more than 3 action buttons in the footer."
+    ]
+  },
+  "code": "layout-06"
+}

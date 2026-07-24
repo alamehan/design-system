@@ -1,0 +1,5 @@
+## composite-01 — InfoBlock  _(advanced)_
+Flexible data display unit. 10 types covering: section titles, icon+body text, icon+body+action, multi-value rich content, label+small body, and experience layout. Used extensively as the building block inside CandidateCard, FilterField, NotificationCard, and CandidateInfoBlock.
+**Props:** type=TitleMD|BodyMD|BodyMDRichSingle1Text|BodyMDRichSingle1Chip|BodyMDRichSingle2|BodyMDRichMulti|BodyMDPlusAction|BodyMDPlusCounter|BodySMPlusLabel|Experience (def BodyMD)
+**Tokens:** spacing.standard.sm, system.text-body, text-styles.bold.title-md, system.text-head, system.surface-strong, system.border-strong, corner-radius.full, text-styles.bold.body-sm, system.text-mute, text-styles.regular.body-md, text-styles.regular.body-sm, text-styles.bold.label-sm, text-styles.regular.label-sm, spacing.standard.3xs  — class per token: see Token vocabulary
+**Spec:** `src/components/composite-01-info-block.json`

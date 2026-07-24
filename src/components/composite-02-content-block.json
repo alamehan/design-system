@@ -1,0 +1,123 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "content-block",
+  "name": "ContentBlock",
+  "figmaName": "[🧱]-content-block-[🎲]-pattern",
+  "figmaNodeId": "4164:70753",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Surface-soft row block pattern for filter panels and lists. 8 types: menu with arrow, accordion (open/closed), option menus with avatar, toggle fields (checkbox list), applied filters chip list, displayed filters, and option menus big.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "MenuWithArrow",
+        "AccordionOpen",
+        "AccordionClose",
+        "OptionMenus",
+        "OptionMenusBig",
+        "ToggleFields",
+        "AppliedFilters",
+        "DisplayedFilters"
+      ],
+      "default": "MenuWithArrow"
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "system.surface-soft",
+      "border-color": "system.border-soft",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.sm",
+      "text-style": "text-styles.regular.body-md",
+      "text-color": "system.text-head"
+    },
+    "accordion-content": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-soft",
+      "text-style": "text-styles.regular.body-md",
+      "text-color": "system.text-head"
+    },
+    "option-menus": {
+      "icon-wrapper-bg": "system.surface-strong",
+      "icon-wrapper-radius": "corner-radius.full",
+      "subtitle-style": "text-styles.regular.body-sm",
+      "subtitle-color": "system.text-body"
+    },
+    "applied-filters": {
+      "padding": "spacing.standard.lg",
+      "gap": "spacing.standard.lg",
+      "active-chip-bg": "brand.brand-surface-soft",
+      "active-chip-border": "brand.brand"
+    }
+  },
+  "subcomponents": [
+    "chip",
+    "form-control"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "header": {
+      "element": "div",
+      "optional": false
+    },
+    "body": {
+      "element": "div",
+      "optional": true,
+      "note": "Visible only in AccordionOpen"
+    },
+    "chevron-icon": {
+      "element": "span",
+      "optional": true,
+      "note": "MenuWithArrow indicator"
+    },
+    "checkbox": {
+      "element": "div",
+      "optional": true,
+      "condition": {
+        "prop": "type",
+        "equals": "ToggleFields"
+      }
+    },
+    "chips": {
+      "element": "div",
+      "optional": true,
+      "condition": {
+        "prop": "type",
+        "equals": [
+          "AppliedFilters",
+          "DisplayedFilters"
+        ]
+      }
+    }
+  },
+  "usage": {
+    "generic": "ContentBlock(type='MenuWithArrow')",
+    "notes": "Used inside FilterPanel as accordion or menu rows."
+  },
+  "a11y": {
+    "accordion": {
+      "role": "button",
+      "aria": {
+        "aria-expanded": "true/false on AccordionOpen/Close"
+      }
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use AccordionOpen/Close to toggle filter sections.",
+      "Use AppliedFilters to show active filter chips with removal."
+    ],
+    "dont": [
+      "Don't use ContentBlock as a standalone card — always in FilterPanel."
+    ]
+  },
+  "code": "composite-02"
+}

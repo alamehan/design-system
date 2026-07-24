@@ -1,0 +1,114 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "info-block",
+  "name": "InfoBlock",
+  "figmaName": "[🧱]-info-block-[🎲]-pattern",
+  "figmaNodeId": "4088:23722",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Flexible data display unit. 10 types covering: section titles, icon+body text, icon+body+action, multi-value rich content, label+small body, and experience layout. Used extensively as the building block inside CandidateCard, FilterField, NotificationCard, and CandidateInfoBlock.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "TitleMD",
+        "BodyMD",
+        "BodyMDRichSingle1Text",
+        "BodyMDRichSingle1Chip",
+        "BodyMDRichSingle2",
+        "BodyMDRichMulti",
+        "BodyMDPlusAction",
+        "BodyMDPlusCounter",
+        "BodySMPlusLabel",
+        "Experience"
+      ],
+      "default": "BodyMD"
+    }
+  },
+  "tokens": {
+    "base": {
+      "gap": "spacing.standard.sm"
+    },
+    "TitleMD": {
+      "icon-color": "system.text-body",
+      "text-style": "text-styles.bold.title-md",
+      "text-color": "system.text-head",
+      "chip-bg": "system.surface-strong",
+      "chip-border": "system.border-strong"
+    },
+    "BodyMD": {
+      "icon-wrapper-bg": "system.surface-strong",
+      "icon-wrapper-radius": "corner-radius.full",
+      "label-style": "text-styles.bold.body-sm",
+      "label-color": "system.text-mute",
+      "value-style": "text-styles.regular.body-md",
+      "value-color": "system.text-head"
+    },
+    "BodyMDPlusAction": {
+      "icon-color": "system.text-body",
+      "text-style": "text-styles.regular.body-md",
+      "text-color": "system.text-head"
+    },
+    "BodySMPlusLabel": {
+      "icon-color": "system.text-body",
+      "text-style": "text-styles.regular.body-sm",
+      "text-color": "system.text-head",
+      "label-style": "text-styles.bold.label-sm",
+      "label-color": "system.text-mute"
+    },
+    "Experience": {
+      "main-title-style": "text-styles.bold.body-sm",
+      "main-title-color": "system.text-head",
+      "subtitle-style": "text-styles.regular.label-sm",
+      "subtitle-color": "system.text-body",
+      "gap-title-to-info": "spacing.standard.3xs"
+    }
+  },
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "icon": {
+      "element": "span",
+      "optional": true
+    },
+    "content": {
+      "element": "div"
+    },
+    "label": {
+      "element": "span",
+      "optional": true
+    },
+    "value": {
+      "element": "span"
+    },
+    "chips": {
+      "element": "div",
+      "optional": true,
+      "note": "Chip array for multi-value types"
+    }
+  },
+  "usage": {
+    "generic": "InfoBlock(type='BodySMPlusLabel')",
+    "notes": "Compose inside CandidateCard, FilterField, NotificationCard. Don't use standalone in product — always within a larger component."
+  },
+  "a11y": {
+    "role": "presentation",
+    "aria": {
+      "note": "Aria roles assigned by parent component"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use TitleMD as section headers inside panels.",
+      "Use BodySMPlusLabel for field-value pairs.",
+      "Use Experience for timeline-style work history rows."
+    ],
+    "dont": [
+      "Don't use as a standalone card — always embed in a parent layout."
+    ]
+  },
+  "code": "composite-01"
+}

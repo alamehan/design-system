@@ -1,0 +1,39 @@
+/* atom-07 Toast — semantic inline alert. Icon via #icon slot. Emits close.
+   Source of truth: src/components/atom-07*.json · token-pure CSS (vars only). */
+
+.es-toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  border: var(--stroke-thin) solid transparent;
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm) var(--space-lg);
+}
+.es-toast__icon { display: inline-flex; align-items: center; font-size: 1.5em; }
+.es-toast__body { flex: 1; min-width: 0; }
+.es-toast__title { color: var(--color-system-text-head); }
+.es-toast__desc { color: var(--color-system-text-body); }
+.es-toast__close {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-system-text-mute);
+  font-size: 1.1em;
+  line-height: 1;
+  padding: 0;
+}
+.es-toast__close:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); border-radius: var(--radius-md); }
+.es-toast--Success { background: var(--color-semantic-success-surface-soft); border-color: var(--color-semantic-success); }
+.es-toast--Success .es-toast__icon { color: var(--color-semantic-success-strong); }
+.es-toast--Warning { background: var(--color-semantic-warning-surface-soft); border-color: var(--color-semantic-warning); }
+.es-toast--Warning .es-toast__icon { color: var(--color-semantic-warning-strong); }
+.es-toast--Error { background: var(--color-semantic-error-surface-soft); border-color: var(--color-semantic-error); }
+.es-toast--Error .es-toast__icon { color: var(--color-semantic-error-strong); }
+.es-toast--Info { background: var(--color-semantic-info-surface-soft); border-color: var(--color-semantic-info); }
+.es-toast--Info .es-toast__icon { color: var(--color-semantic-info-strong); }
+.es-toast--Brand { background: var(--color-brand-brand-surface-soft); border-color: var(--color-brand-brand); }
+.es-toast--Brand .es-toast__icon { color: var(--color-brand-brand-strong); }
+.es-toast--style-Outlined { background: var(--color-neutral-pure-white); box-shadow: var(--shadow-Smooth); }

@@ -1,0 +1,187 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "status-chip",
+  "name": "StatusChip",
+  "figmaName": "[⚛️]-chips-status",
+  "figmaNodeId": "4287:108553",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Read-only status indicator. Semantic color presets per status. Not interactive.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Brand",
+        "Success",
+        "Warning",
+        "Error",
+        "Info",
+        "Sem-Teal",
+        "Sem-Lime",
+        "Sem-Indigo",
+        "Sem-Yellow",
+        "Black"
+      ],
+      "default": "Default"
+    },
+    "label": {
+      "type": "string",
+      "default": "Status"
+    }
+  },
+  "tokens": {
+    "base": {
+      "radius": "corner-radius.full",
+      "padding-y": "spacing.standard.xxs",
+      "padding-x": "spacing.standard.lg",
+      "border-width": "stroke.thin",
+      "font-style": "text-styles.bold.body-md"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": "Default"
+        },
+        "tokens": {
+          "background": "system.surface-strong",
+          "border-color": "system.border-strong",
+          "text": "system.text-head"
+        }
+      },
+      {
+        "when": {
+          "type": "Brand"
+        },
+        "tokens": {
+          "background": "brand.brand-surface-soft",
+          "border-color": "brand.brand",
+          "text": "brand.brand-strong"
+        }
+      },
+      {
+        "when": {
+          "type": "Success"
+        },
+        "tokens": {
+          "background": "semantic.success-surface-soft",
+          "border-color": "semantic.success",
+          "text": "semantic.success-strong"
+        }
+      },
+      {
+        "when": {
+          "type": "Warning"
+        },
+        "tokens": {
+          "background": "semantic.warning-surface-soft",
+          "border-color": "semantic.warning",
+          "text": "semantic.warning-strong"
+        }
+      },
+      {
+        "when": {
+          "type": "Error"
+        },
+        "tokens": {
+          "background": "semantic.error-surface-soft",
+          "border-color": "semantic.error",
+          "text": "semantic.error-strong"
+        }
+      },
+      {
+        "when": {
+          "type": "Info"
+        },
+        "tokens": {
+          "background": "semantic.info-surface-soft",
+          "border-color": "semantic.info",
+          "text": "semantic.info-strong"
+        }
+      },
+      {
+        "when": {
+          "type": "Sem-Teal"
+        },
+        "tokens": {
+          "background": "semantic.sem-teal-surface-soft",
+          "border-color": "semantic.sem-teal",
+          "text": "semantic.sem-teal-strong"
+        }
+      },
+      {
+        "when": {
+          "type": "Sem-Lime"
+        },
+        "tokens": {
+          "background": "semantic.sem-lime-surface-soft",
+          "border-color": "semantic.sem-lime",
+          "text": "semantic.sem-lime-strong"
+        }
+      },
+      {
+        "when": {
+          "type": "Sem-Indigo"
+        },
+        "tokens": {
+          "background": "semantic.sem-indigo-surface-soft",
+          "border-color": "semantic.sem-indigo",
+          "text": "semantic.sem-indigo-strong"
+        }
+      },
+      {
+        "when": {
+          "type": "Sem-Yellow"
+        },
+        "tokens": {
+          "background": "semantic.sem-yellow-surface-soft",
+          "border-color": "semantic.sem-yellow",
+          "text": "semantic.sem-yellow-strong"
+        }
+      },
+      {
+        "when": {
+          "type": "Black"
+        },
+        "tokens": {
+          "background": "neutral.pure-black",
+          "border-color": "neutral.pure-black",
+          "text": "neutral.pure-white"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "chip"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "span",
+      "role": "status"
+    },
+    "label": {
+      "element": "span"
+    }
+  },
+  "usage": {
+    "generic": "StatusChip(type='Success', label='Active')"
+  },
+  "a11y": {
+    "role": "status",
+    "focusable": false,
+    "aria": {
+      "aria-label": "Status: [label]"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use consistent labels per status type across all views."
+    ],
+    "dont": [
+      "Don't make StatusChip interactive — use Chip."
+    ]
+  },
+  "code": "atom-06"
+}

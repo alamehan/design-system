@@ -1,0 +1,43 @@
+/* atom-03 SplitButton — primary action (left) + dropdown trigger (right), 2px gap. Types Filled|Outlined|Tonal. Menu items via `items` (see EDropdownMenu).
+   Source of truth: src/components/atom-03*.json · token-pure CSS (vars only). */
+
+.es-split { display: inline-flex; align-items: stretch; gap: var(--space-3xs); }
+.es-split__main,
+.es-split__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border: var(--stroke-thin) solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.es-split__main { padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.es-split__trigger { padding: var(--space-sm); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 1.15em; line-height: 1; }
+.es-split__icon { display: inline-flex; align-items: center; font-size: 1.15em; }
+
+.es-split--Filled .es-split__main,
+.es-split--Filled .es-split__trigger { background: var(--color-brand-brand); color: var(--color-neutral-pure-white); }
+.es-split--Filled .es-split__main:hover:not(:disabled),
+.es-split--Filled .es-split__trigger:hover:not(:disabled) { background: var(--color-component-button-hover); }
+
+.es-split--Outlined .es-split__main,
+.es-split--Outlined .es-split__trigger { background: var(--color-neutral-pure-white); color: var(--color-brand-brand); border-color: var(--color-brand-brand); }
+.es-split--Outlined .es-split__main:hover:not(:disabled),
+.es-split--Outlined .es-split__trigger:hover:not(:disabled) { background: var(--color-brand-brand-surface-soft); }
+
+.es-split--Tonal .es-split__main,
+.es-split--Tonal .es-split__trigger { background: var(--color-component-button-tonal); color: var(--color-brand-brand); }
+.es-split--Tonal .es-split__main:hover:not(:disabled),
+.es-split--Tonal .es-split__trigger:hover:not(:disabled) { background: var(--color-component-button-tonal-hover); }
+
+.es-split__main:focus-visible,
+.es-split__trigger:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+
+.es-split__main:disabled,
+.es-split__trigger:disabled {
+  cursor: not-allowed;
+  background: var(--color-neutral-muted);
+  color: var(--color-system-text-mute);
+  border-color: transparent;
+}

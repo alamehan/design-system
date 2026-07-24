@@ -1,0 +1,121 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "character-expression",
+  "name": "CharacterExpression",
+  "figmaName": "[📦]-character-expression",
+  "figmaNodeId": "4643:75379",
+  "category": "foundation",
+  "section": "Foundations",
+  "role": "asset",
+  "implementable": true,
+  "description": "Mascot character illustrations expressing emotions. 40 variants across 14 emotion categories. Used in empty states, loading screens, confirmations, and modal body (ModalContent). Each is a 128×128px illustration.",
+  "assetType": "illustration",
+  "dimensions": {
+    "width": 128,
+    "height": 128,
+    "unit": "px"
+  },
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "think-1",
+        "think-2",
+        "think-3",
+        "tutor-1",
+        "tutor-2",
+        "tutor-3",
+        "calm-1",
+        "calm-2",
+        "no-idea-1",
+        "no-idea-2",
+        "info-1",
+        "info-2",
+        "hidden-1",
+        "hidden-2",
+        "success-1",
+        "success-2",
+        "success-3",
+        "love-1",
+        "love-2",
+        "love-3",
+        "surprise-1",
+        "surprise-2",
+        "surprise-3",
+        "sorry-1",
+        "sorry-2",
+        "confuse-1",
+        "confuse-2",
+        "confuse-3",
+        "no-1",
+        "no-2",
+        "no-3",
+        "no-4",
+        "mindful-1",
+        "mindful-2",
+        "search-1",
+        "search-2",
+        "other-time",
+        "other-photo",
+        "other-sleep",
+        "other-sstt"
+      ],
+      "default": "info-1",
+      "description": "Expression variant. Numbers indicate animation alternatives within the same emotion."
+    }
+  },
+  "tokens": {
+    "background": null
+  },
+  "emotionMap": {
+    "think": "Thoughtful / processing — use on AI generation loading",
+    "tutor": "Explaining / teaching — use on help/onboarding screens",
+    "calm": "Neutral / relaxed — use on success confirmation",
+    "no-idea": "Confused / unsure — use on error or unknown state",
+    "info": "Informative — use on info tooltips or guidance modals",
+    "hidden": "Hiding / shy — use on empty state (no data)",
+    "success": "Happy / celebrating — use on task completed",
+    "love": "Friendly / approving — use on onboarding welcome",
+    "surprise": "Surprised — use on unexpected result",
+    "sorry": "Apologetic — use on error states",
+    "confuse": "Confused — use on validation error",
+    "no": "Declining / refusing — use on permission denied",
+    "mindful": "Focused / mindful — use on processing",
+    "search": "Looking / searching — use on search empty state",
+    "other-time": "Time-related — use on scheduled/reminder screens",
+    "other-photo": "Photo-related — use on image upload empty state",
+    "other-sleep": "Idle — use on session timeout",
+    "other-sstt": "Quiet — use on notification-off state"
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "img"
+    },
+    "image": {
+      "element": "img",
+      "optional": false
+    }
+  },
+  "usage": {
+    "generic": "CharacterExpression(type='success-1')",
+    "notes": "Export as SVG or PNG from Figma. Use inside ModalContent(Default) center slot, empty state views, or page-level error screens. Always pair with a text message."
+  },
+  "a11y": {
+    "role": "img",
+    "aria": {
+      "aria-hidden": "true — decorative; pair with visible text message"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Match the expression to the emotional tone of the message.",
+      "Use multiple variants (e.g. think-1, think-2) for variety across different screens."
+    ],
+    "dont": [
+      "Don't use a happy expression for error states.",
+      "Don't show without accompanying text."
+    ]
+  },
+  "code": "asset-03"
+}

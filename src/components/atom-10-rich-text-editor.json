@@ -1,0 +1,157 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "rich-text-editor",
+  "name": "RichTextEditor",
+  "figmaName": "[⚛️]-form-input-text-editor",
+  "figmaNodeId": "5617:197985",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "WYSIWYG editor with formatting toolbar. For email composition, cover letters, and formatted long-form content.",
+  "props": {
+    "state": {
+      "type": "enum",
+      "values": [
+        "Inactive",
+        "Active",
+        "Focus",
+        "Error",
+        "Disabled"
+      ],
+      "default": "Inactive"
+    },
+    "label": {
+      "type": "string",
+      "default": "Label"
+    },
+    "placeholder": {
+      "type": "string",
+      "default": "Write something..."
+    },
+    "toolbarActions": {
+      "type": "array",
+      "default": [
+        "bold",
+        "italic",
+        "underline",
+        "bulletList",
+        "numberedList",
+        "link"
+      ]
+    },
+    "minHeight": {
+      "type": "number",
+      "default": 160
+    },
+    "isRequired": {
+      "type": "boolean",
+      "default": false
+    },
+    "errorText": {
+      "type": "string",
+      "default": "Error message",
+      "condition": {
+        "prop": "state",
+        "equals": "Error"
+      }
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-soft",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "font-style": "text-styles.regular.body-md",
+      "text-input": "system.text-head",
+      "text-placeholder": "system.text-mute",
+      "toolbar-background": "system.surface-soft",
+      "toolbar-border": "system.border-soft",
+      "toolbar-icon": "system.text-body"
+    },
+    "overrides": [
+      {
+        "when": {
+          "state": "Focus"
+        },
+        "tokens": {
+          "border-color": "brand.brand",
+          "shadow": "shadow.State-Focus"
+        }
+      },
+      {
+        "when": {
+          "state": "Error"
+        },
+        "tokens": {
+          "border-color": "semantic.error",
+          "shadow": "shadow.State-Error"
+        }
+      },
+      {
+        "when": {
+          "state": "Disabled"
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "border-color": "system.border-strong",
+          "text-input": "system.text-mute",
+          "toolbar-background": "neutral.muted",
+          "toolbar-icon": "system.text-mute"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "form-input-field"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "label": {
+      "element": "label"
+    },
+    "toolbar": {
+      "element": "div",
+      "role": "toolbar"
+    },
+    "editor-area": {
+      "element": "div",
+      "role": "textbox",
+      "note": "contenteditable div or library editor root"
+    },
+    "error-text": {
+      "element": "p",
+      "optional": true,
+      "condition": {
+        "prop": "state",
+        "equals": "Error"
+      }
+    }
+  },
+  "usage": {
+    "generic": "RichTextEditor(label='Cover Letter', state='Inactive')",
+    "notes": "Implement using TipTap, Quill, or Lexical."
+  },
+  "a11y": {
+    "role": "textbox",
+    "aria": {
+      "aria-multiline": "true",
+      "role": "toolbar on toolbar element"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Expose only necessary toolbar options.",
+      "Support keyboard shortcuts."
+    ],
+    "dont": [
+      "Don't use for simple plain text."
+    ]
+  },
+  "code": "atom-10"
+}

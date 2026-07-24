@@ -1,0 +1,91 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "modal-content",
+  "name": "ModalContent",
+  "figmaName": "[🧩]-modals-content-[🎲]-pattern",
+  "figmaNodeId": "4816:95873",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Content slot patterns for the Modal body. Five types cover: Default (text + illustration), Form (inputs + controls + table), ListCard (selectable items), FileCard (document items with actions), FileContentOnly (file list).",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Form",
+        "ListCard",
+        "FileCard",
+        "FileContentOnly"
+      ],
+      "default": "Default"
+    }
+  },
+  "tokens": {
+    "base": {
+      "gap": "spacing.standard.lg"
+    },
+    "file-card": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-soft",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.lg",
+      "title-style": "text-styles.regular.body-md",
+      "title-color": "system.text-head",
+      "subtitle-style": "text-styles.regular.body-sm",
+      "subtitle-color": "system.text-mute"
+    },
+    "file-content-only": {
+      "tag-background": "system.surface-strong",
+      "tag-radius": "corner-radius.full",
+      "tag-padding": "spacing.standard.xs"
+    }
+  },
+  "subcomponents": [
+    "toast",
+    "input",
+    "form-control",
+    "data-table"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "optional": false
+    },
+    "alert": {
+      "element": "div",
+      "optional": true,
+      "note": "Toast(Filled/Warning) — shown for validation notices"
+    },
+    "content": {
+      "element": "div",
+      "optional": false,
+      "note": "Type-specific content: illustration, form fields, list, or file items"
+    }
+  },
+  "usage": {
+    "generic": "ModalContent(type='Form')",
+    "notes": "Always place inside Modal body slot. Do not use standalone."
+  },
+  "a11y": {
+    "role": "presentation",
+    "aria": {
+      "note": "Accessibility handled by parent Modal"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use Default for confirmation modals with explanation text.",
+      "Use Form for data-entry modals.",
+      "Use FileCard for upload/attachment selection."
+    ],
+    "dont": [
+      "Don't mix content types in one modal body."
+    ]
+  },
+  "code": "layout-08"
+}

@@ -1,0 +1,81 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "resume-template-panel",
+  "name": "ResumeTemplatePanel",
+  "figmaName": "[🧱]-panel-content-multi-rt",
+  "figmaNodeId": "4784:31752",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content for browsing and selecting resume templates. Three variants: PublicTemplate (community templates), MyTemplate (user's own), PrebuiltTemplate (system defaults). Contains a ResumeCard grid and action buttons.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "PublicTemplate",
+        "MyTemplate",
+        "PrebuiltTemplate"
+      ],
+      "default": "PrebuiltTemplate"
+    },
+    "templates": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": "spacing.standard.lg"
+    },
+    "section-action": {
+      "note": "Filter/sort controls for the template list"
+    },
+    "section-template": {
+      "note": "ResumeCard grid"
+    }
+  },
+  "subcomponents": [
+    "resume-card",
+    "button",
+    "icon-button",
+    "input"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "section-action": {
+      "element": "div",
+      "optional": false,
+      "note": "Search + filter controls"
+    },
+    "section-template": {
+      "element": "div",
+      "optional": false,
+      "note": "Grid of ResumeCard components"
+    }
+  },
+  "usage": {
+    "generic": "ResumeTemplatePanel(type='PrebuiltTemplate') — place inside Panel(MultiCard) body",
+    "notes": "Drive which tab is shown via Tabs in Panel sub-header."
+  },
+  "a11y": {
+    "role": "region",
+    "aria": {
+      "aria-label": "Resume templates"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show a grid of ResumeCards (2-3 per row).",
+      "Allow selecting one template as active."
+    ],
+    "dont": [
+      "Don't allow multiple template selection simultaneously."
+    ]
+  },
+  "code": "panel-04"
+}

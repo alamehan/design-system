@@ -1,0 +1,32 @@
+/* composite-08 CandidateCard — candidate summary card: avatar + name + headline + chips, divider, info rows (default slot), hover actions. Slots: #avatar, #chips, default, #actions.
+   Source of truth: src/components/composite-08*.json · token-pure CSS (vars only). */
+
+.es-ccard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  background: var(--color-neutral-pure-white);
+  border: var(--stroke-thin) solid var(--color-system-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg) var(--space-xxl);
+  box-shadow: var(--shadow-Smooth);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.es-ccard.is-selected { background: var(--color-brand-brand-surface-soft); border-color: var(--color-brand-brand); }
+.es-ccard__profile { display: flex; align-items: center; gap: var(--space-lg); }
+.es-ccard__avatar { display: inline-flex; flex-shrink: 0; }
+.es-ccard__identity { flex: 1; min-width: 0; }
+.es-ccard__name { color: var(--color-system-text-head); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.es-ccard__headline { color: var(--color-system-text-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.es-ccard__chips { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+.es-ccard__divider { border: none; border-top: var(--stroke-thin) solid var(--color-system-border-soft); margin: 0; width: 100%; }
+.es-ccard__info { display: flex; flex-direction: column; gap: var(--space-sm); }
+.es-ccard__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.es-ccard:hover .es-ccard__actions,
+.es-ccard:focus-within .es-ccard__actions { opacity: 1; }

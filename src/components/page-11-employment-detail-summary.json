@@ -1,0 +1,322 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "employment-detail-summary",
+  "name": "Sample Pages 11 — Employment Detail Side Panel (Summary)",
+  "figmaNodeId": null,
+  "source": "User-provided screenshot export from Figma (Sample Side-Panel Modal Detail - 1). Node ID not captured.",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "side-panel-detail-view",
+  "description": "Employee/candidate employment detail opened as a wide right-anchored side panel (Panel, MultiCard) over a scrimmed base page. Panel header: candidate switcher dropdown + prev/next buttons + collapse + close. Summary bar: avatar + full name + status/info chips. Body: two columns — left Employment History tree (company > contract > version cards), right contract detail card with a 6-step approval stage stepper, underline tabs and a summary grid of icon+label/value blocks.",
+  "shell": {
+    "note": "Base page remains visible at the left under a scrim overlay (per layout-05 Panel spec). Sidebar/app-bar of the base page are behind the scrim.",
+    "panel": {
+      "component": "panel",
+      "props": {
+        "type": "MultiCard",
+        "isOpen": true,
+        "width": 1045
+      },
+      "dimensions": {
+        "width": 1045,
+        "height": 768
+      },
+      "tokens": {
+        "background": "system.surface-strong",
+        "header-background": "neutral.pure-white"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 321,
+      "y": 0,
+      "width": 1045,
+      "height": 768
+    },
+    "zones": [
+      "panel-header",
+      "summary-bar",
+      "detail-columns"
+    ]
+  },
+  "zones": {
+    "panel-header": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "panel-detail-header",
+      "description": "Panel top bar. Left: record switcher — Dropdown input showing the current candidate name + prev/next icon buttons (Outlined, chevron-left / chevron-right). Right: collapse-to-right icon button + close X icon button.",
+      "dimensions": {
+        "width": 1045,
+        "height": 52
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-bottom": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.sm",
+        "padding-x": "spacing.standard.lg"
+      },
+      "slots": {
+        "left": {
+          "content": [
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "placeholder": "Christopher Aditya Rama W..."
+              }
+            },
+            {
+              "component": "icon-button",
+              "props": {
+                "type": "Outlined",
+                "icon": "chevron-left"
+              }
+            },
+            {
+              "component": "icon-button",
+              "props": {
+                "type": "Outlined",
+                "icon": "chevron-right"
+              }
+            }
+          ]
+        },
+        "right": {
+          "content": [
+            {
+              "component": "icon-button",
+              "props": {
+                "type": "Ghost",
+                "icon": "layout-sidebar-right-collapse"
+              }
+            },
+            {
+              "component": "icon-button",
+              "props": {
+                "type": "Ghost",
+                "icon": "x"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "summary-bar": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "candidate-summary-bar",
+      "description": "Identity strip on a white card. Avatar (component: avatar) + full name (text-styles.bold.body-lg, system.text-head) + chip row: status-chip Success 'Active Employee', then neutral info chips with leading icons: 'ID: EL-CV2030999', 'Current: PT Huawei Device', 'Total: 0 Years 5 Months 1 Days' (chip style Neutral).",
+      "dimensions": {
+        "width": 1045,
+        "height": 72
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "radius": "corner-radius.md",
+        "padding": "spacing.standard.lg",
+        "gap": "spacing.standard.md"
+      },
+      "components": [
+        {
+          "component": "avatar"
+        },
+        {
+          "component": "status-chip",
+          "props": {
+            "type": "Success",
+            "label": "Active Employee"
+          }
+        },
+        {
+          "component": "chip",
+          "props": {
+            "style": "Neutral",
+            "type": "SM-1"
+          },
+          "note": "Info chips: ID / Current / Total, each with leading icon"
+        }
+      ]
+    },
+    "detail-columns": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "employment-detail-columns",
+      "description": "Two-column body on system.surface-strong canvas, gap spacing.standard.md. Left: 370px Employment History card. Right: flexible contract detail card.",
+      "dimensions": {
+        "width": 1045,
+        "height": 644
+      },
+      "tokens": {
+        "background": "system.surface-strong",
+        "padding": "spacing.standard.md",
+        "gap": "spacing.standard.md",
+        "card-bg": "neutral.pure-white",
+        "card-radius": "corner-radius.md",
+        "card-border": "system.border-soft"
+      },
+      "columns": {
+        "employment-history": {
+          "width": 370,
+          "component": null,
+          "customElement": true,
+          "customElementId": "employment-history-tree",
+          "description": "History tree card. Header: 'Employment History' (text-styles.bold.body-md) + collapse icon button. Tree: company node (radio-style active dot brand.brand + company name, collapsible chevron) > contract group card (system.surface-soft bg: folder icon + 'Fixed-Term (PKWT)' + 'Ref: 638/PKWT-PTES/001/VI/2024' in text-styles.regular.label-sm system.text-mute) > version cards linked by a dotted timeline line. Version card anatomy: version chip ('V2 · Amend' — chip Neutral SM) + right badge ('Current' status-chip Success / 'Previous' chip Neutral); contract number (text-styles.bold.body-sm, system.text-head); icon rows: date range with '(Ongoing)' in semantic.success or '(Ended)' in semantic.error, role name, salary 'IDR 13.000.000' (text-styles.regular.body-sm, system.text-body). Selected version card: stroke.regular border brand.brand. Unselected: stroke.thin system.border-soft.",
+          "tokens": {
+            "selected-card-border": "brand.brand",
+            "contract-group-bg": "system.surface-soft",
+            "timeline-line": "system.border-medium",
+            "ongoing-text": "semantic.success",
+            "ended-text": "semantic.error"
+          }
+        },
+        "contract-detail": {
+          "width": "flex",
+          "description": "Contract detail card. Header row: contract number 'PTES.018/05-PTES/41747/XI/24' (text-styles.bold.body-md, system.text-head) + 'Actions' split button (Outlined) right. Below: approval stage stepper (custom), then underline tabs, then tab content.",
+          "header-action": {
+            "component": "split-button",
+            "props": {
+              "type": "Outlined",
+              "label": "Actions"
+            }
+          },
+          "stage-stepper": {
+            "customElement": true,
+            "customElementId": "approval-stage-stepper",
+            "description": "CUSTOM ELEMENT — horizontal 6-step progress stepper: numbered circles (1-6) connected by a line, labels beneath (KA REVIEW, KAM, HOD, KA SEND, CANDIDATE, ACTIVE). Completed/current steps: circle bg brand.brand, number neutral.pure-white, label brand.brand (text-styles.bold.label-sm), connector brand.brand. Upcoming steps: circle bg system.surface-strong, number system.text-mute, label system.text-mute (text-styles.regular.label-sm), connector system.border-medium. In this view all 6 stages are completed (contract fully active)."
+          },
+          "tabs": {
+            "component": "tabs",
+            "props": {
+              "type": "UnderlineTextOnly",
+              "items": [
+                {
+                  "label": "Summary",
+                  "state": "active"
+                },
+                {
+                  "label": "Details"
+                },
+                {
+                  "label": "Snapshots (1)"
+                },
+                {
+                  "label": "Timeline (6)"
+                }
+              ]
+            }
+          },
+          "tab-summary": {
+            "description": "Two-column grid of labelled value blocks separated by soft divider rows. Each block: leading icon in a tonal square (icon-button Tonal look), label above (text-styles.regular.label-sm, system.text-mute), value below (text-styles.bold.body-sm, system.text-head). Chip values use status-chip / chip components.",
+            "component": "candidate-info-block",
+            "props": {
+              "type": "SingleValue"
+            },
+            "blocks": [
+              {
+                "label": "Customer",
+                "value": "PT. Huawei Device"
+              },
+              {
+                "label": "Contract Type",
+                "value": "Fixed-Term (PKWT)"
+              },
+              {
+                "label": "Version Number",
+                "value": "V2 · Amend",
+                "valueComponent": "chip"
+              },
+              {
+                "label": "Contract Number",
+                "value": "PTES.018/05-PTES/41747/XI/24"
+              },
+              {
+                "label": "Period & Validity",
+                "value": "01 Jan 25 – 31 Dec 25 (Ongoing)",
+                "note": "'(Ongoing)' in semantic.success"
+              },
+              {
+                "label": "Position",
+                "value": "Senior Marketing Specialist"
+              },
+              {
+                "label": "Salary (Base)",
+                "value": "IDR 13.000.000"
+              },
+              {
+                "label": "Site Location",
+                "value": "Jakarta Pusat"
+              },
+              {
+                "label": "Pipeline Stage",
+                "value": "Active",
+                "valueComponent": "status-chip",
+                "valueProps": {
+                  "type": "Success"
+                }
+              },
+              {
+                "label": "Approval Status",
+                "value": "Completed",
+                "valueComponent": "status-chip",
+                "valueProps": {
+                  "type": "Success"
+                }
+              },
+              {
+                "label": "Version Status",
+                "value": "Current",
+                "valueComponent": "status-chip",
+                "valueProps": {
+                  "type": "Success"
+                }
+              },
+              {
+                "label": "Created Date",
+                "value": "01 Nov 2024, 09:00",
+                "note": "suffix 'by Raihan Allaam' in system.text-mute"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "panel-detail-header": "Candidate switcher dropdown + prev/next outlined icon buttons left; collapse + close right. Border-bottom: system.border-soft.",
+    "candidate-summary-bar": "Avatar + name + status-chip Success + neutral info chips (ID / Current / Total).",
+    "employment-detail-columns": "Two-column: 370px history tree card + flexible contract detail card on system.surface-strong canvas.",
+    "employment-history-tree": "Company node > contract group (surface-soft) > version cards on dotted timeline. Selected version: brand.brand border. Ongoing: semantic.success; Ended: semantic.error.",
+    "approval-stage-stepper": "6 numbered circle steps + connector line. Done/current: brand.brand circle + label. Upcoming: system.surface-strong circle, system.text-mute label."
+  },
+  "code": "page-11",
+  "geometry": {
+    "basis": "1366x768 design canvas; measured on 2732x1536 @2x real shots",
+    "panelWidth": 1045,
+    "scrimWidth": 321,
+    "canvasPadding": 12,
+    "historyTreeColumn": 370,
+    "contentColumn": "flex (~637)",
+    "columnGap": 12,
+    "candidateSwitcherWidth": 240,
+    "stepperCircle": 28,
+    "summaryIconTile": 36
+  },
+  "_provenance": {
+    "method": "PIL pixel scan of real Figma export shot panel1.png (2732x1536 @2x) + spec cross-check",
+    "date": "2026-07-04",
+    "fase": "G",
+    "notes": [
+      "panel measured 1045px (scrim ends at 321/1366): corrected from the 1112px estimate",
+      "history tree column measured 370px: corrected from the 280px estimate",
+      "both panel states are the same employee (EL-CV2030999) captured at two real moments",
+      "Snapshots tab content for this state is not visible in the shot; one consistent row backs the real 'Snapshots (1)' count and is marked as such",
+      "EPanel provides a #header slot - the panel renders the real top bar (switcher + prev/next left, collapse + close right) instead of the kit title+close pair"
+    ]
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "icon-custom",
+  "name": "Icon (Custom)",
+  "figmaName": "[📦]-custom-icons",
+  "figmaNodeId": "1461:18493",
+  "category": "foundation",
+  "section": "Foundations",
+  "role": "asset",
+  "implementable": true,
+  "description": "Custom-designed icons specific to Elabram. 94 variants across 7 groups: navigation icons (default + active states), system status icons, social media brand icons, country flags, file type icons, and folder icons. 24×24px SVG format.",
+  "assetType": "icon-svg",
+  "dimensions": {
+    "width": 24,
+    "height": 24,
+    "unit": "px"
+  },
+  "totalIcons": 94,
+  "iconGroups": {
+    "navigation": {
+      "description": "Sidebar navigation icons with Default and Active states (26 pairs).",
+      "variants": [
+        "dashboard",
+        "crm-computer",
+        "briefcase",
+        "users-alt",
+        "user-bag",
+        "file-invoice",
+        "money-check-edit",
+        "garage",
+        "to-do-alt",
+        "chart-user",
+        "people-poll",
+        "envelope-bulk",
+        "document-gear",
+        "table-list",
+        "file-import",
+        "file-export",
+        "bars-progress",
+        "chart-tree-map",
+        "hand-holding-box",
+        "convert-document",
+        "cv",
+        "chart-pie-simple-circle-currency",
+        "book-bookmark",
+        "bell",
+        "bell-notification-social-media",
+        "file-edit"
+      ],
+      "note": "Append '-active' to get the active/selected state variant (e.g. 'dashboard-active')"
+    },
+    "system-status": {
+      "description": "Semantic status indicator icons",
+      "variants": [
+        "system-success",
+        "system-warning",
+        "system-error",
+        "system-info",
+        "system-wait-1",
+        "system-wait-2"
+      ]
+    },
+    "social": {
+      "description": "Social media brand icons",
+      "variants": [
+        "social-linkedin",
+        "social-facebook",
+        "social-instagram",
+        "social-x",
+        "social-youtube",
+        "social-tiktok",
+        "social-link"
+      ]
+    },
+    "flags": {
+      "description": "Country flag icons",
+      "variants": [
+        "flag-id",
+        "flag-my",
+        "flag-th",
+        "flag-ph"
+      ]
+    },
+    "utility": {
+      "description": "Utility/misc icons",
+      "variants": [
+        "image-placeholder",
+        "loading",
+        "artificial-intelligence",
+        "google-calendar",
+        "matching"
+      ]
+    },
+    "filetype": {
+      "description": "File type indicators",
+      "variants": [
+        "filetype-pdf",
+        "filetype-png",
+        "filetype-jpg",
+        "filetype-jpeg",
+        "filetype-doc",
+        "filetype-xls",
+        "filetype-zip",
+        "filetype-rar",
+        "filetype-audio",
+        "filetype-video"
+      ]
+    },
+    "folder-file": {
+      "description": "Folder and file collection icons",
+      "variants": [
+        "file-folder-1",
+        "file-folder-2",
+        "file-folder-3",
+        "file-documents",
+        "file-images",
+        "file-videos",
+        "file-audios",
+        "file-zipper",
+        "folder-zip-rar-1",
+        "folder-zip-rar-2"
+      ]
+    }
+  },
+  "props": {
+    "name": {
+      "type": "enum",
+      "values": [
+        "dashboard",
+        "crm-computer",
+        "briefcase",
+        "users-alt",
+        "user-bag",
+        "file-invoice",
+        "money-check-edit",
+        "garage",
+        "to-do-alt",
+        "chart-user",
+        "people-poll",
+        "envelope-bulk",
+        "document-gear",
+        "table-list",
+        "file-import",
+        "file-export",
+        "bars-progress",
+        "chart-tree-map",
+        "hand-holding-box",
+        "convert-document",
+        "cv",
+        "chart-pie-simple-circle-currency",
+        "book-bookmark",
+        "bell",
+        "bell-notification-social-media",
+        "file-edit",
+        "dashboard-active",
+        "crm-computer-active",
+        "briefcase-active",
+        "users-alt-active",
+        "user-bag-active",
+        "file-invoice-active",
+        "money-check-edit-active",
+        "garage-active",
+        "to-do-alt-active",
+        "chart-user-active",
+        "people-poll-active",
+        "envelope-bulk-active",
+        "document-gear-active",
+        "table-list-active",
+        "file-import-active",
+        "file-export-active",
+        "bars-progress-active",
+        "chart-tree-map-active",
+        "hand-holding-box-active",
+        "convert-document-active",
+        "cv-active",
+        "chart-pie-simple-circle-currency-active",
+        "book-bookmark-active",
+        "bell-active",
+        "bell-notification-social-media-active",
+        "file-edit-active",
+        "system-success",
+        "system-warning",
+        "system-error",
+        "system-info",
+        "system-wait-1",
+        "system-wait-2",
+        "social-linkedin",
+        "social-facebook",
+        "social-instagram",
+        "social-x",
+        "social-youtube",
+        "social-tiktok",
+        "social-link",
+        "image-placeholder",
+        "loading",
+        "artificial-intelligence",
+        "google-calendar",
+        "flag-id",
+        "flag-my",
+        "flag-th",
+        "flag-ph",
+        "filetype-pdf",
+        "filetype-png",
+        "filetype-jpg",
+        "filetype-jpeg",
+        "filetype-doc",
+        "filetype-xls",
+        "filetype-zip",
+        "filetype-rar",
+        "filetype-audio",
+        "filetype-video",
+        "file-folder-1",
+        "file-folder-2",
+        "file-folder-3",
+        "file-documents",
+        "file-images",
+        "file-videos",
+        "file-audios",
+        "file-zipper",
+        "folder-zip-rar-1",
+        "folder-zip-rar-2",
+        "matching"
+      ],
+      "default": "dashboard"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": false,
+      "description": "For navigation icons: when true, use the '-active' variant. Handles the active state automatically.",
+      "condition": {
+        "prop": "group",
+        "equals": "navigation"
+      }
+    }
+  },
+  "tokens": {
+    "default-size": 24,
+    "note": "Navigation icons have built-in color (gradient/brand fill). System status icons have semantic colors built-in. Social icons use brand colors. Don't override with CSS color."
+  },
+  "anatomy": {
+    "root": {
+      "element": "svg",
+      "role": "img"
+    },
+    "paths": {
+      "element": "path|rect|circle",
+      "optional": false
+    }
+  },
+  "usage": {
+    "generic": "CustomIcon(name='dashboard', isActive=false)",
+    "notes": "Unlike Tabler icons, Custom icons have colors built into the SVG. Don't apply CSS color overrides. For navigation: toggle between 'name' and 'name-active' based on route. Export as SVG from Figma — each variant is a separate SVG file."
+  },
+  "a11y": {
+    "role": "img",
+    "aria": {
+      "aria-hidden": "true when used in Sidebar with visible label",
+      "aria-label": "[navigation item name] when no adjacent label"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use dashboard/dashboard-active pair for sidebar navigation items.",
+      "Use system-* icons for inline status indicators alongside text.",
+      "Use filetype-* icons in file lists to show document format."
+    ],
+    "dont": [
+      "Don't apply CSS color overrides — colors are baked into the custom icons.",
+      "Don't use social icons without a social media context."
+    ]
+  },
+  "code": "asset-08"
+}

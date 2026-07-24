@@ -1,0 +1,78 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "embed-viewer",
+  "name": "EmbedViewer",
+  "figmaName": "[🧱]-embed-frame",
+  "figmaNodeId": "4782:55624",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Dark-theme embedded viewer for VideoPlayer and DocumentViewer. Uses the component.embed-* token set (dark gray UI). Includes a top control bar, a canvas area, and playback/navigation controls.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "VideoPlayer",
+        "DocumentViewer"
+      ],
+      "default": "VideoPlayer"
+    },
+    "src": {
+      "type": "string",
+      "default": null
+    },
+    "title": {
+      "type": "string",
+      "default": null
+    }
+  },
+  "tokens": {
+    "base": {
+      "topbar-bg": "component.embed-topbar",
+      "topbar-text": "component.embed-text",
+      "topbar-text-mute": "component.embed-text-mute",
+      "separator-color": "component.embed-separator",
+      "canvas-bg": "component.embed-canvas",
+      "darken-overlay": "component.embed-darken"
+    }
+  },
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "topbar": {
+      "element": "div",
+      "note": "Title, close, fullscreen controls — dark gray bg"
+    },
+    "canvas": {
+      "element": "div",
+      "note": "Video frame or document page render area"
+    },
+    "controls": {
+      "element": "div",
+      "note": "Play/pause/seek (Video) or page navigation (Document)"
+    }
+  },
+  "usage": {
+    "generic": "EmbedViewer(type='VideoPlayer', src='https://...')",
+    "notes": "Render inside a Modal(Browser) or fullscreen. Dark theme is intentional — do not override with light colors."
+  },
+  "a11y": {
+    "role": "region",
+    "aria": {
+      "aria-label": "Video player or Document viewer"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always show a close/exit button in the topbar.",
+      "Support keyboard controls for playback."
+    ],
+    "dont": [
+      "Don't mix light UI elements with the dark embed theme.",
+      "Don't render EmbedViewer inside a regular Panel — use a Modal(Browser)."
+    ]
+  },
+  "code": "composite-14"
+}

@@ -1,0 +1,105 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "candidate-details-panel",
+  "name": "CandidateDetailsPanel",
+  "figmaName": "[🧱]-panel-content-multi-cd",
+  "figmaNodeId": "4782:55680",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "The main candidate detail panel body. 8 variants covering the candidate tabs: Profile, Interview, Comment, and History sub-tabs (MH/CA/CH/LA/JA). Each variant shows a different view of the candidate's data using CandidateInfoBlock, Timeline entries, and note/comment sections.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Profile",
+        "Interview",
+        "Comment",
+        "HistoryMH",
+        "HistoryCA",
+        "HistoryCH",
+        "HistoryLA",
+        "HistoryJA"
+      ],
+      "default": "Profile",
+      "description": "Which tab/view of candidate data to display."
+    },
+    "candidateId": {
+      "type": "string",
+      "default": null
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": "spacing.standard.lg"
+    },
+    "section-alert": {
+      "note": "Toast(Filled/Warning) for pending actions"
+    },
+    "section-main": {
+      "note": "Primary content: CandidateInfoBlock rows"
+    },
+    "section-action": {
+      "note": "Quick action buttons"
+    },
+    "section-profile-summary": {
+      "note": "Avatar + name + headline block"
+    }
+  },
+  "subcomponents": [
+    "candidate-info-block",
+    "toast",
+    "button",
+    "icon-button",
+    "avatar",
+    "status-chip",
+    "info-block"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "section-alert": {
+      "element": "div",
+      "optional": true,
+      "note": "Conditional warning toast"
+    },
+    "section-main": {
+      "element": "div",
+      "optional": false,
+      "note": "Main data content for the active tab"
+    },
+    "section-action": {
+      "element": "div",
+      "optional": true,
+      "note": "Contextual action buttons"
+    },
+    "section-profile": {
+      "element": "div",
+      "optional": true,
+      "note": "Profile summary — shown on Profile tab"
+    }
+  },
+  "usage": {
+    "generic": "CandidateDetailsPanel(type='Profile', candidateId='c-001') — place inside Panel(MultiCard) body"
+  },
+  "a11y": {
+    "role": "region",
+    "aria": {
+      "aria-label": "Candidate details"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Drive which variant is shown by the active Tabs item in the Panel sub-header.",
+      "Show alert section when candidate has pending consent or action required."
+    ],
+    "dont": [
+      "Don't render all 8 variants simultaneously — only show the active one."
+    ]
+  },
+  "code": "panel-03"
+}

@@ -1,0 +1,98 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "notification-panel",
+  "name": "NotificationPanel",
+  "figmaName": "[🧱]-panel-content-multi-nf",
+  "figmaNodeId": "13697:113430",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content for the notification/activity feed. Shows activity grouped by category: General, Jobs, Contract, Invoice, Payroll. Each category section is a collapsible group of activity items.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default"
+      ],
+      "default": "Default"
+    },
+    "categories": {
+      "type": "array",
+      "default": [
+        "General",
+        "Jobs",
+        "Contract",
+        "Invoice",
+        "Payroll"
+      ],
+      "description": "Which activity categories to show"
+    },
+    "activities": {
+      "type": "object",
+      "default": {},
+      "description": "Map of category → activity array"
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": "spacing.standard.lg"
+    },
+    "category-sections": {
+      "note": "5 collapsible activity sections"
+    }
+  },
+  "subcomponents": [
+    "notification-card",
+    "info-block",
+    "chip"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "sections": {
+      "General": {
+        "element": "div",
+        "note": "General activity notifications"
+      },
+      "Jobs": {
+        "element": "div",
+        "note": "Job posting activity"
+      },
+      "Contract": {
+        "element": "div",
+        "note": "Contract-related activity"
+      },
+      "Invoice": {
+        "element": "div",
+        "note": "Invoice activity"
+      },
+      "Payroll": {
+        "element": "div",
+        "note": "Payroll activity"
+      }
+    }
+  },
+  "usage": {
+    "generic": "NotificationPanel(type='Default') — inside Panel(MultiCard) body"
+  },
+  "a11y": {
+    "role": "feed",
+    "aria": {
+      "aria-label": "Activity feed"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Group activities by category with collapsible sections.",
+      "Show unread count badge per category."
+    ],
+    "dont": [
+      "Don't mix activity categories in a flat list — always group by category."
+    ]
+  },
+  "code": "panel-12"
+}

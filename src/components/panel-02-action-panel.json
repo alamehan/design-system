@@ -1,0 +1,64 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "action-panel",
+  "name": "ActionPanel",
+  "figmaName": "[🧱]-panel-content-single-ac",
+  "figmaNodeId": "7226:255940",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content for quick-action forms. Two states: Filled (form has data) and Unfilled (empty initial state). Contains stacked form inputs. Domain use: bulk actions, quick-edit, batch assignment on candidate records.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Filled",
+        "Unfilled"
+      ],
+      "default": "Unfilled"
+    },
+    "fields": {
+      "type": "array",
+      "default": [],
+      "description": "Array of form field configs to render"
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": "spacing.standard.lg"
+    }
+  },
+  "subcomponents": [
+    "input",
+    "form-control",
+    "button"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "fields": {
+      "element": "div",
+      "note": "Stack of Input or FormControl fields"
+    }
+  },
+  "usage": {
+    "generic": "ActionPanel(type='Unfilled') — place inside Panel(SingleCard) body slot"
+  },
+  "a11y": {
+    "role": "form"
+  },
+  "guidelines": {
+    "do": [
+      "Show Unfilled state when no record is selected.",
+      "Switch to Filled state when user selects a record."
+    ],
+    "dont": [
+      "Don't add submit button here — use Panel footer."
+    ]
+  },
+  "code": "panel-02"
+}

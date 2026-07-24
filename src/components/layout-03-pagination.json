@@ -1,0 +1,132 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "pagination",
+  "name": "Pagination",
+  "figmaName": "[🧩]-pagination",
+  "figmaNodeId": "4113:65367",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Page navigation bar for paginated data. Default shows row count, page buttons, and items-per-page selector. Compact shows only count and prev/next.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Compact"
+      ],
+      "default": "Default"
+    },
+    "currentPage": {
+      "type": "number",
+      "default": 1
+    },
+    "totalPages": {
+      "type": "number",
+      "default": 10
+    },
+    "totalItems": {
+      "type": "number",
+      "default": 999
+    },
+    "itemsPerPage": {
+      "type": "number",
+      "default": 9
+    },
+    "itemsPerPageOptions": {
+      "type": "array",
+      "default": [
+        9,
+        25,
+        50,
+        100
+      ]
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "system.surface-strong",
+      "border-top": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding-x": "spacing.standard.xxl",
+      "text-style": "text-styles.regular.body-md",
+      "text-color": "system.text-head",
+      "page-btn-active-bg": "brand.brand",
+      "page-btn-active-text": "neutral.pure-white"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": "Compact"
+        },
+        "tokens": {
+          "radius": "corner-radius.md"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "button",
+    "icon-button",
+    "input"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "navigation"
+    },
+    "count-label": {
+      "element": "span",
+      "optional": true,
+      "note": "'Showing X to Y of Z'"
+    },
+    "page-buttons": {
+      "element": "div",
+      "optional": false
+    },
+    "prev-btn": {
+      "element": "button",
+      "optional": false
+    },
+    "page-btn": {
+      "element": "button",
+      "optional": false,
+      "note": "Rendered for each visible page number"
+    },
+    "next-btn": {
+      "element": "button",
+      "optional": false
+    },
+    "per-page-select": {
+      "element": "select",
+      "optional": true,
+      "condition": {
+        "prop": "type",
+        "equals": "Default"
+      }
+    }
+  },
+  "usage": {
+    "generic": "Pagination(type='Default', currentPage=1, totalPages=10, totalItems=999)",
+    "notes": "Place at the bottom of DataTable inside the Footer zone."
+  },
+  "a11y": {
+    "role": "navigation",
+    "aria": {
+      "aria-label": "Pagination",
+      "aria-current": "page — on active page button"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use Compact inside panels with limited width.",
+      "Show max 5 page buttons, use ellipsis for the rest."
+    ],
+    "dont": [
+      "Don't render Pagination for single-page results.",
+      "Don't show items-per-page on Compact variant."
+    ]
+  },
+  "code": "layout-03"
+}

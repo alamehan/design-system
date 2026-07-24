@@ -1,0 +1,246 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "toast",
+  "name": "Toast",
+  "figmaName": "[⚛️]-toast",
+  "figmaNodeId": "4165:77218",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Transient notification overlay. Semantic status types × three visual styles. Auto-dismisses.",
+  "props": {
+    "style": {
+      "type": "enum",
+      "values": [
+        "Filled",
+        "Outlined",
+        "Others"
+      ],
+      "default": "Filled"
+    },
+    "type": {
+      "type": "enum",
+      "values": [
+        "Success",
+        "Warning",
+        "Error",
+        "Info",
+        "Wait",
+        "Brand",
+        "Basic"
+      ],
+      "default": "Success"
+    },
+    "title": {
+      "type": "string",
+      "default": "Notification Title"
+    },
+    "description": {
+      "type": "string",
+      "default": null
+    },
+    "hasAction": {
+      "type": "boolean",
+      "default": false
+    },
+    "actionLabel": {
+      "type": "string",
+      "default": "Undo",
+      "condition": {
+        "prop": "hasAction",
+        "equals": true
+      }
+    },
+    "isDismissible": {
+      "type": "boolean",
+      "default": true
+    },
+    "duration": {
+      "type": "number",
+      "default": 4000,
+      "description": "ms. 0 = no auto-dismiss."
+    }
+  },
+  "tokens": {
+    "base": {
+      "radius": "corner-radius.lg",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.lg",
+      "border-width": "stroke.thin"
+    },
+    "overrides": [
+      {
+        "when": {
+          "style": "Filled",
+          "type": "Success"
+        },
+        "tokens": {
+          "background": "semantic.success-surface-soft",
+          "border-color": "semantic.success",
+          "icon-gradient": "paint-style.Gradients/Grad Green Strong"
+        }
+      },
+      {
+        "when": {
+          "style": "Filled",
+          "type": "Error"
+        },
+        "tokens": {
+          "background": "semantic.error-surface-soft",
+          "border-color": "semantic.error",
+          "icon-gradient": "paint-style.Gradients/Grad Red Strong"
+        }
+      },
+      {
+        "when": {
+          "style": "Filled",
+          "type": "Warning"
+        },
+        "tokens": {
+          "background": "semantic.warning-surface-soft",
+          "border-color": "semantic.warning",
+          "icon-gradient": "paint-style.Gradients/Grad Amber"
+        }
+      },
+      {
+        "when": {
+          "style": "Filled",
+          "type": "Info"
+        },
+        "tokens": {
+          "background": "semantic.info-surface-soft",
+          "border-color": "semantic.info",
+          "icon-gradient": "paint-style.Gradients/Grad Sky"
+        }
+      },
+      {
+        "when": {
+          "style": "Filled",
+          "type": "Brand"
+        },
+        "tokens": {
+          "background": "brand.brand-surface-soft",
+          "border-color": "brand.brand",
+          "icon-gradient": "paint-style.Gradients/Grad Brand Strong"
+        }
+      },
+      {
+        "when": {
+          "style": "Outlined",
+          "type": "Success"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "semantic.success",
+          "icon-gradient": "paint-style.Gradients/Grad Green Strong",
+          "shadow": "shadow.Smooth"
+        }
+      },
+      {
+        "when": {
+          "style": "Outlined",
+          "type": "Error"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "semantic.error",
+          "icon-gradient": "paint-style.Gradients/Grad Red Strong",
+          "shadow": "shadow.Smooth"
+        }
+      },
+      {
+        "when": {
+          "style": "Outlined",
+          "type": "Warning"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "semantic.warning",
+          "icon-gradient": "paint-style.Gradients/Grad Amber",
+          "shadow": "shadow.Smooth"
+        }
+      },
+      {
+        "when": {
+          "style": "Outlined",
+          "type": "Info"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "semantic.info",
+          "icon-gradient": "paint-style.Gradients/Grad Sky",
+          "shadow": "shadow.Smooth"
+        }
+      },
+      {
+        "when": {
+          "style": "Others",
+          "type": "Basic"
+        },
+        "tokens": {
+          "background": "system.surface-strong",
+          "border": null,
+          "icon-background": "brand.brand-surface-soft",
+          "icon-border": "neutral.pure-white",
+          "icon-shadow": "shadow.Base"
+        }
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "alert"
+    },
+    "icon": {
+      "element": "span"
+    },
+    "title": {
+      "element": "p"
+    },
+    "description": {
+      "element": "p",
+      "optional": true
+    },
+    "action": {
+      "element": "button",
+      "optional": true,
+      "condition": {
+        "prop": "hasAction",
+        "equals": true
+      }
+    },
+    "close-button": {
+      "element": "button",
+      "optional": true,
+      "condition": {
+        "prop": "isDismissible",
+        "equals": true
+      }
+    }
+  },
+  "usage": {
+    "generic": "Toast(style='Filled', type='Success', title='Saved', duration=4000)",
+    "notes": "Use a toast manager/context — don't render inline in JSX."
+  },
+  "a11y": {
+    "role": "alert",
+    "aria": {
+      "aria-live": "polite for info/success; assertive for error/warning",
+      "aria-atomic": "true"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Auto-dismiss success/info after 4s.",
+      "Keep error toasts persistent."
+    ],
+    "dont": [
+      "Don't show more than 3 simultaneously.",
+      "Don't use for critical blocking errors — use Dialog."
+    ]
+  },
+  "code": "atom-07"
+}

@@ -1,0 +1,87 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "file-info-panel",
+  "name": "FileInfoPanel",
+  "figmaName": "[🧱]-panel-content-multi-fi",
+  "figmaNodeId": "10845:292603",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content for file management actions. 3 variants: FileHistory (shows version history), EditTag (tag editor for a file), LinkTo (links a file to a job/candidate). Each shows relevant file info and action controls.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "FileHistoryWithData",
+        "EditTagWithData",
+        "LinkToWithData"
+      ],
+      "default": "FileHistoryWithData"
+    },
+    "fileId": {
+      "type": "string",
+      "default": null
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": "spacing.standard.lg"
+    },
+    "section-information": {
+      "note": "File info header: name, size, date, status"
+    },
+    "section-action": {
+      "note": "Action buttons for the current variant"
+    },
+    "selected-section": {
+      "note": "Variant-specific content: history list / tag form / link form"
+    }
+  },
+  "subcomponents": [
+    "info-block",
+    "button",
+    "icon-button",
+    "chip",
+    "input",
+    "form-control"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "section-information": {
+      "element": "div",
+      "optional": false
+    },
+    "section-action": {
+      "element": "div",
+      "optional": true
+    },
+    "selected-section": {
+      "element": "div",
+      "optional": false
+    }
+  },
+  "usage": {
+    "generic": "FileInfoPanel(type='FileHistoryWithData') — inside Panel(MultiCard) body"
+  },
+  "a11y": {
+    "role": "region",
+    "aria": {
+      "aria-label": "File information"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show file version history in chronological order.",
+      "Show tag suggestions when in EditTag mode."
+    ],
+    "dont": [
+      "Don't show all 3 variants simultaneously."
+    ]
+  },
+  "code": "panel-10"
+}

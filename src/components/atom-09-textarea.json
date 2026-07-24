@@ -1,0 +1,153 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "textarea",
+  "name": "Textarea",
+  "figmaName": "[⚛️]-form-input-text-area",
+  "figmaNodeId": "4081:23108",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Multi-line text input. Same state tokens as Input. Built on FormInputField.",
+  "props": {
+    "state": {
+      "type": "enum",
+      "values": [
+        "Inactive",
+        "Active",
+        "Focus",
+        "Error",
+        "Disabled"
+      ],
+      "default": "Inactive"
+    },
+    "label": {
+      "type": "string",
+      "default": "Label"
+    },
+    "placeholder": {
+      "type": "string",
+      "default": "Write something..."
+    },
+    "rows": {
+      "type": "number",
+      "default": 4
+    },
+    "maxLength": {
+      "type": "number",
+      "default": null
+    },
+    "showCharCount": {
+      "type": "boolean",
+      "default": false
+    },
+    "isResizable": {
+      "type": "boolean",
+      "default": true
+    },
+    "helperText": {
+      "type": "string",
+      "default": null
+    },
+    "errorText": {
+      "type": "string",
+      "default": "Error message"
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-soft",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.sm",
+      "font-style": "text-styles.regular.body-md",
+      "text-input": "system.text-head",
+      "text-placeholder": "system.text-mute",
+      "text-label": "system.text-body"
+    },
+    "overrides": [
+      {
+        "when": {
+          "state": "Focus"
+        },
+        "tokens": {
+          "border-color": "brand.brand",
+          "shadow": "shadow.State-Focus"
+        }
+      },
+      {
+        "when": {
+          "state": "Error"
+        },
+        "tokens": {
+          "border-color": "semantic.error",
+          "shadow": "shadow.State-Error",
+          "text-helper": "semantic.error"
+        }
+      },
+      {
+        "when": {
+          "state": "Disabled"
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "border-color": "system.border-strong",
+          "text-input": "system.text-mute"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "form-input-field"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "label": {
+      "element": "label"
+    },
+    "textarea": {
+      "element": "textarea"
+    },
+    "char-count": {
+      "element": "p",
+      "optional": true,
+      "condition": {
+        "prop": "showCharCount",
+        "equals": true
+      }
+    },
+    "error-text": {
+      "element": "p",
+      "optional": true,
+      "condition": {
+        "prop": "state",
+        "equals": "Error"
+      }
+    }
+  },
+  "usage": {
+    "generic": "Textarea(label='Description', placeholder='Write something...', rows=4)"
+  },
+  "a11y": {
+    "role": "textbox",
+    "aria": {
+      "aria-multiline": "true",
+      "aria-invalid": "true when state=Error",
+      "aria-disabled": "true when state=Disabled"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show char count when there is a limit."
+    ],
+    "dont": [
+      "Don't use for single-line input — use Input."
+    ]
+  },
+  "code": "atom-09"
+}

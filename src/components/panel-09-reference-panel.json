@@ -1,0 +1,74 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "reference-panel",
+  "name": "ReferencePanel",
+  "figmaName": "[🧱]-panel-content-single-crf",
+  "figmaNodeId": "7560:273201",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content for viewing candidate reference letters. Two states: Read (letter has been opened) and Unread (not yet viewed). Shows the reference letter document viewer on the left and metadata/actions on the right.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Read",
+        "Unread"
+      ],
+      "default": "Unread"
+    },
+    "referenceId": {
+      "type": "string",
+      "default": null
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": 0
+    },
+    "modal-left": {
+      "note": "Modal(Browser) showing the reference letter document"
+    },
+    "section-right": {
+      "note": "Metadata: sender, date, status; action buttons"
+    }
+  },
+  "subcomponents": [
+    "modal",
+    "info-block",
+    "button",
+    "status-chip"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "document-view": {
+      "element": "div",
+      "note": "Left: Modal(Browser) with letter document"
+    },
+    "metadata": {
+      "element": "div",
+      "note": "Right: sender info, date, status, actions"
+    }
+  },
+  "usage": {
+    "generic": "ReferencePanel(type='Unread') — inside Panel(SingleCard) body"
+  },
+  "a11y": {
+    "role": "document"
+  },
+  "guidelines": {
+    "do": [
+      "Mark as Read once the letter is viewed.",
+      "Allow downloading the reference letter as PDF."
+    ],
+    "dont": [
+      "Don't allow editing the reference letter content."
+    ]
+  },
+  "code": "panel-09"
+}

@@ -1,0 +1,201 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "form-control",
+  "name": "FormControl",
+  "figmaName": "[⚛️]-form-control",
+  "figmaNodeId": "4082:24734",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Selection controls: Checkbox, Radio, Switch. Each has Enabled/Disabled states and Selected/Unselected/Indeterminate values.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "CheckboxVertical",
+        "CheckboxHorizontal",
+        "RadioVertical",
+        "RadioHorizontal",
+        "Switch"
+      ],
+      "default": "CheckboxVertical"
+    },
+    "state": {
+      "type": "enum",
+      "values": [
+        "Enabled",
+        "Disabled"
+      ],
+      "default": "Enabled"
+    },
+    "checked": {
+      "type": "boolean",
+      "default": false
+    },
+    "indeterminate": {
+      "type": "boolean",
+      "default": false,
+      "condition": {
+        "prop": "type",
+        "equals": [
+          "CheckboxVertical",
+          "CheckboxHorizontal"
+        ]
+      }
+    },
+    "label": {
+      "type": "string",
+      "default": "Option"
+    }
+  },
+  "tokens": {
+    "base": {
+      "gap": "spacing.standard.sm",
+      "label-style": "text-styles.regular.body-md",
+      "label-color": "system.text-head"
+    },
+    "overrides": [
+      {
+        "when": {
+          "type": [
+            "CheckboxVertical",
+            "CheckboxHorizontal"
+          ],
+          "checked": true,
+          "state": "Enabled"
+        },
+        "tokens": {
+          "control-color": "brand.brand"
+        }
+      },
+      {
+        "when": {
+          "type": [
+            "CheckboxVertical",
+            "CheckboxHorizontal"
+          ],
+          "checked": false,
+          "state": "Enabled"
+        },
+        "tokens": {
+          "control-color": "system.text-mute"
+        }
+      },
+      {
+        "when": {
+          "indeterminate": true,
+          "state": "Enabled"
+        },
+        "tokens": {
+          "control-color": "brand.brand"
+        }
+      },
+      {
+        "when": {
+          "type": [
+            "RadioVertical",
+            "RadioHorizontal"
+          ],
+          "checked": true,
+          "state": "Enabled"
+        },
+        "tokens": {
+          "control-color": "brand.brand",
+          "control-dot": "brand.brand",
+          "control-inner-dot": "neutral.pure-white"
+        }
+      },
+      {
+        "when": {
+          "type": [
+            "RadioVertical",
+            "RadioHorizontal"
+          ],
+          "checked": false,
+          "state": "Enabled"
+        },
+        "tokens": {
+          "control-color": "system.text-mute"
+        }
+      },
+      {
+        "when": {
+          "type": "Switch",
+          "checked": true,
+          "state": "Enabled"
+        },
+        "tokens": {
+          "track-color": "brand.brand",
+          "thumb-color": "neutral.pure-white",
+          "thumb-shadow": "shadow.Base",
+          "padding": "spacing.standard.3xs"
+        }
+      },
+      {
+        "when": {
+          "type": "Switch",
+          "checked": false,
+          "state": "Enabled"
+        },
+        "tokens": {
+          "track-color": "system.text-mute",
+          "thumb-color": "neutral.pure-white",
+          "thumb-shadow": "shadow.Base",
+          "padding": "spacing.standard.3xs"
+        }
+      },
+      {
+        "when": {
+          "state": "Disabled"
+        },
+        "tokens": {
+          "control-color": "neutral.muted",
+          "track-color": "neutral.muted",
+          "label-color": "system.text-mute"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "form-control-master"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "group"
+    },
+    "control-item": {
+      "element": "div"
+    },
+    "control-icon": {
+      "element": "span"
+    },
+    "label": {
+      "element": "label"
+    }
+  },
+  "usage": {
+    "generic": "FormControl(type='CheckboxVertical', label='Option A', checked=false)"
+  },
+  "a11y": {
+    "role": "checkbox | radio | switch",
+    "keyboard": [
+      "Space"
+    ],
+    "aria": {
+      "aria-checked": "true/false/mixed",
+      "aria-disabled": "true when Disabled"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Group related checkboxes with a visible group label.",
+      "Use Switch for boolean settings that take effect immediately."
+    ],
+    "dont": [
+      "Don't use Checkbox as standalone binary toggle — use Switch."
+    ]
+  },
+  "code": "atom-12"
+}

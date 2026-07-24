@@ -1,0 +1,269 @@
+{
+  "_schema": "elabram-page-sample-v1",
+  "id": "bulk-approval",
+  "name": "Sample Pages 9 — Bulk Send for Approval",
+  "figmaNodeId": null,
+  "source": "User-provided screenshot export from Figma (Sample Full-Screen Modal Bulk Task - 1). Node ID not captured.",
+  "canvas": {
+    "width": 1366,
+    "height": 768,
+    "unit": "px"
+  },
+  "pageType": "fullscreen-modal-view",
+  "description": "Bulk task flow opened as a full-screen modal (Browser type). Header: 'Bulk Send for Approval' + close X. Body: three panes — left candidates list (selectable rows with status chips and remove actions), center approval actions form (apply-mode cards, tabs, contract/approver form cards), right contract document preview with zoom controls. Footer: Cancel left, Send for Approval (disabled until valid) right. Left and right panes are collapsible.",
+  "shell": {
+    "note": "Full-screen modal overlays the entire viewport — sidebar and app-bar are covered. Modal chrome is the page shell.",
+    "modal": {
+      "component": "modal",
+      "props": {
+        "type": "DefaultBrowser",
+        "size": "fullscreen",
+        "title": "Bulk Send for Approval"
+      },
+      "dimensions": {
+        "width": 1366,
+        "height": 768
+      },
+      "tokens": {
+        "background": "system.surface-strong",
+        "chrome-background": "neutral.pure-white"
+      }
+    }
+  },
+  "layout": {
+    "type": "vertical-stack",
+    "contentArea": {
+      "x": 0,
+      "y": 0,
+      "width": 1366,
+      "height": 768
+    },
+    "zones": [
+      "modal-header",
+      "panes-body",
+      "modal-footer"
+    ]
+  },
+  "zones": {
+    "modal-header": {
+      "component": "panel-section",
+      "props": {
+        "type": "HeaderTitle"
+      },
+      "description": "Modal title bar: 'Bulk Send for Approval' (text-styles.bold.body-lg, system.text-head) + close X icon button right.",
+      "dimensions": {
+        "width": 1366,
+        "height": 52
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-bottom": "system.border-soft",
+        "border-width": "stroke.thin"
+      }
+    },
+    "panes-body": {
+      "component": null,
+      "customElement": true,
+      "customElementId": "bulk-panes-body",
+      "description": "Three-pane horizontal body on a system.surface-strong canvas. Each pane is a white card (corner-radius.md, border system.border-soft). Gap: spacing.standard.md. Left and right panes can collapse to icon rails (see page-10).",
+      "dimensions": {
+        "width": 1366,
+        "height": 656
+      },
+      "tokens": {
+        "background": "system.surface-strong",
+        "padding": "spacing.standard.md",
+        "gap": "spacing.standard.md",
+        "pane-bg": "neutral.pure-white",
+        "pane-border": "system.border-soft",
+        "pane-radius": "corner-radius.md"
+      },
+      "layout": {
+        "type": "horizontal"
+      },
+      "columns": {
+        "candidates-pane": {
+          "width": 300,
+          "component": null,
+          "customElement": true,
+          "customElementId": "bulk-candidates-pane",
+          "description": "Selectable candidate queue. Header row: 'Candidates' (text-styles.bold.body-md) + count chip (6) + collapse icon button. List rows: candidate name (text-styles.bold.body-sm, system.text-head, single-line ellipsis) over role subtitle (text-styles.regular.label-sm, system.text-mute), status chip right (chip style Colored: 'New' neutral tone, 'Extend' semantic.warning tone, 'Revision' semantic.error tone, 'Request Change' semantic.sem-teal tone), trailing delete icon button (Ghost, icon color semantic.error). Selected row: brand.brand-surface-soft background + stroke.regular left border brand.brand. Footer hint: 'Navigate with Ctrl + ↑ or ↓' with keyboard key caps (system.surface-strong bg, corner-radius.md, text-styles.regular.label-sm, system.text-mute).",
+          "tokens": {
+            "row-border": "system.border-soft",
+            "selected-bg": "brand.brand-surface-soft",
+            "selected-border": "brand.brand",
+            "delete-icon": "semantic.error"
+          }
+        },
+        "approval-actions-pane": {
+          "width": "flex",
+          "component": null,
+          "customElement": true,
+          "customElementId": "approval-actions-pane",
+          "description": "Main form pane. Header row: 'Approval Actions' (text-styles.bold.body-md) + 'Info' chip with info icon right + expand icon button. Apply-mode selector: two selectable option cards in a row (radio behavior) — 'Apply to All' (stack icon, title text brand.brand, caption 'Use the same details for all selected candidates.'; selected: border brand.brand + bg brand.brand-surface-soft) and 'Only for [Candidate Name]' (file icon, caption 'Set unique and specific details just for this person.'; unselected: border system.border-soft, bg neutral.pure-white). Below: tabs (UnderlineTextOnly): 'Template & Approval' (active) | 'Attachment (0)'. Tab content: two stacked form cards on system.surface-soft group backgrounds: card 1 — 'Contracy Type' Dropdown (disabled, value 'Contract or PKWT') and 'Version' Dropdown ('Select Version') with trailing 'Edit' button (Outlined, pencil icon); card 2 — 'Approver 1 (KAM)' and 'Approver 2 (KAM)' Dropdowns ('Select Approver').",
+          "content-components": [
+            {
+              "component": "tabs",
+              "props": {
+                "type": "UnderlineTextOnly",
+                "items": [
+                  {
+                    "label": "Template & Approval",
+                    "state": "active"
+                  },
+                  {
+                    "label": "Attachment (0)",
+                    "state": "inactive"
+                  }
+                ]
+              }
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "label": "Contracy Type",
+                "placeholder": "Contract or PKWT",
+                "isDisabled": true
+              },
+              "note": "Label text as in source design ('Contracy Type')"
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "label": "Version",
+                "placeholder": "Select Version"
+              },
+              "trailing": {
+                "component": "button",
+                "props": {
+                  "type": "Outlined",
+                  "label": "Edit",
+                  "hasIconLeft": true,
+                  "icon": "pencil"
+                }
+              }
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "label": "Approver 1 (KAM)",
+                "placeholder": "Select Approver"
+              }
+            },
+            {
+              "component": "input",
+              "props": {
+                "type": "Dropdown",
+                "label": "Approver 2 (KAM)",
+                "placeholder": "Select Approver"
+              }
+            }
+          ],
+          "tokens": {
+            "group-card-bg": "system.surface-soft",
+            "group-card-radius": "corner-radius.md",
+            "group-card-padding": "spacing.standard.lg"
+          }
+        },
+        "contract-preview-pane": {
+          "width": 290,
+          "component": null,
+          "customElement": true,
+          "customElementId": "contract-preview-pane",
+          "description": "Document preview pane. Header row: 'Contract Preview' (text-styles.bold.body-md) + 'Toggle Summary' pill chip with eye icon + collapse icon button. Preview card on system.surface-soft: toolbar row with candidate name (text-styles.bold.body-sm) + zoom controls (− / '100%' / + icon buttons, Ghost); document page below as a white A4-ratio card (shadow, contract text content: centered bold heading lines + numbered clauses, text-styles.regular.label-sm, system.text-body). Vertical scroll within the pane.",
+          "tokens": {
+            "preview-canvas-bg": "system.surface-soft",
+            "page-bg": "neutral.pure-white"
+          },
+          "scroll": {
+            "component": "scroll-bar",
+            "note": "Vertical variant"
+          }
+        }
+      }
+    },
+    "modal-footer": {
+      "component": "panel-section",
+      "props": {
+        "type": "FooterDefault"
+      },
+      "dimensions": {
+        "width": 1366,
+        "height": 60
+      },
+      "tokens": {
+        "background": "neutral.pure-white",
+        "border-top": "system.border-soft",
+        "border-width": "stroke.thin",
+        "padding-y": "spacing.standard.sm",
+        "padding-x": "spacing.standard.lg"
+      },
+      "layout": {
+        "type": "horizontal",
+        "justify": "space-between"
+      },
+      "content": {
+        "left": {
+          "component": "button",
+          "props": {
+            "type": "Outlined",
+            "label": "Cancel"
+          }
+        },
+        "right": [
+          {
+            "component": "button",
+            "props": {
+              "type": "Filled",
+              "label": "Send for Approval",
+              "state": "Disabled"
+            },
+            "note": "Disabled until template and approvers are set"
+          }
+        ]
+      }
+    }
+  },
+  "customElementsRegistry": {
+    "bulk-panes-body": "Three-pane body on system.surface-strong: 300px candidates pane + flexible form pane + 290px preview pane. Panes are white cards, gap spacing.standard.md.",
+    "bulk-candidates-pane": "Selectable candidate rows: name + role + colored status chip + error delete icon. Selected: brand.brand-surface-soft bg + brand.brand left border. Footer: keyboard navigation hint.",
+    "approval-actions-pane": "Apply-mode option cards (radio behavior; selected: brand border + brand-surface-soft bg) + underline tabs + stacked form cards on system.surface-soft.",
+    "contract-preview-pane": "Preview header + zoom toolbar (− / 100% / +) + white document page card on system.surface-soft canvas."
+  },
+  "code": "page-09",
+  "geometry": {
+    "basis": "1366x768 (screenshots are @2x); values in px @1x",
+    "canvas": {
+      "padding": 16,
+      "gap": 16,
+      "background": "system-surface-strong"
+    },
+    "panes": {
+      "left": 370,
+      "middle": 558,
+      "right": 376
+    },
+    "collapsedRail": {
+      "width": 58,
+      "initialsChip": 40,
+      "totalBand": "gray-50 w/ hairline"
+    },
+    "paper": {
+      "width": 304,
+      "viewerBackground": "var(--color-brand-brand-surface-soft) (pixel-measured rgb 219,234,254 = existing brand surface token)"
+    },
+    "zoom": {
+      "pill": "gray-100 label between ghost minus/plus",
+      "default": 100
+    }
+  },
+  "_provenance": {
+    "method": "PIL pixel scan of the real Bulk 1 / Bulk 2 screenshots",
+    "date": "2026-07-04",
+    "fase": "F",
+    "notes": "contract text transcribed verbatim incl. 'Contracy Type' typo and 'Systems.Selanjutnya' missing space; paper content below the visible fold was NOT invented; Elabram watermark approximated with low-opacity text"
+  }
+}

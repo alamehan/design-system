@@ -1,0 +1,43 @@
+/* atom-16 Tabs — Basic (pill) or Underline. v-model = active index. items: [{label, icon?}].
+   Source of truth: src/components/atom-16*.json · token-pure CSS (vars only). */
+
+.es-tabs { display: inline-flex; }
+.es-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.es-tabs__tab:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+
+/* Basic (pill in a muted container) */
+.es-tabs--basic {
+  gap: var(--space-3xs);
+  background: var(--color-neutral-muted);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3xs);
+}
+.es-tabs--basic .es-tabs__tab {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  color: var(--color-system-text-body);
+}
+.es-tabs--basic .es-tabs__tab.is-active { background: var(--color-neutral-pure-white); color: var(--color-system-text-head); }
+
+/* Underline */
+.es-tabs--underline {
+  gap: var(--space-sm);
+  padding: var(--space-none);
+  border-bottom: var(--stroke-thin) solid var(--color-system-border-strong);
+}
+.es-tabs--underline .es-tabs__tab {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-none);
+  margin-bottom: calc(-1 * var(--stroke-thin));
+  border-bottom: 2px solid transparent;
+  color: var(--color-system-text-mute);
+}
+.es-tabs--underline .es-tabs__tab.is-active { border-bottom-color: var(--color-brand-brand); color: var(--color-brand-brand); }

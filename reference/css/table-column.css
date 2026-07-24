@@ -1,0 +1,58 @@
+/* layout-10 TableColumn — header cell (th) for EDataTable. 11 types incl. sortable, checkbox select-all, inline search/select/date. Icons via #icon slot.
+   Source of truth: src/components/layout-10*.json · token-pure CSS (vars only). */
+
+.es-col {
+  background: var(--color-system-surface-strong);
+  border-right: var(--stroke-thin) solid var(--color-system-border-soft);
+  border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
+  padding: var(--space-sm);
+  color: var(--color-system-text-head);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.es-col:last-child { border-right: none; }
+.es-col__title { display: flex; align-items: center; gap: var(--space-sm); }
+.es-col__labelwrap { display: inline-flex; flex-direction: column; min-width: 0; }
+.es-col__subtitle { color: var(--color-system-text-mute); }
+.es-col__icon { display: inline-flex; align-items: center; font-size: 1.15em; }
+.es-col__center { display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.es-col__checkbox { accent-color: var(--color-brand-brand); cursor: pointer; }
+.es-col__sortbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: var(--color-system-text-head);
+  cursor: pointer;
+}
+.es-col__sortbtn:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); border-radius: var(--radius-md); }
+.es-col__sorticon { color: var(--color-system-text-mute); }
+.es-col__sorticon.is-asc .es-col__sortdown { opacity: 0.35; }
+.es-col__sorticon.is-desc .es-col__sortup { opacity: 0.35; }
+.es-col__field { display: flex; align-items: center; gap: var(--space-sm); }
+.es-col__fieldicon { color: var(--color-system-text-mute); flex-shrink: 0; }
+.es-col__input,
+.es-col__select {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-system-text-head);
+  font-weight: normal;
+  cursor: inherit;
+}
+.es-col__input::placeholder { color: var(--color-system-text-mute); }
+.es-col__select { cursor: pointer; color: var(--color-system-text-mute); }
+.es-col__replace {
+  background: var(--color-brand-brand-surface-soft);
+  border: var(--stroke-thin) solid var(--color-brand-brand);
+  border-radius: var(--radius-md);
+  color: var(--color-brand-brand);
+  padding: var(--space-sm);
+  text-align: center;
+}

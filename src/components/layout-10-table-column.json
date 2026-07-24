@@ -1,0 +1,137 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "table-column",
+  "name": "TableColumn",
+  "figmaName": "[🧩]-table-column-[🎲]-pattern",
+  "figmaNodeId": "4086:78480",
+  "category": "basic",
+  "section": "Basic Components",
+  "role": "pattern",
+  "implementable": true,
+  "description": "Header cell pattern for DataTable columns. 11 types covering: title-only, sortable title, checkbox select-all, inline search, inline select, date picker, and the ReplaceMe slot. All share surface-strong background with border.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "OnlyTitle",
+        "TitleAndSort",
+        "WithSubtitle",
+        "OnlyCheckbox",
+        "TitleWithIcon1",
+        "TitleWithIcon2",
+        "FullSearch",
+        "FullSearchWithIcon",
+        "FullSelect",
+        "FullDatePicker",
+        "ReplaceMe"
+      ],
+      "default": "OnlyTitle"
+    },
+    "label": {
+      "type": "string",
+      "default": "Column"
+    },
+    "width": {
+      "type": "number",
+      "default": 160
+    },
+    "isSorted": {
+      "type": "boolean",
+      "default": false
+    },
+    "sortDir": {
+      "type": "enum",
+      "values": [
+        "asc",
+        "desc",
+        "none"
+      ],
+      "default": "none"
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "system.surface-strong",
+      "border-right": "system.border-soft",
+      "border-width": "stroke.thin",
+      "padding": "spacing.standard.sm",
+      "gap": "spacing.standard.sm",
+      "text-style": "text-styles.bold.body-md",
+      "text-color": "system.text-head"
+    },
+    "replace-me": {
+      "background": "brand.brand-surface-soft",
+      "border-color": "brand.brand",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md",
+      "text-color": "brand.brand"
+    }
+  },
+  "anatomy": {
+    "root": {
+      "element": "th",
+      "role": "columnheader"
+    },
+    "label": {
+      "element": "span",
+      "optional": false
+    },
+    "sort-icon": {
+      "element": "span",
+      "optional": true,
+      "condition": {
+        "prop": "type",
+        "equals": "TitleAndSort"
+      }
+    },
+    "checkbox": {
+      "element": "input",
+      "type": "checkbox",
+      "optional": true,
+      "condition": {
+        "prop": "type",
+        "equals": "OnlyCheckbox"
+      }
+    },
+    "search-input": {
+      "element": "input",
+      "optional": true,
+      "condition": {
+        "prop": "type",
+        "equals": [
+          "FullSearch",
+          "FullSearchWithIcon"
+        ]
+      }
+    },
+    "select": {
+      "element": "select",
+      "optional": true,
+      "condition": {
+        "prop": "type",
+        "equals": "FullSelect"
+      }
+    }
+  },
+  "usage": {
+    "generic": "TableColumn(type='OnlyTitle', label='Candidate Name')",
+    "notes": "Compose inside DataTable column area. Use ReplaceMe as the empty slot template."
+  },
+  "a11y": {
+    "role": "columnheader",
+    "aria": {
+      "aria-sort": "ascending/descending/none on sortable columns"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use TitleAndSort for columns the user can sort.",
+      "Use OnlyCheckbox as the first column for multi-select.",
+      "Keep column labels short (1-2 words)."
+    ],
+    "dont": [
+      "Don't use FullSearch in every column — limit to 1-2 searchable columns."
+    ]
+  },
+  "code": "layout-10"
+}

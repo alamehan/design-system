@@ -1,0 +1,86 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "option-menu",
+  "name": "OptionMenu",
+  "figmaName": "[📦]-option-menus",
+  "figmaNodeId": "6966:239232",
+  "category": "foundation",
+  "section": "Foundations",
+  "role": "asset",
+  "implementable": true,
+  "description": "Action illustration icons for the DropdownMenu(OptionMenus) and ContentBlock(OptionMenus) layouts. 24 variants covering HR workflow actions: email, consent, import, export, reporting, and finance operations. Each is a 64×64px illustration icon.",
+  "assetType": "illustration-icon",
+  "dimensions": {
+    "width": 64,
+    "height": 64,
+    "unit": "px"
+  },
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "send-email",
+        "manual-consent",
+        "share-link",
+        "import-contract",
+        "import-candidate",
+        "import-job",
+        "import-resources",
+        "compose-email",
+        "generate-resume",
+        "import-candidate-cv",
+        "import-cv-letter",
+        "import-certificate-and-license",
+        "import-profile-images",
+        "import-video-cv",
+        "import-restricted-files",
+        "uploaded-zip-rar",
+        "report-extend",
+        "report-join",
+        "report-exit",
+        "claim",
+        "incentive",
+        "payroll",
+        "salary",
+        "empty-data"
+      ],
+      "default": "empty-data"
+    }
+  },
+  "tokens": {
+    "background": null,
+    "note": "No tokens — purely illustrative"
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "role": "img"
+    },
+    "icon": {
+      "element": "img",
+      "optional": false,
+      "note": "64×64 illustration"
+    }
+  },
+  "usage": {
+    "generic": "OptionMenu(type='send-email')",
+    "notes": "Used inside ContentBlock(OptionMenus) as the left-side icon. Export as SVG from Figma. Do not resize — always render at 64×64."
+  },
+  "a11y": {
+    "role": "img",
+    "aria": {
+      "aria-label": "Describe the action (e.g. 'Send email')"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Use the icon that semantically matches the action.",
+      "Always use inside ContentBlock(OptionMenus) or a similar action list."
+    ],
+    "dont": [
+      "Don't use OptionMenu icons as navigation icons — use Icon(Custom) instead.",
+      "Don't resize below 48×48."
+    ]
+  },
+  "code": "asset-02"
+}

@@ -1,0 +1,108 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "resume-card",
+  "name": "ResumeCard",
+  "figmaName": "[🧱]-card-resume",
+  "figmaNodeId": "4557:104183",
+  "category": "advanced",
+  "section": "Advanced Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Resume template selection card. Shows a visual preview thumbnail, template name, and owner. Hover state reveals action buttons (preview, select, more). Used inside the Resume Template Panel.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Default",
+        "Example",
+        "DefaultOnHover",
+        "ExampleOnHover",
+        "Default2",
+        "DefaultOnHover2"
+      ],
+      "default": "Default"
+    },
+    "templateId": {
+      "type": "string",
+      "default": null
+    },
+    "title": {
+      "type": "string",
+      "default": "Template Name"
+    },
+    "owner": {
+      "type": "string",
+      "default": "Owner Name"
+    },
+    "isSelected": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "tokens": {
+    "card": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-strong",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md",
+      "padding": "spacing.standard.lg",
+      "gap": "spacing.standard.lg",
+      "shadow": "shadow.Smooth"
+    },
+    "preview-placeholder": {
+      "background": "system.surface-strong",
+      "radius": "corner-radius.md"
+    },
+    "action-buttons": {
+      "button-bg": "component.button-tonal",
+      "button-radius": "corner-radius.md",
+      "button-padding": "spacing.standard.sm",
+      "button-radius-hover": "corner-radius.lg"
+    }
+  },
+  "subcomponents": [
+    "icon-button"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "visual": {
+      "element": "div",
+      "note": "Template thumbnail preview"
+    },
+    "content": {
+      "element": "div",
+      "note": "Template title + owner info"
+    },
+    "actions": {
+      "element": "div",
+      "optional": true,
+      "note": "Visible on hover: preview, select, more options"
+    }
+  },
+  "usage": {
+    "generic": "ResumeCard(type='Default', title='Modern Professional')",
+    "notes": "Render in a grid inside ResumeTemplatePanel body."
+  },
+  "a11y": {
+    "role": "button",
+    "keyboard": [
+      "Enter",
+      "Space"
+    ],
+    "aria": {
+      "aria-selected": "true if template is active"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show template name and author clearly.",
+      "Reveal actions on hover/focus."
+    ],
+    "dont": [
+      "Don't auto-select on card click — require explicit selection from action."
+    ]
+  },
+  "code": "composite-09"
+}

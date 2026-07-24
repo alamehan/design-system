@@ -1,0 +1,98 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "resume-builder-panel",
+  "name": "ResumeBuilderPanel",
+  "figmaName": "[🧱]-panel-content-single-rb",
+  "figmaNodeId": "4601:132689",
+  "category": "panel-content",
+  "section": "Panel Content Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Panel body content for the resume builder editor. 25 variants covering all resume section editors: Home (default view), Personal Information, Working Experience (collapse/expand), Formal Education (collapse/expand), Skills, Courses, Achievements, Additional Information, and a Design Tab for template/style customization. Two-column layout: left navigation + right editor.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "HomeDefault",
+        "PersonalInformation",
+        "WorkingExperienceCollapse",
+        "WorkingExperienceExpand",
+        "FormalEducationCollapse",
+        "FormalEducationExpand",
+        "Skills",
+        "SkillsPlaceholder",
+        "SkillsToggle",
+        "Course",
+        "CoursePlaceholder",
+        "CourseToggle",
+        "Achievement",
+        "AchievementPlaceholder",
+        "AchievementToggle",
+        "AdditionalInformation",
+        "AdditionalInformationPlaceholder",
+        "AdditionalInformationToggle",
+        "DesignTab"
+      ],
+      "default": "HomeDefault"
+    },
+    "resumeId": {
+      "type": "string",
+      "default": null
+    }
+  },
+  "tokens": {
+    "root": {
+      "background": null,
+      "padding": null,
+      "gap": 0
+    },
+    "section-left": {
+      "note": "Sidebar navigation — section list for the resume"
+    },
+    "section-right": {
+      "note": "Editor area — form fields for the active section"
+    }
+  },
+  "subcomponents": [
+    "input",
+    "textarea",
+    "form-control",
+    "button",
+    "icon-button",
+    "chip",
+    "document-gallery"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "section-left": {
+      "element": "aside",
+      "note": "Resume section navigation list"
+    },
+    "section-right": {
+      "element": "main",
+      "note": "Active section form editor"
+    }
+  },
+  "usage": {
+    "generic": "ResumeBuilderPanel(type='HomeDefault', resumeId='r-001') — place inside Panel(SingleCard) body"
+  },
+  "a11y": {
+    "role": "main",
+    "aria": {
+      "aria-label": "Resume editor"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Show section navigation on the left.",
+      "Save changes automatically or on explicit action.",
+      "Show DesignTab for template/color customization."
+    ],
+    "dont": [
+      "Don't lose unsaved changes when switching sections without warning."
+    ]
+  },
+  "code": "panel-05"
+}

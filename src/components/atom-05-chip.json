@@ -1,0 +1,218 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "chip",
+  "name": "Chip",
+  "figmaName": "[⚛️]-chips",
+  "figmaNodeId": "4075:16773",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "Compact label for tags, filters, selections. Three styles (Neutral/Colored/Gradient), three sizes (MD/SM/CC). Full-radius pill.",
+  "props": {
+    "style": {
+      "type": "enum",
+      "values": [
+        "Neutral",
+        "Colored",
+        "Gradient"
+      ],
+      "default": "Neutral"
+    },
+    "type": {
+      "type": "enum",
+      "values": [
+        "MD-1",
+        "MD-2",
+        "SM-1",
+        "SM-2",
+        "CC"
+      ],
+      "default": "MD-1"
+    },
+    "label": {
+      "type": "string",
+      "default": "Label"
+    },
+    "hasIconLeft": {
+      "type": "boolean",
+      "default": false
+    },
+    "hasIconRight": {
+      "type": "boolean",
+      "default": false
+    },
+    "count": {
+      "type": "number",
+      "default": null,
+      "condition": {
+        "prop": "type",
+        "equals": "CC"
+      }
+    }
+  },
+  "tokens": {
+    "base": {
+      "radius": "corner-radius.full"
+    },
+    "overrides": [
+      {
+        "when": {
+          "style": "Neutral",
+          "type": "MD-1"
+        },
+        "tokens": {
+          "background": "system.surface-strong",
+          "border-color": "system.border-strong",
+          "border-width": "stroke.thin",
+          "text": "system.text-head",
+          "icon": "system.text-body",
+          "padding-y": "spacing.standard.xxs",
+          "padding-x": "spacing.standard.lg",
+          "gap": "spacing.standard.xxs",
+          "font-style": "text-styles.bold.body-md"
+        }
+      },
+      {
+        "when": {
+          "style": "Neutral",
+          "type": "SM-1"
+        },
+        "tokens": {
+          "background": "system.surface-strong",
+          "border-color": "system.border-strong",
+          "border-width": "stroke.thin",
+          "text": "system.text-head",
+          "icon": "system.text-body",
+          "padding-y": "spacing.standard.3xs",
+          "padding-x": "spacing.standard.sm",
+          "gap": "spacing.standard.xxs",
+          "font-style": "text-styles.bold.label-sm"
+        }
+      },
+      {
+        "when": {
+          "style": "Neutral",
+          "type": "MD-2"
+        },
+        "tokens": {
+          "background": "system.surface-strong",
+          "border-color": "system.border-strong",
+          "border-width": "stroke.thin",
+          "text": "system.text-head",
+          "icon": "system.text-body",
+          "padding-y": "spacing.standard.xxs",
+          "padding-x": "spacing.standard.lg",
+          "gap": "spacing.standard.xxs",
+          "font-style": "text-styles.bold.body-md"
+        }
+      },
+      {
+        "when": {
+          "style": "Neutral",
+          "type": "SM-2"
+        },
+        "tokens": {
+          "background": "system.surface-strong",
+          "border-color": "system.border-strong",
+          "border-width": "stroke.thin",
+          "text": "system.text-head",
+          "icon": "system.text-body",
+          "padding-y": "spacing.standard.3xs",
+          "padding-x": "spacing.standard.sm",
+          "gap": "spacing.standard.xxs",
+          "font-style": "text-styles.bold.label-sm"
+        }
+      },
+      {
+        "when": {
+          "style": "Colored"
+        },
+        "tokens": {
+          "background": "brand.brand-surface-soft",
+          "border-color": "brand.brand",
+          "border-width": "stroke.thin",
+          "text": "brand.brand-strong",
+          "icon": "brand.brand"
+        }
+      },
+      {
+        "when": {
+          "style": "Gradient"
+        },
+        "tokens": {
+          "background": "paint-style.Gradients/Grad Amber",
+          "border": null,
+          "text": "neutral.pure-white",
+          "icon": "neutral.pure-white",
+          "shadow": "shadow.Base"
+        }
+      },
+      {
+        "when": {
+          "type": "CC"
+        },
+        "tokens": {
+          "padding": "spacing.standard.none",
+          "gap": "spacing.standard.none",
+          "border-width": "stroke.thin",
+          "font-style": "text-styles.bold.label-sm"
+        }
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "span"
+    },
+    "icon-left": {
+      "element": "span",
+      "optional": true,
+      "condition": {
+        "prop": "hasIconLeft",
+        "equals": true
+      }
+    },
+    "label": {
+      "element": "span"
+    },
+    "icon-right": {
+      "element": "span",
+      "optional": true,
+      "condition": {
+        "prop": "hasIconRight",
+        "equals": true
+      }
+    },
+    "count-badge": {
+      "element": "span",
+      "optional": true,
+      "condition": {
+        "prop": "type",
+        "equals": "CC"
+      }
+    }
+  },
+  "usage": {
+    "generic": "Chip(style='Neutral', type='MD-1', label='Design')",
+    "notes": "Use Neutral for static tags, Colored for active filters, Gradient for decorative only."
+  },
+  "a11y": {
+    "role": "listitem",
+    "focusable": true,
+    "keyboard": [
+      "Enter",
+      "Space",
+      "Delete"
+    ]
+  },
+  "guidelines": {
+    "do": [
+      "Keep labels 1-2 words."
+    ],
+    "dont": [
+      "Don't use Gradient for functional chips."
+    ]
+  },
+  "code": "atom-05"
+}

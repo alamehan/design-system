@@ -1,0 +1,188 @@
+{
+  "_schema": "elabram-component-v1",
+  "id": "input",
+  "name": "Input",
+  "figmaName": "[⚛️]-form-input-general",
+  "figmaNodeId": "4077:15699",
+  "category": "atomic",
+  "section": "Atomic Components",
+  "role": "component",
+  "implementable": true,
+  "description": "General-purpose single-line text input. Covers Basic, Search, Password, Number, DatePicker, Dropdown. Single and Multi value modes.",
+  "props": {
+    "type": {
+      "type": "enum",
+      "values": [
+        "Basic",
+        "Search",
+        "SearchWithIcon",
+        "Password",
+        "PasswordShow",
+        "Number",
+        "Special",
+        "DatePicker",
+        "Dropdown"
+      ],
+      "default": "Basic"
+    },
+    "state": {
+      "type": "enum",
+      "values": [
+        "Inactive",
+        "Active Single",
+        "Active Multi"
+      ],
+      "default": "Inactive"
+    },
+    "label": {
+      "type": "string",
+      "default": "Label"
+    },
+    "placeholder": {
+      "type": "string",
+      "default": "Placeholder"
+    },
+    "helperText": {
+      "type": "string",
+      "default": null
+    },
+    "isRequired": {
+      "type": "boolean",
+      "default": false
+    },
+    "isDisabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "isError": {
+      "type": "boolean",
+      "default": false
+    },
+    "errorText": {
+      "type": "string",
+      "default": "Error message",
+      "condition": {
+        "prop": "isError",
+        "equals": true
+      }
+    }
+  },
+  "tokens": {
+    "base": {
+      "background": "neutral.pure-white",
+      "border-color": "system.border-soft",
+      "border-width": "stroke.thin",
+      "radius": "corner-radius.md",
+      "padding-y": "spacing.standard.sm",
+      "padding-x": "spacing.standard.lg",
+      "gap": "spacing.standard.sm",
+      "font-style": "text-styles.regular.body-md",
+      "text-input": "system.text-head",
+      "text-placeholder": "system.text-mute",
+      "text-label": "system.text-body",
+      "icon": "system.text-body"
+    },
+    "overrides": [
+      {
+        "when": {
+          "state": "Active Multi"
+        },
+        "tokens": {
+          "padding-y": "spacing.standard.xxs"
+        }
+      },
+      {
+        "when": {
+          "isFocused": true
+        },
+        "tokens": {
+          "border-color": "brand.brand",
+          "shadow": "shadow.State-Focus"
+        }
+      },
+      {
+        "when": {
+          "isError": true
+        },
+        "tokens": {
+          "border-color": "semantic.error",
+          "shadow": "shadow.State-Error",
+          "text-helper": "semantic.error"
+        }
+      },
+      {
+        "when": {
+          "isDisabled": true
+        },
+        "tokens": {
+          "background": "neutral.muted",
+          "border-color": "system.border-strong",
+          "text-input": "system.text-mute",
+          "text-placeholder": "system.text-mute",
+          "icon": "system.text-mute"
+        }
+      }
+    ]
+  },
+  "subcomponents": [
+    "form-input-field"
+  ],
+  "anatomy": {
+    "root": {
+      "element": "div"
+    },
+    "label": {
+      "element": "label"
+    },
+    "field": {
+      "element": "div",
+      "note": "Styled container — see FormInputField (C1-11)"
+    },
+    "icon-left": {
+      "element": "span",
+      "optional": true
+    },
+    "input": {
+      "element": "input"
+    },
+    "icon-right": {
+      "element": "span",
+      "optional": true
+    },
+    "helper-text": {
+      "element": "p",
+      "optional": true
+    },
+    "error-text": {
+      "element": "p",
+      "optional": true,
+      "condition": {
+        "prop": "isError",
+        "equals": true
+      }
+    }
+  },
+  "usage": {
+    "generic": "Input(type='Basic', label='Full Name', placeholder='Enter your name')"
+  },
+  "a11y": {
+    "role": "textbox",
+    "focusable": true,
+    "aria": {
+      "aria-invalid": "true when isError",
+      "aria-describedby": "error-text or helper-text",
+      "aria-required": "true when isRequired",
+      "aria-disabled": "true when isDisabled"
+    }
+  },
+  "guidelines": {
+    "do": [
+      "Always provide a visible label."
+    ],
+    "dont": [
+      "Don't use placeholder as label.",
+      "Don't use for multi-line — use Textarea."
+    ]
+  },
+  "code": "atom-08"
+}
