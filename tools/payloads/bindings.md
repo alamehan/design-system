@@ -1,6 +1,6 @@
 # .ds/bindings.md — Spec ↔ Execution map (portal-nuxt)
 
-ds-version: 3.2.0 · map-updated: 2026-07-28 · adoption-level: 0 (reference-only)
+ds-version: 3.3.0 · map-updated: 2026-07-28 · adoption-level: 0 (reference-only)
 
 **What this is:** the translation layer between design-system specs (`design-system/catalog/`) and THIS repo's real components and utility classes. AI must use this map when building UI here.
 

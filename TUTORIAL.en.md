@@ -10,6 +10,7 @@ Two roles, two paths. Pick yours.
 
 ```
 design-system/          the design system repo — push this to your git host
+  docs/                 ARCHITECTURE.md + system-map.mermaid
   src/                  EDITABLE truth: 185 tokens + 76 specs + assets
   dist/ catalog/        GENERATED: Tailwind preset, CSS vars, AI grounding
   reference/            plain HTML+CSS reference components + gallery.html
@@ -103,7 +104,7 @@ The panel opens on `127.0.0.1`. Choose **Level 0**, press Process, review the pl
 
 | Level | What it does | Footprint |
 |---|---|---|
-| **0 — Reference only** | full AI grounding; your build is untouched | 1 read-only submodule + `CLAUDE.md` block + `.ds/bindings.md` |
+| **0 — Reference only** | full AI grounding; your build is untouched | 1 read-only submodule + marked blocks in `CLAUDE.md`, `.gitignore`, `.gitattributes` + `.ds/bindings.md` |
 | **1 — Live tokens** | token classes + dark mode | Level 0 **+ 2 marked lines** in your configs. Needs an access code from the maintainer — the panel has a one-click button to request it |
 
 Everything is plan-first, marked, and reversible. See [SAFETY.en.md](./SAFETY.en.md).
@@ -113,6 +114,8 @@ Everything is plan-first, marked, and reversible. See [SAFETY.en.md](./SAFETY.en
 Nothing to remember. Your AI agent reads `CLAUDE.md` → `design-system/CLAUDE.md` → `catalog/INDEX.md` → `.ds/bindings.md` automatically, and builds UI on spec using **your** components.
 
 The panel's **AI Prompts** section has seven ready-made prompts that already carry your repo's rules and adoption level.
+
+First time you open the panel it runs a short guided tour. You can replay it any time from the **⋯** menu in the bottom navigation, which also holds the light/dark/system theme switch.
 
 ### B3. If you edit something the panel installed
 

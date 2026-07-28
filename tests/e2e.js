@@ -75,6 +75,7 @@ async function api(p, data) {
   }
   fs.writeFileSync(path.join(app, "pages", "index.vue"), "<template><div class=\"tw-bg-brand\">hi</div></template>\n");
   fs.writeFileSync(path.join(app, "CLAUDE.md"), "# portal-nuxt\n\nMy own notes. Do not delete me.\n");
+  fs.writeFileSync(path.join(app, ".gitignore"), "node_modules/\n.nuxt/\nMY-OWN-IGNORE-LINE\n");
   fs.mkdirSync(path.join(app, ".ds"), { recursive: true });
   fs.writeFileSync(path.join(app, ".ds", "team-notes.md"), "my own notes in .ds\n");
   sh("git init -q -b main .", app);
@@ -109,13 +110,27 @@ async function api(p, data) {
     /* =============================================== 2. safety */
     console.log("2. safety guarantees");
     ok(fs.readFileSync(path.join(app, "CLAUDE.md"), "utf8").includes("My own notes. Do not delete me."), "dev's own CLAUDE.md content survives");
+    ok(fs.readFileSync(path.join(app, ".gitignore"), "utf8").includes("MY-OWN-IGNORE-LINE"), "dev's own .gitignore lines survive");
     ok(fs.readFileSync(path.join(app, "CLAUDE.md"), "utf8").includes("design-system:begin"), "marker block added");
     ok(fs.existsSync(path.join(app, ".ds", "team-notes.md")), "dev's own .ds file untouched");
     ok(fs.existsSync(path.join(app, ".ds", "manifest.json")), "receipt written");
 
     st = await api("/api/state");
     ok(st.level === "0", "level 0 detected");
-    ok(st.manifest && st.manifest.managed.length === 2, "receipt lists 2 managed regions at L0");
+    ok(st.manifest && st.manifest.managed.length === 4, "receipt lists 4 managed regions at L0 (" +
+      (st.manifest ? st.manifest.managed.map((m) => m.path).join(", ") : "") + ")");
+
+    /* ---- git housekeeping: .ds/ is selectively ignored, never wholesale ---- */
+    const gi = fs.readFileSync(path.join(app, ".gitignore"), "utf8");
+    ok(gi.includes("design-system:begin") && gi.includes("design-system:end"), ".gitignore block is marked");
+    ok(gi.includes(".ds/.trash/") && gi.includes(".ds/rollback-point.json") && gi.includes("ds-setup.cjs"),
+      "machine-local state and the panel itself are ignored");
+    ok(!/^\s*\.ds\/\s*$/m.test(gi), ".ds/ is NOT ignored wholesale — the receipt must stay committed");
+    const ga = fs.readFileSync(path.join(app, ".gitattributes"), "utf8");
+    ok(/\.ds\/history\.jsonl\s+merge=union/.test(ga), "history.jsonl gets a union merge so parallel installs never conflict");
+    ok(sh("git check-ignore -q .ds/manifest.json || echo visible", app).trim() === "visible", "manifest.json is git-visible");
+    ok(sh("git check-ignore -q .ds/bindings.md || echo visible", app).trim() === "visible", "bindings.md is git-visible");
+    ok(sh("git check-ignore -q ds-setup.cjs || echo visible", app).trim() === "", "the panel file itself is git-ignored");
     ok(st.drift.length === 0, "no drift right after install");
     ok(st.unmanaged === false, "not flagged as unmanaged");
     ok((st.history || []).some((h) => h.event === "install"), "history records the install");
@@ -139,11 +154,24 @@ async function api(p, data) {
     const d = await api("/api/diff", { file: "CLAUDE.md" });
     ok(d.diff && d.diff.includes("edited by a dev"), "diff shows the dev's edit");
 
+    /* a hash-comment block is tracked exactly like a markdown one */
+    const gip = path.join(app, ".gitignore");
+    fs.writeFileSync(gip, fs.readFileSync(gip, "utf8").replace(".ds/.trash/", ".ds/.trash/    # tweaked"));
+    let st2 = await api("/api/state");
+    ok(st2.drift.some((x) => x.path === ".gitignore" && x.klass === "contract"), "gitblock drift detected");
+    const gr = await api("/api/restore", { file: ".gitignore" });
+    ok(gr.ok === true, "gitblock restore succeeds");
+    st2 = await api("/api/state");
+    ok(!st2.drift.some((x) => x.path === ".gitignore"), "gitblock drift cleared");
+    ok(fs.readFileSync(gip, "utf8").includes("MY-OWN-IGNORE-LINE"), "restore kept the dev's own ignore lines");
+
     /* =============================================== 4. restore */
     console.log("4. restore");
     const rr = await api("/api/restore", { file: "CLAUDE.md" });
     ok(rr.ok === true, "restore succeeds");
     ok(!!rr.backup && fs.existsSync(path.join(app, rr.backup)), "dev's version preserved in .ds/.trash/");
+    /* now that .trash exists, the trailing-slash ignore pattern can be verified */
+    ok(sh("git check-ignore -q .ds/.trash || echo visible", app).trim() === "", ".ds/.trash is git-ignored once created");
     ok(fs.readFileSync(cm, "utf8").includes("My own notes. Do not delete me."), "restore keeps the dev's own content");
     st = await api("/api/state");
     ok(st.drift.filter((x) => x.path === "CLAUDE.md").length === 0, "contract drift cleared");
@@ -158,7 +186,7 @@ async function api(p, data) {
     /* ================================== 6. update + impact + rollback */
     console.log("6. update / impact / rollback");
     const meta = JSON.parse(fs.readFileSync(path.join(origin, "version.json"), "utf8"));
-    meta.version = "3.3.0";
+    meta.version = "3.4.0"; /* must be above the shipped version for the bump to read as minor */
     fs.writeFileSync(path.join(origin, "version.json"), JSON.stringify(meta, null, 2) + "\n");
     const vcss = path.join(origin, "dist", "variables.css");
     fs.writeFileSync(vcss, fs.readFileSync(vcss, "utf8").replace("--color-brand-brand:", "--color-brand-renamed:"));
@@ -169,7 +197,7 @@ async function api(p, data) {
 
     const imp = await api("/api/impact", {});
     ok(imp.tokensRemoved.includes("--color-brand-brand"), "impact detects the removed token");
-    ok(imp.toVersion === "3.3.0" && imp.bump === "minor", "impact reads the incoming version and bump");
+    ok(imp.toVersion === "3.4.0" && imp.bump === "minor", "impact reads the incoming version and bump (" + imp.fromVersion + " -> " + imp.toVersion + " = " + imp.bump + ")");
 
     const beforeSha = (await api("/api/state")).subCommit;
     const ur = await api("/api/update", { commit: false });
@@ -192,6 +220,10 @@ async function api(p, data) {
     ok(fs.existsSync(path.join(app, ".ds", "team-notes.md")), "F11: dev's own .ds file survives uninstall");
     ok(!fs.existsSync(path.join(app, ".ds", "bindings.md")), "bindings removed");
     ok(fs.existsSync(path.join(app, ".ds", "history.jsonl")), "history preserved");
+    const gi2 = fs.readFileSync(path.join(app, ".gitignore"), "utf8");
+    ok(gi2.includes("MY-OWN-IGNORE-LINE"), "dev's own .gitignore lines survive uninstall");
+    ok(!gi2.includes("design-system:begin"), "the .gitignore block is stripped on uninstall");
+    ok(!fs.existsSync(path.join(app, ".gitattributes")), ".gitattributes removed (it held only our block)");
     ok(fs.readFileSync(path.join(app, "tailwind.config.js"), "utf8").includes('prefix: "tw-"'), "dev's tailwind config intact");
 
     proc.kill();
@@ -229,6 +261,8 @@ async function api(p, data) {
     ok(s2.unmanaged === false, "no longer unmanaged");
     ok(s2.drift.length === 0, "G9: existing state recorded as BASELINE, not drift");
     ok(fs.readFileSync(path.join(app2, "tailwind.config.js"), "utf8").includes("design-system:managed"), "marker added to the pre-existing config line");
+    ok(fs.existsSync(path.join(app2, ".gitignore")) && fs.readFileSync(path.join(app2, ".gitignore"), "utf8").includes("ds-setup.cjs"),
+      "adopt also lays down the git housekeeping");
     ok(fs.readFileSync(path.join(app2, "tailwind.config.js"), "utf8").includes('prefix: "tw-"'), "rest of the config untouched");
     p2.kill();
 
@@ -240,9 +274,38 @@ async function api(p, data) {
     ok(idKeys.every((k) => dict.id[k] && dict.en[k]), "no empty strings in either locale");
 
     const bundle = fs.readFileSync(path.join(DS, "tools", "ds-setup.cjs"), "utf8");
-    const used = [...new Set((fs.readFileSync(path.join(DS, "tools", "dashboard", "app.js"), "utf8").match(/\bt\("([\w.]+)"/g) || []).map((s) => s.slice(3, -1)))];
+    const appJs = fs.readFileSync(path.join(DS, "tools", "dashboard", "app.js"), "utf8");
+    const html = fs.readFileSync(path.join(DS, "tools", "dashboard", "index.html"), "utf8");
+    const used = [...new Set([
+      ...(appJs.match(/\bt\("([\w.]+)"/g) || []).map((s) => s.slice(3, -1)),
+      ...(html.match(/data-i18n="([\w.]+)"/g) || []).map((s) => s.slice(11, -1)),
+    ])].filter((k) => !k.endsWith(".")); /* t("theme." + THEME) builds its key at runtime */
     const missing = used.filter((k) => !dict.id[k]);
-    ok(missing.length === 0, "every t() key exists in the dictionary" + (missing.length ? " — missing: " + missing.join(", ") : ""));
+    ok(missing.length === 0, "every referenced i18n key exists" + (missing.length ? " — missing: " + missing.join(", ") : ""));
+
+    /* the dynamic key families must be complete too */
+    ok(["auto", "light", "dark"].every((x) => dict.id["theme." + x] && dict.en["theme." + x]), "every theme name is translated");
+    const tourKeys = [...new Set((appJs.match(/k: "(tour\.[\w]+)"/g) || []).map((s) => s.slice(4, -1)))];
+    const tourMissing = tourKeys.filter((k) => !dict.id[k + ".t"] || !dict.id[k + ".d"] || !dict.en[k + ".t"] || !dict.en[k + ".d"]);
+    ok(tourKeys.length > 0 && tourMissing.length === 0, tourKeys.length + " tour steps have a title and body in both locales" + (tourMissing.length ? " — missing: " + tourMissing.join(", ") : ""));
+
+    /* ---- the v3.2.0 primary-button bug, made mechanically impossible ----
+       Every .btn variant that overrides its resting background must also
+       override its hover background, or it will show the base hover colour
+       underneath its own foreground colour. */
+    console.log("9b. button contrast invariant");
+    const css = fs.readFileSync(path.join(DS, "tools", "dashboard", "app.css"), "utf8");
+    ok(/button\.btn:hover:not\(:disabled\)\s*\{\s*background:\s*var\(--btn-bg-hover\)/.test(css),
+      "base hover reads the variant's own --btn-bg-hover");
+    const variants = [...css.matchAll(/button\.btn\.(\w+)\s*\{([^}]*)\}/g)];
+    ok(variants.length >= 3, variants.length + " button variants found");
+    const bad = variants
+      .filter(([, , body]) => /--btn-bg\s*:/.test(body) && !/--btn-bg-hover\s*:/.test(body))
+      .map(([, name]) => name);
+    ok(bad.length === 0, "every variant that sets --btn-bg also sets --btn-bg-hover" + (bad.length ? " — offenders: " + bad.join(", ") : ""));
+    const primary = (variants.find(([, n]) => n === "primary") || [])[2] || "";
+    ok(/--btn-fg\s*:\s*#f{3,6}/i.test(primary) && /--btn-bg-hover\s*:\s*var\(--accent-hover\)/.test(primary),
+      "primary keeps white text on an accent hover background");
 
     /* =========================================== 10. the bundle */
     console.log("10. bundle integrity");

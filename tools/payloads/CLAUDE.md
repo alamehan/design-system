@@ -34,6 +34,10 @@
 - Clicking a row/card/list item never navigates or opens a panel — every open/navigate/destructive action needs its own explicit control (view icon, kebab menu, button). Destructive actions always confirm via modal first.
 - The reference gallery has two tiers: ground on Part 1 (base components) by default; consult Part 2 (composed samples) ONLY when the task needs an assembled screen (list page, detail panel, form section, empty/confirm states).
 
+## Git housekeeping
+
+The panel also maintains marked blocks in `.gitignore` and `.gitattributes`. `.ds/` is **not** ignored wholesale: `manifest.json`, `bindings.md`, `history.jsonl` and `requests/` are committed on purpose — the first is the install receipt, the second is shared team knowledge you and every agent depend on. Only machine-local recovery state is ignored.
+
 ## About this section
 
 Everything between the `design-system:begin` / `design-system:end` markers above is written and maintained by the Design System panel. Edit outside the markers freely — your content is never touched. To remove it, run the panel and choose Uninstall; only the marked block is stripped.

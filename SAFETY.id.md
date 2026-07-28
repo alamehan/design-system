@@ -8,7 +8,7 @@
 
 ## 1. Jawaban singkatnya
 
-Panel menulis ke **empat** tempat di repo kamu, dan **semuanya dibungkus marker pembuka dan penutup** supaya bisa ditemukan dan dihapus dengan tepat.
+Panel menulis ke **enam** tempat di repo kamu, dan **semuanya dibungkus marker pembuka dan penutup** supaya bisa ditemukan dan dihapus dengan tepat.
 
 Tidak ada yang ditimpa diam-diam. Tidak ada yang dihapus — hanya dipindah ke `.ds/.trash/`. Setiap aksi menampilkan rencana lengkap, termasuk isi file persisnya, sebelum dijalankan.
 
@@ -24,11 +24,56 @@ Yang **tidak** kami klaim: bahwa tidak ada yang bisa salah. §6 mendaftar apa ya
 | `.ds/bindings.md` | file utuh, dibuat **hanya kalau belum ada** | seluruh file, dilacak lewat hash di struk | hanya file itu yang dihapus — bukan folder `.ds/` |
 | `tailwind.config.js` | **1 baris** (Level 1 saja) | `/* design-system:managed */` di ujung baris | baris bertanda dihapus |
 | `nuxt.config.js` | **1 baris** (Level 1 saja) | `/* design-system:managed */` di ujung baris | baris bertanda dihapus |
+| `.gitignore` | satu blok ditambahkan di **akhir** | `# design-system:begin` … `# design-system:end` | hanya blok bertanda yang dicabut |
+| `.gitattributes` | satu blok ditambahkan di **akhir** | `# design-system:begin` … `# design-system:end` | hanya blok bertanda yang dicabut; file-nya dihapus hanya kalau jadi kosong |
 | `.gitmodules` + `design-system/` | submodule git standar | native git | `git submodule deinit` + `git rm` |
 
 Di **Level 0** hanya dua yang pertama yang ada. Build kamu sama sekali tidak disentuh.
 
 Marker di baris config menempel *pada barisnya sendiri*, jadi tahan terhadap Prettier, ESLint `--fix`, dan reformat. Penghapusan mencocokkan marker, bukan teksnya — jadi tetap jalan meski formatter sudah menulis ulang tanda kutip atau indentasinya.
+
+
+---
+
+## 2b. Housekeeping git — dan kenapa `.ds/` **tidak** diignore seluruhnya
+
+Panel menulis dua blok bertanda kecil supaya repo memperlakukan state-nya sendiri
+dengan benar. Keduanya bisa dibatalkan persis seperti region managed lainnya.
+
+**`.gitignore`** hanya mengignore state pemulihan lokal:
+
+```
+.ds/.trash/
+.ds/rollback-point.json
+ds-setup.cjs
+```
+
+**`.gitattributes`** menambah satu baris:
+
+```
+.ds/history.jsonl merge=union
+```
+
+`history.jsonl` itu append-only. Tanpa union merge, dua developer yang install di
+branch berbeda menghasilkan konflik git di akhir file — konflik yang tidak punya
+resolusi manual yang benar selain "simpan dua-duanya". `merge=union` membuat git
+menyimpan dua-duanya otomatis. Lubang ini diam-diam ada sampai v3.3.0.
+
+### Yang di-commit, dan kenapa
+
+| Path | Git | Alasan |
+|---|---|---|
+| `.ds/manifest.json` | **commit** | struknya. Ini yang bikin uninstall presisi, dan ini yang dibaca adoption report. Kalau diignore, dua-duanya mati. |
+| `.ds/bindings.md` | **commit** | pengetahuan tim; dibaca tiap AI agent |
+| `.ds/history.jsonl` | **commit** | adoption report menghitung developer dari sini |
+| `.ds/requests/` | **commit** | catatan yang bisa direview soal apa yang tim minta ke desainer |
+| `.ds/.trash/` | **ignore** | salinan pemulihan lokal; bisa besar, dan sifatnya per-mesin |
+| `.ds/rollback-point.json` | **ignore** | menggambarkan update terakhir *kamu*, bukan state tim |
+| `ds-setup.cjs` | **ignore** | build artifact 278 KB dari repo design system. Ambil dengan satu `curl`; setelahnya dia update sendiri dari submodule. |
+
+Kalau kamu tidak setuju dengan salah satunya, edit saja bloknya — panel akan
+melaporkannya sebagai drift dan menawarkan mengirim versimu balik supaya default-nya
+bisa berubah untuk semua orang.
 
 ---
 
@@ -45,8 +90,10 @@ Saat install, panel menulis `.ds/manifest.json` — catatan persis apa yang dia 
   "dsVersion": "3.2.0",
   "dsCommit": "a1b2c3d",
   "managed": [
-    { "path": "CLAUDE.md",        "mode": "block", "klass": "contract", "sha256": "…" },
-    { "path": ".ds/bindings.md",  "mode": "file",  "klass": "living",   "sha256": "…" }
+    { "path": "CLAUDE.md",        "mode": "block",    "klass": "contract", "sha256": "…" },
+    { "path": ".ds/bindings.md",  "mode": "file",     "klass": "living",   "sha256": "…" },
+    { "path": ".gitignore",       "mode": "gitblock", "klass": "contract", "sha256": "…" },
+    { "path": ".gitattributes",   "mode": "gitblock", "klass": "contract", "sha256": "…" }
   ]
 }
 ```

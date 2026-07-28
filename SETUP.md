@@ -62,3 +62,17 @@ You control when to take updates. Check `design-system/CHANGELOG.md`; doctor war
 ## Already installed by an older panel?
 
 Repos adopted with panel v2.x have no install receipt, so drift detection, exact revert and rollback cannot work. Open the panel and choose **Create receipt** — it reads your current state, adds markers to unmarked config lines, and records that state as the **baseline**. Nothing is rewritten and nothing is reported as drift.
+
+## What lands in git
+
+The panel writes two small marked blocks so your repo treats the design system's own
+state correctly:
+
+- **`.gitignore`** — ignores `.ds/.trash/`, `.ds/rollback-point.json` and `ds-setup.cjs`
+- **`.gitattributes`** — `.ds/history.jsonl merge=union`, so two developers installing
+  in parallel never hit a conflict in that append-only log
+
+Everything else under `.ds/` is **committed on purpose**: `manifest.json` is the receipt
+that makes uninstall exact and is what the adoption report reads, and `bindings.md` is
+team knowledge every AI agent depends on. Full rationale in
+[SAFETY.en.md §2b](./SAFETY.en.md) / [SAFETY.id.md §2b](./SAFETY.id.md).

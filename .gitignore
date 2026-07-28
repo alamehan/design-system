@@ -1,4 +1,24 @@
+# ── Never committed ──────────────────────────────────────────────
 node_modules/
-release/
 .DS_Store
 Thumbs.db
+*.log
+tmp/
+.env
+.env.*
+
+# Scratch space for release experiments
+release/
+/.ds-scratch/
+
+# ── Deliberately COMMITTED, listed here so nobody "tidies" them away ──
+#   version.json              single source of the version number
+#   ds-meta.json              maintainer contact, read live by the panel
+#   dist/  catalog/           generated, but consumers read them straight
+#                             from the pinned submodule, so they must be in git
+#   tools/ds-setup.cjs        generated, but this IS the artifact developers curl
+#   reference/fonts/*.woff2   the real font files, licences alongside
+#   reference/icons/*.svg     the Tabler sprite
+#   reference/css/_fonts.css  generated (base64 fonts) - required over file://
+#   .release/contract.json    the public-surface baseline for contract-check
+#   .release/adoption.json    adoption history; ADOPTION.md is its readable form

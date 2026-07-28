@@ -8,7 +8,7 @@
 
 ## 1. The short answer
 
-The panel writes to **four** places in your repository, and **every single one is wrapped in an opening and closing marker** so it can be found and removed exactly.
+The panel writes to **six** places in your repository, and **every single one is wrapped in an opening and closing marker** so it can be found and removed exactly.
 
 Nothing is ever overwritten silently. Nothing is ever deleted — only moved to `.ds/.trash/`. Every action shows you the full plan, including the exact file contents, before it runs.
 
@@ -24,11 +24,55 @@ What we will **not** claim: that nothing can ever go wrong. §6 lists what stays
 | `.ds/bindings.md` | the file, created **only if absent** | whole file, tracked by hash in the receipt | that one file is removed — never the `.ds/` folder |
 | `tailwind.config.js` | **1 line** (Level 1 only) | trailing `/* design-system:managed */` | the marked line is deleted |
 | `nuxt.config.js` | **1 line** (Level 1 only) | trailing `/* design-system:managed */` | the marked line is deleted |
+| `.gitignore` | a block appended at the **end** | `# design-system:begin` … `# design-system:end` | only the marked block is stripped |
+| `.gitattributes` | a block appended at the **end** | `# design-system:begin` … `# design-system:end` | only the marked block is stripped; the file goes only if it becomes empty |
 | `.gitmodules` + `design-system/` | a standard git submodule | git-native | `git submodule deinit` + `git rm` |
 
 At **Level 0** only the first two exist. Your build is not touched at all.
 
 The marker on config lines rides *on the line itself*, so it survives Prettier, ESLint `--fix`, and reformatting. Removal matches the marker, not the text — which means it still works after your formatter has rewritten the quotes or the indentation.
+
+
+---
+
+## 2b. Git housekeeping — and why `.ds/` is **not** ignored wholesale
+
+The panel writes two small marked blocks so the repository treats its own state
+correctly. Both are reversible exactly like every other managed region.
+
+**`.gitignore`** ignores only machine-local recovery state:
+
+```
+.ds/.trash/
+.ds/rollback-point.json
+ds-setup.cjs
+```
+
+**`.gitattributes`** adds one line:
+
+```
+.ds/history.jsonl merge=union
+```
+
+`history.jsonl` is append-only. Without a union merge, two developers installing on
+different branches produce a git conflict at the end of the file — a conflict with no
+correct manual resolution other than "keep both". `merge=union` makes git keep both
+automatically. This gap existed silently until v3.3.0.
+
+### What is committed, and why
+
+| Path | Git | Reason |
+|---|---|---|
+| `.ds/manifest.json` | **commit** | the receipt. It is what makes uninstall exact, and it is what the adoption report reads. Ignoring it would break both. |
+| `.ds/bindings.md` | **commit** | team knowledge; every AI agent reads it |
+| `.ds/history.jsonl` | **commit** | the adoption report counts distinct developers from it |
+| `.ds/requests/` | **commit** | a reviewable record of what your team asked the designer for |
+| `.ds/.trash/` | **ignore** | local recovery copies; can be large, and are per-machine |
+| `.ds/rollback-point.json` | **ignore** | describes *your* last update, not the team's state |
+| `ds-setup.cjs` | **ignore** | a 278 KB build artifact of the design system repo. Fetch it with one `curl`; it then self-updates from the submodule. |
+
+If you disagree with any of these, edit the block — the panel will report it as drift
+and offer to send your version back so the default can change for everyone.
 
 ---
 
@@ -45,8 +89,10 @@ On install the panel writes `.ds/manifest.json` — a record of exactly what it 
   "dsVersion": "3.2.0",
   "dsCommit": "a1b2c3d",
   "managed": [
-    { "path": "CLAUDE.md",        "mode": "block", "klass": "contract", "sha256": "…" },
-    { "path": ".ds/bindings.md",  "mode": "file",  "klass": "living",   "sha256": "…" }
+    { "path": "CLAUDE.md",        "mode": "block",    "klass": "contract", "sha256": "…" },
+    { "path": ".ds/bindings.md",  "mode": "file",     "klass": "living",   "sha256": "…" },
+    { "path": ".gitignore",       "mode": "gitblock", "klass": "contract", "sha256": "…" },
+    { "path": ".gitattributes",   "mode": "gitblock", "klass": "contract", "sha256": "…" }
   ]
 }
 ```

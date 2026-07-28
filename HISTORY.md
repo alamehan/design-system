@@ -73,3 +73,63 @@ A worst-first, kit-component-first rebuild of the sample pages, **each page live
 2. A single master page with the zips attached is the only reliable restore source - it survived 4+ sandbox resets/rollbacks mid-work. Patch + verify chain + zip rebuild must run in ONE command.
 3. Never trust size/color claims from old notes or changelogs - re-probe the benchmark pixels every time.
 4. Scoped CSS silently drops rules that end on kit-internal elements - the systemic reason repeated "fixes" never appeared on screen until ::v-deep became law.
+
+---
+
+## v3.2.0 – v3.3.0 — the silent-failure audit
+
+An independent re-audit reproduced every claim in this repository rather than trusting
+it. Four failures had been shipping for months, and all four shared one property:
+**nothing ever errored.**
+
+**#1 — An install could report success having committed nothing.**
+`git add a b c` aborts *entirely* if any one path is missing, so nothing was staged.
+The resulting `nothing to commit` was whitelisted as success. Developers saw a green
+tick on a repo that had not changed. Now the panel stages only existing paths, verifies
+the index, and prints the actual file list.
+
+**#2 — Uninstall deleted the whole `.ds/` folder.**
+Including files the developer had put there. Removal is now driven by
+`.ds/manifest.json`, file by file; `.ds/` itself goes only when empty.
+
+**#3 — The AI catalog was missing 24 of 76 specs.**
+One regex could not match a hyphen (`panel-content`) or the pages' empty category, so
+every `panel-*` and `page-*` spec vanished from `catalog/components/` — and leaked
+into `catalog/TOKENS.md`, the file every agent reads once per session **as its token
+vocabulary**. For months, every agent working in this repo held a corrupted vocabulary
+and there was no symptom.
+
+**#4 — The reference tier named a font it never loaded.**
+`reference/css/_base.css` declared `font-family: "Fustat"` with no `@font-face`
+anywhere. Chrome fell back to the system font in silence. Every visual verdict given
+against the reference tier was therefore given in the wrong typeface — a direct
+violation of **law #2 below**, which this repository wrote. The stamp matched; the font
+lied. Icons had the same shape of problem: 16 hand-drawn SVGs on a 24×24 grid, close
+enough to Tabler to pass a glance, verifiable against nothing.
+
+### Law #5 — a lesson that is not a gate is not a lesson
+
+The first four laws were written down and then re-broken in new forms, because prose in
+a markdown file cannot stop a commit. Every lesson here is now mechanical:
+
+| Lesson | Enforced by |
+|---|---|
+| No breaking change without MAJOR + a deprecation alias | `contract-check.js` (fails CI) |
+| Version stamps must match the shipped version | `stamp-reference.js --check` |
+| A named font must actually be loaded | `lint-reference.js` gate 2 |
+| Icons come from the real Tabler sprite, never hand-drawn | `lint-reference.js` gate 3 |
+| The reference must stay token-pure | `lint-reference.js` gate 1 |
+| The panel must survive its own full lifecycle | `tests/e2e.js`, 84 assertions |
+| Uninstall must be exact and non-destructive | `.ds/manifest.json` + `.ds/.trash/` |
+| A button variant must never lose its own hover contrast | `tests/e2e.js` CSS invariant |
+
+The last row is a small bug with a useful shape: a generic `:hover` rule set the
+background of *every* button, while the primary variant overrode only `filter`. White
+text on a light-grey hover — invisible. It shipped because CSS does not error, and
+because the author who wrote it could not see it. The fix was structural rather than a
+patched line: each variant now owns both its resting and its hover background as its
+own custom properties, and a test asserts that invariant so the class of bug cannot
+return.
+
+**A programmatic check is still not a visual verdict** (law #1 stands). But a visual
+verdict given against a lying artifact is worth nothing, so the gates come first.

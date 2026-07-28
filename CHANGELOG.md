@@ -2,6 +2,47 @@
 
 All notable changes to this design system. Semver: token/spec rename or removal = MAJOR (with a one-cycle deprecation alias), additions = MINOR, fixes = PATCH. Enforced mechanically by `contract-check.js`.
 
+Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
+
+## 3.3.0 — 2026-07-28
+
+**The reference tier now renders what it claims, and the panel got its navigation back.**
+
+### Fixed — the reference tier was lying about its own typography
+- **`reference/css/_base.css` named `"Fustat"` but nothing ever declared an `@font-face` for it.** Chrome silently fell back to the system font, which means every visual verdict ever given against the reference tier was given in the wrong typeface — a direct violation of `HISTORY.md` law #2, written in this repository. Both fonts are now embedded as base64 in the new `reference/css/_fonts.css`, so the reference renders correctly over `file://` (a designer double-clicking `gallery.html`), over `http://`, and inside the panel alike. A `url()` reference would not have worked: Chrome treats each `file://` document as an opaque origin and blocks the font fetch.
+- **All 16 icon shapes in the reference were hand-drawn SVG paths, not Tabler.** They sat on a 24×24 grid and looked close enough to pass a glance while being verifiable against nothing. Replaced with **real Tabler 3.45.0 icons (MIT)** — 15 symbols, 97 occurrences — from a sprite that is **inlined per file**, because an external `<use href="sprite.svg#id">` is also blocked over `file://`.
+- The checkbox tick was the text character `✓`, which ignores stroke weight and shifts between fonts. It is now the Tabler `check` icon.
+- **`lint-reference.js` gained two gates** so neither class of failure can return: it fails if any named font has no `@font-face`, and if any reference HTML contains a hand-drawn `<svg>` or references a sprite that is not inlined. Both fired on the first run and caught a file the migration had missed.
+
+### Fixed — panel
+- **Primary buttons became unreadable on hover.** A generic `button.btn:hover` set `background: var(--bg-sunken)` for every button, while `.primary:hover` overrode only `filter` — leaving white text on light grey. Fixed structurally rather than with a patched line: every variant now owns both its resting and its hover background as its own custom properties (`--btn-bg` / `--btn-bg-hover`), and `tests/e2e.js` asserts that any variant setting one sets the other.
+
+### Added — panel v3.1.0
+- **Bottom pill navigation** replaces the left sidebar. Frosted, fixed, seven destinations, attention dots on the icons; content is now 880 px wide instead of 720 px in a 1232 px column, which removes the dead space either side. Below 820 px the labels collapse to icons except on the active item.
+- The scattered version / language / close controls are consolidated into the pill: a compact ID·EN segmented control, and a **⋯** menu holding the panel version, **Play tour** and **Close panel**.
+- **Guided tour, rebuilt and bilingual.** Seven spotlight steps that cross pages on their own, fully keyboard-dismissable, auto-playing once per browser and replayable from the ⋯ menu for ever after.
+- **New About page** — the Truth / Reference / Binding model in three cards, build provenance (panel version, installed design system, typeface, both icon sets with their licences), and author credit for Raihan Allaam (@alamehan), UI/UX Designer at ITS Elabram. It also states plainly that the panel makes no automatic network request and that the links only open if you click them.
+- **Markdown is rendered, not dumped.** "What's new", the release notes and every document in the Docs tab now have a **Preview / Markdown** switch that defaults to Preview. The renderer is ~90 lines, dependency-free, handles tables, code fences, blockquotes and lists, and escapes the source *before* generating any markup. Mermaid blocks are labelled and shown as source rather than pulling in a ~1 MB renderer.
+- **Home has stat cards** — tokens, specs, reference files, catalog files — all read live from the installed design system, plus a product-stack card and the Lucide-vs-Tabler disclosure.
+- **Theme switch**: light, dark, or follow-system, on top of the existing `prefers-color-scheme` support.
+
+### Added — git housekeeping as a managed region
+- The panel now writes marked blocks into **`.gitignore`** and **`.gitattributes`**, bringing Level 0 to four managed regions. Both are reversible exactly like the others, and both appear in the receipt with a `gitblock` mode.
+- `.gitattributes` sets `.ds/history.jsonl merge=union`. Without it, two developers installing on different branches produce a git conflict in an append-only log — a conflict with no correct manual resolution other than "keep both". This gap existed silently until now.
+- **`.ds/` is deliberately not ignored wholesale.** `manifest.json`, `bindings.md`, `history.jsonl` and `requests/` are committed on purpose: the receipt is what makes uninstall exact and is what the adoption report reads, and the bindings map is team knowledge. Only `.ds/.trash/`, `.ds/rollback-point.json` and `ds-setup.cjs` are ignored. Rationale in `SAFETY.*.md` §2b.
+
+### Docs
+- **`docs/ARCHITECTURE.md`** — new. Layers, what is generated vs authored, the release chain and the failure each gate prevents, the consumer-side file map, where an AI agent enters, live counted numbers, and the honest gap list. Plus **`docs/system-map.mermaid`** as a standalone diagram.
+- `HISTORY.md` gains the v3.2–v3.3 audit and **law #5: a lesson that is not a gate is not a lesson**, with a table mapping every past failure to the script that now blocks it.
+- `STORY.md` gains chapter 7, in the author's own voice.
+- `SAFETY.id.md` / `SAFETY.en.md`: the file table goes from four rows to six, with a new §2b on git housekeeping.
+- The design system's own `.gitignore` now documents what is *deliberately committed*, so nobody tidies away `dist/`, `catalog/` or `tools/ds-setup.cjs`.
+
+### Changed
+- Reference version stamps: `REF v3.3.0`. Truth layer is unchanged — 185 tokens, 86 dark overrides, 12 text styles, 76 specs, 487 colour keys — so `contract-check.js` reports no public-surface change.
+- Panel bundle 234 KB → 278 KB (markdown renderer, tour, About, 58-icon sprite). Still one file, still zero dependencies, still no network.
+- `tests/e2e.js`: 61 → **84 assertions**, now covering git-block drift and restore, the ignore rules themselves, the button-contrast invariant, and both dynamic i18n key families.
+
 ## 3.2.0 — 2026-07-28
 
 **Safety, provenance and a rebuilt panel.**

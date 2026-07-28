@@ -29,6 +29,10 @@ const T = (id, en) => ({ id, en: en || id });
 const MD_BEGIN = "<!-- design-system:begin (managed by the Design System panel - do not edit inside) -->";
 const MD_END = "<!-- design-system:end -->";
 const LINE_MARK = "/* design-system:managed */";
+/* .gitignore and .gitattributes have no comment syntax other than #, so the
+   same begin/end contract is expressed with hash comments. */
+const HASH_BEGIN = "# design-system:begin (managed by the Design System panel - do not edit inside)";
+const HASH_END = "# design-system:end";
 
 /* --------------------------------------------------------------- shell */
 function sh(cmd, opts) {
@@ -66,6 +70,43 @@ const PAYLOADS = {
   "CLAUDE.md": "@@PAYLOAD_CLAUDE@@",
   ".ds/bindings.md": "@@PAYLOAD_BINDINGS@@",
 };
+
+/* Git housekeeping the panel owns, each as a marked block appended to whatever
+   the repo already has.
+   .ds/ is deliberately NOT ignored wholesale: manifest.json, bindings.md,
+   history.jsonl and requests/ are team knowledge and the basis of the adoption
+   report, so they must be committed. Only machine-local recovery state is
+   ignored. history.jsonl is append-only, so merge=union lets two developers
+   install in parallel without a conflict. */
+const GIT_BLOCKS = {
+  ".gitignore": [
+    "# Local recovery state and machine-local panel state.",
+    "# Everything else under .ds/ is committed on purpose - see SAFETY.md.",
+    ".ds/.trash/",
+    ".ds/rollback-point.json",
+    "",
+    "# The panel is a build artifact of the design system; fetch it, do not commit it.",
+    "ds-setup.cjs",
+  ].join("\n"),
+  ".gitattributes": [
+    "# .ds/history.jsonl is append-only, so a union merge is always correct",
+    "# and two developers installing in parallel never conflict.",
+    ".ds/history.jsonl merge=union",
+  ].join("\n"),
+};
+
+function hashBlock(rel) { return HASH_BEGIN + "\n" + GIT_BLOCKS[rel].trim() + "\n" + HASH_END + "\n"; }
+function extractHashBlock(src) {
+  if (src == null) return null;
+  const i = src.indexOf(HASH_BEGIN), j = src.indexOf(HASH_END);
+  if (i < 0 || j < 0) return null;
+  return src.slice(i, j + HASH_END.length);
+}
+function stripHashBlock(src) {
+  const i = src.indexOf(HASH_BEGIN), j = src.indexOf(HASH_END);
+  if (i < 0 || j < 0) return src;
+  return (src.slice(0, i) + src.slice(j + HASH_END.length)).replace(/\n{3,}/g, "\n\n").replace(/^\n+/, "");
+}
 
 function markedBlock(rel) { return MD_BEGIN + "\n\n" + PAYLOADS[rel].trim() + "\n\n" + MD_END + "\n"; }
 function extractBlock(src) {
@@ -167,12 +208,14 @@ function currentRegion(entry) {
   if (src == null) return null;
   if (entry.mode === "file") return src;
   if (entry.mode === "block") return extractBlock(src);
+  if (entry.mode === "gitblock") return extractHashBlock(src);
   if (entry.mode === "line") return managedLineOf(src, entry.kind);
   return null;
 }
 function pristineRegion(entry) {
   if (entry.mode === "file") return PAYLOADS[entry.path];
   if (entry.mode === "block") return markedBlock(entry.path);
+  if (entry.mode === "gitblock") return hashBlock(entry.path);
   if (entry.mode === "line") return entry.kind === "tw" ? PRESET_LINE : CSS_LINE;
   return null;
 }
@@ -201,6 +244,10 @@ function surveyManaged() {
   const nx = nuxtConfigName();
   const css = managedLineOf(readIf(nx), "css");
   if (css) managed.push({ path: nx, mode: "line", kind: "css", klass: "contract", sha256: sha(css), marker: LINE_MARK });
+  for (const g of Object.keys(GIT_BLOCKS)) {
+    const blk = extractHashBlock(readIf(g));
+    if (blk != null) managed.push({ path: g, mode: "gitblock", klass: "contract", sha256: sha(blk), bytes: blk.length });
+  }
   return managed;
 }
 
@@ -335,6 +382,7 @@ function detectState() {
     root: ROOT, isGit,
     defaultRepoUrl: defaultRepoUrl(), originUrl: originUrl(),
     maintainerEmail: maintainerEmail(),
+    maintainer: dsMeta().maintainer || null,
     subRegistered, subPopulated, subCommit, level,
     level1tw, level1css, halfWired: installed && (level1tw !== level1css),
     nuxtConfig: nx, hasTailwindConfig: tw != null,
@@ -375,6 +423,13 @@ function buildInstallPlan(cfg) {
   if (readIf(".ds/bindings.md") != null) steps.push({ title: T(".ds/bindings.md sudah ada — tidak ditimpa", ".ds/bindings.md already exists — not overwritten"), skip: true });
   else steps.push({ title: T("Buat .ds/bindings.md (peta komponen)", "Create .ds/bindings.md (component map)"), write: ".ds/bindings.md" });
 
+  for (const g of Object.keys(GIT_BLOCKS)) {
+    const cur = readIf(g);
+    if (extractHashBlock(cur) != null) steps.push({ title: T(g + " sudah punya bagian design-system", g + " already has the design-system section"), skip: true });
+    else if (cur == null) steps.push({ title: T("Buat " + g, "Create " + g), write: g });
+    else steps.push({ title: T("Tambahkan bagian design-system di akhir " + g + " (isi kamu tidak disentuh)", "Append the design-system section to the end of " + g + " (your content untouched)"), append: g });
+  }
+
   if (String(cfg.level) === "1") {
     const tp = planTailwindEdit(readIf("tailwind.config.js"));
     if (tp.already) steps.push({ title: T("tailwind.config.js sudah terpasang", "tailwind.config.js already wired"), skip: true });
@@ -409,6 +464,7 @@ function buildRevertPlan(cfg) {
     for (const e of m.managed) {
       if (e.mode === "line") steps.push({ title: T("Hapus baris bertanda dari " + e.path, "Remove the marked line from " + e.path), edit: e.kind === "tw" ? "tw-remove" : "nuxt-remove" });
       else if (e.mode === "block") steps.push({ title: T("Hapus bagian bertanda dari " + e.path + " (sisa file dipertahankan)", "Remove the marked section from " + e.path + " (the rest is kept)"), edit: "claude-strip" });
+      else if (e.mode === "gitblock") steps.push({ title: T("Hapus bagian bertanda dari " + e.path + " (sisa file dipertahankan)", "Remove the marked section from " + e.path + " (the rest is kept)"), gitstrip: e.path });
       else steps.push({ title: T("Hapus " + e.path + " (disalin dulu ke .ds/.trash/)", "Remove " + e.path + " (copied to .ds/.trash/ first)"), rmfile: e.path });
     }
   } else {
@@ -417,9 +473,15 @@ function buildRevertPlan(cfg) {
     if (st.level1css) steps.push({ title: T("Hapus baris variables.css dari " + st.nuxtConfig, "Remove the variables.css line from " + st.nuxtConfig), edit: "nuxt-remove" });
     if (extractBlock(readIf("CLAUDE.md")) != null) steps.push({ title: T("Hapus bagian bertanda dari CLAUDE.md", "Remove the marked section from CLAUDE.md"), edit: "claude-strip" });
     if (readIf(".ds/bindings.md") != null) steps.push({ title: T("Hapus .ds/bindings.md", "Remove .ds/bindings.md"), rmfile: ".ds/bindings.md" });
+    for (const g of Object.keys(GIT_BLOCKS)) {
+      if (extractHashBlock(readIf(g)) != null) steps.push({ title: T("Hapus bagian bertanda dari " + g, "Remove the marked section from " + g), gitstrip: g });
+    }
   }
 
   if (readIf("CLAUDE.md") != null) steps.push({ title: T("Hapus CLAUDE.md kalau jadi kosong", "Remove CLAUDE.md if it becomes empty"), pruneClaude: true });
+  for (const g of Object.keys(GIT_BLOCKS)) {
+    if (readIf(g) != null) steps.push({ title: T("Hapus " + g + " kalau jadi kosong", "Remove " + g + " if it becomes empty"), pruneEmpty: g });
+  }
 
   if (st.subRegistered || st.subPopulated) {
     steps.push({ title: T("Deinit submodule", "Deinit the submodule"), cmd: "git submodule deinit -f " + SUBMODULE_DIR });
@@ -474,11 +536,16 @@ async function execSteps(steps, ctx) {
         if (miss.length) { push(false, "missing: " + miss.join(", ") + " — that URL does not look like an E-Systems design system repo"); return { log, ok: false }; }
         push(true, "ok"); continue;
       }
-      if (s.write) { writeFile(s.write, s.write === "CLAUDE.md" ? markedBlock("CLAUDE.md") : PAYLOADS[s.write]); push(true, "wrote " + s.write); continue; }
+      if (s.write) {
+        const body = GIT_BLOCKS[s.write] !== undefined ? hashBlock(s.write)
+          : s.write === "CLAUDE.md" ? markedBlock("CLAUDE.md") : PAYLOADS[s.write];
+        writeFile(s.write, body); push(true, "wrote " + s.write); continue;
+      }
       if (s.append) {
+        const isGit = GIT_BLOCKS[s.append] !== undefined;
         const prev = readIf(s.append) || "";
-        if (extractBlock(prev) != null) { push(true, "(section already present)"); continue; }
-        writeFile(s.append, (prev ? prev.replace(/\n*$/, "\n\n") : "") + markedBlock(s.append));
+        if ((isGit ? extractHashBlock(prev) : extractBlock(prev)) != null) { push(true, "(section already present)"); continue; }
+        writeFile(s.append, (prev ? prev.replace(/\n*$/, "\n\n") : "") + (isGit ? hashBlock(s.append) : markedBlock(s.append)));
         push(true, "appended to " + s.append); continue;
       }
       if (s.edit) {
@@ -507,6 +574,22 @@ async function execSteps(steps, ctx) {
         fs.rmSync(abs(s.rmfile), { force: true });
         sh('git rm --cached --ignore-unmatch -- "' + s.rmfile + '"');
         push(true, bak ? "moved to " + bak : "not present"); continue;
+      }
+      if (s.gitstrip) {
+        const src = readIf(s.gitstrip);
+        if (src == null) { push(true, "not present"); continue; }
+        const bak = toTrash(s.gitstrip);
+        writeFile(s.gitstrip, stripHashBlock(src));
+        push(true, bak ? "backup: " + bak : "stripped"); continue;
+      }
+      if (s.pruneEmpty) {
+        const src = readIf(s.pruneEmpty);
+        if (src != null && src.trim() === "") {
+          toTrash(s.pruneEmpty); fs.rmSync(abs(s.pruneEmpty), { force: true });
+          sh('git rm --cached --ignore-unmatch -- "' + s.pruneEmpty + '"');
+          push(true, "removed (was empty)");
+        } else push(true, "kept (has your content)");
+        continue;
       }
       if (s.pruneClaude) {
         const src = readIf("CLAUDE.md");
@@ -551,7 +634,7 @@ async function execSteps(steps, ctx) {
       }
       if (s.commit) {
         const nx = nuxtConfigName();
-        const res = stageExisting([".gitmodules", SUBMODULE_DIR, "CLAUDE.md", DS_DIR_LOCAL, "tailwind.config.js", nx]);
+        const res = stageExisting([".gitmodules", SUBMODULE_DIR, "CLAUDE.md", DS_DIR_LOCAL, "tailwind.config.js", nx, ".gitignore", ".gitattributes"]);
         if (!res.staged.length) { push(true, "nothing to stage — no commit was made"); continue; }
         const c = sh('git commit -m "' + s.commitMsg + '"');
         if (!c.ok && /nothing to commit|nothing added/.test(c.out)) { push(true, "nothing to commit"); continue; }
@@ -625,7 +708,8 @@ function dsInfo() {
     commit: commitR.ok ? commitR.out.trim() : null,
     changelogHead: changelog ? changelog.split("\n").slice(0, 30).join("\n").trim() : null,
     hasGallery: fs.existsSync(path.join(base, "reference", "gallery.html")),
-    docs: ["README.md", "STORY.md", "TUTORIAL.id.md", "TUTORIAL.en.md", "SETUP.md", "SAFETY.id.md", "SAFETY.en.md", "CHANGELOG.md"].filter((f) => fs.existsSync(path.join(base, f))),
+    docs: ["README.md", "docs/ARCHITECTURE.md", "SAFETY.id.md", "SAFETY.en.md", "TUTORIAL.id.md", "TUTORIAL.en.md",
+           "SETUP.md", "CHANGELOG.md", "STORY.md", "HISTORY.md", "CLAUDE.md"].filter((f) => fs.existsSync(path.join(base, f))),
   };
 }
 
@@ -846,6 +930,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "POST" && url === "/api/payload") {
     const b = await body(req);
     const f = b.file;
+    if (Object.prototype.hasOwnProperty.call(GIT_BLOCKS, f)) return json(res, 200, { content: hashBlock(f) });
     if (!Object.prototype.hasOwnProperty.call(PAYLOADS, f)) return json(res, 400, { error: "unknown file" });
     return json(res, 200, { content: f === "CLAUDE.md" ? markedBlock(f) : PAYLOADS[f] });
   }
@@ -890,6 +975,7 @@ const server = http.createServer(async (req, res) => {
       steps: [
         { title: T("Baca kondisi terpasang saat ini (" + managed.length + " file)", "Read the current installed state (" + managed.length + " files)") },
         { title: T("Tambahkan marker ke baris config yang belum bertanda", "Add markers to any unmarked config lines") },
+        { title: T("Tambahkan housekeeping git (.gitignore, .gitattributes)", "Add the git housekeeping (.gitignore, .gitattributes)") },
         { title: T("Tulis struk dari kondisi saat ini sebagai BASELINE (bukan drift)", "Write the receipt from the current state as the BASELINE (not drift)"), manifest: "adopt" },
       ],
       notTouched: [T("Isi file kamu — tidak ada yang ditulis ulang", "Your file contents — nothing is rewritten")],
@@ -1017,6 +1103,7 @@ const server = http.createServer(async (req, res) => {
     const bak = toTrash(e.path);
     if (e.mode === "file") writeFile(e.path, PAYLOADS[e.path]);
     else if (e.mode === "block") { const src = readIf(e.path) || ""; writeFile(e.path, extractBlock(src) != null ? src.replace(extractBlock(src), markedBlock(e.path).trim()) : src.replace(/\n*$/, "\n\n") + markedBlock(e.path)); }
+    else if (e.mode === "gitblock") { const src = readIf(e.path) || ""; writeFile(e.path, extractHashBlock(src) != null ? src.replace(extractHashBlock(src), hashBlock(e.path).trim()) : src.replace(/\n*$/, "\n\n") + hashBlock(e.path)); }
     else if (e.mode === "line") {
       const src = readIf(e.path);
       const stripped = removeManagedLine(src, e.kind);
@@ -1040,7 +1127,15 @@ const server = http.createServer(async (req, res) => {
       toTrash(file);
       writeFile(file, src.split("\n").map((l) => (l.includes(needle) && !l.includes(LINE_MARK)) ? l.replace(/\s*$/, " " + LINE_MARK) : l).join("\n"));
     }
-    const r = await execSteps([{ title: T("Tulis struk baseline", "Write the baseline receipt"), manifest: "adopt" }]);
+    const pre = [];
+    for (const g of Object.keys(GIT_BLOCKS)) {
+      const cur = readIf(g);
+      if (extractHashBlock(cur) != null) continue;
+      pre.push(cur == null
+        ? { title: T("Buat " + g, "Create " + g), write: g }
+        : { title: T("Tambahkan bagian design-system di akhir " + g, "Append the design-system section to " + g), append: g });
+    }
+    const r = await execSteps(pre.concat([{ title: T("Tulis struk baseline", "Write the baseline receipt"), manifest: "adopt" }]));
     PROGRESS = { active: false, current: 0, total: 0, label: T("", "") };
     return json(res, 200, r);
   }

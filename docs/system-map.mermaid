@@ -1,0 +1,108 @@
+%% E-Systems Design System v3.3.0 — master system map
+%% Regenerated 2026-07-28 from the repository as it actually is.
+%% Paste into any Mermaid viewer, or see docs/ARCHITECTURE.md for the narrated version.
+
+flowchart TB
+
+  %% ============================ AUTHORING ============================
+  subgraph AUTHOR["AUTHORING — designer"]
+    direction TB
+    FIG["Figma<br/><i>the only place visual decisions are made</i>"]
+    FND["src/foundations.json<br/><b>185 tokens</b>"]
+    SPEC["src/components/*.json<br/><b>76 specs</b> — 64 components + 12 pages"]
+    REFSRC["reference/*.html + css/*.css<br/><b>27 files</b> · 25 of 52 codes"]
+    VER["version.json<br/><i>single source of the version</i>"]
+    META["ds-meta.json<br/><i>maintainer contact</i>"]
+    FIG --> FND & SPEC & REFSRC
+  end
+
+  %% ============================ RELEASE CHAIN ============================
+  subgraph SHIP["RELEASE — node tools/ship.js"]
+    direction TB
+    G1["1 build.js<br/>compile + validate every token ref"]
+    G2["2 split-catalog.js<br/>regenerate AI grounding"]
+    G3["3 stamp-reference.js<br/>single-source the version stamp"]
+    G4["4 lint-reference.js<br/>token purity · fonts loaded · icons from sprite"]
+    G5["5 validate-pages.py<br/>page geometry + refs"]
+    G6["6 build-wizard.js<br/>bundle the panel"]
+    G7["7 contract-check.js<br/>no breaking change without MAJOR + alias"]
+    G1 --> G2 --> G3 --> G4 --> G5 --> G6 --> G7
+  end
+
+  FND & SPEC & VER --> G1
+  REFSRC --> G3
+
+  %% ============================ GENERATED ============================
+  subgraph OUT["GENERATED — never hand-edited"]
+    direction TB
+    DIST["dist/<br/>variables.css · tailwind.preset.js<br/><b>185 vars</b> + <b>86 dark</b> + <b>12 .ts-*</b> · <b>487 colour keys</b>"]
+    CAT["catalog/<br/>INDEX.md · TOKENS.md<br/><b>76 spec files</b>"]
+    GAL["reference/gallery.html<br/>+ _fonts.css (Fustat, DM Mono embedded)<br/>+ Tabler sprite (15 icons, inlined)"]
+    CJS["tools/ds-setup.cjs<br/><b>278 KB · 1 file · 0 dependencies</b>"]
+    BASE[".release/contract.json<br/><i>the public-surface baseline</i>"]
+  end
+
+  G1 --> DIST
+  G2 --> CAT
+  G3 & G4 --> GAL
+  G6 --> CJS
+  G7 --> BASE
+
+  %% ============================ CONSUMER ============================
+  subgraph CONSUME["CONSUMER REPO — e.g. portal-nuxt (Nuxt 2 / Vue 2.6)"]
+    direction TB
+    SUB["design-system/<br/><i>pinned read-only submodule</i>"]
+    CLA["CLAUDE.md<br/><i>marked block appended</i>"]
+    BND[".ds/bindings.md<br/><b>LIVING</b> — agents correct it"]
+    MAN[".ds/manifest.json<br/><b>THE RECEIPT</b> — sha256 per region"]
+    HIS[".ds/history.jsonl<br/><i>append-only · merge=union</i>"]
+    GIT[".gitignore + .gitattributes<br/><i>marked blocks</i>"]
+    TRASH[".ds/.trash/<br/><i>every replaced version, git-ignored</i>"]
+    L1["tailwind.config.js + nuxt.config.js<br/><b>1 marked line each — Level 1 only</b>"]
+    OWN["YOUR components, pages, styles<br/><b>NEVER TOUCHED</b>"]
+  end
+
+  CJS -->|"plan-first · marked · reversible"| CLA & BND & GIT & L1
+  CJS --> SUB
+  CJS -->|records| MAN & HIS
+  CJS -->|"backs up before every destructive act"| TRASH
+  DIST -.->|"Level 1 only"| L1
+
+  %% ============================ AI AGENT ============================
+  subgraph AGENT["AI CODING AGENT"]
+    direction TB
+    A1["reads CLAUDE.md"] --> A2["design-system/CLAUDE.md<br/>universal laws §0–§5"]
+    A2 --> A3["catalog/INDEX.md<br/>router"]
+    A3 --> A4["catalog/components/&lt;code&gt;.md"]
+    A4 --> A5[".ds/bindings.md<br/>which LOCAL component"]
+    A5 --> A6["writes code with THIS repo's components"]
+    A6 --> A7["node doctor.js"]
+    A6 -.->|"map was wrong"| A8["corrects .ds/bindings.md<br/><i>Self-Healing Map Law</i>"]
+    A8 --> A5
+  end
+
+  CLA --> A1
+  CAT --> A3
+  GAL -->|"structural reference"| A6
+  BND --> A5
+
+  %% ============================ FEEDBACK LOOPS ============================
+  MAN -->|"drives"| REV["exact uninstall · drift detection<br/>restore · rollback"]
+  MAN -->|"read from git — no telemetry"| RPT["adoption-report.js<br/>→ ADOPTION.md"]
+  BND -->|"drift = new knowledge"| CR[".ds/requests/CR-*.md<br/>+ prefilled email"]
+  CR ==>|"folded into the shipped template"| REFSRC
+  RPT ==>|"who is behind → nudge them"| AUTHOR
+  GAL -->|"visual verdict<br/><i>only valid because the font now really loads</i>"| FIG
+
+  %% ============================ STYLING ============================
+  classDef authored fill:#EFF4FF,stroke:#2563EB,color:#1E3A8A
+  classDef gen fill:#F7F7F5,stroke:#DCDCDA,color:#37352F
+  classDef gate fill:#FDF6E7,stroke:#A86400,color:#7A4A00
+  classDef safe fill:#EDF7F0,stroke:#0F7B3F,color:#0B5C2F
+  classDef never fill:#FDF0EF,stroke:#B3261E,color:#8A1D17
+
+  class FIG,FND,SPEC,REFSRC,VER,META authored
+  class DIST,CAT,GAL,CJS,BASE gen
+  class G1,G2,G3,G4,G5,G6,G7 gate
+  class MAN,HIS,TRASH,REV safe
+  class OWN never

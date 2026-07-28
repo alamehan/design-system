@@ -5,14 +5,15 @@ Framework-agnostic, AI-grounded design system: **design tokens + component specs
 Author: Raihan Allaam (@alamehan) — UI/UX Designer, ITS Elabram.
 
 > **New here?** Read the tutorial: [English](./TUTORIAL.en.md) · [Bahasa Indonesia](./TUTORIAL.id.md)
+> **Want the whole picture?** [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — layers, release chain, data flow, live numbers, plus a standalone [`system-map.mermaid`](./docs/system-map.mermaid).
 > **Signing this off?** Read [SAFETY.en.md](./SAFETY.en.md) · [SAFETY.id.md](./SAFETY.id.md) — exactly what the panel writes, and what it can never touch.
 
 ## Architecture: Truth / Reference / Binding
 
 | Layer | Where | What |
 |---|---|---|
-| **Truth** | this repo: `src/` → `dist/` + `catalog/` | 185 tokens + 76 specs, compiled & validated |
-| **Reference** | this repo: `reference/` | plain HTML+CSS per component + browsable `gallery.html` |
+| **Truth** | this repo: `src/` → `dist/` + `catalog/` | 185 tokens + 86 dark overrides + 12 text styles + 76 specs, compiled & validated |
+| **Reference** | this repo: `reference/` | plain HTML+CSS per component + browsable `gallery.html`, rendering in **Fustat** with real **Tabler** icons |
 | **Binding** | consumer repo: `.ds/bindings.md` | map spec → that repo's components & classes (self-healing) |
 
 ## Layout
@@ -24,7 +25,8 @@ Author: Raihan Allaam (@alamehan) — UI/UX Designer, ITS Elabram.
 - `src/assets/` — avatars, option-menus, characters, custom icons
 - `src/scripts/` — `build.js` (compile+validate) · `split-catalog.js` · `stamp-reference.js` · `lint-reference.js` · `contract-check.js` · `adoption-report.js` · `doctor.js`
 - `tools/` — `dashboard/` (panel sources) · `build-wizard.js` · `ds-setup.cjs` (the ONE file developers run) · `ship.js`
-- `tests/e2e.js` — drives the panel through its whole lifecycle and asserts
+- `tests/e2e.js` — drives the panel through its whole lifecycle and asserts (84 checks)
+- `docs/` — `ARCHITECTURE.md` + `system-map.mermaid`
 - `dist/` — generated: `tailwind.preset.js`, `variables.css`
 - `catalog/` — generated: `INDEX.md` (router) + `TOKENS.md` + `components/<code>.md`
 - `reference/` — token-pure HTML+CSS; open `reference/gallery.html` in a browser

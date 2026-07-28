@@ -17,7 +17,7 @@
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 .es-check__box.is-on { background: var(--color-brand-brand); border-color: var(--color-brand-brand); }
-.es-check__mark { font-size: 0.8em; line-height: 1; }
+.es-check__mark { width: 0.8em; height: 0.8em; display: block; stroke-width: 3; }
 .es-check__native { position: absolute; opacity: 0; width: 0; height: 0; }
 .es-check:focus-within .es-check__box { box-shadow: var(--shadow-State-Focus); }
 .es-check__label { color: var(--color-system-text-head); }

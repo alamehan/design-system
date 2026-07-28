@@ -1,7 +1,7 @@
 # 📖 STORY.md — Cerita di Balik E-Systems Design System V3
 
 > Ditulis oleh **Raihan Allaam** — UI/UX Designer, ITS Elabram 🎨
-> Ini bukan dokumentasi teknis. Ini cerita gimana design system ini lahir, jatuh, bangkit, dan akhirnya jadi sesuatu yang (semoga) kalian cintai. Dokumentasi teknisnya ada di `README.md`, `SETUP.md`, dan `TUTORIAL.md`.
+> Ini bukan dokumentasi teknis. Ini cerita gimana design system ini lahir, jatuh, bangkit, dan akhirnya jadi sesuatu yang (semoga) kalian cintai. Dokumentasi teknisnya ada di `README.md`, `SETUP.md`, `TUTORIAL.id.md` / `TUTORIAL.en.md`, dan peta lengkapnya di `docs/ARCHITECTURE.md`.
 
 ---
 
@@ -83,8 +83,60 @@ Design it once — the product follows. Itu kalimatnya. Itu ambisinya. ✨
 Makasih buat tim frontend yang jujur waktu nge-revert V1 — tanpa itu, V3 nggak akan pernah sebagus ini. Design system ini hidup: kalau ada yang aneh, bilang aku, kita iterasi lagi.
 
 **— Raihan Allaam** · UI/UX Designer · ITS Elabram 🎨
-*E-Systems Design System v3.0.0*
+*E-Systems Design System v3.3.0*
 
 ---
 
 *Update paling gres: si wizard akhirnya naik kelas jadi **Design System Dashboard** 📊 — satu perintah `node ds-setup.cjs`, dan SEMUA tentang design system ada di sana: status repo, info live (versi, token, spec — dibaca langsung dari repo DS, jadi selalu up-to-date), cek update dariku, galeri komponen, docs lengkap, install, maintain, sampai test with AI. One command to rule them all. 😎*
+
+---
+
+## 🔍 Chapter 7 — Audit yang Bikin Malu (v3.2 → v3.3)
+
+Aku minta satu AI ngaudit ulang semuanya dari nol. Bukan "cek dong bener nggak" — tapi
+"reproduksi tiap klaim yang kutulis". Hasilnya bikin nyengir kecut. 😅
+
+Tiga yang paling nyeleneh:
+
+**1. Wizard bisa lapor "ALL DONE ✅" tanpa commit apa pun.** `git add` itu batal
+*total* kalau ada satu path yang nggak ada. Jadi nol file ter-stage, git bilang
+"nothing to commit", dan kodeku menganggap itu sukses. Dev lihat centang hijau, ngira
+beres, padahal repo-nya nggak berubah sama sekali.
+
+**2. Uninstall menghapus seluruh folder `.ds/`.** Termasuk file milik dev sendiri yang
+kebetulan dia taruh di situ. Aku nggak pernah kepikiran orang bakal naruh apa-apa di
+sana — padahal wajar banget.
+
+**3. Katalog AI kehilangan 24 dari 76 spec** — semua `panel-*` dan `page-*` — karena
+satu regex nggak bisa match tanda hubung. Dan yang 24 itu nggak hilang begitu aja: dia
+nyampur ke `TOKENS.md`, file yang dibaca tiap AI agent sebagai *kamus token*. Jadi
+selama berbulan-bulan, setiap agent yang kerja di repo ini punya kosakata token yang
+salah, dan nggak ada yang tahu.
+
+Lalu di v3.3 ketahuan yang paling menohok buatku sebagai **desainer**:
+
+**Reference gallery-ku menyebut Fustat, tapi nggak pernah memuatnya.** CSS-nya nulis
+`font-family: "Fustat"` — tanpa satu pun `@font-face`. Browser diam-diam jatuh ke
+font sistem. Artinya: setiap kali aku bilang "oke, ini udah bener" sambil ngeliatin
+gallery, aku menilai di font yang salah. Padahal law #2 di `HISTORY.md` itu tulisanku
+sendiri: *jangan pernah kasih verdict visual tanpa stamp versi yang cocok*. Ternyata
+stamp-nya cocok, fontnya yang bohong. 🙃
+
+Pelajarannya sama kayak dulu, cuma bentuknya lain: **sesuatu yang keliatan benar dan
+nggak pernah error adalah tempat persembunyian terbaik buat bug.** Yang bikin gagal
+loud itu gampang — yang gagal *sunyi* itu yang mahal.
+
+Makanya sekarang tiap pelajaran itu jadi **gate**, bukan catatan:
+
+- `contract-check.js` — nolak rilis yang menghapus token tanpa MAJOR + alias
+- `lint-reference.js` — nolak font yang disebut tapi nggak dimuat, dan ikon gambar
+  tangan yang ngaku-ngaku Tabler
+- `tests/e2e.js` — 84 assertion yang benar-benar install, ngedit file, restore,
+  update, rollback, uninstall, di repo sungguhan
+- `.ds/manifest.json` — struk. Uninstall nggak nebak lagi, dia baca
+
+Aku nggak nulis ini buat pamer udah diperbaiki. Aku nulis ini karena aku pengen versi
+diriku enam bulan lagi inget: **dokumentasi yang nggak dijaga mesin akan jadi bohong,
+cepat atau lambat.** 💪
+
+**— Raihan Allaam** · v3.3.0

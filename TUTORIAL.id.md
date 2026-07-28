@@ -198,3 +198,19 @@ Buka dashboard seperti biasa (`node ds-setup.cjs`). Kalau di repo masih ada sisa
 - **Rekomendasi: bersihkan dulu** supaya install v3 mulus tanpa redundant/konflik. Ketik `HAPUS DS LAMA` di kolom konfirmasi lalu klik **🧹 Bersihkan file DS lama** (ada rencana lengkap sebelum apapun dijalankan).
 - Kalau memilih tidak menghapus, install tetap bisa dilanjut.
 - CLAUDE.md yang sudah berisi catatan kamu sendiri aman: hanya baris peninggalan DS lama yang dicabut.
+
+---
+
+## Catatan v3.3.0
+
+- **Reference tier sekarang jujur.** `reference/gallery.html` benar-benar render pakai
+  **Fustat** (font-nya ditanam base64 supaya jalan meski file dibuka lewat `file://`)
+  dan ikonnya **Tabler asli** dari sprite MIT, bukan SVG gambar tangan. Sebelum ini
+  CSS-nya *menyebut* Fustat tapi tidak pernah memuatnya — jadi semua penilaian visual
+  terhadap gallery dibuat di font yang salah.
+- **Navigasi panel** sekarang pill mengapung di bawah. Menu **⋯** berisi putar tour,
+  ganti tema, dan tutup panel.
+- **Dokumen dirender**, bukan markdown mentah. Ada tab Pratinjau (default) dan Markdown.
+- **Panel menulis `.gitignore` + `.gitattributes`** (blok bertanda). `.ds/` tidak
+  diignore seluruhnya — alasannya di [SAFETY.id.md §2b](./SAFETY.id.md).
+- Peta lengkap arsitektur: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
