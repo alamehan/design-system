@@ -202,8 +202,8 @@ it silently became the agent's idea of the token vocabulary.
 | Tabler icons in the reference sprite | **15** | MIT, inlined per file |
 | Lucide icons in the panel sprite | **48** | ISC, all of them used |
 | Panel bundle | **301 KB**, one file, zero dependencies | `tools/ds-setup.cjs` |
-| Panel i18n keys | **266 × 2 locales** | `tools/dashboard/i18n.json` |
-| End-to-end assertions | **87** | `tests/e2e.js` |
+| Panel i18n keys | **269 × 2 locales** | `tools/dashboard/i18n.json` |
+| End-to-end assertions | **99** | `tests/e2e.js` |
 
 ---
 

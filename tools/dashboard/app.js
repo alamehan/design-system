@@ -12,6 +12,14 @@ var PAGE = "home";
 
 /* ------------------------------------------------------------- helpers */
 function $(id) { return document.getElementById(id); }
+/* create-or-reuse, so repeated renders never stack duplicates */
+function elOnce(id, tag, cls, html) {
+  var n = document.getElementById(id);
+  if (!n) { n = document.createElement(tag); n.id = id; }
+  if (cls) n.className = cls;
+  if (html != null) n.innerHTML = html;
+  return n;
+}
 function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
 function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 function t(k, vars) {
@@ -477,55 +485,90 @@ function renderHome() {
 
 /* Adoption counters.
  *
- * Two scopes, deliberately kept apart and labelled:
- *   ORG  — totals from design-system/.release/adoption.json, produced by
- *          adoption-report.js reading COMMITTED receipts across the configured
- *          repos. This is the number a PM wants.
- *   REPO — what happened in THIS repository, from its own history log.
+ * Three scopes behind one segmented control, because three different people ask
+ * three different questions:
+ *   TEAM     - every registered repo. This is the number a PM wants. It comes from
+ *              design-system/.release/adoption.json, which ship.js now regenerates
+ *              on every release, so a developer never has to run anything.
+ *   THIS REPO- what happened here, by anyone.
+ *   ME       - what this developer did, matched on the same non-identifying actor
+ *              hash the report uses. No address is stored anywhere.
  *
- * Nothing here is telemetry: the panel makes no network call, and if the report
- * has never been generated the card says so instead of showing a zero that
- * would read as "nobody adopted it". */
+ * The counts are cumulative and survive design system updates: .ds/history.jsonl
+ * is append-only and committed, and uninstalling deliberately keeps it. Reinstalling
+ * appends rather than starting over.
+ *
+ * None of this is telemetry. The panel makes no network request to produce it.  */
+var ADOPT_SCOPE = localStorage.getItem("dsAdoptScope") || "team";
+
 function adoptionCard() {
   var a = (S && S.adoption) || {};
-  var org = a.org, rep = a.repo || {};
+  var scope = ADOPT_SCOPE;
+  if (scope === "team" && !a.org) scope = "repo";
+  if (scope === "me" && !a.hasActor) scope = "repo";
 
-  function cell(v, label, ic, warn) {
-    return '<div><div class="av2' + (warn ? " warn2" : "") + '">' + esc(v == null ? "\u2014" : v) + "</div>" +
-      '<div class="al">' + icon(ic) + "<span>" + esc(label) + "</span></div></div>";
-  }
-
-  var h = '<div class="card" data-tour="adoption"><div class="body"><h2>' + icon("activity") + esc(t("adopt.title")) + "</h2>";
-
-  if (org) {
-    h += '<p class="hint">' + esc(t("adopt.org.hint")) + "</p>" +
-      '<div class="adopt">' +
-      cell(org.repos, t("adopt.repos"), "git-branch") +
-      cell(org.installs, t("adopt.installs"), "download") +
-      cell(org.updates, t("adopt.updates"), "arrow-up-circle") +
-      cell(org.uninstalls, t("adopt.uninstalls"), "trash-2") +
-      cell(org.devs, t("adopt.devs"), "user-round") +
-      cell(org.requests, t("adopt.requests"), "mail") +
-      cell(org.current, t("adopt.current"), "circle-check") +
-      cell(org.behind, t("adopt.behind"), "clock", org.behind > 0) +
-      "</div>";
-    if (a.generatedAt) h += '<div class="note">' + icon("clock") + "<span>" +
-      esc(t("adopt.generated") + " " + fmtDate(a.generatedAt) + (a.reportVersion ? " \u00b7 v" + a.reportVersion : "")) + "</span></div>";
+  var src = scope === "team" ? (a.org || {}) : scope === "me" ? (a.mine || {}) : (a.repo || {});
+  var cells;
+  if (scope === "team") {
+    cells = [
+      [src.repos, "adopt.repos", "git-branch"],
+      [src.installs, "adopt.installs", "download"],
+      [src.updates, "adopt.updates", "arrow-up-circle"],
+      [src.uninstalls, "adopt.uninstalls", "trash-2"],
+      [src.devs, "adopt.devs", "user-round"],
+      [src.requests, "adopt.requests", "mail"],
+      [src.current, "adopt.current", "circle-check"],
+      [src.behind, "adopt.behind", "clock", src.behind > 0],
+    ];
   } else {
-    h += '<div class="callout" style="margin-bottom:0">' + icon("info") + "<div><b>" + esc(t("adopt.none.t")) + "</b><br>" +
-      esc(t("adopt.none.d")) + ' <code>node design-system/src/scripts/adoption-report.js</code></div></div>';
+    cells = [
+      [src.install, "adopt.installs", "download"],
+      [src.update, "adopt.updates", "arrow-up-circle"],
+      [src.rollback, "adopt.rollbacks", "rotate-ccw"],
+      [src.uninstall, "adopt.uninstalls", "trash-2"],
+      [src.request, "adopt.requests", "mail"],
+      [src.adopt, "adopt.adopted", "shield-check"],
+    ];
   }
 
-  h += '<h2 style="margin:20px 0 12px">' + icon("git-commit-horizontal") + esc(t("adopt.repo.title")) + "</h2>" +
-    '<p class="hint">' + esc(t("adopt.repo.hint")) + "</p>" +
-    '<div class="adopt">' +
-    cell(rep.install || 0, t("adopt.installs"), "download") +
-    cell(rep.update || 0, t("adopt.updates"), "arrow-up-circle") +
-    cell(rep.rollback || 0, t("adopt.rollbacks"), "rotate-ccw") +
-    cell(rep.request || 0, t("adopt.requests"), "mail") +
-    "</div></div></div>";
-  return h;
+  var tabs = [["team", "adopt.scope.team", !!a.org], ["repo", "adopt.scope.repo", true], ["me", "adopt.scope.me", !!a.hasActor]];
+  var h = '<div class="card" data-tour="adoption"><div class="body">' +
+    '<div class="adopthead"><h2>' + icon("activity") + esc(t("adopt.title")) + "</h2>" +
+    '<div class="scopesw">' + tabs.map(function (x) {
+      return '<button data-scope="' + x[0] + '"' + (x[2] ? "" : " disabled") +
+        (scope === x[0] ? ' class="sel"' : "") + ">" + esc(t(x[1])) + "</button>";
+    }).join("") + "</div></div>";
+
+  h += '<div class="adopt">' + cells.map(function (c) {
+    return '<div><div class="av2' + (c[3] ? " warn2" : "") + '">' + esc(c[0] == null ? 0 : c[0]) + "</div>" +
+      '<div class="al">' + icon(c[2]) + "<span>" + esc(t(c[1])) + "</span></div></div>";
+  }).join("") + "</div>";
+
+  var note;
+  if (scope === "team") {
+    note = a.configured === false
+      ? { ic: "info", txt: t("adopt.unconfigured") }
+      : { ic: "clock", txt: t("adopt.org.hint") + (a.generatedAt ? " \u00b7 " + t("adopt.generated") + " " + fmtDate(a.generatedAt) : "") };
+  } else if (scope === "me") {
+    note = { ic: "shield-check", txt: t("adopt.me.hint") };
+  } else {
+    note = { ic: "git-commit-horizontal", txt: t("adopt.repo.hint") };
+  }
+  h += '<div class="note">' + icon(note.ic) + "<span>" + esc(note.txt) + "</span></div>";
+
+  if (!a.org && scope !== "team") h += '<div class="note" style="border-top:none;padding-top:0">' + icon("info") +
+    "<span>" + esc(t("adopt.noteam")) + "</span></div>";
+
+  return h + "</div></div>";
 }
+
+document.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest("[data-scope]") : null;
+  if (!b || b.disabled) return;
+  ADOPT_SCOPE = b.getAttribute("data-scope");
+  localStorage.setItem("dsAdoptScope", ADOPT_SCOPE);
+  renderHome();
+});
 
 function managedTable(man) {
   var rows = man.map(function (m) {
@@ -908,28 +951,64 @@ function renderAbout() {
 
 /* ========================================================= PROMPTS page */
 var promptsDrawn = false;
+var promptBodies = {};
+
+/* Bound once, at load. Attaching these inside renderPrompts() added a fresh pair
+   every time the library was redrawn - so after an uninstall and reinstall each
+   copy fired twice. */
+function promptFilled(id) {
+  var txt = promptBodies[id] || "", box = $("pf-" + id);
+  if (box) {
+    var ins = box.querySelectorAll("[data-ph]");
+    for (var i = 0; i < ins.length; i++) {
+      var v = ins[i].value.trim();
+      if (v) txt = txt.split(ins[i].getAttribute("data-ph")).join(v);
+    }
+  }
+  return txt;
+}
+function promptRefresh(id) {
+  var pre = $("pb-" + id); if (pre) pre.textContent = promptFilled(id);
+  var box = $("pf-" + id); if (!box) return;
+  var ins = box.querySelectorAll("[data-ph]"), left = 0;
+  for (var i = 0; i < ins.length; i++) if (!ins[i].value.trim()) left++;
+  var bd = $("pn-" + id);
+  if (bd) { bd.textContent = left ? left + " " + t("prompts.fill") : t("prompts.ready"); bd.className = "badge" + (left ? "" : " ok"); }
+}
+document.addEventListener("input", function (e) {
+  var n = e.target;
+  if (!n.getAttribute || !n.getAttribute("data-ph")) return;
+  var box = n.parentNode;
+  while (box && (!box.id || box.id.indexOf("pf-") !== 0)) box = box.parentNode;
+  if (box) promptRefresh(box.id.slice(3));
+});
+document.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest("[data-pc]") : null;
+  if (b) copy(promptFilled(b.getAttribute("data-pc")));
+});
+
 function renderPrompts() {
   var lib = $("promptLib");
-  if (!S || S.level === "not-installed") { lib.innerHTML = '<div class="empty">' + icon("lock") + esc(t("prompts.locked")) + "</div>"; promptsDrawn = false; return; }
-  if (promptsDrawn) return;
-  var list = S.prompts || []; if (!list.length) return;
-  promptsDrawn = true;
-  var bodies = {}, cats = [], byCat = {};
-  list.forEach(function (p) { bodies[p.id] = p.body; if (!byCat[p.cat]) { byCat[p.cat] = []; cats.push(p.cat); } byCat[p.cat].push(p); });
-
-  function phOf(id) { var m = bodies[id].match(/\[[^\]\n]+\]/g) || [], u = []; m.forEach(function (x) { if (u.indexOf(x) < 0) u.push(x); }); return u; }
-  function filled(id) {
-    var txt = bodies[id], box = $("pf-" + id);
-    if (box) { var ins = box.querySelectorAll("[data-ph]"); for (var i = 0; i < ins.length; i++) { var v = ins[i].value.trim(); if (v) txt = txt.split(ins[i].getAttribute("data-ph")).join(v); } }
-    return txt;
+  var intro = $("promptIntro");
+  if (!S || S.level === "not-installed") {
+    intro.hidden = true;
+    lib.innerHTML = '<div class="empty">' + icon("lock") + esc(t("prompts.locked")) + "</div>";
+    promptsDrawn = false;
+    return;
   }
-  function refresh1(id) {
-    var pre = $("pb-" + id); if (pre) pre.textContent = filled(id);
-    var box = $("pf-" + id); if (!box) return;
-    var ins = box.querySelectorAll("[data-ph]"), left = 0;
-    for (var i = 0; i < ins.length; i++) if (!ins[i].value.trim()) left++;
-    var bd = $("pn-" + id);
-    if (bd) { bd.textContent = left ? left + " " + t("prompts.fill") : t("prompts.ready"); bd.className = "badge" + (left ? "" : " ok"); }
+  var list = S.prompts || [];
+  if (!list.length) { intro.hidden = true; lib.innerHTML = '<div class="empty">' + icon("lock") + esc(t("prompts.locked")) + "</div>"; promptsDrawn = false; return; }
+  intro.hidden = false;
+  if (promptsDrawn) return;
+  promptsDrawn = true;
+  var cats = [], byCat = {};
+  promptBodies = {};
+  list.forEach(function (p) { promptBodies[p.id] = p.body; if (!byCat[p.cat]) { byCat[p.cat] = []; cats.push(p.cat); } byCat[p.cat].push(p); });
+
+  function phOf(id) {
+    var m = (promptBodies[id] || "").match(/\[[^\]\n]+\]/g) || [], u = [];
+    m.forEach(function (x) { if (u.indexOf(x) < 0) u.push(x); });
+    return u;
   }
 
   var h = "";
@@ -955,30 +1034,38 @@ function renderPrompts() {
     });
   });
   lib.innerHTML = h;
-  list.forEach(function (p) { refresh1(p.id); });
-  lib.addEventListener("input", function (e) {
-    var n = e.target; if (!n.getAttribute || !n.getAttribute("data-ph")) return;
-    var box = n.parentNode; while (box && (!box.id || box.id.indexOf("pf-") !== 0)) box = box.parentNode;
-    if (box) refresh1(box.id.slice(3));
-  });
-  lib.addEventListener("click", function (e) {
-    var b = e.target.closest ? e.target.closest("[data-pc]") : null;
-    if (b) copy(filled(b.getAttribute("data-pc")));
-  });
+  list.forEach(function (p) { promptRefresh(p.id); });
 }
 
 /* =============================================================== SETUP */
-/* A compact side-by-side so nobody has to guess what a level actually costs. */
+/* A comparison TABLE, not two cards.
+ * The first attempt rendered two bordered boxes directly beneath two bordered
+ * radio options, so it read as a second set of choices. A table is unambiguously
+ * information. The selected column is tinted, nothing else. */
 function levelCompare(active) {
-  function box(n, cls, items) {
-    return '<div class="' + (active === n ? "now " : "") + cls + '"><div class="lh">' + esc(t("setup.level" + n + ".short")) +
-      '<span class="tag">' + esc(t("setup.level" + n + ".tag")) + "</span></div><ul>" +
-      items.map(function (k) { return "<li>" + t(k) + "</li>"; }).join("") + "</ul></div>";
+  var rows = [
+    ["setup.cmp.ai", "on", "on"],
+    ["setup.cmp.gallery", "on", "on"],
+    ["setup.cmp.classes", "off", "on"],
+    ["setup.cmp.dark", "off", "on"],
+    ["setup.cmp.build", "off", "cost:setup.cmp.build.v"],
+    ["setup.cmp.code", "off", "on"],
+  ];
+  function cellHtml(v) {
+    if (v === "on") return '<span class="on">' + icon("check") + "</span>";
+    if (v === "off") return '<span class="off">\u2013</span>';
+    return '<span class="cost">' + esc(t(v.slice(5))) + "</span>";
   }
-  return '<div class="lvlcmp">' +
-    box("0", "", ["setup.cmp0.a", "setup.cmp0.b", "setup.cmp0.c", "setup.cmp0.d"]) +
-    box("1", "", ["setup.cmp1.a", "setup.cmp1.b", "setup.cmp1.c", "setup.cmp1.d"]) +
-    "</div>";
+  var h = '<div class="lvlwrap"><div class="lvlq">' + icon("info") + "<span>" + esc(t("setup.cmp.q")) + "</span></div>" +
+    '<table class="lvl"><thead><tr><th></th>' +
+    '<th class="' + (active === "0" ? "pick" : "") + '">' + esc(t("setup.level0.short")) + "</th>" +
+    '<th class="' + (active === "1" ? "pick" : "") + '">' + esc(t("setup.level1.short")) + "</th></tr></thead><tbody>";
+  rows.forEach(function (r) {
+    h += "<tr><th>" + esc(t(r[0])) + "</th>" +
+      '<td class="' + (active === "0" ? "pickcol" : "") + '">' + cellHtml(r[1]) + "</td>" +
+      '<td class="' + (active === "1" ? "pickcol" : "") + '">' + cellHtml(r[2]) + "</td></tr>";
+  });
+  return h + "</tbody></table></div>";
 }
 
 function renderSetup() {
@@ -988,14 +1075,27 @@ function renderSetup() {
   $("btnProcess").querySelector("span").textContent = installed ? t("setup.recheck") : t("setup.process");
 
   var sel = (document.querySelector("input[name=lv]:checked") || {}).value || "0";
-  $("lvlCompare").innerHTML = levelCompare(installed ? String(S.level) : sel);
+  $("lvlCompare").innerHTML = levelCompare(sel);
 
-  /* ---- installed: the page becomes a receipt, not a form ---- */
+  /* ---- installed: the page becomes a receipt, and the form folds away ----
+     The fold is permanent markup. An earlier version appended #setupForm into a
+     container it later cleared with innerHTML = "", which destroyed the form node
+     outright: after an uninstall renderSetup() then threw on a null reference,
+     and because render() calls renderPrompts() after it, the Prompts tab kept
+     stale content too. Two visible bugs, one piece of DOM surgery. Nothing is
+     moved now. */
   var done = $("setupDone");
+  var fold = $("setupFold");
   if (!installed) {
     done.innerHTML = "";
-    $("setupForm").style.display = "";
+    fold.classList.add("always");   /* summary hidden, form always visible */
+    fold.open = true;
+    delete fold.dataset.touched;    /* so a reinstall starts folded again */
   } else {
+    fold.classList.remove("always");
+    if (!fold.dataset.touched) fold.open = false;
+    var hint = elOnce("reinstallHint", "p", "hint", esc(t("setup.reinstall.hint")));
+    if (hint.parentNode !== $("setupFoldBody")) $("setupFoldBody").insertBefore(hint, $("setupFoldBody").firstChild);
     var man = (S.manifest && S.manifest.managed) || [];
     var mf = S.manifest || {};
     var h = '<div class="donecard"><div class="dh">' + icon("circle-check", "ic-lg") + "<b>" + esc(t("setup.done.title")) + "</b></div>" +
@@ -1019,18 +1119,13 @@ function renderSetup() {
     if (man.length) h += '<details class="fold card"><summary>' + icon("shield-check", "chev") + "<span>" + esc(t("setup.done.written")) +
       '</span><span class="count">' + man.length + '</span></summary><div class="body">' + managedTable(man) + "</div></details>";
 
-    h += '<details class="fold card" id="reinstallFold"><summary>' + icon("settings", "chev") + "<span>" + esc(t("setup.reinstall")) +
-      '</span></summary><div class="body"><p class="hint">' + esc(t("setup.reinstall.hint")) + '</p><div id="formSlot"></div></div></details>';
-
     done.innerHTML = h;
-    /* move the real form inside the fold rather than duplicating it */
-    $("formSlot").appendChild($("setupForm"));
-    $("setupForm").style.display = "";
     if ($("goL1")) $("goL1").onclick = function () {
-      $("reinstallFold").open = true;
+      fold.dataset.touched = "1";
+      fold.open = true;
       var l1 = document.querySelector('#levels label[data-v="1"]');
       if (l1) l1.click();
-      $("reinstallFold").scrollIntoView({ behavior: "smooth", block: "center" });
+      fold.scrollIntoView({ behavior: "smooth", block: "center" });
     };
     if ($("goHealth2")) $("goHealth2").onclick = function () { go("health"); };
     if ($("goPrompts2")) $("goPrompts2").onclick = function () { go("prompts"); };
@@ -1048,12 +1143,24 @@ function renderSetup() {
   $("btnProcess").disabled = !!lk.install;
   $("lockNote").style.display = lk.install ? "flex" : "none";
 
+  /* A bare mailto: link is a dead end when no mail client is registered - the
+     click appears to do nothing at all. So this is a button that opens the draft
+     AND copies the address, then says which it did. */
   var mail = S.maintainerEmail;
   var ask = $("askCode");
   if (mail) {
-    ask.href = "mailto:" + mail + "?subject=" + encodeURIComponent("[Design System] Level 1 access code request") +
-      "&body=" + encodeURIComponent("Repo: " + (S.originUrl || S.root) + "\n\nHi, could I get the Level 1 access code for the design system? Thanks!");
     ask.style.display = "";
+    ask.title = mail;
+    ask.onclick = function () {
+      var href = "mailto:" + mail +
+        "?subject=" + encodeURIComponent("[Design System] Level 1 access code \u2014 " + (S.root || "").split(/[\\/]/).pop()) +
+        "&body=" + encodeURIComponent(
+          "Hi Raihan,\n\nCould I get the Level 1 access code for this repo?\n\n---\nRepo: " +
+          (S.originUrl || S.root || "?") + "\nDesign system: v" + ((OV && OV.version) || "?") +
+          "\nPanel: v" + (S.wizardVersion || "?"));
+      copy(mail, t("setup.l1code.copied"));
+      try { window.location.href = href; } catch (e) {}
+    };
   } else ask.style.display = "none";
 }
 
@@ -1120,14 +1227,13 @@ function endTour() {
   if (tourFrom && tourFrom !== PAGE) go(tourFrom);
 }
 
-function tourDots() {
-  var d = "";
-  for (var i = 0; i < tourSteps.length; i++) d += '<i class="' + (i === tourAt ? "on" : "") + '"></i>';
-  return d;
+function tourProg() {
+  var pct = tourSteps.length < 2 ? 100 : Math.round((tourAt + 1) / tourSteps.length * 100);
+  return '<div class="tour-prog"><i style="width:' + pct + '%"></i></div>';
 }
 
 function tourNav(extra) {
-  return '<div class="tf"><div class="tour-dots">' + tourDots() + '</div><span class="sp"></span>' +
+  return tourProg() + '<div class="tf"><span class="sp"></span>' +
     '<button class="btn ghost" id="tSkip">' + esc(t("tour.skip")) + "</button>" +
     (tourAt > 0 ? '<button class="btn" id="tPrev">' + esc(t("tour.back")) + "</button>" : "") +
     '<button class="btn primary" id="tNext">' + esc(extra || (tourAt === tourSteps.length - 1 ? t("tour.done") : t("tour.next"))) + "</button></div>";

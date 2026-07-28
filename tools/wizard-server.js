@@ -181,21 +181,30 @@ function maintainerEmail() { return process.env.DS_DESIGNER_EMAIL || (dsMeta().m
  * If the report has never been generated, org is null and the panel says so
  * rather than showing a zero that looks like real data. */
 function adoptionStats() {
-  const local = { install: 0, update: 0, uninstall: 0, request: 0, rollback: 0, adopt: 0 };
+  const blank = () => ({ install: 0, update: 0, uninstall: 0, request: 0, rollback: 0, adopt: 0 });
+  const repo = blank(), mine = blank();
+  const me = actorId();
+  const KEY = { install: "install", update: "update", revert: "uninstall", "change-request": "request", rollback: "rollback", adopt: "adopt" };
+  /* history.jsonl is append-only AND committed, so these counts are cumulative:
+     they survive updates, and an uninstall does not wipe them (revert keeps the
+     log on purpose). Reinstalling appends rather than restarting from zero. */
   for (const h of loadHistory()) {
-    if (h.event === "install") local.install++;
-    else if (h.event === "update") local.update++;
-    else if (h.event === "revert") local.uninstall++;
-    else if (h.event === "change-request") local.request++;
-    else if (h.event === "rollback") local.rollback++;
-    else if (h.event === "adopt") local.adopt++;
+    const k = KEY[h.event];
+    if (!k) continue;
+    repo[k]++;
+    if (h.actor && me && h.actor === me) mine[k]++;
   }
-  let org = null, generatedAt = null, reportVersion = null;
+  let org = null, generatedAt = null, reportVersion = null, configured = null;
   try {
     const raw = JSON.parse(fs.readFileSync(abs(path.join(SUBMODULE_DIR, ".release", "adoption.json")), "utf8"));
-    if (raw && raw.totals) { org = raw.totals; generatedAt = raw.generatedAt || null; reportVersion = raw.dsVersion || null; }
-  } catch { /* never generated, or no submodule yet */ }
-  return { repo: local, org: org, generatedAt: generatedAt, reportVersion: reportVersion };
+    if (raw && raw.totals) {
+      org = raw.totals;
+      configured = raw.totals.configured !== false;
+      generatedAt = raw.generatedAt || null;
+      reportVersion = raw.dsVersion || null;
+    }
+  } catch { /* no submodule yet, or a build older than v3.3.0 */ }
+  return { repo, mine, org, configured, generatedAt, reportVersion, hasActor: !!me };
 }
 
 function explainerInfo() {
@@ -432,7 +441,7 @@ function detectState() {
     history: loadHistory().slice(0, 100),
     rollback: (() => { try { return JSON.parse(readIf(ROLLBACK)); } catch { return null; } })(),
     panelLatest, panelOutdated: !!(panelLatest && cmpVer(panelLatest, WIZARD_VERSION) > 0),
-    prompts: buildPromptSet(level),
+    prompts: level === "not-installed" ? [] : buildPromptSet(level),
     locked: LOCKED,
   };
 }

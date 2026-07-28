@@ -125,6 +125,9 @@ a markdown file cannot stop a commit. Every lesson here is now mechanical:
 | Embedded payloads must really be in the bundle | `buildGuard()` in `build-wizard.js` + `tests/e2e.js` |
 | The ID and EN dictionaries must not disagree | `build-wizard.js`, at build time |
 | The bundle must not silently bloat | `tests/e2e.js` budget tripwire |
+| No descendant `.ic` rule may repaint a button's icon | `tests/e2e.js` selector check |
+| `.btn` must style any element, not only `<button>` | `tests/e2e.js` selector check |
+| Uninstall must leave the UI indistinguishable from never-installed | `tests/e2e.js` post-revert assertions |
 
 The last row is a small bug with a useful shape: a generic `:hover` rule set the
 background of *every* button, while the primary variant overrode only `filter`. White
@@ -159,3 +162,32 @@ The lesson is not "check for fonts". It is that a guard which asserts *the absen
 marker* is weaker than one which asserts *the presence of the payload*. `buildGuard()` now
 does the latter, and `tests/e2e.js` repeats the check independently, because a build script
 that verifies its own output is one bug away from verifying nothing.
+
+### One more, on the difference between passing and working
+
+A third review pass found six more faults, and not one of them could have been caught
+by the test suite as it stood. They were all found by a person opening the panel and
+looking at it.
+
+The most instructive was a single line of CSS. `.nextup .ic { color: var(--accent) }`
+is a descendant selector, so it reached inside a primary button sitting in that
+container and painted its icon accent-on-accent — invisible. The button worked. The
+tests passed. The icon simply was not there.
+
+The second most instructive was structural. To fold the install form away after a
+successful install, the code *moved* the form node into a container it rendered — and
+that container was later cleared with `innerHTML = ""`. So an uninstall destroyed the
+form outright, `renderSetup()` threw on the next null reference, and because
+`render()` calls `renderPrompts()` straight afterwards, the Prompts tab kept stale
+contents too. Two unrelated-looking bug reports, one piece of DOM surgery.
+
+Both are now gates: a check that rejects any descendant `.ic` rule setting a colour
+(which found a further offender the moment it ran), and post-uninstall assertions that
+the served state is indistinguishable from never-installed.
+
+But the honest lesson is narrower than "add more gates". It is that **the gates cover
+the failures we have already had**. The suite grew from 61 to 99 assertions across
+this release, and every single addition was written *after* a human said "this looks
+wrong". A test suite is a memory, not an imagination — so the visual pass is not a
+formality to be automated away, it is the only step that can find something nobody has
+thought of yet.

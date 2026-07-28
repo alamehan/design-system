@@ -82,8 +82,11 @@ const STATE = {
   adoption: {
     org: { repos: 7, devs: 14, installs: 9, updates: 23, uninstalls: 1, requests: 5, behind: 2, current: 5,
            byLevel: { "0": 4, "1": 3 }, byVersion: { "3.2.0": 2, "3.3.0": 5 } },
-    repo: FRESH ? { install: 0, update: 0, uninstall: 0, request: 0, rollback: 0, adopt: 0 }
+    repo: FRESH ? { install: 2, update: 4, uninstall: 1, request: 1, rollback: 1, adopt: 0 }
                 : { install: 1, update: 3, uninstall: 0, request: 1, rollback: 1, adopt: 0 },
+    mine: FRESH ? { install: 1, update: 2, uninstall: 1, request: 0, rollback: 0, adopt: 0 }
+                : { install: 1, update: 2, uninstall: 0, request: 1, rollback: 0, adopt: 0 },
+    hasActor: true, configured: true,
     generatedAt: "2026-07-28T02:00:00.000Z", reportVersion: meta.version,
   },
   locked: { install: false, revert: false, update: false, rollback: false, legacy: false, panel: false },
@@ -106,7 +109,7 @@ const banner = `
   font:600 12px/1.4 Fustat,system-ui,sans-serif;padding:9px 16px;display:flex;gap:10px;align-items:center;
   box-shadow:0 1px 6px rgba(0,0,0,.25)">
   <span style="background:#f59e0b;color:#111827;border-radius:100px;padding:1px 8px;font-size:10.5px;letter-spacing:.05em">PREVIEW</span>
-  <span>${FRESH ? "NOT-INSTALLED state \u2014 the tour must never point at a hidden element. " : ""}Real panel v${meta.wizardVersion} UI \u2014 canned data, no server. The tour opens on load. Check: welcome card, hover the blue buttons, Docs \u2192 open a file \u2192 sticky \u00d7, About \u2192 @alamehan link + Contact.</span>
+  <span>${FRESH ? "NOT-INSTALLED / post-uninstall state \u2014 Setup must show its form, Prompts must be empty, the tour must never point at a hidden element. " : ""}Real panel v${meta.wizardVersion} UI \u2014 canned data, no server. The tour opens on load. Check: welcome card, hover the blue buttons, Docs \u2192 open a file \u2192 sticky \u00d7, About \u2192 @alamehan link + Contact.</span>
   <button onclick="document.getElementById('pv-banner').remove()"
     style="margin-left:auto;background:none;border:1px solid #4b5563;color:#d1d5db;border-radius:5px;
     padding:2px 9px;font:inherit;cursor:pointer">dismiss</button>
