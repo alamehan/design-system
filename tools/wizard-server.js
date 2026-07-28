@@ -170,6 +170,34 @@ function maintainerEmail() { return process.env.DS_DESIGNER_EMAIL || (dsMeta().m
 
 /* The motion explainer is optional. Report only what is really on disk so the
    welcome step can show a placeholder instead of a broken player. */
+/* Adoption statistics.
+ *
+ * Two honest scopes, never mixed:
+ *   - "org"  : totals from design-system/.release/adoption.json, produced by
+ *              adoption-report.js reading COMMITTED .ds/manifest.json files
+ *              across the configured repos. No telemetry, no network call here.
+ *   - "repo" : event counts from this repository's own .ds/history.jsonl.
+ *
+ * If the report has never been generated, org is null and the panel says so
+ * rather than showing a zero that looks like real data. */
+function adoptionStats() {
+  const local = { install: 0, update: 0, uninstall: 0, request: 0, rollback: 0, adopt: 0 };
+  for (const h of loadHistory()) {
+    if (h.event === "install") local.install++;
+    else if (h.event === "update") local.update++;
+    else if (h.event === "revert") local.uninstall++;
+    else if (h.event === "change-request") local.request++;
+    else if (h.event === "rollback") local.rollback++;
+    else if (h.event === "adopt") local.adopt++;
+  }
+  let org = null, generatedAt = null, reportVersion = null;
+  try {
+    const raw = JSON.parse(fs.readFileSync(abs(path.join(SUBMODULE_DIR, ".release", "adoption.json")), "utf8"));
+    if (raw && raw.totals) { org = raw.totals; generatedAt = raw.generatedAt || null; reportVersion = raw.dsVersion || null; }
+  } catch { /* never generated, or no submodule yet */ }
+  return { repo: local, org: org, generatedAt: generatedAt, reportVersion: reportVersion };
+}
+
 function explainerInfo() {
   const ex = dsMeta().explainer || {};
   const base = abs(SUBMODULE_DIR);
@@ -393,6 +421,7 @@ function detectState() {
     maintainerEmail: maintainerEmail(),
     maintainer: dsMeta().maintainer || null,
     explainer: explainerInfo(),
+    adoption: adoptionStats(),
     subRegistered, subPopulated, subCommit, level,
     level1tw, level1css, halfWired: installed && (level1tw !== level1css),
     nuxtConfig: nx, hasTailwindConfig: tw != null,

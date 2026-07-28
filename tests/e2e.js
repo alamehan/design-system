@@ -314,7 +314,24 @@ async function api(p, data) {
     ok(/id=\\?"i-circle-check\\?"/.test(bundle), "Lucide sprite embedded");
     const uiOnly = bundle.slice(bundle.indexOf("const UI_HTML"));
     ok(!/[\u{1F300}-\u{1FAFF}]/u.test(uiOnly), "zero emoji in the shipped UI");
-    ok(bundle.length < 300 * 1024, "bundle under 300 KB (" + (bundle.length / 1024).toFixed(0) + " KB)");
+    /* Budget raised once, deliberately, in v3.3.0: the 15-step bilingual tour,
+       adoption reporting, the markdown renderer and the embedded Fustat/DM Mono
+       payload are all real content, and every genuinely wasteful byte was already
+       removed (unused icons dropped, bundle CSS minified, dictionary compacted).
+       This number is a tripwire against accidental bloat - someone vendoring a
+       library - not a target to nudge upward each release. If it fails, look for
+       waste first and only then argue for a new number. */
+    const BUDGET_KB = 320;
+    ok(bundle.length < BUDGET_KB * 1024,
+      "bundle under " + BUDGET_KB + " KB (" + (bundle.length / 1024).toFixed(0) + " KB)");
+
+    /* The embedded payloads must actually be present. A bundle that merely LOOKS
+       right is how a fontless panel shipped during this cycle: the CSS minifier
+       treated the /* @FONTS@ *​/ placeholder as a comment and deleted it, so the
+       "unreplaced placeholder" guard had nothing left to find. */
+    ok((bundle.match(/@font-face/g) || []).length >= 2, "both @font-face rules survive into the bundle");
+    ok(/url\(data:font\/woff2;base64,[A-Za-z0-9+/=]{500,}\)/.test(bundle), "woff2 payload is embedded, not referenced");
+    ok(bundle.includes("Fustat") && bundle.includes("DM Mono"), "both typefaces are named in the bundle");
   } catch (e) {
     fail++;
     console.log("  FAIL threw: " + (e && e.stack || e));

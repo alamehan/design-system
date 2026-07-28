@@ -122,6 +122,9 @@ a markdown file cannot stop a commit. Every lesson here is now mechanical:
 | The panel must survive its own full lifecycle | `tests/e2e.js`, 84 assertions |
 | Uninstall must be exact and non-destructive | `.ds/manifest.json` + `.ds/.trash/` |
 | A button variant must never lose its own hover contrast | `tests/e2e.js` CSS invariant |
+| Embedded payloads must really be in the bundle | `buildGuard()` in `build-wizard.js` + `tests/e2e.js` |
+| The ID and EN dictionaries must not disagree | `build-wizard.js`, at build time |
+| The bundle must not silently bloat | `tests/e2e.js` budget tripwire |
 
 The last row is a small bug with a useful shape: a generic `:hover` rule set the
 background of *every* button, while the primary variant overrode only `filter`. White
@@ -133,3 +136,26 @@ return.
 
 **A programmatic check is still not a visual verdict** (law #1 stands). But a visual
 verdict given against a lying artifact is worth nothing, so the gates come first.
+
+### A postscript, from the same cycle
+
+Two more silent failures turned up while polishing the panel, and both are worth
+recording because they rhyme with everything above.
+
+**The tour pointed at nothing.** Its second step spotlighted the Home hero, but the panel
+opens on Setup whenever the design system is not installed. No step declared which page it
+belonged to, so the tour measured a hidden element, got a zero-sized rectangle, and drew
+its card in the corner beside an invisible hole. It never threw. It looked, to code, like a
+tour that worked. It took a human opening the panel and saying "this one is nonsense".
+
+**Adding CSS minification deleted the fonts.** The minifier strips comments; the font
+payload's placeholder *was* a comment. So `/* @FONTS@ */` vanished, the substitution
+matched nothing, and the bundle shipped with zero `@font-face` rules. The existing guard
+looked for placeholders that were **left behind** — it had nothing to say about one that had
+been **removed**. Same font, same layer, same class of failure as #4 above, one release
+later, through a completely different door.
+
+The lesson is not "check for fonts". It is that a guard which asserts *the absence of a
+marker* is weaker than one which asserts *the presence of the payload*. `buildGuard()` now
+does the latter, and `tests/e2e.js` repeats the check independently, because a build script
+that verifies its own output is one bug away from verifying nothing.

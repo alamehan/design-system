@@ -214,26 +214,66 @@ function go(page) {
   if (page === "about") renderAbout();
 }
 
-/* -------------------------------------------------------------- modal */
-var mOnClose = null;
-function modal(opts) {
+/* -------------------------------------------------------------- modal
+ * Modals form a stack. Opening a detail view from inside another modal (the
+ * eye button on a plan step, for instance) pushes onto it, and a Back button
+ * appears automatically. Before v3.3.0 the detail view simply replaced the
+ * plan, so the only way out was Close — which threw away the plan the user was
+ * halfway through reading. */
+var mStack = [];
+
+function renderModal(opts) {
   $("mTitle").textContent = opts.title || "";
   $("mDesc").textContent = opts.desc || "";
   $("mBody").innerHTML = opts.body || "";
   $("modal").classList.toggle("wide", !!opts.wide);
+
   var f = $("mFoot"); f.innerHTML = "";
+  if (mStack.length > 1) {
+    var back = el("button", "btn ghost mback", icon("chevron-left") + "<span>" + esc(t("act.back")) + "</span>");
+    back.onclick = modalBack;
+    f.appendChild(back);
+    f.appendChild(el("span", "mspacer"));
+  }
   (opts.buttons || []).forEach(function (b) {
     var btn = el("button", "btn " + (b.kind || ""), (b.icon ? icon(b.icon) : "") + "<span>" + esc(b.label) + "</span>");
-    btn.onclick = function () { if (b.keepOpen !== true) closeModal(); if (b.onClick) b.onClick(); };
+    btn.onclick = function () {
+      if (b.keepOpen === true) { if (b.onClick) b.onClick(); return; }
+      if (b.back === true) { modalBack(); if (b.onClick) b.onClick(); return; }
+      closeModal();
+      if (b.onClick) b.onClick();
+    };
     f.appendChild(btn);
   });
+
   $("scrim").classList.add("on");
-  mOnClose = opts.onClose || null;
   if (opts.after) opts.after();
-  var first = $("mFoot").querySelector("button.primary") || $("mFoot").querySelector("button");
+  var first = f.querySelector("button.primary") || f.querySelector("button:not(.mback)") || f.querySelector("button");
   if (first) first.focus();
 }
-function closeModal() { $("scrim").classList.remove("on"); if (mOnClose) { var f = mOnClose; mOnClose = null; f(); } }
+
+/* open a modal, replacing the stack */
+function modal(opts) { mStack = [opts]; renderModal(opts); }
+/* open a modal on top of the current one, keeping a way back */
+function modalPush(opts) { mStack.push(opts); renderModal(opts); }
+function modalBack() {
+  if (mStack.length < 2) return closeModal();
+  mStack.pop();
+  var prev = mStack[mStack.length - 1];
+  renderModal(prev);
+  if (prev.onReturn) prev.onReturn();
+}
+function closeModal() {
+  $("scrim").classList.remove("on");
+  var top = mStack[mStack.length - 1];
+  mStack = [];
+  if (top && top.onClose) top.onClose();
+}
+/* replace what is on top without losing what is underneath it */
+function modalSwap(opts) {
+  if (mStack.length) mStack[mStack.length - 1] = opts; else mStack = [opts];
+  renderModal(opts);
+}
 
 /* ----------------------------------------------------------- progress */
 function withProgress(progId, promise) {
@@ -293,7 +333,7 @@ function showPlan(opts) {
     h += '<div class="nt rest"><b>' + icon("info") + esc(t("plan.remains")) + "</b><ul>" +
          plan.remains.map(function (x) { return "<li>" + esc(tx(x)) + "</li>"; }).join("") + "</ul></div>";
   }
-  modal({
+  (opts.nested ? modalPush : modal)({
     title: opts.title || t("plan.title"),
     desc: opts.desc || t("plan.lead"),
     body: h, wide: true,
@@ -306,12 +346,17 @@ function showPlan(opts) {
       for (var i = 0; i < peeks.length; i++) {
         peeks[i].onclick = function () {
           var f = this.getAttribute("data-peek"), line = this.getAttribute("data-line");
-          if (!f) { modal({ title: t("plan.preview"), body: '<pre class="block">' + esc(line) + "</pre>", buttons: [{ label: t("act.close"), kind: "ghost" }] }); return; }
+          if (!f) {
+            modalPush({ title: t("plan.preview"), body: '<pre class="block">' + esc(line) + "</pre>",
+              buttons: [{ label: t("act.close"), kind: "ghost" }] });
+            return;
+          }
+          modalPush({ title: f, desc: t("plan.preview"), wide: true, body: '<div class="empty">' + icon("loader") + "\u2026</div>", buttons: [] });
           api("/api/payload", { file: f }).then(function (r) {
-            modal({
+            modalSwap({
               title: f, desc: t("plan.preview"), wide: true,
               body: /\.md$/.test(f) ? mdBlock(r.content || r.error || "") : '<pre class="block">' + esc(r.content || r.error || "") + "</pre>",
-              buttons: [{ label: t("act.copy"), icon: "copy", keepOpen: true, onClick: function () { copy(r.content || ""); } }, { label: t("act.close"), kind: "ghost" }],
+              buttons: [{ label: t("act.copy"), icon: "copy", keepOpen: true, onClick: function () { copy(r.content || ""); } }],
             });
           });
         };
@@ -416,6 +461,8 @@ function renderHome() {
   row(t("home.managed"), S.manifest ? S.manifest.managed.length + " " + t("home.files") : null);
   h += '</dl><div class="note">' + icon("info") + "<span>" + esc(t("home.stack.note")) + "</span></div></div></div>";
 
+  h += adoptionCard();
+
   var man = (S.manifest && S.manifest.managed) || [];
   if (man.length) {
     h += '<details class="fold card"><summary>' + icon("file-text", "chev") + "<span>" + esc(t("home.managed")) +
@@ -426,6 +473,58 @@ function renderHome() {
       '</span></summary><div class="body">' + mdBlock(o.changelogHead) + "</div></details>";
   }
   b.innerHTML = h;
+}
+
+/* Adoption counters.
+ *
+ * Two scopes, deliberately kept apart and labelled:
+ *   ORG  — totals from design-system/.release/adoption.json, produced by
+ *          adoption-report.js reading COMMITTED receipts across the configured
+ *          repos. This is the number a PM wants.
+ *   REPO — what happened in THIS repository, from its own history log.
+ *
+ * Nothing here is telemetry: the panel makes no network call, and if the report
+ * has never been generated the card says so instead of showing a zero that
+ * would read as "nobody adopted it". */
+function adoptionCard() {
+  var a = (S && S.adoption) || {};
+  var org = a.org, rep = a.repo || {};
+
+  function cell(v, label, ic, warn) {
+    return '<div><div class="av2' + (warn ? " warn2" : "") + '">' + esc(v == null ? "\u2014" : v) + "</div>" +
+      '<div class="al">' + icon(ic) + "<span>" + esc(label) + "</span></div></div>";
+  }
+
+  var h = '<div class="card" data-tour="adoption"><div class="body"><h2>' + icon("activity") + esc(t("adopt.title")) + "</h2>";
+
+  if (org) {
+    h += '<p class="hint">' + esc(t("adopt.org.hint")) + "</p>" +
+      '<div class="adopt">' +
+      cell(org.repos, t("adopt.repos"), "git-branch") +
+      cell(org.installs, t("adopt.installs"), "download") +
+      cell(org.updates, t("adopt.updates"), "arrow-up-circle") +
+      cell(org.uninstalls, t("adopt.uninstalls"), "trash-2") +
+      cell(org.devs, t("adopt.devs"), "user-round") +
+      cell(org.requests, t("adopt.requests"), "mail") +
+      cell(org.current, t("adopt.current"), "circle-check") +
+      cell(org.behind, t("adopt.behind"), "clock", org.behind > 0) +
+      "</div>";
+    if (a.generatedAt) h += '<div class="note">' + icon("clock") + "<span>" +
+      esc(t("adopt.generated") + " " + fmtDate(a.generatedAt) + (a.reportVersion ? " \u00b7 v" + a.reportVersion : "")) + "</span></div>";
+  } else {
+    h += '<div class="callout" style="margin-bottom:0">' + icon("info") + "<div><b>" + esc(t("adopt.none.t")) + "</b><br>" +
+      esc(t("adopt.none.d")) + ' <code>node design-system/src/scripts/adoption-report.js</code></div></div>';
+  }
+
+  h += '<h2 style="margin:20px 0 12px">' + icon("git-commit-horizontal") + esc(t("adopt.repo.title")) + "</h2>" +
+    '<p class="hint">' + esc(t("adopt.repo.hint")) + "</p>" +
+    '<div class="adopt">' +
+    cell(rep.install || 0, t("adopt.installs"), "download") +
+    cell(rep.update || 0, t("adopt.updates"), "arrow-up-circle") +
+    cell(rep.rollback || 0, t("adopt.rollbacks"), "rotate-ccw") +
+    cell(rep.request || 0, t("adopt.requests"), "mail") +
+    "</div></div></div>";
+  return h;
 }
 
 function managedTable(man) {
@@ -628,10 +727,9 @@ function showImpact() {
       return '<tr><td class="mono">' + esc(f.file) + "</td><td>" + esc(f.hits) + "</td></tr>";
     }), ["file", "hits"]);
     $("btnDoUpdate").onclick = function () {
-      closeModal();
       api("/api/update-plan", {}).then(function (plan) {
         if (plan.error) return toast(tx(plan.error), true);
-        showPlan({ plan: plan, title: t("ver.update"), onConfirm: function () {
+        showPlan({ plan: plan, nested: true, title: t("ver.update"), onConfirm: function () {
           withProgress("verProg", api("/api/update", { commit: false })).then(function (res) {
             if (res.error) return toast(tx(res.error), true);
             renderLog($("verLog"), res); refresh();
@@ -654,19 +752,21 @@ function showDiff(path) {
     }).join("\n");
     $("mBody").innerHTML = '<div class="callout">' + icon("info") + "<div>" + esc(t("diff.restoreNote")) + " " + esc(r.wizardVersion || "") + ". " + esc(t("diff.backupNote")) + "</div></div>" +
       '<pre class="block diff">' + (lines || "\u2014") + "</pre>";
-    $("mFoot").innerHTML = "";
-    [{ l: t("act.restore"), k: "", f: function () { closeModal(); doRestore(path); } },
-     { l: t("act.sendDesigner"), k: "primary", f: function () { closeModal(); changeRequest(path); } },
-     { l: t("act.close"), k: "ghost", f: closeModal }].forEach(function (b) {
-      var btn = el("button", "btn " + b.k, esc(b.l)); btn.onclick = b.f; $("mFoot").appendChild(btn);
+    modalSwap({
+      title: path, desc: t("diff.title"), wide: true, body: $("mBody").innerHTML,
+      buttons: [
+        { label: t("act.restore"), icon: "rotate-ccw", keepOpen: true, onClick: function () { doRestore(path, true); } },
+        { label: t("act.sendDesigner"), kind: "primary", icon: "mail", keepOpen: true, onClick: function () { changeRequest(path, true); } },
+        { label: t("act.close"), kind: "ghost" },
+      ],
     });
   });
 }
 
-function doRestore(path) {
+function doRestore(path, nested) {
   api("/api/restore-plan", { file: path }).then(function (plan) {
     if (plan.error) return toast(tx(plan.error), true);
-    showPlan({ plan: plan, title: t("act.restore") + " \u2014 " + path, onConfirm: function () {
+    showPlan({ plan: plan, nested: nested, title: t("act.restore") + " \u2014 " + path, onConfirm: function () {
       api("/api/restore", { file: path }).then(function (r) {
         if (r.error) return toast(tx(r.error), true);
         toast(t("log.done")); refresh();
@@ -675,8 +775,8 @@ function doRestore(path) {
   });
 }
 
-function changeRequest(path) {
-  modal({
+function changeRequest(path, nested) {
+  (nested ? modalPush : modal)({
     title: t("cr.title"), desc: t("cr.lead"),
     body: '<label class="field" style="margin-top:0"><span>' + esc(t("cr.reason")) + '</span><textarea id="crReason" placeholder="' + esc(t("cr.reason.ph")) + '"></textarea></label>',
     buttons: [
@@ -868,12 +968,73 @@ function renderPrompts() {
 }
 
 /* =============================================================== SETUP */
+/* A compact side-by-side so nobody has to guess what a level actually costs. */
+function levelCompare(active) {
+  function box(n, cls, items) {
+    return '<div class="' + (active === n ? "now " : "") + cls + '"><div class="lh">' + esc(t("setup.level" + n + ".short")) +
+      '<span class="tag">' + esc(t("setup.level" + n + ".tag")) + "</span></div><ul>" +
+      items.map(function (k) { return "<li>" + t(k) + "</li>"; }).join("") + "</ul></div>";
+  }
+  return '<div class="lvlcmp">' +
+    box("0", "", ["setup.cmp0.a", "setup.cmp0.b", "setup.cmp0.c", "setup.cmp0.d"]) +
+    box("1", "", ["setup.cmp1.a", "setup.cmp1.b", "setup.cmp1.c", "setup.cmp1.d"]) +
+    "</div>";
+}
+
 function renderSetup() {
   if (!S) return;
   $("repoUrl").value = $("repoUrl").value || S.defaultRepoUrl || "";
   var installed = S.level !== "not-installed";
-  $("alreadyBanner").style.display = installed ? "flex" : "none";
   $("btnProcess").querySelector("span").textContent = installed ? t("setup.recheck") : t("setup.process");
+
+  var sel = (document.querySelector("input[name=lv]:checked") || {}).value || "0";
+  $("lvlCompare").innerHTML = levelCompare(installed ? String(S.level) : sel);
+
+  /* ---- installed: the page becomes a receipt, not a form ---- */
+  var done = $("setupDone");
+  if (!installed) {
+    done.innerHTML = "";
+    $("setupForm").style.display = "";
+  } else {
+    var man = (S.manifest && S.manifest.managed) || [];
+    var mf = S.manifest || {};
+    var h = '<div class="donecard"><div class="dh">' + icon("circle-check", "ic-lg") + "<b>" + esc(t("setup.done.title")) + "</b></div>" +
+      '<div class="dsub">' + esc(t("setup.done.sub")) + '</div><dl class="props">' +
+      "<dt>" + esc(t("setup.done.level")) + "</dt><dd><b>" + esc(t("setup.level" + S.level + ".short")) + "</b> \u00b7 " + esc(t("setup.level" + S.level + ".tag")) + "</dd>" +
+      "<dt>" + esc(t("setup.done.version")) + "</dt><dd>v" + esc(mf.dsVersion || (OV && OV.version) || "?") + ' <span class="mono" style="color:var(--faint)">' + esc(mf.dsCommit || "") + "</span></dd>" +
+      "<dt>" + esc(t("setup.done.when")) + "</dt><dd>" + esc(mf.installedAt ? fmtDate(mf.installedAt) : "\u2014") + "</dd>" +
+      "<dt>" + esc(t("setup.done.files")) + "</dt><dd>" + man.length + " " + esc(t("home.files")) + "</dd></dl></div>";
+
+    /* the honest next step depends on where they are */
+    if (String(S.level) === "0") {
+      h += '<div class="nextup">' + icon("arrow-up-circle") + "<div><b>" + esc(t("setup.next.l1.t")) + "</b><p>" + esc(t("setup.next.l1.d")) +
+        '</p><div class="acts"><button class="btn primary" id="goL1">' + icon("arrow-up-circle") + "<span>" + esc(t("setup.next.l1.cta")) + "</span></button>" +
+        '<button class="btn ghost" id="goHealth2">' + icon("heart-pulse") + "<span>" + esc(t("nav.health")) + "</span></button></div></div></div>";
+    } else {
+      h += '<div class="nextup">' + icon("circle-check") + "<div><b>" + esc(t("setup.next.done.t")) + "</b><p>" + esc(t("setup.next.done.d")) +
+        '</p><div class="acts"><button class="btn" id="goHealth2">' + icon("heart-pulse") + "<span>" + esc(t("nav.health")) + "</span></button>" +
+        '<button class="btn ghost" id="goPrompts2">' + icon("library") + "<span>" + esc(t("nav.prompts")) + "</span></button></div></div></div>";
+    }
+
+    if (man.length) h += '<details class="fold card"><summary>' + icon("shield-check", "chev") + "<span>" + esc(t("setup.done.written")) +
+      '</span><span class="count">' + man.length + '</span></summary><div class="body">' + managedTable(man) + "</div></details>";
+
+    h += '<details class="fold card" id="reinstallFold"><summary>' + icon("settings", "chev") + "<span>" + esc(t("setup.reinstall")) +
+      '</span></summary><div class="body"><p class="hint">' + esc(t("setup.reinstall.hint")) + '</p><div id="formSlot"></div></div></details>';
+
+    done.innerHTML = h;
+    /* move the real form inside the fold rather than duplicating it */
+    $("formSlot").appendChild($("setupForm"));
+    $("setupForm").style.display = "";
+    if ($("goL1")) $("goL1").onclick = function () {
+      $("reinstallFold").open = true;
+      var l1 = document.querySelector('#levels label[data-v="1"]');
+      if (l1) l1.click();
+      $("reinstallFold").scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+    if ($("goHealth2")) $("goHealth2").onclick = function () { go("health"); };
+    if ($("goPrompts2")) $("goPrompts2").onclick = function () { go("prompts"); };
+  }
 
   var lg = S.legacy || {};
   if (lg.found && lg.items && lg.items.length) {
@@ -896,85 +1057,141 @@ function renderSetup() {
   } else ask.style.display = "none";
 }
 
-/* ===================================================== GUIDED TOUR */
+/* ===================================================== GUIDED TOUR
+ * Each step names the page it belongs to, so the tour navigates there before it
+ * measures anything. In v3.3.0 the "hero" step had no page: when the panel
+ * opened on Setup (which it does whenever the design system is not installed
+ * yet), the tour tried to spotlight a hidden element, got a zero-sized rect, and
+ * parked its card in the top-left corner pointing at nothing.
+ *
+ * Two guards now make that impossible:
+ *   - every non-centred step declares `page`
+ *   - visibleNode() refuses an element that is hidden or zero-sized, falling
+ *     back to the pill-navigation button for that destination, and skipping the
+ *     step only if even that is gone.
+ */
 var TOUR = [
-  { welcome: true, k: "tour.welcome" },
-  { sel: '[data-tour="hero"]', k: "tour.hero" },
-  { sel: '[data-tour="nav"]', k: "tour.nav" },
-  { sel: '[data-tour="stats"]', k: "tour.stats", page: "home", optional: true },
-  { sel: '[data-tour="level"]', k: "tour.level", page: "setup" },
-  { sel: '[data-tour="process"]', k: "tour.process", page: "setup" },
-  { sel: '[data-tour="drift"]', k: "tour.drift", page: "health", optional: true },
-  { sel: '[data-tour="lang"]', k: "tour.lang" },
+  { centre: "welcome", k: "tour.welcome" },
+  { page: "home", sel: '[data-tour="nav"]', k: "tour.nav" },
+  { page: "home", sel: '[data-tour="hero"]', k: "tour.hero" },
+  { page: "home", sel: '[data-tour="stats"]', fb: '.navb[data-nav="home"]', k: "tour.stats", needs: "installed" },
+  { page: "home", sel: '[data-tour="adoption"]', fb: '.navb[data-nav="home"]', k: "tour.adoption", needs: "installed" },
+  { page: "setup", sel: '[data-tour="level"]', fb: '.navb[data-nav="setup"]', k: "tour.level" },
+  { page: "setup", sel: '[data-tour="process"]', fb: '.navb[data-nav="setup"]', k: "tour.process" },
+  { page: "health", sel: '[data-tour="p-health"]', fb: '.navb[data-nav="health"]', k: "tour.health" },
+  { page: "versions", sel: '[data-tour="p-versions"]', fb: '.navb[data-nav="versions"]', k: "tour.versions" },
+  { page: "prompts", sel: '[data-tour="p-prompts"]', fb: '.navb[data-nav="prompts"]', k: "tour.prompts" },
+  { page: "docs", sel: '[data-tour="p-docs"]', fb: '.navb[data-nav="docs"]', k: "tour.docs" },
+  { page: "about", sel: '[data-tour="p-about"]', fb: '.navb[data-nav="about"]', k: "tour.about" },
+  { page: "home", sel: '[data-tour="lang"]', k: "tour.lang" },
+  { page: "home", sel: '[data-tour="more"]', k: "tour.more" },
+  { centre: "finish", k: "tour.finish" },
 ];
-var tourAt = 0, tourSteps = [];
+var tourAt = 0, tourSteps = [], tourFrom = "home";
+
+function visibleNode(step) {
+  var cands = [step.sel, step.fb];
+  for (var i = 0; i < cands.length; i++) {
+    if (!cands[i]) continue;
+    var n = document.querySelector(cands[i]);
+    if (!n) continue;
+    var r = n.getBoundingClientRect();
+    if (n.offsetParent !== null && r.width > 2 && r.height > 2) return n;
+  }
+  return null;
+}
 
 function startTour() {
   closeMore();
-  tourSteps = TOUR.filter(function (s) { return s.welcome || !s.optional || document.querySelector(s.sel) || s.page; });
+  var installed = S && S.level !== "not-installed";
+  tourSteps = TOUR.filter(function (x) { return !(x.needs === "installed" && !installed); });
   tourAt = 0;
+  tourFrom = PAGE;
   $("tourScrim").classList.add("on");
   tourShow();
 }
+
 function endTour() {
   var v = $("tourCard").querySelector("video");
   if (v) { try { v.pause(); } catch (e) {} }
   $("tourScrim").classList.remove("on");
   $("tourCard").classList.remove("centered");
   localStorage.setItem("dsTourSeen", "1");
-}
-function tourShow() {
-  var st = tourSteps[tourAt];
-  if (!st) return endTour();
-  if (st.welcome) return tourWelcome(st);
-  if (st.page && PAGE !== st.page) go(st.page);
-  setTimeout(function () {
-    var node = document.querySelector(st.sel);
-    if (!node) { if (tourAt < tourSteps.length - 1) { tourAt++; return tourShow(); } return endTour(); }
-    node.scrollIntoView({ behavior: "smooth", block: "center" });
-    setTimeout(function () { tourPlace(node, st); }, 260);
-  }, st.page && PAGE !== st.page ? 90 : 0);
-}
-/* The opening step is a centred card rather than a spotlight: there is nothing
-   to point at yet, and the explainer is the point. If the video file is not in
-   the design system repo, the frame degrades to an honest placeholder instead of
-   a broken player. */
-function tourWelcome(st) {
-  var hole = $("tourHole"), card = $("tourCard");
-  hole.style.width = "0px"; hole.style.height = "0px";
-  hole.style.left = "50%"; hole.style.top = "50%";
-
-  var ex = (S && S.explainer) || {};
-  var frame;
-  if (ex.video) {
-    frame = '<video class="tvid" controls preload="metadata" playsinline' +
-      (ex.poster ? ' poster="/ds/' + ex.poster.split("/").map(encodeURIComponent).join("/") + '"' : "") +
-      '><source src="/ds/' + ex.video.split("/").map(encodeURIComponent).join("/") + '"></video>';
-  } else {
-    frame = '<div class="tvid tvid-soon">' + icon("play", "ic-xl") +
-      "<b>" + esc(t("tour.video.soon")) + "</b><span>" + esc(t("tour.video.soon.d")) + "</span></div>";
-  }
-
-  card.innerHTML = '<div class="twelcome">' +
-    '<div class="tbanner">' + icon("lightbulb") + "<span>" + esc(t("tour.video.banner")) + "</span>" +
-      (ex.length ? '<b>' + esc(ex.length) + "</b>" : "") + "</div>" +
-    frame +
-    '<div class="twrap"><div class="tstep">' + esc(t("tour.step")) + " " + (tourAt + 1) + "/" + tourSteps.length + "</div>" +
-    "<h4>" + esc(t(st.k + ".t")) + "</h4><p>" + esc(t(st.k + ".d")) + "</p>" +
-    '<div class="tf"><div class="tour-dots">' + tourDots() + '</div><span class="sp"></span>' +
-    '<button class="btn ghost" id="tSkip">' + esc(t("tour.skip")) + "</button>" +
-    '<button class="btn primary" id="tNext">' + esc(t("tour.begin")) + "</button></div></div></div>";
-
-  card.classList.add("centered");
-  card.style.left = ""; card.style.top = "";
-  $("tSkip").onclick = endTour;
-  $("tNext").onclick = function () { tourAt++; tourShow(); };
+  if (tourFrom && tourFrom !== PAGE) go(tourFrom);
 }
 
 function tourDots() {
   var d = "";
   for (var i = 0; i < tourSteps.length; i++) d += '<i class="' + (i === tourAt ? "on" : "") + '"></i>';
   return d;
+}
+
+function tourNav(extra) {
+  return '<div class="tf"><div class="tour-dots">' + tourDots() + '</div><span class="sp"></span>' +
+    '<button class="btn ghost" id="tSkip">' + esc(t("tour.skip")) + "</button>" +
+    (tourAt > 0 ? '<button class="btn" id="tPrev">' + esc(t("tour.back")) + "</button>" : "") +
+    '<button class="btn primary" id="tNext">' + esc(extra || (tourAt === tourSteps.length - 1 ? t("tour.done") : t("tour.next"))) + "</button></div>";
+}
+
+function tourBind(last) {
+  $("tSkip").onclick = endTour;
+  $("tNext").onclick = function () { if (last) return endTour(); tourAt++; tourShow(); };
+  if ($("tPrev")) $("tPrev").onclick = function () { tourAt--; tourShow(); };
+}
+
+function tourShow() {
+  var st = tourSteps[tourAt];
+  if (!st) return endTour();
+  if (st.centre) return tourCentre(st);
+
+  var needsNav = st.page && PAGE !== st.page;
+  if (needsNav) go(st.page);
+  setTimeout(function () {
+    var node = visibleNode(st);
+    if (!node) {
+      /* nothing to point at: move on rather than spotlighting a void */
+      if (tourAt < tourSteps.length - 1) { tourAt++; return tourShow(); }
+      return endTour();
+    }
+    node.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(function () { tourPlace(node, st); }, 250);
+  }, needsNav ? 110 : 0);
+}
+
+/* Centred cards: the opening welcome (which can play the explainer) and the
+   closing summary. Nothing to point at, so nothing is spotlighted. */
+function tourCentre(st) {
+  var hole = $("tourHole"), card = $("tourCard");
+  hole.style.width = "0px"; hole.style.height = "0px";
+  hole.style.left = "50%"; hole.style.top = "50%";
+  card.classList.add("centered");
+  card.style.left = ""; card.style.top = "";
+
+  var last = tourAt === tourSteps.length - 1;
+  var head = "", body = "";
+
+  if (st.centre === "welcome") {
+    var ex = (S && S.explainer) || {};
+    head = '<div class="tbanner">' + icon("lightbulb") + "<span>" + esc(t("tour.video.banner")) + "</span>" +
+      (ex.length ? "<b>" + esc(ex.length) + "</b>" : "") + "</div>";
+    if (ex.video) {
+      head += '<video class="tvid" controls preload="metadata" playsinline' +
+        (ex.poster ? ' poster="/ds/' + ex.poster.split("/").map(encodeURIComponent).join("/") + '"' : "") +
+        '><source src="/ds/' + ex.video.split("/").map(encodeURIComponent).join("/") + '"></video>';
+    } else {
+      head += '<div class="tvid tvid-soon">' + icon("play", "ic-xl") +
+        "<b>" + esc(t("tour.video.soon")) + "</b><span>" + esc(t("tour.video.soon.d")) + "</span></div>";
+    }
+  } else {
+    head = '<div class="tbanner ok">' + icon("circle-check") + "<span>" + esc(t("tour.finish.banner")) + "</span></div>";
+    body = '<ul class="tlist"><li>' + t("tour.finish.a") + "</li><li>" + t("tour.finish.b") + "</li><li>" + t("tour.finish.c") + "</li></ul>";
+  }
+
+  card.innerHTML = '<div class="twelcome">' + head +
+    '<div class="twrap"><div class="tstep">' + esc(t("tour.step")) + " " + (tourAt + 1) + "/" + tourSteps.length + "</div>" +
+    "<h4>" + esc(t(st.k + ".t")) + "</h4><p>" + esc(t(st.k + ".d")) + "</p>" + body +
+    tourNav(st.centre === "welcome" ? t("tour.begin") : t("tour.done")) + "</div></div>";
+  tourBind(last);
 }
 
 function tourPlace(node, st) {
@@ -986,24 +1203,16 @@ function tourPlace(node, st) {
   hole.style.width = (r.width + pad * 2) + "px";
   hole.style.height = (r.height + pad * 2) + "px";
 
-  var dots = tourDots();
   card.innerHTML = '<div class="tstep">' + esc(t("tour.step")) + " " + (tourAt + 1) + "/" + tourSteps.length + "</div>" +
-    "<h4>" + esc(t(st.k + ".t")) + "</h4><p>" + esc(t(st.k + ".d")) + "</p>" +
-    '<div class="tf"><div class="tour-dots">' + dots + '</div><span class="sp"></span>' +
-    '<button class="btn ghost" id="tSkip">' + esc(t("tour.skip")) + "</button>" +
-    (tourAt > 0 ? '<button class="btn" id="tPrev">' + esc(t("tour.back")) + "</button>" : "") +
-    '<button class="btn primary" id="tNext">' + esc(tourAt === tourSteps.length - 1 ? t("tour.done") : t("tour.next")) + "</button></div>";
+    "<h4>" + esc(t(st.k + ".t")) + "</h4><p>" + esc(t(st.k + ".d")) + "</p>" + tourNav();
 
   var cw = Math.min(322, window.innerWidth - 32), ch = card.offsetHeight || 190;
   var below = r.bottom + 14, above = r.top - ch - 14;
-  var top = (below + ch < window.innerHeight - 90) ? below : (above > 12 ? above : Math.max(12, (window.innerHeight - ch) / 2));
+  var top = (below + ch < window.innerHeight - 96) ? below : (above > 12 ? above : Math.max(12, (window.innerHeight - ch) / 2));
   var left = Math.min(Math.max(12, r.left + r.width / 2 - cw / 2), window.innerWidth - cw - 12);
   card.style.top = top + "px";
   card.style.left = left + "px";
-
-  $("tSkip").onclick = endTour;
-  $("tNext").onclick = function () { if (tourAt === tourSteps.length - 1) return endTour(); tourAt++; tourShow(); };
-  if ($("tPrev")) $("tPrev").onclick = function () { tourAt--; tourShow(); };
+  tourBind(tourAt === tourSteps.length - 1);
 }
 
 /* ============================================================== state */
@@ -1033,6 +1242,7 @@ document.querySelectorAll("#levels label").forEach(function (l) {
     document.querySelectorAll("#levels label").forEach(function (x) { x.classList.remove("sel"); });
     l.classList.add("sel"); l.querySelector("input").checked = true;
     $("l1box").style.display = l.getAttribute("data-v") === "1" ? "block" : "none";
+    $("lvlCompare").innerHTML = levelCompare(l.getAttribute("data-v"));
   };
 });
 
@@ -1052,7 +1262,7 @@ document.addEventListener("keydown", function (e) {
   if (e.key !== "Escape") return;
   if ($("tourScrim").classList.contains("on")) return endTour();
   if ($("morePop").classList.contains("on")) return closeMore();
-  if ($("scrim").classList.contains("on")) return closeModal();
+  if ($("scrim").classList.contains("on")) return (mStack.length > 1 ? modalBack() : closeModal());
   if ($("docClose")) $("docClose").click();
 });
 window.addEventListener("resize", function () {

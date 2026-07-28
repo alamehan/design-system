@@ -200,9 +200,10 @@ it silently became the agent's idea of the token vocabulary.
 | Reference components | **27 files / 25 of 52 codes** | see §9 |
 | Reference stylesheets | **30** | token-pure, lint-enforced |
 | Tabler icons in the reference sprite | **15** | MIT, inlined per file |
-| Panel bundle | **278 KB**, one file, zero dependencies | `tools/ds-setup.cjs` |
-| Panel i18n keys | **196 × 2 locales** | `tools/dashboard/i18n.json` |
-| End-to-end assertions | **84** | `tests/e2e.js` |
+| Lucide icons in the panel sprite | **48** | ISC, all of them used |
+| Panel bundle | **301 KB**, one file, zero dependencies | `tools/ds-setup.cjs` |
+| Panel i18n keys | **266 × 2 locales** | `tools/dashboard/i18n.json` |
+| End-to-end assertions | **87** | `tests/e2e.js` |
 
 ---
 

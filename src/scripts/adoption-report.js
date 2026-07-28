@@ -163,7 +163,22 @@ function collect(name, url, man, hist) {
 
   fs.writeFileSync(path.join(DS, "ADOPTION.md"), md, "utf8");
   fs.mkdirSync(path.join(DS, ".release"), { recursive: true });
-  fs.writeFileSync(path.join(DS, ".release", "adoption.json"), JSON.stringify({ generatedAt: new Date().toISOString(), dsVersion: meVersion, rows }, null, 2) + "\n", "utf8");
+  /* The panel reads these totals straight from the committed file, so the
+     dashboard can show org-wide adoption without any telemetry. */
+  const totals = {
+    repos: rows.length,
+    devs: devs,
+    installs: installs,
+    updates: updates,
+    uninstalls: reverts,
+    requests: requests,
+    behind: stale.length,
+    current: rows.length - stale.length,
+    byLevel: byLevel,
+    byVersion: byVersion,
+  };
+  fs.writeFileSync(path.join(DS, ".release", "adoption.json"),
+    JSON.stringify({ generatedAt: new Date().toISOString(), dsVersion: meVersion, totals, rows }, null, 2) + "\n", "utf8");
 
   console.log("\n" + rows.length + " repo(s) \u00b7 " + devs + " dev(s) \u00b7 " + stale.length + " behind");
   console.log("\u2192 ADOPTION.md");
