@@ -4,7 +4,7 @@
 
 var I18N = /* @I18N@ */ {};
 var LANG = localStorage.getItem("dsLang") || "id";
-var THEME = localStorage.getItem("dsTheme") || "auto";
+var THEME = localStorage.getItem("dsTheme") || "light"; /* light by default; dark is opt-in */
 var S = null;          /* latest /api/state */
 var OV = null;         /* latest /api/overview */
 var UPD = null;        /* latest update check */
@@ -22,6 +22,12 @@ function t(k, vars) {
 /* server-side strings arrive as {id,en} pairs */
 function tx(v) { return v && typeof v === "object" ? (v[LANG] || v.id || v.en || "") : (v || ""); }
 function icon(name, cls) { return '<svg class="ic ' + (cls || "") + '"><use href="#i-' + name + '"/></svg>'; }
+function mailtoHref(email) {
+  return "mailto:" + email +
+    "?subject=" + encodeURIComponent("[Design System] " + (S && S.root ? S.root.split(/[\\/]/).pop() : "question")) +
+    "&body=" + encodeURIComponent("Hi Raihan,\n\n\n\n---\nDesign system: v" + ((OV && OV.version) || "?") +
+      "\nPanel: v" + ((S && S.wizardVersion) || "?") + "\nRepo: " + ((S && (S.originUrl || S.root)) || "?"));
+}
 function fmtDate(iso) { try { return new Date(iso).toLocaleString(LANG === "id" ? "id-ID" : "en-GB", { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return iso; } }
 
 function api(path, data) {
@@ -416,7 +422,7 @@ function renderHome() {
       '</span><span class="count">' + man.length + '</span></summary><div class="body">' + managedTable(man) + "</div></details>";
   }
   if (o.changelogHead) {
-    h += '<details class="fold card" open><summary>' + icon("sparkles", "chev") + "<span>" + esc(t("home.whatsnew")) + " v" + esc(o.version || "") +
+    h += '<details class="fold card"><summary>' + icon("sparkles", "chev") + "<span>" + esc(t("home.whatsnew")) + " v" + esc(o.version || "") +
       '</span></summary><div class="body">' + mdBlock(o.changelogHead) + "</div></details>";
   }
   b.innerHTML = h;
@@ -570,7 +576,7 @@ function renderVersions() {
     '<div class="prog" id="verProg"><div class="bar"><div class="fill"></div></div><div class="lbl"></div></div><div class="log" id="verLog"></div></div></div>';
 
   if (o.changelogHead) {
-    h += '<details class="fold card" open><summary>' + icon("history", "chev") + "<span>" + esc(t("ver.changelog")) + '</span></summary><div class="body">' + mdBlock(o.changelogHead) + "</div></details>";
+    h += '<details class="fold card"><summary>' + icon("history", "chev") + "<span>" + esc(t("ver.changelog")) + '</span></summary><div class="body">' + mdBlock(o.changelogHead) + "</div></details>";
   }
   b.innerHTML = h;
 
@@ -727,14 +733,33 @@ function renderDocs() {
   (OV.docs || []).forEach(function (f) { h += '<button data-doc="' + esc(f) + '">' + icon("file-text") + "<span>" + esc(f) + "</span></button>"; });
   h += "</div><div id="+'"docView"'+" style=\"margin-top:16px\"></div>";
   b.innerHTML = h;
+
+  var openDoc = null;
+  function closeDoc() {
+    openDoc = null;
+    $("docView").innerHTML = "";
+    var all = b.querySelectorAll("[data-doc]");
+    for (var k = 0; k < all.length; k++) all[k].classList.remove("sel");
+  }
+
   var bs = b.querySelectorAll("[data-doc]");
   for (var i = 0; i < bs.length; i++) (function (btn) {
     btn.onclick = function () {
       var f = btn.getAttribute("data-doc");
+      /* clicking the open document again closes it */
+      if (openDoc === f) return closeDoc();
+      openDoc = f;
+      var all = b.querySelectorAll("[data-doc]");
+      for (var k = 0; k < all.length; k++) all[k].classList.toggle("sel", all[k] === btn);
       var view = $("docView");
       view.innerHTML = '<div class="empty">' + icon("loader") + "\u2026</div>";
       fetch("/ds/" + f.split("/").map(encodeURIComponent).join("/")).then(function (r) { return r.text(); }).then(function (txt) {
-        view.innerHTML = '<div class="card"><div class="body"><h2>' + icon("file-text") + esc(f) + "</h2>" + mdBlock(txt, { full: true }) + "</div></div>";
+        if (openDoc !== f) return; /* the user moved on while it loaded */
+        view.innerHTML = '<div class="card docopen"><div class="dochead">' + icon("file-text") +
+          "<span>" + esc(f) + '</span><button class="docx" id="docClose" aria-label="' + esc(t("act.close")) + '" title="' + esc(t("act.close")) + '">' +
+          icon("x") + "</button></div>" +
+          '<div class="body">' + mdBlock(txt, { full: true }) + "</div></div>";
+        $("docClose").onclick = closeDoc;
         view.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     };
@@ -748,6 +773,9 @@ function renderAbout() {
   var name = m.name || "Raihan Allaam";
   var initials = name.split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
 
+  var handle = m.handle || "@alamehan";
+  var site = m.url || "https://alamehan.github.io/";
+
   var h = '<div class="layers" style="margin-bottom:20px">' +
     '<div class="layer"><span class="lb">Truth</span><span class="lt"><b>' + esc(t("about.truth")) + "</b><span>" + esc(t("about.truth.d")) + "</span></span></div>" +
     '<div class="layer"><span class="lb">Reference</span><span class="lt"><b>' + esc(t("about.ref")) + "</b><span>" + esc(t("about.ref.d")) + "</span></span></div>" +
@@ -756,11 +784,11 @@ function renderAbout() {
 
   h += '<div class="card"><div class="body"><h2>' + icon("user-round") + esc(t("about.author")) + "</h2>" +
     '<div class="author"><div class="av">' + esc(initials) + "</div><div>" +
-    '<div class="nm">' + esc(name) + ' <span style="color:var(--faint);font-weight:400">(@alamehan)</span></div>' +
+    '<div class="nm">' + esc(name) + ' <a class="handle" href="' + esc(site) + '" target="_blank" rel="noopener noreferrer" title="' + esc(site) + '">' + esc(handle) + "</a></div>" +
     '<div class="rl">' + esc(m.role || "UI/UX Designer, ITS Elabram") + "</div>" +
-    '<div class="lk"><a href="https://alamehan.github.io/" target="_blank" rel="noopener noreferrer">' + icon("globe") + "<span>alamehan.github.io</span></a>" +
-    (m.email ? '<a href="mailto:' + esc(m.email) + '">' + icon("mail") + "<span>" + esc(t("about.contact")) + "</span></a>" : "") +
-    "</div></div></div>" +
+    (m.email ? '<div class="lk"><a href="' + esc(mailtoHref(m.email)) + '">' + icon("mail") + "<span>" + esc(t("about.contact")) + "</span></a>" +
+      '<button class="btn ghost" id="copyMail" title="' + esc(m.email) + '">' + icon("copy") + "<span>" + esc(t("about.copyMail")) + "</span></button></div>" : "") +
+    "</div></div>" +
     '<div class="note">' + icon("shield-check") + "<span>" + esc(t("about.offline")) + "</span></div></div></div>";
 
   h += '<div class="card"><div class="body"><h2>' + icon("info") + esc(t("about.build")) + '</h2><dl class="props">' +
@@ -775,6 +803,7 @@ function renderAbout() {
   h += '<div class="actions"><button class="btn" id="aboutTour">' + icon("play") + "<span>" + esc(t("more.tour")) + "</span></button></div>";
   $("aboutBody").innerHTML = h;
   $("aboutTour").onclick = startTour;
+  if ($("copyMail")) $("copyMail").onclick = function () { copy(m.email, t("about.mailCopied")); };
 }
 
 /* ========================================================= PROMPTS page */
@@ -869,6 +898,7 @@ function renderSetup() {
 
 /* ===================================================== GUIDED TOUR */
 var TOUR = [
+  { welcome: true, k: "tour.welcome" },
   { sel: '[data-tour="hero"]', k: "tour.hero" },
   { sel: '[data-tour="nav"]', k: "tour.nav" },
   { sel: '[data-tour="stats"]', k: "tour.stats", page: "home", optional: true },
@@ -881,18 +911,22 @@ var tourAt = 0, tourSteps = [];
 
 function startTour() {
   closeMore();
-  tourSteps = TOUR.filter(function (s) { return !s.optional || document.querySelector(s.sel) || s.page; });
+  tourSteps = TOUR.filter(function (s) { return s.welcome || !s.optional || document.querySelector(s.sel) || s.page; });
   tourAt = 0;
   $("tourScrim").classList.add("on");
   tourShow();
 }
 function endTour() {
+  var v = $("tourCard").querySelector("video");
+  if (v) { try { v.pause(); } catch (e) {} }
   $("tourScrim").classList.remove("on");
+  $("tourCard").classList.remove("centered");
   localStorage.setItem("dsTourSeen", "1");
 }
 function tourShow() {
   var st = tourSteps[tourAt];
   if (!st) return endTour();
+  if (st.welcome) return tourWelcome(st);
   if (st.page && PAGE !== st.page) go(st.page);
   setTimeout(function () {
     var node = document.querySelector(st.sel);
@@ -901,7 +935,50 @@ function tourShow() {
     setTimeout(function () { tourPlace(node, st); }, 260);
   }, st.page && PAGE !== st.page ? 90 : 0);
 }
+/* The opening step is a centred card rather than a spotlight: there is nothing
+   to point at yet, and the explainer is the point. If the video file is not in
+   the design system repo, the frame degrades to an honest placeholder instead of
+   a broken player. */
+function tourWelcome(st) {
+  var hole = $("tourHole"), card = $("tourCard");
+  hole.style.width = "0px"; hole.style.height = "0px";
+  hole.style.left = "50%"; hole.style.top = "50%";
+
+  var ex = (S && S.explainer) || {};
+  var frame;
+  if (ex.video) {
+    frame = '<video class="tvid" controls preload="metadata" playsinline' +
+      (ex.poster ? ' poster="/ds/' + ex.poster.split("/").map(encodeURIComponent).join("/") + '"' : "") +
+      '><source src="/ds/' + ex.video.split("/").map(encodeURIComponent).join("/") + '"></video>';
+  } else {
+    frame = '<div class="tvid tvid-soon">' + icon("play", "ic-xl") +
+      "<b>" + esc(t("tour.video.soon")) + "</b><span>" + esc(t("tour.video.soon.d")) + "</span></div>";
+  }
+
+  card.innerHTML = '<div class="twelcome">' +
+    '<div class="tbanner">' + icon("lightbulb") + "<span>" + esc(t("tour.video.banner")) + "</span>" +
+      (ex.length ? '<b>' + esc(ex.length) + "</b>" : "") + "</div>" +
+    frame +
+    '<div class="twrap"><div class="tstep">' + esc(t("tour.step")) + " " + (tourAt + 1) + "/" + tourSteps.length + "</div>" +
+    "<h4>" + esc(t(st.k + ".t")) + "</h4><p>" + esc(t(st.k + ".d")) + "</p>" +
+    '<div class="tf"><div class="tour-dots">' + tourDots() + '</div><span class="sp"></span>' +
+    '<button class="btn ghost" id="tSkip">' + esc(t("tour.skip")) + "</button>" +
+    '<button class="btn primary" id="tNext">' + esc(t("tour.begin")) + "</button></div></div></div>";
+
+  card.classList.add("centered");
+  card.style.left = ""; card.style.top = "";
+  $("tSkip").onclick = endTour;
+  $("tNext").onclick = function () { tourAt++; tourShow(); };
+}
+
+function tourDots() {
+  var d = "";
+  for (var i = 0; i < tourSteps.length; i++) d += '<i class="' + (i === tourAt ? "on" : "") + '"></i>';
+  return d;
+}
+
 function tourPlace(node, st) {
+  $("tourCard").classList.remove("centered");
   var r = node.getBoundingClientRect(), pad = 8;
   var hole = $("tourHole"), card = $("tourCard");
   hole.style.left = (r.left - pad) + "px";
@@ -909,8 +986,7 @@ function tourPlace(node, st) {
   hole.style.width = (r.width + pad * 2) + "px";
   hole.style.height = (r.height + pad * 2) + "px";
 
-  var dots = "";
-  for (var i = 0; i < tourSteps.length; i++) dots += '<i class="' + (i === tourAt ? "on" : "") + '"></i>';
+  var dots = tourDots();
   card.innerHTML = '<div class="tstep">' + esc(t("tour.step")) + " " + (tourAt + 1) + "/" + tourSteps.length + "</div>" +
     "<h4>" + esc(t(st.k + ".t")) + "</h4><p>" + esc(t(st.k + ".d")) + "</p>" +
     '<div class="tf"><div class="tour-dots">' + dots + '</div><span class="sp"></span>' +
@@ -976,9 +1052,15 @@ document.addEventListener("keydown", function (e) {
   if (e.key !== "Escape") return;
   if ($("tourScrim").classList.contains("on")) return endTour();
   if ($("morePop").classList.contains("on")) return closeMore();
-  if ($("scrim").classList.contains("on")) closeModal();
+  if ($("scrim").classList.contains("on")) return closeModal();
+  if ($("docClose")) $("docClose").click();
 });
-window.addEventListener("resize", function () { if ($("tourScrim").classList.contains("on")) tourShow(); });
+window.addEventListener("resize", function () {
+  if (!$("tourScrim").classList.contains("on")) return;
+  var st = tourSteps[tourAt];
+  if (st && st.welcome) return; /* centred by CSS; re-rendering would restart the video */
+  tourShow();
+});
 
 function cfg() {
   return {

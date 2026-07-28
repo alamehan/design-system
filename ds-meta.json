@@ -2,10 +2,17 @@
   "name": "E-Systems Design System",
   "maintainer": {
     "name": "Raihan Allaam",
-    "email": "raihan@its-elabram.example",
+    "handle": "@alamehan",
+    "url": "https://alamehan.github.io/",
+    "email": "raihan.a@elabram.com",
     "role": "UI/UX Designer, ITS Elabram"
+  },
+  "explainer": {
+    "video": "docs/explainer.mp4",
+    "poster": "docs/explainer-poster.png",
+    "length": "3 min"
   },
   "repoUrl": "https://github.com/alamehan/design-system.git",
   "telemetryUrl": null,
-  "note": "Read live by the Design System panel. Change the maintainer email here, never in the panel."
+  "note": "Read live by the Design System panel. Change the maintainer email here, never in the panel. Drop the motion explainer at explainer.video (relative to the design system root) and the welcome step will play it automatically; until the file exists the panel shows a graceful placeholder."
 }

@@ -37,8 +37,15 @@ const STATE = {
   isGit: true,
   defaultRepoUrl: "https://git.example.co/design/design-system.git",
   originUrl: "https://git.example.co/design/design-system.git",
-  maintainerEmail: "raihan@its-elabram.example",
-  maintainer: { name: "Raihan Allaam", email: "raihan@its-elabram.example", role: "UI/UX Designer, ITS Elabram" },
+  maintainerEmail: "raihan.a@elabram.com",
+  maintainer: {
+    name: "Raihan Allaam", handle: "@alamehan", url: "https://alamehan.github.io/",
+    email: "raihan.a@elabram.com", role: "UI/UX Designer, ITS Elabram",
+  },
+  /* Set DS_PREVIEW_VIDEO=1 to preview the player state instead of the placeholder. */
+  explainer: process.env.DS_PREVIEW_VIDEO
+    ? { video: "docs/explainer.mp4", poster: null, length: "3 min", declared: "docs/explainer.mp4" }
+    : { video: null, poster: null, length: "3 min", declared: "docs/explainer.mp4" },
   subRegistered: true, subPopulated: true, subCommit: "a1b2c3d", level: "0",
   level1tw: false, level1css: false, halfWired: false,
   nuxtConfig: "nuxt.config.js", hasTailwindConfig: true,
@@ -87,7 +94,7 @@ const banner = `
   font:600 12px/1.4 Fustat,system-ui,sans-serif;padding:9px 16px;display:flex;gap:10px;align-items:center;
   box-shadow:0 1px 6px rgba(0,0,0,.25)">
   <span style="background:#f59e0b;color:#111827;border-radius:100px;padding:1px 8px;font-size:10.5px;letter-spacing:.05em">PREVIEW</span>
-  <span>Real panel v${meta.wizardVersion} UI \u2014 canned data, no server. Hover the blue buttons, switch ID/EN, open \u22ef \u2192 Play tour.</span>
+  <span>Real panel v${meta.wizardVersion} UI \u2014 canned data, no server. The tour opens on load. Check: welcome card, hover the blue buttons, Docs \u2192 open a file \u2192 sticky \u00d7, About \u2192 @alamehan link + Contact.</span>
   <button onclick="document.getElementById('pv-banner').remove()"
     style="margin-left:auto;background:none;border:1px solid #4b5563;color:#d1d5db;border-radius:5px;
     padding:2px 9px;font:inherit;cursor:pointer">dismiss</button>
@@ -144,6 +151,13 @@ const stub = `
   var realFetch = window.fetch;
   window.fetch = function (url, opt) {
     var p = String(url).split("?")[0];
+    if (/\.(mp4|webm|m4v)$/.test(p)) {
+      /* a 1-frame black mp4 so the player chrome is real in the preview */
+      var b = atob("AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAAhtZGF0");
+      var u8 = new Uint8Array(b.length);
+      for (var i = 0; i < b.length; i++) u8[i] = b.charCodeAt(i);
+      return Promise.resolve(new Response(u8, { status: 200, headers: { "Content-Type": "video/mp4" } }));
+    }
     if (p.indexOf("/ds/") === 0) {
       return Promise.resolve(new Response(
         "# " + decodeURIComponent(p.slice(4)) + "\\n\\nThis document is served from the installed design system.\\n\\n" +

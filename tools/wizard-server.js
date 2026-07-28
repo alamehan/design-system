@@ -168,6 +168,15 @@ function dsMeta() {
 }
 function maintainerEmail() { return process.env.DS_DESIGNER_EMAIL || (dsMeta().maintainer || {}).email || null; }
 
+/* The motion explainer is optional. Report only what is really on disk so the
+   welcome step can show a placeholder instead of a broken player. */
+function explainerInfo() {
+  const ex = dsMeta().explainer || {};
+  const base = abs(SUBMODULE_DIR);
+  const rel = (p) => (p && fs.existsSync(path.join(base, p)) ? p : null);
+  return { video: rel(ex.video), poster: rel(ex.poster), length: ex.length || null, declared: ex.video || null };
+}
+
 function defaultRepoUrl() {
   if (process.env.DS_REPO_URL) return process.env.DS_REPO_URL;
   try { const rc = JSON.parse(readIf(".dsrc.json") || "{}"); if (rc.repoUrl) return rc.repoUrl; } catch {}
@@ -383,6 +392,7 @@ function detectState() {
     defaultRepoUrl: defaultRepoUrl(), originUrl: originUrl(),
     maintainerEmail: maintainerEmail(),
     maintainer: dsMeta().maintainer || null,
+    explainer: explainerInfo(),
     subRegistered, subPopulated, subCommit, level,
     level1tw, level1css, halfWired: installed && (level1tw !== level1css),
     nuxtConfig: nx, hasTailwindConfig: tw != null,
@@ -915,8 +925,33 @@ const server = http.createServer(async (req, res) => {
     const base = abs(SUBMODULE_DIR);
     const full = path.resolve(base, rel);
     if (!full.startsWith(base + path.sep) || !fs.existsSync(full) || !fs.statSync(full).isFile()) return json(res, 404, { error: "not found" });
-    const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".gif": "image/gif", ".json": "application/json; charset=utf-8", ".woff2": "font/woff2", ".md": "text/plain; charset=utf-8" };
-    res.writeHead(200, { "Content-Type": types[path.extname(full).toLowerCase()] || "text/plain; charset=utf-8" });
+    const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp", ".json": "application/json; charset=utf-8", ".woff2": "font/woff2", ".md": "text/plain; charset=utf-8", ".mp4": "video/mp4", ".webm": "video/webm", ".m4v": "video/mp4" };
+    const ctype = types[path.extname(full).toLowerCase()] || "text/plain; charset=utf-8";
+
+    /* Video needs byte-range replies or the browser cannot seek (and Safari
+       refuses to start playback at all without them). */
+    if (/^video\//.test(ctype)) {
+      const size = fs.statSync(full).size;
+      const range = req.headers.range;
+      if (range) {
+        const m2 = /bytes=(\d*)-(\d*)/.exec(range) || [];
+        const start = m2[1] ? parseInt(m2[1], 10) : 0;
+        const end = m2[2] ? parseInt(m2[2], 10) : size - 1;
+        if (start >= size || end >= size || start > end) {
+          res.writeHead(416, { "Content-Range": "bytes */" + size });
+          return res.end();
+        }
+        res.writeHead(206, {
+          "Content-Type": ctype, "Content-Length": end - start + 1,
+          "Content-Range": "bytes " + start + "-" + end + "/" + size, "Accept-Ranges": "bytes",
+        });
+        return fs.createReadStream(full, { start, end }).pipe(res);
+      }
+      res.writeHead(200, { "Content-Type": ctype, "Content-Length": size, "Accept-Ranges": "bytes" });
+      return fs.createReadStream(full).pipe(res);
+    }
+
+    res.writeHead(200, { "Content-Type": ctype });
     return res.end(fs.readFileSync(full));
   }
 

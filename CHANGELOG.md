@@ -39,8 +39,13 @@ Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety 
 - The design system's own `.gitignore` now documents what is *deliberately committed*, so nobody tidies away `dist/`, `catalog/` or `tools/ds-setup.cjs`.
 
 ### Changed
+- **The tour now opens with a centred welcome card that can play a motion explainer.** The video path is declared in `ds-meta.json` (`explainer.video`, relative to the design system root) and resolved against what is actually on disk, so the card degrades to a plain placeholder instead of a broken player when the file is not there yet. The panel serves video with byte-range replies so seeking works and Safari will play it at all.
+- **Light is now the default theme.** Dark mode is opt-in from the ⋯ menu rather than following the OS preference automatically.
+- **Every accordion starts closed**, on every page.
+- **Documents in the Docs tab toggle.** Clicking the open document closes it, there is a sticky header with a close button that stays visible while scrolling, and Escape closes it too.
+- **About page:** the maintainer handle *is* the portfolio link rather than printing a bare URL beside it, and the contact button now builds a real `mailto:` with a prefilled subject and a footer carrying the design system version, panel version and repo — plus a copy-address button for anyone without a mail client configured. The maintainer email in `ds-meta.json` is now a real address, so both this and the Level 1 code request work out of the box.
 - Reference version stamps: `REF v3.3.0`. Truth layer is unchanged — 185 tokens, 86 dark overrides, 12 text styles, 76 specs, 487 colour keys — so `contract-check.js` reports no public-surface change.
-- Panel bundle 234 KB → 278 KB (markdown renderer, tour, About, 58-icon sprite). Still one file, still zero dependencies, still no network.
+- Panel bundle 234 KB → 288 KB (markdown renderer, tour with video, About, 58-icon sprite). Still one file, still zero dependencies, still no network.
 - `tests/e2e.js`: 61 → **84 assertions**, now covering git-block drift and restore, the ignore rules themselves, the button-contrast invariant, and both dynamic i18n key families.
 
 ## 3.2.0 — 2026-07-28
