@@ -66,3 +66,33 @@
 - **composite-15** WhatsAppChat _(advanced)_ — WhatsApp-style chat interface for consent communication. Three variants: Default (generic chat), ConsentRecruiterPOV (recruiter sending c… → `components/composite-15.md`
 - **composite-16** InteractiveFlow _(advanced)_ — Multi-step interactive overlay flows for complex operations. 26 variants covering: AI Generate Text (6 steps), Consent Share Link (4 step… → `components/composite-16.md`
 
+## panel (12)
+
+- **panel-01** FilterBlockPanel _(panel-content)_ — Panel body content for the filter block panel. Contains a search input at the top, followed by filter category sections. Slots directly i… → `components/panel-01.md`
+- **panel-02** ActionPanel _(panel-content)_ — Panel body content for quick-action forms. Two states: Filled (form has data) and Unfilled (empty initial state). Contains stacked form i… → `components/panel-02.md`
+- **panel-03** CandidateDetailsPanel _(panel-content)_ — The main candidate detail panel body. 8 variants covering the candidate tabs: Profile, Interview, Comment, and History sub-tabs (MH/CA/CH… → `components/panel-03.md`
+- **panel-04** ResumeTemplatePanel _(panel-content)_ — Panel body content for browsing and selecting resume templates. Three variants: PublicTemplate (community templates), MyTemplate (user's … → `components/panel-04.md`
+- **panel-05** ResumeBuilderPanel _(panel-content)_ — Panel body content for the resume builder editor. 25 variants covering all resume section editors: Home (default view), Personal Informat… → `components/panel-05.md`
+- **panel-06** ConsentRequestPanel _(panel-content)_ — Panel body content for sending consent requests. 4 variants: ManualConsent (checkbox acknowledgment + textarea), SendEmail (email form + … → `components/panel-06.md`
+- **panel-07** SmartContentPanel _(panel-content)_ — AI-powered content generation panel body. 4-step flow: SelectClient → ChooseOptions → ComposeEmail → GenerateResume. Each step shows rele… → `components/panel-07.md`
+- **panel-08** ConsentInfoPanel _(panel-content)_ — Panel body content showing consent status and history. 21 variants combining: consent method (ShareLink/ManualUpload/SendEmail) × status … → `components/panel-08.md`
+- **panel-09** ReferencePanel _(panel-content)_ — Panel body content for viewing candidate reference letters. Two states: Read (letter has been opened) and Unread (not yet viewed). Shows … → `components/panel-09.md`
+- **panel-10** FileInfoPanel _(panel-content)_ — Panel body content for file management actions. 3 variants: FileHistory (shows version history), EditTag (tag editor for a file), LinkTo … → `components/panel-10.md`
+- **panel-11** WorkflowPanel _(panel-content)_ — Panel body content for candidate workflow/pipeline management. Shows the candidate's current status in the recruitment workflow, stage hi… → `components/panel-11.md`
+- **panel-12** NotificationPanel _(panel-content)_ — Panel body content for the notification/activity feed. Shows activity grouped by category: General, Jobs, Contract, Invoice, Payroll. Eac… → `components/panel-12.md`
+
+## page (12)
+
+- **page-01** Sample Pages 1 — Candidate Pipeline — Candidate recruitment pipeline view. Shows a horizontal arrow-shaped pipeline stepper above a data table. The stepper visualizes candidat… → `components/page-01.md`
+- **page-02** Sample Pages 2 — Candidate List — Full-width candidate data table view for a requisition. Shows a filtered list of candidates with their onboarding/pre-boarding status. Ha… → `components/page-02.md`
+- **page-03** Sample Pages 3 — Wizard Form: Offer Setup — Multi-step wizard form for creating an offer. Step 1: Offer Setup. Contains customer selector, position/department inputs, site location,… → `components/page-03.md`
+- **page-04** Sample Pages 4 — Wizard Form: Salary & Income — Multi-step wizard form for creating an offer. Step 2: Salary & Income. Contains currency selector, basic salary input, wage type selector… → `components/page-04.md`
+- **page-05** Sample Pages 5 — Candidate Card Grid — Candidate browsing view as a card grid. Left: full FilterPanel drawer with filter fields and quick suggestions. Top: list toolbar with vi… → `components/page-05.md`
+- **page-06** Sample Pages 6 — Candidate Directory Table — Flat candidate directory as a wide data table with per-column filters. Same page header and list toolbar as the card grid view. Table: le… → `components/page-06.md`
+- **page-07** Sample Pages 7 — Resume Builder (Editor) — Resume Builder opened as a full-screen modal (Browser type: plain white chrome). Header: 'Resume Builder' title + close X. Mode toolbar: … → `components/page-07.md`
+- **page-08** Sample Pages 8 — Resume Builder (Design) — Resume Builder full-screen modal, Design mode. Same modal chrome and toolbar as the Editor view, but with the 'Design' tab active (and 'E… → `components/page-08.md`
+- **page-09** Sample Pages 9 — Bulk Send for Approval — Bulk task flow opened as a full-screen modal (Browser type). Header: 'Bulk Send for Approval' + close X. Body: three panes — left candida… → `components/page-09.md`
+- **page-10** Sample Pages 10 — Bulk Send for Approval (Collapsed Panes) — Bulk Send for Approval with both side panes collapsed into narrow icon rails. Left rail: expand icon button, 'Total: 6' caption, then one… → `components/page-10.md`
+- **page-11** Sample Pages 11 — Employment Detail Side Panel (Summary) — Employee/candidate employment detail opened as a wide right-anchored side panel (Panel, MultiCard) over a scrimmed base page. Panel heade… → `components/page-11.md`
+- **page-12** Sample Pages 12 — Employment Detail Side Panel (Snapshots) — Same employment detail side panel as page-11, showing an in-review contract (V1 · Main) with the Snapshots tab active. Stage stepper: onl… → `components/page-12.md`
+

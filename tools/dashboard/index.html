@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design System</title>
+<style>/* @CSS@ */</style>
+</head>
+<body>
+<!-- @ICONS@ -->
+
+<div class="shell">
+  <nav class="side" aria-label="Sections">
+    <div class="brand"><svg class="ic ic-lg"><use href="#i-shapes"/></svg><span data-i18n="app.title">Design System</span></div>
+
+    <button class="navb sel" data-nav="home"><svg class="ic"><use href="#i-house"/></svg><span data-i18n="nav.home">Beranda</span><i class="dot"></i></button>
+    <button class="navb" data-nav="setup"><svg class="ic"><use href="#i-download"/></svg><span data-i18n="nav.setup">Pasang</span><i class="dot"></i></button>
+    <button class="navb" data-nav="health"><svg class="ic"><use href="#i-heart-pulse"/></svg><span data-i18n="nav.health">Kesehatan</span><i class="dot"></i></button>
+    <button class="navb" data-nav="versions"><svg class="ic"><use href="#i-history"/></svg><span data-i18n="nav.versions">Versi</span><i class="dot"></i></button>
+    <button class="navb" data-nav="prompts"><svg class="ic"><use href="#i-library"/></svg><span data-i18n="nav.prompts">Prompt AI</span></button>
+    <button class="navb" data-nav="docs"><svg class="ic"><use href="#i-book-open"/></svg><span data-i18n="nav.docs">Dokumen</span></button>
+
+    <div class="side-foot">
+      <div class="langsw" role="group" aria-label="Language">
+        <button data-lang="id">ID</button><button data-lang="en">EN</button>
+      </div>
+      <div class="side-meta">
+        <span id="wizVer">—</span>
+        <button id="btnClose" title="Close" aria-label="Close panel"><svg class="ic"><use href="#i-power"/></svg></button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="col">
+
+      <!-- ===================================================== HOME -->
+      <section data-page="home">
+        <h1 class="page" data-i18n="nav.home">Beranda</h1>
+        <div class="statusline" id="statusline"><span class="pill" data-i18n="status.checking">Memeriksa…</span></div>
+        <div id="verdict"></div>
+        <div class="attn" id="attn" style="display:none"></div>
+        <div id="homeBody"></div>
+      </section>
+
+      <!-- ==================================================== SETUP -->
+      <section data-page="setup" hidden>
+        <h1 class="page" data-i18n="setup.title">Pasang design system</h1>
+        <p class="lead" data-i18n="setup.lead"></p>
+
+        <div class="callout ok" id="alreadyBanner" style="display:none">
+          <svg class="ic"><use href="#i-circle-check"/></svg><div data-i18n="setup.installed"></div>
+        </div>
+
+        <div class="card" id="legacyCard" style="display:none"><div class="body">
+          <h2><svg class="ic" style="color:var(--warn)"><use href="#i-triangle-alert"/></svg> <span data-i18n="legacy.title"></span></h2>
+          <p class="hint" data-i18n="legacy.body"></p>
+          <div id="legacyList"></div>
+          <label class="field"><span><span data-i18n="legacy.confirm"></span>: <code id="legacyPhrase"></code></span>
+            <input type="text" id="legacyConfirm" spellcheck="false" autocomplete="off">
+          </label>
+          <div class="actions"><button class="btn danger" id="btnLegacy" disabled><svg class="ic"><use href="#i-brush-cleaning"/></svg><span data-i18n="legacy.action"></span></button></div>
+          <div class="prog" id="legacyProg"><div class="bar"><div class="fill"></div></div><div class="lbl"></div></div>
+          <div class="log" id="legacyLog"></div>
+        </div></div>
+
+        <div class="card"><div class="body">
+          <label class="field"><span data-i18n="setup.level">Level adopsi</span>
+            <div class="choice" id="levels">
+              <label class="sel" data-v="0"><input type="radio" name="lv" value="0" checked><span><b data-i18n="setup.level0"></b><span data-i18n="setup.level0.desc"></span></span></label>
+              <label data-v="1"><input type="radio" name="lv" value="1"><span><b data-i18n="setup.level1"></b><span data-i18n="setup.level1.desc"></span></span></label>
+            </div>
+          </label>
+
+          <div id="l1box" style="display:none">
+            <label class="field"><span data-i18n="setup.l1code"></span>
+              <input type="text" id="l1code" spellcheck="false" autocomplete="off">
+              <small data-i18n="setup.l1code.hint"></small>
+            </label>
+            <div class="actions"><a class="btn ghost" id="askCode" href="#"><svg class="ic"><use href="#i-mail"/></svg><span data-i18n="setup.l1code.ask"></span></a></div>
+          </div>
+
+          <label class="check"><input type="checkbox" id="doCommit"><span><span data-i18n="setup.commit"></span><br><small style="color:var(--faint)" data-i18n="setup.commit.hint"></small></span></label>
+
+          <details class="fold" style="margin-top:14px;border:1px solid var(--line);border-radius:8px">
+            <summary><svg class="ic chev"><use href="#i-chevron-right"/></svg><span data-i18n="setup.advanced"></span></summary>
+            <div class="body">
+              <label class="field"><span data-i18n="setup.repoUrl"></span>
+                <input type="text" id="repoUrl" spellcheck="false">
+                <small data-i18n="setup.repoUrl.hint"></small>
+              </label>
+            </div>
+          </details>
+
+          <div class="actions"><button class="btn primary" id="btnProcess"><svg class="ic"><use href="#i-play"/></svg><span data-i18n="setup.process"></span></button></div>
+          <div class="callout warn" id="lockNote" style="display:none;margin-top:14px"><svg class="ic"><use href="#i-lock"/></svg><div data-i18n="lock.note"></div></div>
+          <div class="prog" id="installProg"><div class="bar"><div class="fill"></div></div><div class="lbl"></div></div>
+          <div class="log" id="installLog"></div>
+          <div class="callout ok" id="doneRibbon" style="display:none;margin-top:14px"><svg class="ic"><use href="#i-sparkles"/></svg><div data-i18n="setup.done"></div></div>
+        </div></div>
+      </section>
+
+      <!-- =================================================== HEALTH -->
+      <section data-page="health" hidden>
+        <h1 class="page" data-i18n="nav.health">Kesehatan</h1>
+        <div id="healthBody"></div>
+      </section>
+
+      <!-- ================================================= VERSIONS -->
+      <section data-page="versions" hidden>
+        <h1 class="page" data-i18n="nav.versions">Versi</h1>
+        <div id="versBody"></div>
+      </section>
+
+      <!-- ================================================== PROMPTS -->
+      <section data-page="prompts" hidden>
+        <h1 class="page" data-i18n="prompts.title">Pustaka prompt AI</h1>
+        <p class="lead" data-i18n="prompts.lead"></p>
+        <div class="callout acc"><svg class="ic"><use href="#i-shapes"/></svg><div data-i18n="prompts.stack"></div></div>
+        <div class="callout"><svg class="ic"><use href="#i-lightbulb"/></svg><div data-i18n="prompts.tip"></div></div>
+        <div id="promptLib"></div>
+      </section>
+
+      <!-- ===================================================== DOCS -->
+      <section data-page="docs" hidden>
+        <h1 class="page" data-i18n="docs.title">Dokumen &amp; galeri</h1>
+        <p class="lead" data-i18n="docs.lead"></p>
+        <div id="docsBody"></div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="scrim" id="scrim" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <header><h3 id="mTitle"></h3><p id="mDesc"></p></header>
+    <div class="content" id="mBody"></div>
+    <footer id="mFoot"></footer>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script>/* @JS@ */</script>
+</body>
+</html>

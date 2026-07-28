@@ -1,0 +1,3 @@
+## page-11 — Sample Pages 11 — Employment Detail Side Panel (Summary)  _()_
+Employee/candidate employment detail opened as a wide right-anchored side panel (Panel, MultiCard) over a scrimmed base page. Panel header: candidate switcher dropdown + prev/next buttons + collapse + close. Summary bar: avatar + full name + status/info chips. Body: two columns — left Employment History tree (company > contract > version cards), right contract detail card with a 6-step approval stage stepper, underline tabs and a summary grid of icon+label/value blocks.
+**Spec:** `src/components/page-11-employment-detail-summary.json`

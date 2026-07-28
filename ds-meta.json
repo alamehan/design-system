@@ -1,0 +1,11 @@
+{
+  "name": "E-Systems Design System",
+  "maintainer": {
+    "name": "Raihan Allaam",
+    "email": "raihan@its-elabram.example",
+    "role": "UI/UX Designer, ITS Elabram"
+  },
+  "repoUrl": "https://github.com/alamehan/design-system.git",
+  "telemetryUrl": null,
+  "note": "Read live by the Design System panel. Change the maintainer email here, never in the panel."
+}

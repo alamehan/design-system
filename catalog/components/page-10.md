@@ -1,0 +1,3 @@
+## page-10 — Sample Pages 10 — Bulk Send for Approval (Collapsed Panes)  _()_
+Bulk Send for Approval with both side panes collapsed into narrow icon rails. Left rail: expand icon button, 'Total: 6' caption, then one initials chip per candidate (e.g. AR, BA, CA, DW, EC, FN) stacked vertically — the selected candidate's chip is highlighted. Right rail: expand icon button + a single document icon button. The center approval actions pane stretches across the freed width. Header, center pane content and footer are identical to page-09.
+**Spec:** `src/components/page-10-bulk-approval-collapsed.json`

@@ -78,7 +78,7 @@ const idxPath=path.join(CAT,'index.json');
 const idx=JSON.parse(fs.readFileSync(idxPath,'utf8'));
 idx.items=specs.map(d=>({code:d.code,name:d.name,type:(d.__file.startsWith('page-')?'page':'component'),category:d.category,figmaNodeId:d.figmaNodeId,description:d.description,file:'src/components/'+d.__file}));
 idx.totalComponents=idx.items.filter(i=>i.type==='component').length;idx.totalPages=idx.items.filter(i=>i.type==='page').length;
-idx.version='1.0';idx.generatedAt=new Date().toISOString().slice(0,10);idx.designSystem='E-Systems Design System (Elabram)';
+const VER=JSON.parse(fs.readFileSync(path.join(DS,'version.json'),'utf8')).version;idx.version=VER;const prevItems=JSON.stringify(JSON.parse(fs.existsSync(idxPath)?fs.readFileSync(idxPath,'utf8'):'{}').items||null);if(prevItems!==JSON.stringify(idx.items)||!idx.generatedAt)idx.generatedAt=new Date().toISOString().slice(0,10);idx.designSystem='E-Systems Design System (Elabram)';
 fs.writeFileSync(idxPath,JSON.stringify(idx,null,2)+'\n');
 const roots=[f,f.semantic&&f.semantic.light,f.semantic&&f.semantic.dark].filter(Boolean);
 function exists(ref){for(const r of roots){let c=r,ok=true;for(const s of ref.split('.')){if(c&&typeof c==='object'&&s in c)c=c[s];else{ok=false;break;}}if(ok)return true;}return false;}

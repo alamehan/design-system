@@ -17,7 +17,7 @@ const intro = parts.shift();
 const tokenSec = [];
 const comps = [];
 for (const p of parts) {
-  const m = p.match(/^## ([a-z]+-\d+) \u2014 ([^\n_]+?)\s*(?:_\(([a-z]+)\)_)?\s*\n/);
+  const m = p.match(/^## ([a-z]+-\d+) \u2014 ([^\n_]+?)\s*(?:_\(([a-z-]*)\)_)?\s*\n/);
   if (m) comps.push({ code: m[1], name: m[2].trim(), tier: m[3] || "", body: p });
   else tokenSec.push(p);
 }

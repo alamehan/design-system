@@ -1,6 +1,6 @@
 import json, os, re, sys
 
-ROOT = "/data/design-system-master/design-system-master/src"
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 COMP = os.path.join(ROOT, "components")
 found = json.load(open(os.path.join(ROOT, "foundations.json")))
 sem = found["semantic"]["light"]

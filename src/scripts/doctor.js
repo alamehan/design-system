@@ -16,7 +16,11 @@ const read = (p) => { try { return fs.readFileSync(p, "utf8"); } catch { return 
 function findConsumerRoot() {
   let dir = path.dirname(DS_ROOT);
   for (let i = 0; i < 4; i++) {
-    if (["nuxt.config.js", "nuxt.config.ts", "package.json"].some((f) => fs.existsSync(path.join(dir, f)))) return dir;
+    // prefer a real app root (nuxt config) over a bare package.json (monorepo workspace root)
+    if (["nuxt.config.js", "nuxt.config.ts"].some((f) => fs.existsSync(path.join(dir, f)))) return dir;
+    if (fs.existsSync(path.join(dir, "package.json")) && !fs.existsSync(path.join(dir, "pnpm-workspace.yaml"))) {
+      try { if (!JSON.parse(fs.readFileSync(path.join(dir, "package.json"), "utf8")).workspaces) return dir; } catch { return dir; }
+    }
     const parent = path.dirname(dir);
     if (parent === dir) break;
     dir = parent;

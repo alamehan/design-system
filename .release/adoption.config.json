@@ -1,0 +1,7 @@
+{
+  "provider": "list",
+  "_comment": "The 'list' provider works on ANY git host, including self-hosted. Switch to github/gitlab once the repo lives on the office host and a token is available.",
+  "repos": [],
+  "org": null,
+  "apiBase": null
+}

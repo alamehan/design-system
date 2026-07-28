@@ -33,7 +33,8 @@ A missing bindings entry never blocks work: inspect the repo directly, then writ
 
 - No hardcoded hex colors, no magic px for anything a token covers. Use token classes / CSS vars (`var(--…)`) exactly as listed in the catalog.
 - Text styles: use `.ts-<weight>-<role>-<size>` classes exactly as listed. They are global and never prefixed.
-- Icons (Tabler): write icon classes as full literals (e.g. `i-tabler-user`), never string-concatenated, or the CSS scanner will miss them. Respect any utility prefix rule from the consumer repo profile.
+- **Icons are Tabler.** Write icon classes as full literals (e.g. `i-tabler-user`), never string-concatenated, or the CSS scanner will miss them. Respect any utility prefix rule from the consumer repo profile. Tabler (asset-06/07) plus the Elabram custom set (asset-08) are the only icon sources for product UI — never substitute another library.
+- **Typeface is Fustat** (body) and **DM Mono** (code), per `src/foundations.json`. Do not introduce another font.
 - Never rebuild the app shell (sidebar/navbar/layout) unless explicitly asked.
 - Fixed-vs-scroll contract: exactly ONE region scrolls in any layout. Never nest competing scroll containers.
 - Visual verification is only valid against a live render whose build stamp matches the current build. A pixel probe beats any prior claim.
@@ -63,6 +64,8 @@ Consumer repos may carry a bindings file (COMPONENT-MAP + TOKEN-MAP) that transl
 
 - `src/foundations.json` + `src/components/*.json` — EDITABLE source of truth (tokens + specs).
 - `src/assets/` — shipped assets. `src/scripts/` — engine (build, split-catalog, lint-reference, doctor).
+- `version.json` — the single source of the version number. `ds-meta.json` — maintainer contact, read live by the panel.
+- `tools/` — the adoption panel: `dashboard/` sources → bundled by `build-wizard.js` into the single-file `ds-setup.cjs`. `ship.js` runs the whole release chain.
 - `dist/` — GENERATED (tailwind preset + CSS variables). Never hand-edit.
 - `catalog/` — GENERATED AI grounding (INDEX + TOKENS + per-component specs). Never hand-edit.
 - `reference/` — plain HTML+CSS reference implementations + `gallery.html` (open in a browser). Token-pure: CSS vars only, no hardcoded hex. Two tiers in gallery.html: Part 1 base components (default grounding) + Part 2 composed samples (assembled screens — consult per need, see §5).
@@ -71,5 +74,6 @@ Consumer repos may carry a bindings file (COMPONENT-MAP + TOKEN-MAP) that transl
 ## Versioning contract (author side)
 
 - Semver. Renaming/removing a token or spec = MAJOR, with a deprecation alias kept for one minor cycle and a CHANGELOG entry.
-- `node src/scripts/build.js` must pass before any release (validates every token ref and asset name).
+- **`node tools/ship.js` must pass before any release.** It runs build · split-catalog · stamp-reference · lint-reference · validate-pages · build-wizard · contract-check, in that order, and stops at the first failure.
+- `contract-check.js` fails the build if a token, text style, spec code or enum value is removed without a MAJOR bump AND a deprecation alias in `.release/deprecations.json`. The rule is mechanical, not a judgement call.
 - Consumers pin a commit and upgrade explicitly (`git submodule update --remote`).

@@ -1,4 +1,6 @@
-# TUTORIAL PRAKTIS — Dari Nol Sampai Jalan (Bahasa Indonesia)
+# TUTORIAL PRAKTIS — Dari Nol Sampai Jalan
+
+> English: [TUTORIAL.en.md](./TUTORIAL.en.md)
 
 > Baca file ini SATU KALI dari atas ke bawah, ikuti urutannya, selesai.
 > Estimasi total waktu: ±15 menit (di luar review PR oleh tim frontend).
@@ -49,7 +51,15 @@ git push -u origin main
 
 ## LANGKAH 2 — Adopsi di portal-nuxt / Level 0 (tim frontend, ±5 menit)
 
-### Cara termudah — Design System Dashboard ✨
+### Cara termudah — Design System Panel
+
+```bash
+# dari root repo frontend kamu — satu baris, bisa diulang kapan saja
+curl -fsSL <RAW-URL-REPO-DS>/raw/main/tools/ds-setup.cjs -o ds-setup.cjs
+node ds-setup.cjs
+```
+
+Setelah design system terpasang, panel bisa memperbarui dirinya sendiri dari submodule — tidak perlu curl lagi.
 
 Tidak perlu hafal command. Paketnya **literally 1 file**:
 
