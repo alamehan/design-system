@@ -177,3 +177,14 @@ Selesai — repo kembali persis seperti semula.
 | `reference/gallery.html` | Galeri visual semua komponen (buka di browser) |
 | `CHANGELOG.md` | Riwayat versi + aturan semver |
 | `portal-nuxt-package/.ds/bindings.md` | Peta spec → komponen portal-nuxt (tinggal review) |
+
+---
+
+## Catatan v2.4.0 — Kalau repo kamu pernah pakai design system versi LAMA (v1/v2)
+
+Buka dashboard seperti biasa (`node ds-setup.cjs`). Kalau di repo masih ada sisa **paket design system lama yang dulu di-deliver** (folder `design-system/` hasil copy, `plugins/design-system.js`, halaman contoh, `.ds-backup/`, pointer CLAUDE.md lama, baris config lama), tab **Setup** otomatis menampilkan kartu peringatan berisi daftar temuannya.
+
+- Itu **bukan** komponen/kode asli portal kamu — kode asli tidak akan disentuh sama sekali.
+- **Rekomendasi: bersihkan dulu** supaya install v3 mulus tanpa redundant/konflik. Ketik `HAPUS DS LAMA` di kolom konfirmasi lalu klik **🧹 Bersihkan file DS lama** (ada rencana lengkap sebelum apapun dijalankan).
+- Kalau memilih tidak menghapus, install tetap bisa dilanjut.
+- CLAUDE.md yang sudah berisi catatan kamu sendiri aman: hanya baris peninggalan DS lama yang dicabut.
