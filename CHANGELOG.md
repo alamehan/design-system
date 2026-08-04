@@ -4,6 +4,36 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
+## 3.4.5 — 2026-08-04
+
+**Uninstall removed the `.gitignore` block that was hiding its own recovery files, then left the files on disk.**
+
+### Fixed — uninstall now returns the working tree to its pre-install state
+- **The panel installed a `.gitignore` block covering `.ds/.trash/`, `.ds/rollback-point.json` and `ds-setup.cjs`, and the uninstall stripped that block while leaving every one of those files in place.** A repo that was clean before an install came back from the uninstall with a dozen untracked recovery artifacts in Source Control. It removed the raincoat and left you in the rain. **All recovery state now lives in `.git/ds-recovery/`** — outside the working tree, invisible to `git status`, never committed, and destroyed by nothing short of deleting the clone. The "nothing is ever destroyed" guarantee is kept; the mess is not.
+- **`stripHashBlock` and `stripBlock` reformatted the entire file, not just the block being removed.** `.replace(/\n{3,}/g,"\n\n")` ran over the whole document, so any repo whose `.gitignore` or `CLAUDE.md` happened to contain three consecutive newlines came back from an uninstall silently reformatted. A revert that edits bytes it did not install is not a revert. Both strips are now byte-exact: the block, plus the one blank line the install put in front of it, and nothing else.
+- **`.gitmodules` was left staged as an addition.** Git only rewrites it when `git rm <path>` succeeds; if the folder had already gone, the stale `[submodule]` section survived and the file sat in Source Control as `A .gitmodules`. The panel now removes its own section explicitly and deletes the file when nothing else claims it.
+- **One failing step aborted the whole uninstall.** A `git submodule deinit` against a submodule git no longer knows about returned non-zero and `execSteps` stopped there — leaving the repo *half* uninstalled, a worse state than either end of the operation. Submodule cleanup steps are now `soft`: they report and carry on.
+- **`removeManagedLine` deleted the entire line containing the marker.** The panel always writes its line alone, but if anyone had since merged their own code onto it, that code was deleted too. It now drops the line only when the managed text is all that is on it, and otherwise excises just the managed segment.
+- New final step: **verify the working tree came back clean.** It runs `git status --porcelain` and prints exactly what still differs and why, rather than a green tick over an unverified claim.
+- Legacy installs are migrated: anything a pre-3.4.5 panel left at `.ds/.trash/` or `.ds/rollback-point.json` is **moved** into `.git/ds-recovery/` during the uninstall.
+- The panel now removes `ds-setup.cjs` from the repo when it stops, after copying it into `.git/ds-recovery/`.
+
+### Fixed — dashboard counters that reset to zero on every design system update
+- **`.release/adoption.config.json` ships with `repos: []`, so `adoption-report.js` wrote a file full of structural zeros — and `ship.js` regenerates it on every release.** The panel could not tell those zeros apart from a real measurement of zero, and the adoption card defaulted to the Team tab, so every update looked like the numbers had just been wiped. The developer's own counts were correct and cumulative the whole time, one tab away in `This repo`.
+- `adoption-report.js` now publishes `{ configured: false }` and **no counters at all** when nothing is registered. A structural zero is not a measurement.
+- `adoptionStats()` returns `org: null` unless the report means something. The function's own comment already promised this ("rather than showing a zero that looks like real data"); it just checked whether `totals` existed instead of whether it said anything.
+- The adoption card no longer hardcodes `team` as the default scope — it opens on a tab that can answer its own question, and explains *why* the team tab is empty instead of showing an unexplained disabled control.
+
+### Changed — the Component Reference Gallery is navigable
+- Thirty-five sections in one flat scroll was complete and unusable: finding TableColumn meant Ctrl+F on a 200KB page. The gallery now has a **sticky, grouped, filterable index** — Assets → Atoms (actions · data display · form controls · navigation) → Molecules → Composites → Layout → Organisms → Composed samples — with scroll-spy highlighting, a `/` shortcut, per-section anchor links and a back-to-top control. ~30 lines of dependency-free JS; with JavaScript off it degrades to a plain anchor list, because the reference must work from a `file://` double-click.
+- **Not one section id changed.** Those anchors are the AI grounding contract: `CLAUDE.md` §5 names them and every `catalog/components/<code>.md` links back by anchor. The DOM was reordered freely; the contract was not touched.
+
+### Added
+- **`lint-reference.js` GATE 8 — the gallery anchor contract.** Every `gallery.html#<id>` referenced from `CLAUDE.md` or the catalog must resolve, and every internal gallery link must point at a real section. An agent told to open `#table-row` and finding nothing has no visual truth to copy, and will invent one.
+
+### Note
+`visual-audit.py` failed on its first run against the new navigation: the per-section anchor link was `opacity: 0` and still hit-testable — the exact ghost-control fault the gate was written for, reintroduced by the person who wrote the gate. It was caught before anyone saw it. That is what the gate is for.
+
 ## 3.4.4 — 2026-08-04
 
 **Nothing in `reference/` ever set `box-sizing`. The whole tier rendered in a box model the product does not use.**

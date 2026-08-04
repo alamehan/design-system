@@ -39,3 +39,92 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
 .ref-stage { position: relative; height: 420px; overflow: hidden; border: 1px solid var(--color-system-border-soft); border-radius: var(--radius-md); background: var(--color-system-surface-soft); }
 /* variant caption above each specimen */
 .ref-label { font-size: 11px; line-height: 16px; letter-spacing: 0.5px; color: var(--color-system-text-mute); }
+
+/* ---------------------------------------------------------------------------------------
+   Gallery navigation. Thirty-five sections in one scroll is complete but unusable: finding
+   TableColumn meant a Ctrl+F on a 200KB page. A sticky, grouped, filterable index turns the
+   same content into something you can move around in.
+   Anchors are untouched by design — CLAUDE.md and every catalog Reference: line point at
+   #<id>, so the ids are a contract. Only the ORDER and the chrome changed.
+   --------------------------------------------------------------------------------------- */
+.ref-toc {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 268px;
+  overflow-y: auto;
+  border-right: 1px solid var(--color-system-border-soft);
+  background: var(--color-system-surface-soft);
+  padding: 20px 0 40px;
+  z-index: 20;
+}
+.ref-toc__inner { padding: 0 16px; }
+.ref-toc__title { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--color-system-text-mute); margin: 0 0 10px; }
+.ref-toc__filter {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+  border: 1px solid var(--color-system-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-pure-white);
+  font-size: 14px; line-height: 20px;
+  color: var(--color-system-text-head);
+}
+.ref-toc__filter:focus { outline: none; border-color: var(--color-brand-brand); box-shadow: var(--shadow-State-Focus); }
+.ref-toc__group { font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--color-system-text-mute); margin: 16px 0 6px; }
+.ref-toc__list { list-style: none; margin: 0; padding: 0; }
+.ref-toc__list a {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 5px 8px; border-radius: var(--radius-md);
+  text-decoration: none; color: var(--color-system-text-body);
+  font-size: 14px; line-height: 20px;
+}
+.ref-toc__list a:hover { background: var(--color-neutral-muted); color: var(--color-system-text-head); }
+.ref-toc__list a.is-current { background: var(--color-brand-brand-surface-soft); color: var(--color-brand-brand); font-weight: 700; }
+.ref-toc__code { font-size: 11px; line-height: 16px; color: var(--color-system-text-mute); flex: none; min-width: 62px; }
+.ref-toc__list a.is-current .ref-toc__code { color: var(--color-brand-brand); }
+.ref-toc__name { min-width: 0; }
+.ref-toc__group.is-hidden, .ref-toc__list li.is-hidden { display: none; }
+
+.ref-main { margin-left: 268px; padding: 0 8px 120px; }
+.ref-grouphead {
+  font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+  color: var(--color-system-text-mute);
+  margin: 44px 0 4px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-system-border-soft);
+  scroll-margin-top: 16px;
+}
+.ref-section { scroll-margin-top: 16px; position: relative; }
+/* the copyable per-section anchor sits in the gutter and only appears on hover, so it never
+   competes with the specimen it labels */
+.ref-anchor {
+  position: absolute; left: -18px; top: 2px;
+  color: var(--color-system-text-mute); text-decoration: none;
+  opacity: 0; pointer-events: none; transition: opacity .12s ease;
+  font-size: 14px; line-height: 20px;
+}
+/* pointer-events travels WITH the opacity — law #27. visual-audit.py caught this exact link
+   the first time it ran against the new navigation, which is the whole point of the gate. */
+.ref-section:hover .ref-anchor,
+.ref-anchor:focus-visible { opacity: 1; pointer-events: auto; }
+
+.ref-top {
+  position: fixed; right: 20px; bottom: 20px;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--color-neutral-pure-white);
+  border: 1px solid var(--color-system-border-soft);
+  box-shadow: var(--shadow-Base);
+  color: var(--color-system-text-body); text-decoration: none;
+  font-size: 14px; line-height: 20px;
+  z-index: 20;
+}
+.ref-top:hover { background: var(--color-system-surface-soft); }
+
+/* Narrow screens: the index collapses to a normal block at the top rather than eating half
+   the viewport. Nothing is hidden — a gallery you cannot see all of is the problem being
+   solved, not a trade to make somewhere else. */
+@media (max-width: 900px) {
+  .ref-toc { position: static; width: auto; height: auto; bottom: auto; border-right: none; border-bottom: 1px solid var(--color-system-border-soft); max-height: 40vh; }
+  .ref-main { margin-left: 0; }
+}

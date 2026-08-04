@@ -38,24 +38,99 @@
 <link rel="stylesheet" href="css/table-row.css" />
 <link rel="stylesheet" href="css/composed.css" />
 </head>
-<body>
+<body id="top">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><!-- Tabler Icons 3.45.0 - MIT License - https://tabler.io/icons --><symbol id="tb-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10" /></symbol><symbol id="tb-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6l6 -6" /></symbol><symbol id="tb-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6l6 6" /></symbol><symbol id="tb-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6" /></symbol><symbol id="tb-dots" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></symbol><symbol id="tb-dots-vertical" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></symbol><symbol id="tb-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /> <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></symbol><symbol id="tb-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4" /> <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" /> <path d="M9 9l1 0" /> <path d="M9 13l6 0" /> <path d="M9 17l6 0" /></symbol><symbol id="tb-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /> <path d="M3 7l9 6l9 -6" /></symbol><symbol id="tb-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10.5 -10.5a2.83 2.83 0 1 0 -4 -4l-10.5 10.5v4" /> <path d="M13.5 6.5l4 4" /></symbol><symbol id="tb-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /> <path d="M21 21l-6 -6" /></symbol><symbol id="tb-search-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.04 5.06a7 7 0 0 0 9.91 9.89m1.58 -2.43a7 7 0 0 0 -9.04 -9.06" /> <path d="M3 3l18 18" /></symbol><symbol id="tb-selector" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4 -4l4 4" /> <path d="M16 15l-4 4l-4 -4" /></symbol><symbol id="tb-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /> <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></symbol><symbol id="tb-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6l-12 12" /> <path d="M6 6l12 12" /></symbol><symbol id="tb-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /> <path d="M16 3v4" /> <path d="M8 3v4" /> <path d="M4 11h16" /> <path d="M11 15h1" /> <path d="M12 15v3" /></symbol><symbol id="tb-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l14 0" /></symbol><symbol id="tb-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l0 14" /> <path d="M5 12l14 0" /></symbol><symbol id="tb-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" /> <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" /> <path d="M3 3l18 18" /></symbol><symbol id="tb-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /> <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></symbol><symbol id="tb-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l16 0" /> <path d="M10 11l0 6" /> <path d="M14 11l0 6" /> <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /> <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></symbol><symbol id="tb-bold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z" /> <path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7" /></symbol><symbol id="tb-italic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5l6 0" /> <path d="M7 19l6 0" /> <path d="M14 5l-4 14" /></symbol><symbol id="tb-underline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5v5a5 5 0 0 0 10 0v-5" /> <path d="M5 19h14" /></symbol><symbol id="tb-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l11 0" /> <path d="M9 12l11 0" /> <path d="M9 18l11 0" /> <path d="M5 6l0 .01" /> <path d="M5 12l0 .01" /> <path d="M5 18l0 .01" /></symbol><symbol id="tb-list-numbers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 6h9" /> <path d="M11 12h9" /> <path d="M12 18h8" /> <path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /> <path d="M6 10v-6l-2 2" /></symbol><symbol id="tb-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15l6 -6" /> <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /> <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /></symbol><symbol id="tb-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /> <path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /> <path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /> <path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /></symbol><symbol id="tb-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" /> <path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></symbol><symbol id="tb-chevron-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6 -6l6 6" /></symbol></svg>
-<p class="ref-stamp">REF v3.4.4 · generated 2026-08-04</p>
+<p class="ref-stamp">REF v3.4.5 · generated 2026-08-04</p>
 <h1 class="ref-h">Component Reference Gallery</h1>
-<p class="ref-sub">Plain HTML + CSS, token-pure. Open directly in a browser. This is the visual truth for all components. Two tiers: <b>Part 1 — Base components</b> (the default grounding tier) and <b><a href="#composed">Part 2 — Composed samples</a></b> (assembled screens — consult only when the task needs that level of detail).</p>
-<h1 class="ref-h" style="margin-top:28px">Part 1 — Base components</h1>
-<p class="ref-sub">The 27 building blocks. Ground here by default.</p>
-<div class="ref-section" id="avatar">
-<h2 class="ref-h">asset-01 — Avatar</h2>
+<p class="ref-sub">Plain HTML + CSS, token-pure. Open directly in a browser. This is the visual truth for all components — every <code>catalog/components/&lt;code&gt;.md</code> links back here by anchor, so <b>section ids are a contract and never change</b>.<br /><b>Part 1 — Base components</b> (Assets → Atoms → Molecules → Composites → Layout → Organisms) is the default grounding tier. <b><a href="#composed">Part 2 — Composed samples</a></b> shows assembled screens; consult it only when the task needs that level of detail — <a href="#composed-05">composed-05</a> is the one to copy for any non-trivial table.</p>
+<nav class="ref-toc" aria-label="Component index">
+  <div class="ref-toc__inner">
+    <p class="ref-toc__title">Component index</p>
+    <input class="ref-toc__filter" type="search" placeholder="Filter components…" aria-label="Filter components" autocomplete="off" />
+    <p class="ref-toc__group">Assets</p>
+    <ul class="ref-toc__list" data-tier="asset">
+      <li><a href="#avatar" data-for="avatar"><span class="ref-toc__code">asset-01</span><span class="ref-toc__name">Avatar</span></a></li>
+    </ul>
+    <p class="ref-toc__group">Atoms — actions</p>
+    <ul class="ref-toc__list" data-tier="atom">
+      <li><a href="#button" data-for="button"><span class="ref-toc__code">atom-01</span><span class="ref-toc__name">Button</span></a></li>
+      <li><a href="#icon-button" data-for="icon-button"><span class="ref-toc__code">atom-02</span><span class="ref-toc__name">IconButton</span></a></li>
+      <li><a href="#split-button" data-for="split-button"><span class="ref-toc__code">atom-03</span><span class="ref-toc__name">SplitButton</span></a></li>
+      <li><a href="#custom-button" data-for="custom-button"><span class="ref-toc__code">atom-04</span><span class="ref-toc__name">CustomButton</span></a></li>
+    </ul>
+    <p class="ref-toc__group">Atoms — data display</p>
+    <ul class="ref-toc__list" data-tier="atom">
+      <li><a href="#chip" data-for="chip"><span class="ref-toc__code">atom-05</span><span class="ref-toc__name">Chip</span></a></li>
+      <li><a href="#status-chip" data-for="status-chip"><span class="ref-toc__code">atom-06</span><span class="ref-toc__name">StatusChip</span></a></li>
+      <li><a href="#toast" data-for="toast"><span class="ref-toc__code">atom-07</span><span class="ref-toc__name">Toast</span></a></li>
+    </ul>
+    <p class="ref-toc__group">Atoms — form controls</p>
+    <ul class="ref-toc__list" data-tier="atom">
+      <li><a href="#input" data-for="input"><span class="ref-toc__code">atom-08</span><span class="ref-toc__name">Input</span></a></li>
+      <li><a href="#textarea" data-for="textarea"><span class="ref-toc__code">atom-09</span><span class="ref-toc__name">Textarea</span></a></li>
+      <li><a href="#rich-text-editor" data-for="rich-text-editor"><span class="ref-toc__code">atom-10</span><span class="ref-toc__name">RichTextEditor</span></a></li>
+      <li><a href="#checkbox" data-for="checkbox"><span class="ref-toc__code">atom-12</span><span class="ref-toc__name">Checkbox</span></a></li>
+      <li><a href="#radio" data-for="radio"><span class="ref-toc__code">atom-12</span><span class="ref-toc__name">Radio</span></a></li>
+      <li><a href="#switch" data-for="switch"><span class="ref-toc__code">atom-12</span><span class="ref-toc__name">Switch</span></a></li>
+      <li><a href="#range-slider" data-for="range-slider"><span class="ref-toc__code">atom-13</span><span class="ref-toc__name">RangeSlider</span></a></li>
+    </ul>
+    <p class="ref-toc__group">Atoms — navigation</p>
+    <ul class="ref-toc__list" data-tier="atom">
+      <li><a href="#breadcrumb" data-for="breadcrumb"><span class="ref-toc__code">atom-14</span><span class="ref-toc__name">Breadcrumb</span></a></li>
+      <li><a href="#dropdown-menu" data-for="dropdown-menu"><span class="ref-toc__code">atom-15</span><span class="ref-toc__name">DropdownMenu</span></a></li>
+      <li><a href="#tabs" data-for="tabs"><span class="ref-toc__code">atom-16</span><span class="ref-toc__name">Tabs</span></a></li>
+    </ul>
+    <p class="ref-toc__group">Molecules — table parts</p>
+    <ul class="ref-toc__list" data-tier="molecule">
+      <li><a href="#table-column" data-for="table-column"><span class="ref-toc__code">molecule-04</span><span class="ref-toc__name">TableColumn</span></a></li>
+      <li><a href="#table-row" data-for="table-row"><span class="ref-toc__code">molecule-05</span><span class="ref-toc__name">TableRow</span></a></li>
+    </ul>
+    <p class="ref-toc__group">Composites</p>
+    <ul class="ref-toc__list" data-tier="composite">
+      <li><a href="#filter-field" data-for="filter-field"><span class="ref-toc__code">composite-04</span><span class="ref-toc__name">FilterField</span></a></li>
+      <li><a href="#candidate-info-block" data-for="candidate-info-block"><span class="ref-toc__code">composite-06</span><span class="ref-toc__name">CandidateInfoBlock</span></a></li>
+      <li><a href="#filter-panel" data-for="filter-panel"><span class="ref-toc__code">composite-07</span><span class="ref-toc__name">FilterPanel</span></a></li>
+      <li><a href="#candidate-card" data-for="candidate-card"><span class="ref-toc__code">composite-08</span><span class="ref-toc__name">CandidateCard</span></a></li>
+    </ul>
+    <p class="ref-toc__group">Layout</p>
+    <ul class="ref-toc__list" data-tier="layout">
+      <li><a href="#pagination" data-for="pagination"><span class="ref-toc__code">layout-03</span><span class="ref-toc__name">Pagination</span></a></li>
+      <li><a href="#panel" data-for="panel"><span class="ref-toc__code">layout-05</span><span class="ref-toc__name">Panel</span></a></li>
+      <li><a href="#panel-section" data-for="panel-section"><span class="ref-toc__code">layout-06</span><span class="ref-toc__name">PanelSection</span></a></li>
+      <li><a href="#modal" data-for="modal"><span class="ref-toc__code">layout-07</span><span class="ref-toc__name">Modal</span></a></li>
+    </ul>
+    <p class="ref-toc__group">Organisms</p>
+    <ul class="ref-toc__list" data-tier="organism">
+      <li><a href="#data-table" data-for="data-table"><span class="ref-toc__code">organism-01</span><span class="ref-toc__name">DataTable</span></a></li>
+    </ul>
+    <p class="ref-toc__group">Composed samples</p>
+    <ul class="ref-toc__list" data-tier="composed">
+      <li><a href="#composed" data-for="composed"><span class="ref-toc__code"></span><span class="ref-toc__name">composed · Composed samples</span></a></li>
+      <li><a href="#composed-01" data-for="composed-01"><span class="ref-toc__code">composed-01</span><span class="ref-toc__name">List page: table always in a white card</span></a></li>
+      <li><a href="#composed-02" data-for="composed-02"><span class="ref-toc__code">composed-02</span><span class="ref-toc__name">Slide-in detail panel (from the right)</span></a></li>
+      <li><a href="#composed-03" data-for="composed-03"><span class="ref-toc__code">composed-03</span><span class="ref-toc__name">Form section (in a white card)</span></a></li>
+      <li><a href="#composed-04" data-for="composed-04"><span class="ref-toc__code">composed-04</span><span class="ref-toc__name">Empty state & confirmation modal</span></a></li>
+      <li><a href="#composed-05" data-for="composed-05"><span class="ref-toc__code">composed-05</span><span class="ref-toc__name">Data table: every column & cell type in one screen</span></a></li>
+    </ul>
+  </div>
+</nav>
+<main class="ref-main">
+<h2 class="ref-grouphead" id="grp-assets">Assets</h2>
+
+<section class="ref-section" id="avatar" data-name="asset-01 — avatar">
+<a class="ref-anchor" href="#avatar" aria-label="Link to this section">#</a><h2 class="ref-h">asset-01 — Avatar</h2>
 <p class="ref-sub">asset-01 Avatar — image (src, e.g. shipped ava-*.svg) or initials fallback. Full radius + soft border per spec.</p>
 <div class="ref-row"><span class="es-avatar ts-bold-body-md es-avatar--xs">RA</span>
   <span class="es-avatar ts-bold-body-md es-avatar--sm">RA</span>
   <span class="es-avatar ts-bold-body-md es-avatar--md">RA</span>
   <span class="es-avatar ts-bold-body-md es-avatar--lg">RA</span>
   <span class="es-avatar ts-bold-body-md es-avatar--xl">RA</span></div>
-</div>
-<div class="ref-section" id="button">
-<h2 class="ref-h">atom-01 — Button</h2>
+</section>
+
+<h2 class="ref-grouphead" id="grp-atoms-actions">Atoms — actions</h2>
+
+<section class="ref-section" id="button" data-name="atom-01 — button">
+<a class="ref-anchor" href="#button" aria-label="Link to this section">#</a><h2 class="ref-h">atom-01 — Button</h2>
 <p class="ref-sub">atom-01 Button — 5 types + states. Icon-agnostic: pass icons via #left / #right slots.</p>
 <div class="ref-row"><button type="button" class="es-btn ts-bold-body-md es-btn--Filled">Filled</button>
   <button type="button" class="es-btn ts-bold-body-md es-btn--Outlined">Outlined</button>
@@ -64,30 +139,36 @@
   <button type="button" class="es-btn ts-bold-body-md es-btn--Ghost">Ghost</button></div>
 <div class="ref-row"><button type="button" class="es-btn ts-bold-body-md es-btn--Filled" disabled>Disabled</button>
   <button type="button" class="es-btn ts-bold-body-md es-btn--Filled"><span class="es-btn__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-pencil"></use></svg></span>With icon</button></div>
-</div>
-<div class="ref-section" id="icon-button">
-<h2 class="ref-h">atom-02 — IconButton</h2>
+</section>
+
+<section class="ref-section" id="icon-button" data-name="atom-02 — iconbutton">
+<a class="ref-anchor" href="#icon-button" aria-label="Link to this section">#</a><h2 class="ref-h">atom-02 — IconButton</h2>
 <p class="ref-sub">atom-02 IconButton — square, icon-only (via default slot).</p>
 <div class="ref-row"><button type="button" class="es-iconbtn es-iconbtn--Filled" aria-label="Edit"><svg class="es-ico" aria-hidden="true"><use href="#tb-pencil"></use></svg></button>
   <button type="button" class="es-iconbtn es-iconbtn--Outlined" aria-label="Edit"><svg class="es-ico" aria-hidden="true"><use href="#tb-pencil"></use></svg></button>
   <button type="button" class="es-iconbtn es-iconbtn--Tonal" aria-label="Edit"><svg class="es-ico" aria-hidden="true"><use href="#tb-pencil"></use></svg></button>
   <button type="button" class="es-iconbtn es-iconbtn--Elevated" aria-label="Edit"><svg class="es-ico" aria-hidden="true"><use href="#tb-pencil"></use></svg></button>
   <button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="Edit"><svg class="es-ico" aria-hidden="true"><use href="#tb-pencil"></use></svg></button></div>
-</div>
-<div class="ref-section" id="split-button">
-<h2 class="ref-h">atom-03 — SplitButton</h2>
+</section>
+
+<section class="ref-section" id="split-button" data-name="atom-03 — splitbutton">
+<a class="ref-anchor" href="#split-button" aria-label="Link to this section">#</a><h2 class="ref-h">atom-03 — SplitButton</h2>
 <p class="ref-sub">atom-03 SplitButton — primary action (left) + dropdown trigger (right), 2px gap. Types Filled|Outlined|Tonal. Menu items via `items` (see EDropdownMenu).</p>
 <div class="ref-row"><div class="es-split es-split--Filled" role="group"><button type="button" class="es-split__main ts-bold-body-md">Action</button><button type="button" class="es-split__trigger" aria-haspopup="true" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></button></div>
   <div class="es-split es-split--Outlined" role="group"><button type="button" class="es-split__main ts-bold-body-md">Action</button><button type="button" class="es-split__trigger" aria-haspopup="true" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></button></div>
   <div class="es-split es-split--Tonal" role="group"><button type="button" class="es-split__main ts-bold-body-md">Action</button><button type="button" class="es-split__trigger" aria-haspopup="true" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></button></div></div>
-</div>
-<div class="ref-section" id="custom-button">
-<h2 class="ref-h">atom-04 — CustomButton</h2>
+</section>
+
+<section class="ref-section" id="custom-button" data-name="atom-04 — custombutton">
+<a class="ref-anchor" href="#custom-button" aria-label="Link to this section">#</a><h2 class="ref-h">atom-04 — CustomButton</h2>
 <p class="ref-sub">atom-04 CustomButton — neutral low-emphasis button (breadcrumb/navigation). System surface, no brand color. Icons via #left / #right slots.</p>
 <div class="ref-row"><button type="button" class="es-custombtn ts-bold-body-md"><span class="es-custombtn__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-pencil"></use></svg></span>Custom action</button></div>
-</div>
-<section class="ref-section" id="chip">
-<h2 class="ref-h">atom-05 · Chip</h2>
+</section>
+
+<h2 class="ref-grouphead" id="grp-atoms-data-display">Atoms — data display</h2>
+
+<section class="ref-section" id="chip" data-name="atom-05 · chip">
+<a class="ref-anchor" href="#chip" aria-label="Link to this section">#</a><h2 class="ref-h">atom-05 · Chip</h2>
 <p class="ref-sub">atom-05 Chip — tag/filter pill. Same bold text ramp as StatusChip: MD = ts-bold-body-md, SM = ts-bold-label-sm. style: Neutral | Colored | Gradient · optional icon, count, close.</p>
 <div class="ref-row" style="align-items:center"><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">Neutral</span>
   <span class="es-chip es-chip--md es-chip--Colored ts-bold-body-md">Colored</span>
@@ -99,8 +180,9 @@
   <span class="es-chip es-chip--sm es-chip--Colored ts-bold-label-sm">Small colored</span>
   <span class="es-chip es-chip--sm es-chip--Neutral ts-bold-label-sm">Small closable<button type="button" class="es-chip__close" aria-label="Remove"><svg class="es-ico" aria-hidden="true"><use href="#tb-x"></use></svg></button></span></div>
 </section>
-<div class="ref-section" id="status-chip">
-<h2 class="ref-h">atom-06 — StatusChip</h2>
+
+<section class="ref-section" id="status-chip" data-name="atom-06 — statuschip">
+<a class="ref-anchor" href="#status-chip" aria-label="Link to this section">#</a><h2 class="ref-h">atom-06 — StatusChip</h2>
 <p class="ref-sub">atom-06 StatusChip — read-only semantic status pill (11 types). SINGLE size per spec: bold.body-md + padding xxs/lg.</p>
 <div class="ref-row"><span class="es-status ts-bold-body-md es-status--Default" role="status">Default</span>
   <span class="es-status ts-bold-body-md es-status--Success" role="status">Success</span>
@@ -113,9 +195,10 @@
   <span class="es-status ts-bold-body-md es-status--Sem-Lime" role="status">Sem-Lime</span>
   <span class="es-status ts-bold-body-md es-status--Sem-Indigo" role="status">Sem-Indigo</span>
   <span class="es-status ts-bold-body-md es-status--Sem-Yellow" role="status">Sem-Yellow</span></div>
-</div>
-<section class="ref-section" id="toast">
-<h2 class="ref-h">atom-07 · Toast</h2>
+</section>
+
+<section class="ref-section" id="toast" data-name="atom-07 · toast">
+<a class="ref-anchor" href="#toast" aria-label="Link to this section">#</a><h2 class="ref-h">atom-07 · Toast</h2>
 <p class="ref-sub">atom-07 Toast — semantic alert card: circular custom icon (src/assets/icons-custom — system-*.svg, loading.svg for Wait) · bold semantic title + tight subtitle · Action = the standard Button (Tonal) · dismiss = the standard IconButton (Ghost). Styles: Filled | Outlined | Others (Basic).</p>
 <div class="ref-col" style="max-width:480px">
   <div class="es-toast es-toast--Success" role="alert"><img class="es-toast__icon" src="../src/assets/icons-custom/system-success.svg" alt="" /><div class="es-toast__body"><p class="es-toast__title ts-bold-body-md">Success</p><p class="es-toast__desc ts-regular-body-sm">Subtitle</p></div><button type="button" class="es-btn ts-bold-body-sm es-btn--Tonal es-toast__action">Action</button><button type="button" class="es-iconbtn es-iconbtn--Ghost es-toast__close" aria-label="Dismiss"><svg class="es-ico" aria-hidden="true"><use href="#tb-x"></use></svg></button></div>
@@ -127,8 +210,11 @@
   <div class="es-toast es-toast--Basic" role="alert"><div class="es-toast__body"><p class="es-toast__title ts-bold-body-md">Basic</p><p class="es-toast__desc ts-regular-body-sm">Subtitle</p></div><button type="button" class="es-btn ts-bold-body-sm es-btn--Tonal es-toast__action">Action</button><button type="button" class="es-iconbtn es-iconbtn--Ghost es-toast__close" aria-label="Dismiss"><svg class="es-ico" aria-hidden="true"><use href="#tb-x"></use></svg></button></div>
 </div>
 </section>
-<section class="ref-section" id="input">
-<h2 class="ref-h">atom-08 · Input</h2>
+
+<h2 class="ref-grouphead" id="grp-atoms-form-controls">Atoms — form controls</h2>
+
+<section class="ref-section" id="input" data-name="atom-08 · input">
+<a class="ref-anchor" href="#input" aria-label="Link to this section">#</a><h2 class="ref-h">atom-08 · Input</h2>
 <p class="ref-sub">atom-08 Input — single-line field. 9 types (Basic | Search | SearchWithIcon | Dropdown | DatePicker | Password | PasswordShow | Number | Special) × states Inactive / Active Single / Active Multi. Multi values are REAL Chip components; clear &amp; stepper controls are REAL IconButtons. Focus = brand border + focus ring.</p>
 <div style="display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:20px 24px;max-width:1024px">
   <div class="ref-col" style="gap:4px"><span class="ts-regular-label-sm" style="color:var(--color-system-text-mute)">Basic — Inactive</span>
@@ -181,13 +267,15 @@
   <label class="es-field"><span class="es-field__box is-disabled"><input class="es-field__input ts-regular-body-md" placeholder="Not editable" disabled /></span></label></div>
 </div>
 </section>
-<div class="ref-section" id="textarea">
-<h2 class="ref-h">atom-09 — Textarea</h2>
+
+<section class="ref-section" id="textarea" data-name="atom-09 — textarea">
+<a class="ref-anchor" href="#textarea" aria-label="Link to this section">#</a><h2 class="ref-h">atom-09 — Textarea</h2>
 <p class="ref-sub">atom-09 Textarea — multi-line field. v-model.</p>
 <label class="es-ta" style="max-width:320px"><span class="es-ta__label ts-regular-body-md">Notes</span><span class="es-ta__box"><textarea class="es-ta__input ts-regular-body-md" rows="3" placeholder="Write something…"></textarea></span><span class="es-ta__msg ts-regular-body-sm">Helper text</span></label>
-</div>
-<section class="ref-section" id="rich-text-editor">
-<h2 class="ref-h">atom-10 · RichTextEditor</h2>
+</section>
+
+<section class="ref-section" id="rich-text-editor" data-name="atom-10 · richtexteditor">
+<a class="ref-anchor" href="#rich-text-editor" aria-label="Link to this section">#</a><h2 class="ref-h">atom-10 · RichTextEditor</h2>
 <p class="ref-sub">atom-10 RichTextEditor — label + toolbar + content area. Toolbar actions (bold/italic/underline/lists/link) are REAL IconButton components; the frame behaves like the Input field (visible border, brand focus ring). States: Active | Placeholder | Error | Disabled.</p>
 <div class="ref-col" style="max-width:520px">
   <div class="ref-col" style="gap:4px"><span class="ts-regular-label-sm" style="color:var(--color-system-text-mute)">Active — with content</span>
@@ -204,8 +292,8 @@
 </div>
 </section>
 
-<section class="ref-section" id="checkbox">
-<h2 class="ref-h">atom-12 · Checkbox</h2>
+<section class="ref-section" id="checkbox" data-name="atom-12 · checkbox">
+<a class="ref-anchor" href="#checkbox" aria-label="Link to this section">#</a><h2 class="ref-h">atom-12 · Checkbox</h2>
 <p class="ref-sub">atom-12 FormControl (Checkbox) — v-model. Supports indeterminate (sprite minus icon — optically centered both axes).</p>
 <div class="ref-row" style="align-items:center">
   <label class="es-check"><input type="checkbox" class="es-check__native" checked /><span class="es-check__box is-on"><svg class="es-check__mark es-ico" style="font-size:0.8em" aria-hidden="true"><use href="#tb-check"></use></svg></span><span class="es-check__label ts-regular-body-md">Checked</span></label>
@@ -214,22 +302,25 @@
   <label class="es-check is-disabled"><input type="checkbox" class="es-check__native" disabled /><span class="es-check__box"></span><span class="es-check__label ts-regular-body-md">Disabled</span></label>
 </div>
 </section>
-<div class="ref-section" id="radio">
-<h2 class="ref-h">atom-12 — Radio</h2>
+
+<section class="ref-section" id="radio" data-name="atom-12 — radio">
+<a class="ref-anchor" href="#radio" aria-label="Link to this section">#</a><h2 class="ref-h">atom-12 — Radio</h2>
 <p class="ref-sub">atom-12 FormControl (Radio) — one radio in a group. v-model = selected value; `option` = this radio's value.</p>
 <div class="ref-row"><label class="es-radio"><span class="es-radio__dot is-on"><span class="es-radio__inner"></span></span><span class="es-radio__label ts-regular-body-md">Selected</span></label>
   <label class="es-radio"><span class="es-radio__dot"></span><span class="es-radio__label ts-regular-body-md">Unselected</span></label>
   <label class="es-radio is-disabled"><span class="es-radio__dot"></span><span class="es-radio__label ts-regular-body-md">Disabled</span></label></div>
-</div>
-<div class="ref-section" id="switch">
-<h2 class="ref-h">atom-12 — Switch</h2>
+</section>
+
+<section class="ref-section" id="switch" data-name="atom-12 — switch">
+<a class="ref-anchor" href="#switch" aria-label="Link to this section">#</a><h2 class="ref-h">atom-12 — Switch</h2>
 <p class="ref-sub">atom-12 FormControl (Switch) — boolean toggle. v-model.</p>
 <div class="ref-row"><label class="es-switch"><button type="button" role="switch" aria-checked="true" class="es-switch__track is-on"><span class="es-switch__thumb"></span></button><span class="es-switch__label ts-regular-body-md">On</span></label>
   <label class="es-switch"><button type="button" role="switch" aria-checked="false" class="es-switch__track"><span class="es-switch__thumb"></span></button><span class="es-switch__label ts-regular-body-md">Off</span></label>
   <label class="es-switch is-disabled"><button type="button" role="switch" aria-checked="false" class="es-switch__track" disabled><span class="es-switch__thumb"></span></button><span class="es-switch__label ts-regular-body-md">Disabled</span></label></div>
-</div>
-<section class="ref-section" id="range-slider">
-<h2 class="ref-h">atom-13 · RangeSlider</h2>
+</section>
+
+<section class="ref-section" id="range-slider" data-name="atom-13 · rangeslider">
+<a class="ref-anchor" href="#range-slider" aria-label="Link to this section">#</a><h2 class="ref-h">atom-13 · RangeSlider</h2>
 <p class="ref-sub">atom-13 RangeSlider — dual-handle numeric range: track + brand fill + two circular handles. props: min/max/step/valueMin/valueMax/showLabels. States: Enabled | Disabled.</p>
 <div class="ref-row" style="align-items:flex-start;gap:48px">
   <div class="ref-col" style="gap:4px"><span class="ts-regular-label-sm" style="color:var(--color-system-text-mute)">Enabled — showLabels</span>
@@ -247,8 +338,10 @@
 </div>
 </section>
 
-<div class="ref-section" id="breadcrumb">
-<h2 class="ref-h">atom-14 — Breadcrumb</h2>
+<h2 class="ref-grouphead" id="grp-atoms-navigation">Atoms — navigation</h2>
+
+<section class="ref-section" id="breadcrumb" data-name="atom-14 — breadcrumb">
+<a class="ref-anchor" href="#breadcrumb" aria-label="Link to this section">#</a><h2 class="ref-h">atom-14 — Breadcrumb</h2>
 <p class="ref-sub">atom-14 Breadcrumb — items:[{label, href?}]. Last item = current. Icon-free (glyph separator). <b>Opt-in only:</b> never render a breadcrumb by default — add one only when the requirement explicitly asks for it.</p>
 <nav class="es-bc" aria-label="Breadcrumb">
   <ol class="es-bc__list">
@@ -263,9 +356,10 @@
     <li class="es-bc__li"><span class="es-bc__current es-bc__current--brand ts-bold-body-md" aria-current="page">Detail</span></li>
   </ol>
 </nav>
-</div>
-<section class="ref-section" id="dropdown-menu">
-<h2 class="ref-h">atom-15 · DropdownMenu</h2>
+</section>
+
+<section class="ref-section" id="dropdown-menu" data-name="atom-15 · dropdownmenu">
+<a class="ref-anchor" href="#dropdown-menu" aria-label="Link to this section">#</a><h2 class="ref-h">atom-15 · DropdownMenu</h2>
 <p class="ref-sub">atom-15 DropdownMenu (context menu) — floating panel. Variants: plain items · items with leading icons · with search (hasSearch — the pinned search field is the REAL Input component). Danger items use semantic error.</p>
 <div class="ref-row" style="align-items:flex-start;gap:32px">
   <div class="ref-col" style="gap:6px"><span class="ts-regular-label-sm" style="color:var(--color-system-text-mute)">MenuGeneral — plain</span>
@@ -276,8 +370,9 @@
   <div class="es-menu__panel" style="position:static;min-width:240px"><div class="es-menu__search"><label class="es-field"><span class="es-field__box"><span class="es-field__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-search"></use></svg></span><input class="es-field__input ts-regular-body-md" placeholder="Search" /></span></label></div><button type="button" class="es-menu__item ts-regular-body-md"><span class="es-menu__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-user"></use></svg></span><span class="es-menu__label">Profile</span></button><button type="button" class="es-menu__item ts-regular-body-md"><span class="es-menu__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-file-text"></use></svg></span><span class="es-menu__label">Documents</span></button><button type="button" class="es-menu__item ts-regular-body-md"><span class="es-menu__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-mail"></use></svg></span><span class="es-menu__label">Messages</span></button></div></div>
 </div>
 </section>
-<section class="ref-section" id="tabs">
-<h2 class="ref-h">atom-16 · Tabs</h2>
+
+<section class="ref-section" id="tabs" data-name="atom-16 · tabs">
+<a class="ref-anchor" href="#tabs" aria-label="Link to this section">#</a><h2 class="ref-h">atom-16 · Tabs</h2>
 <p class="ref-sub">atom-16 Tabs — styles: underline | pill. Variants: text · icon + text · icon-only (optically centered). Icons ride the same sprite as Button/IconButton.</p>
 <div class="ref-col" style="gap:20px;max-width:640px">
   <div class="ref-col" style="gap:6px"><span class="ts-regular-label-sm" style="color:var(--color-system-text-mute)">Underline — text</span>
@@ -294,34 +389,73 @@
   <div class="es-tabs es-tabs--pill"><button type="button" class="es-tabs__tab es-tabs__tab--icononly is-active ts-bold-body-md" aria-label="Overview"><span class="es-tabs__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-layout-dashboard"></use></svg></span></button><button type="button" class="es-tabs__tab es-tabs__tab--icononly ts-bold-body-md" aria-label="Documents"><span class="es-tabs__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-file-text"></use></svg></span></button><button type="button" class="es-tabs__tab es-tabs__tab--icononly ts-bold-body-md" aria-label="Settings"><span class="es-tabs__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-settings"></use></svg></span></button></div></div>
 </div>
 </section>
-<div class="ref-section" id="filter-field">
-<h2 class="ref-h">composite-04 — FilterField</h2>
+
+<h2 class="ref-grouphead" id="grp-molecules-table-parts">Molecules — table parts</h2>
+
+<section class="ref-section" id="table-column" data-name="molecule-04 · tablecolumn">
+<a class="ref-anchor" href="#table-column" aria-label="Link to this section">#</a><h2 class="ref-h">molecule-04 · TableColumn</h2>
+<p class="ref-sub">molecule-04 TableColumn — every header variant, each shown inside a real <code>&lt;thead&gt;</code> so it carries the same geometry it has in <a href="#data-table">organism-01</a> and <a href="#composed-01">composed-01</a>. Spec typography is <code>bold.body-md</code>; icons are optically centred on the label, never baseline-aligned.</p>
+<div class="ref-row" style="align-items:flex-start;flex-wrap:wrap;gap:20px">
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Basic</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col">Name</th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Sortable</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col"><button type="button" class="es-col__sortbtn"><span>Name</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-selector"></use></svg></span></button></th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Sorted — asc</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col is-sorted ts-bold-body-md" scope="col" aria-sort="ascending"><button type="button" class="es-col__sortbtn"><span>Name</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-up"></use></svg></span></button></th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Sorted — desc</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col is-sorted ts-bold-body-md" scope="col" aria-sort="descending"><button type="button" class="es-col__sortbtn"><span>Name</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></span></button></th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">WithFilter</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col es-col--stacked ts-bold-body-md" scope="col"><span class="es-col__title"><span>Name</span><div class="es-col__field"><label class="es-field"><span class="es-field__box"><input class="es-field__input ts-regular-body-md" placeholder="Filter" /></span></label></div></span></th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">WithDropdown</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col es-col--stacked ts-bold-body-md" scope="col"><span class="es-col__title"><span>Dept</span><div class="es-col__field"><label class="es-field"><span class="es-field__box is-dropdown"><input class="es-field__input ts-regular-body-md" placeholder="All" readonly /><span class="es-field__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></span></span></label></div></span></th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Checkbox</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col"><label class="es-col__center"><input type="checkbox" class="es-col__checkbox" aria-label="Select all" /></label></th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Numeric — right</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col es-col--numeric ts-bold-body-md" scope="col"><button type="button" class="es-col__sortbtn"><span>Amount</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-selector"></use></svg></span></button></th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">WithIcon</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col"><span class="es-col__title"><span class="es-col__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-calendar"></use></svg></span><span>Due date</span></span></th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">WithSubtitle</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col"><span class="es-col__title"><span class="es-col__labelwrap"><span>Salary</span><span class="es-col__subtitle ts-regular-label-sm">IDR / month</span></span></span></th></tr></thead></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Sticky</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col es-col--sticky ts-bold-body-md" scope="col">Pinned</th></tr></thead></table></div></div>
+</div>
+</section>
+
+<section class="ref-section" id="table-row" data-name="molecule-05 · tablerow">
+<a class="ref-anchor" href="#table-row" aria-label="Link to this section">#</a><h2 class="ref-h">molecule-05 · TableRow</h2>
+<p class="ref-sub">molecule-05 TableRow — every cell variant, each in a real <code>&lt;tbody&gt;</code> row so padding and pitch match <a href="#data-table">organism-01</a> and <a href="#composed-01">composed-01</a> exactly. Spec: <code>regular.body-md</code>, padding <code>xl / md</code> (14px · 10px) — a 48px row pitch. States: default · hover · selected · disabled.</p>
+<div class="ref-row" style="align-items:flex-start;flex-wrap:wrap;gap:20px">
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Text</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md">Athaya Zahrani</td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Bold text</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__primary ts-bold-body-md">Athaya Zahrani</span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Secondary</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__mute">Optional note</span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Two-line</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__multi"><span class="es-cell__primary ts-bold-body-md">Athaya</span><span class="es-cell__mute ts-regular-body-sm">athaya@esystems.id</span></span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Numeric</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell es-cell--numeric ts-regular-body-md">1.024</td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Currency</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell es-cell--numeric ts-regular-body-md"><span class="es-cell__mute ts-regular-body-sm">IDR</span> 12.500.000</td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Status</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-status es-status--Success ts-bold-body-md"><span class="es-status__dot"></span>Active</span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Chips</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__chips"><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">Design</span><span class="es-chip es-chip--md es-chip--Colored ts-bold-body-md">Figma</span></span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Checkbox</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" checked aria-label="Select row" /></label></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Photo</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><img class="es-cell__photo" src="../src/assets/avatars/ava-placeholder-user.svg" alt="" /></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Photo + text</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__inline"><img class="es-cell__photo" src="../src/assets/avatars/ava-placeholder-user.svg" alt="" />Bimo Prakoso</span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Avatar initials</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__inline"><span class="es-avatar es-avatar--sm ts-bold-body-md">RA</span>Raihan Allaam</span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Dot indicator</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__indicator"><span class="es-cell__dot es-cell__dot--info"></span>Syncing</span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Icon actions</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__actions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="Edit"><svg class="es-ico" aria-hidden="true"><use href="#tb-pencil"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="Delete" style="color:var(--color-semantic-error)"><svg class="es-ico" aria-hidden="true"><use href="#tb-trash"></use></svg></button></span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Link</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><a class="es-cell__link" href="#">Open detail</a></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Choice box</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__choice"><label class="es-check" style="gap:0"><input type="checkbox" class="es-check__native" /><span class="es-check__box"></span></label><span class="ts-regular-body-md">Option A</span></span></td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Hover state</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr class="is-hover"><td class="es-cell ts-regular-body-md">Hovered row</td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Selected</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr class="is-selected"><td class="es-cell ts-regular-body-md">Selected row</td></tr></tbody></table></div></div>
+  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Disabled</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr class="is-disabled"><td class="es-cell ts-regular-body-md">Disabled row</td></tr></tbody></table></div></div>
+</div>
+</section>
+
+<h2 class="ref-grouphead" id="grp-composites">Composites</h2>
+
+<section class="ref-section" id="filter-field" data-name="composite-04 — filterfield">
+<a class="ref-anchor" href="#filter-field" aria-label="Link to this section">#</a><h2 class="ref-h">composite-04 — FilterField</h2>
 <p class="ref-sub">composite-04 FilterField — one filter row inside EFilterPanel. Types: General|Date|Phone|MaxMin|Slider. Inputs go in the default slot; optional #icon, #options (checkbox list), #suggestions (chips).</p>
 <div class="es-ffield" role="group" style="max-width:320px">
   <div class="es-ffield__header"><span class="es-ffield__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-search"></use></svg></span><span class="es-ffield__label ts-bold-body-md">Keyword</span></div>
   <div class="es-ffield__body"><label class="es-field"><span class="es-field__box"><input class="es-field__input ts-regular-body-md" placeholder="Search keyword" /></span></label></div>
-</div>
-<div class="es-ffield es-ffield--MaxMin" role="group" style="max-width:320px">
-  <div class="es-ffield__header"><span class="es-ffield__label ts-bold-body-md">Salary range</span></div>
-  <div class="es-ffield__body"><label class="es-field"><span class="es-field__box"><input class="es-field__input ts-regular-body-md" placeholder="Min" /></span></label><label class="es-field"><span class="es-field__box"><input class="es-field__input ts-regular-body-md" placeholder="Max" /></span></label></div>
-</div>
-</div>
-<div class="ref-section" id="candidate-info-block">
-<h2 class="ref-h">composite-06 — CandidateInfoBlock</h2>
+</section>
+
+<section class="ref-section" id="candidate-info-block" data-name="composite-06 — candidateinfoblock">
+<a class="ref-anchor" href="#candidate-info-block" aria-label="Link to this section">#</a><h2 class="ref-h">composite-06 — CandidateInfoBlock</h2>
 <p class="ref-sub">composite-06 CandidateInfoBlock — label + value display for panel body cards. Value via prop, default slot (e.g. chips), or `entries` (experience rows).</p>
 <div class="es-info" style="max-width:280px">
   <span class="es-info__label ts-bold-body-md">Email</span>
   <div class="es-info__value ts-regular-body-md">raihan@elabram.com</div>
-</div>
-<div class="es-info es-info--grouped" style="max-width:280px">
-  <span class="es-info__label ts-bold-body-md">Education</span>
-  <div class="es-info__entries">
-    <div class="es-info__entry"><span class="es-info__entry-title ts-bold-body-sm">Institut Teknologi Sepuluh Nopember</span><span class="es-info__entry-subtitle ts-regular-label-sm">S1 Desain Produk · 2019–2023</span></div>
-  </div>
-</div>
-</div>
-<div class="ref-section" id="filter-panel">
-<h2 class="ref-h">composite-07 — FilterPanel</h2>
+</section>
+
+<section class="ref-section" id="filter-panel" data-name="composite-07 — filterpanel">
+<a class="ref-anchor" href="#filter-panel" aria-label="Link to this section">#</a><h2 class="ref-h">composite-07 — FilterPanel</h2>
 <p class="ref-sub">composite-07 FilterPanel — vertical filter drawer: sticky header, scrollable stack of EFilterField rows, footer with Clear + Apply. Emits @apply / @clear.</p>
 <form class="es-fpanel" aria-label="Filter panel" style="max-width:340px" onsubmit="return false">
   <div class="es-fpanel__header"><span class="es-fpanel__title ts-bold-body-md">Filters</span><span class="es-fpanel__count ts-bold-body-sm">3</span></div>
@@ -333,9 +467,10 @@
   </div>
   <div class="es-fpanel__footer"><button type="button" class="es-fpanel__clear ts-bold-body-md">Clear all</button><button type="button" class="es-btn ts-bold-body-md es-btn--Filled">Apply</button></div>
 </form>
-</div>
-<div class="ref-section" id="candidate-card">
-<h2 class="ref-h">composite-08 — CandidateCard</h2>
+</section>
+
+<section class="ref-section" id="candidate-card" data-name="composite-08 — candidatecard">
+<a class="ref-anchor" href="#candidate-card" aria-label="Link to this section">#</a><h2 class="ref-h">composite-08 — CandidateCard</h2>
 <p class="ref-sub">composite-08 CandidateCard — candidate summary card: avatar + name + headline + chips, divider, info rows (default slot), actions. Slots: #avatar, #chips, default, #actions. <b>#actions is visible at rest</b> — add <code>es-ccard--hoveractions</code> only where a dense grid really needs the reveal; an <code>opacity:0</code> button stays clickable and tab-focusable while invisible.</p>
 <div class="es-ccard" role="listitem" style="max-width:420px">
   <div class="es-ccard__profile">
@@ -349,10 +484,12 @@
   <hr class="es-ccard__divider" />
   <div class="es-ccard__info ts-regular-body-md">5 years experience · Figma · Design systems</div>
   <div class="es-ccard__actions"><button type="button" class="es-btn ts-bold-body-md es-btn--Tonal">View profile</button></div>
-</div>
-</div>
-<div class="ref-section" id="pagination">
-<h2 class="ref-h">layout-03 — Pagination</h2>
+</section>
+
+<h2 class="ref-grouphead" id="grp-layout">Layout</h2>
+
+<section class="ref-section" id="pagination" data-name="layout-03 — pagination">
+<a class="ref-anchor" href="#pagination" aria-label="Link to this section">#</a><h2 class="ref-h">layout-03 — Pagination</h2>
 <p class="ref-sub">layout-03 Pagination — spec footer bar on surface-strong: count label + page buttons. v-model = current page.</p>
 <nav class="es-pg ts-regular-body-md" aria-label="Pagination">
   <span class="es-pg__count">1–10 of 128</span>
@@ -364,9 +501,10 @@
     <button type="button" class="es-pg__btn es-pg__navbtn" aria-label="Next page"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-right"></use></svg></button>
   </span>
 </nav>
-</div>
-<div class="ref-section" id="panel">
-<h2 class="ref-h">layout-05 — Panel</h2>
+</section>
+
+<section class="ref-section" id="panel" data-name="layout-05 — panel">
+<a class="ref-anchor" href="#panel" aria-label="Link to this section">#</a><h2 class="ref-h">layout-05 — Panel</h2>
 <p class="ref-sub">layout-05 Panel — slide-in side panel per spec anatomy: header (title-md) / body on surface-strong with white cards / footer. v-model = open. Named slot #header replaces the default title+close pair (used by the page-11 candidate-switcher bar).</p>
 <div class="ref-stage" style="position:relative;height:420px;overflow:hidden">
   <div class="es-panel__scrim" style="position:absolute"></div>
@@ -375,21 +513,18 @@
     <div class="es-panel__body ts-regular-body-md">Slide panel content.</div>
     <footer class="es-panel__footer"><button type="button" class="es-btn ts-bold-body-md es-btn--Filled">Save</button></footer>
   </aside>
-</div>
-</div>
-<div class="ref-section" id="panel-section">
-<h2 class="ref-h">layout-06 — PanelSection</h2>
+</section>
+
+<section class="ref-section" id="panel-section" data-name="layout-06 — panelsection">
+<a class="ref-anchor" href="#panel-section" aria-label="Link to this section">#</a><h2 class="ref-h">layout-06 — PanelSection</h2>
 <p class="ref-sub">layout-06 PanelSection — header/sub-header/footer building blocks for Panel, Modal and DataTable shells. Slots: #left (or title prop), default, #right.</p>
 <div class="es-psec es-psec--HeaderTitle">
   <div class="es-psec__left"><span class="es-psec__title ts-bold-title-md">Section title</span></div>
   <div class="es-psec__right"><button type="button" class="es-btn ts-bold-body-md es-btn--Tonal">Action</button></div>
-</div>
-<div class="es-psec es-psec--SubHeader">
-  <div class="es-psec__left"><span class="es-psec__title ts-bold-title-md">Sub header</span></div>
-</div>
-</div>
-<div class="ref-section" id="modal">
-<h2 class="ref-h">layout-07 — Modal</h2>
+</section>
+
+<section class="ref-section" id="modal" data-name="layout-07 — modal">
+<a class="ref-anchor" href="#modal" aria-label="Link to this section">#</a><h2 class="ref-h">layout-07 — Modal</h2>
 <p class="ref-sub">layout-07 Modal — overlay dialog per spec: System body = surface-strong + white content card; radius none; shadow 2XL. v-model = open. Sizes sm|md|lg|fullscreen.</p>
 <div class="ref-stage" style="position:relative;height:420px;overflow:hidden">
   <div class="es-modal" style="position:absolute">
@@ -400,10 +535,12 @@
       <div class="es-modal__footer"><button type="button" class="es-btn ts-bold-body-md es-btn--Ghost">Cancel</button><button type="button" class="es-btn ts-bold-body-md es-btn--Filled">Confirm</button></div>
     </div>
   </div>
-</div>
-</div>
-<section class="ref-section" id="data-table">
-<h2 class="ref-h">organism-01 · DataTable</h2>
+</section>
+
+<h2 class="ref-grouphead" id="grp-organisms">Organisms</h2>
+
+<section class="ref-section" id="data-table" data-name="organism-01 · datatable">
+<a class="ref-anchor" href="#data-table" aria-label="Link to this section">#</a><h2 class="ref-h">organism-01 · DataTable</h2>
 <p class="ref-sub">organism-01 DataTable — the full shell with everything on: inline filter header row (REAL Input / Dropdown), sortable columns, selection checkboxes, StatusChip cells, IconButton row actions, Pagination footer. Same markup contract as <a href="#composed-01">composed-01</a>: a real <code>&lt;table&gt;</code> with <code>.es-col</code> headers and <code>.es-cell</code> cells at <code>body-md</code>.</p>
 <div class="es-table" style="max-width:920px">
   <div class="es-table__scroll">
@@ -438,51 +575,11 @@
   <div class="es-table__footer"><nav class="es-pg ts-regular-body-md" aria-label="Pagination"><span class="es-pg__count">1–4 of 24</span><span class="es-pg__pages"><button type="button" class="es-pg__btn es-pg__navbtn" aria-label="Previous" disabled><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-left"></use></svg></button><button type="button" class="es-pg__btn ts-bold-body-md is-active">1</button><button type="button" class="es-pg__btn ts-bold-body-md">2</button><button type="button" class="es-pg__btn ts-bold-body-md">3</button><button type="button" class="es-pg__btn es-pg__navbtn" aria-label="Next"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-right"></use></svg></button></span></nav></div>
 </div>
 </section>
-<section class="ref-section" id="table-column">
-<h2 class="ref-h">molecule-04 · TableColumn</h2>
-<p class="ref-sub">molecule-04 TableColumn — every header variant, each shown inside a real <code>&lt;thead&gt;</code> so it carries the same geometry it has in <a href="#data-table">organism-01</a> and <a href="#composed-01">composed-01</a>. Spec typography is <code>bold.body-md</code>; icons are optically centred on the label, never baseline-aligned.</p>
-<div class="ref-row" style="align-items:flex-start;flex-wrap:wrap;gap:20px">
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Basic</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col">Name</th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Sortable</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col"><button type="button" class="es-col__sortbtn"><span>Name</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-selector"></use></svg></span></button></th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Sorted — asc</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col is-sorted ts-bold-body-md" scope="col" aria-sort="ascending"><button type="button" class="es-col__sortbtn"><span>Name</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-up"></use></svg></span></button></th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Sorted — desc</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col is-sorted ts-bold-body-md" scope="col" aria-sort="descending"><button type="button" class="es-col__sortbtn"><span>Name</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></span></button></th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">WithFilter</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col es-col--stacked ts-bold-body-md" scope="col"><span class="es-col__title"><span>Name</span><div class="es-col__field"><label class="es-field"><span class="es-field__box"><input class="es-field__input ts-regular-body-md" placeholder="Filter" /></span></label></div></span></th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">WithDropdown</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col es-col--stacked ts-bold-body-md" scope="col"><span class="es-col__title"><span>Dept</span><div class="es-col__field"><label class="es-field"><span class="es-field__box is-dropdown"><input class="es-field__input ts-regular-body-md" placeholder="All" readonly /><span class="es-field__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></span></span></label></div></span></th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Checkbox</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col"><label class="es-col__center"><input type="checkbox" class="es-col__checkbox" aria-label="Select all" /></label></th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Numeric — right</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col es-col--numeric ts-bold-body-md" scope="col"><button type="button" class="es-col__sortbtn"><span>Amount</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-selector"></use></svg></span></button></th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">WithIcon</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col"><span class="es-col__title"><span class="es-col__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-calendar"></use></svg></span><span>Due date</span></span></th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">WithSubtitle</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col ts-bold-body-md" scope="col"><span class="es-col__title"><span class="es-col__labelwrap"><span>Salary</span><span class="es-col__subtitle ts-regular-label-sm">IDR / month</span></span></span></th></tr></thead></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Sticky</span><div class="es-table" style="width:236px"><table class="es-table__table"><thead><tr><th class="es-col es-col--sticky ts-bold-body-md" scope="col">Pinned</th></tr></thead></table></div></div>
-</div>
-</section>
-<section class="ref-section" id="table-row">
-<h2 class="ref-h">molecule-05 · TableRow</h2>
-<p class="ref-sub">molecule-05 TableRow — every cell variant, each in a real <code>&lt;tbody&gt;</code> row so padding and pitch match <a href="#data-table">organism-01</a> and <a href="#composed-01">composed-01</a> exactly. Spec: <code>regular.body-md</code>, padding <code>xl / md</code> (14px · 10px) — a 48px row pitch. States: default · hover · selected · disabled.</p>
-<div class="ref-row" style="align-items:flex-start;flex-wrap:wrap;gap:20px">
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Text</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md">Athaya Zahrani</td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Bold text</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__primary ts-bold-body-md">Athaya Zahrani</span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Secondary</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__mute">Optional note</span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Two-line</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__multi"><span class="es-cell__primary ts-bold-body-md">Athaya</span><span class="es-cell__mute ts-regular-body-sm">athaya@esystems.id</span></span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Numeric</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell es-cell--numeric ts-regular-body-md">1.024</td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Currency</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell es-cell--numeric ts-regular-body-md"><span class="es-cell__mute ts-regular-body-sm">IDR</span> 12.500.000</td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Status</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-status es-status--Success ts-bold-body-md"><span class="es-status__dot"></span>Active</span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Chips</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__chips"><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">Design</span><span class="es-chip es-chip--md es-chip--Colored ts-bold-body-md">Figma</span></span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Checkbox</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" checked aria-label="Select row" /></label></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Photo</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><img class="es-cell__photo" src="../src/assets/avatars/ava-placeholder-user.svg" alt="" /></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Photo + text</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__inline"><img class="es-cell__photo" src="../src/assets/avatars/ava-placeholder-user.svg" alt="" />Bimo Prakoso</span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Avatar initials</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__inline"><span class="es-avatar es-avatar--sm ts-bold-body-md">RA</span>Raihan Allaam</span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Dot indicator</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__indicator"><span class="es-cell__dot es-cell__dot--info"></span>Syncing</span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Icon actions</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__actions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="Edit"><svg class="es-ico" aria-hidden="true"><use href="#tb-pencil"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="Delete" style="color:var(--color-semantic-error)"><svg class="es-ico" aria-hidden="true"><use href="#tb-trash"></use></svg></button></span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Link</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><a class="es-cell__link" href="#">Open detail</a></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Choice box</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr><td class="es-cell ts-regular-body-md"><span class="es-cell__choice"><label class="es-check" style="gap:0"><input type="checkbox" class="es-check__native" /><span class="es-check__box"></span></label><span class="ts-regular-body-md">Option A</span></span></td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Hover state</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr class="is-hover"><td class="es-cell ts-regular-body-md">Hovered row</td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Selected</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr class="is-selected"><td class="es-cell ts-regular-body-md">Selected row</td></tr></tbody></table></div></div>
-  <div class="ref-col" style="gap:6px;margin:0"><span class="ref-label">Disabled</span><div class="es-table" style="width:220px"><table class="es-table__table"><tbody><tr class="is-disabled"><td class="es-cell ts-regular-body-md">Disabled row</td></tr></tbody></table></div></div>
-</div>
-</section>
-<!-- =================== PART 2 — COMPOSED SAMPLES (detail tier) =================== -->
-<section class="ref-section" id="composed">
-<h2 class="ref-h">composed · Composed samples</h2>
+
+<h2 class="ref-grouphead" id="grp-composed-samples">Composed samples</h2>
+
+<section class="ref-section" id="composed" data-name="composed · composed samples">
+<a class="ref-anchor" href="#composed" aria-label="Link to this section">#</a><h2 class="ref-h">composed · Composed samples</h2>
 <p class="ref-sub">Composed mini-layouts proving the parts snap together: MetricCard · EmptyState · confirm dialog. Illustrations are the REAL shipped SVGs from <code>src/assets/</code>, rendered at their authored scale (96px) — never upscaled past the artwork.</p>
 <div class="ref-row" style="align-items:flex-start;flex-wrap:wrap;gap:24px">
   <div class="cp-card" style="min-width:220px"><p class="ts-regular-body-sm" style="margin:0;color:var(--color-system-text-mute)">Active users</p><p class="ts-bold-title-lg" style="margin:4px 0 0;color:var(--color-system-text-head)">2.408</p><span class="es-status es-status--Success ts-bold-body-md cp-metric__trend"><span class="es-status__dot"></span>+12.4%</span></div>
@@ -490,6 +587,179 @@
   <div class="cp-card" style="min-width:280px"><p class="ts-bold-body-lg" style="margin:0 0 4px;color:var(--color-system-text-head)">Delete item?</p><p class="ts-regular-body-sm" style="margin:0 0 16px;color:var(--color-system-text-body)">This action cannot be undone.</p><div class="ref-row" style="gap:8px;justify-content:flex-end"><button type="button" class="es-btn ts-bold-body-md es-btn--Outlined">Cancel</button><button type="button" class="es-btn ts-bold-body-md es-btn--Danger">Delete</button></div></div>
 </div>
 </section>
+
+<section class="ref-section" id="composed-01" data-name="composed-01 — list page: table always in a white card">
+<a class="ref-anchor" href="#composed-01" aria-label="Link to this section">#</a><h2 class="ref-h">composed-01 — List page: table always in a white card</h2>
+<p class="ref-sub">The standard list screen. Laws demonstrated: NO breadcrumb by default · the table always lives inside a white card (never bare on the page) · default 10 rows per page (5–10 ok), pagination beyond · rows-per-page presets + free input, hard max 50 · row click does NOTHING — details open only from the explicit eye action (composed-02).</p>
+<div class="cp-page">
+  <div class="cp-pagehead">
+    <div><h3 class="cp-title">Candidates</h3><p class="cp-sub">Track and manage every candidate in the pipeline.</p></div>
+    <div class="cp-actions">
+      <button type="button" class="es-btn ts-bold-body-md es-btn--Ghost">Export</button>
+      <button type="button" class="es-btn ts-bold-body-md es-btn--Outlined">Import</button>
+      <button type="button" class="es-btn ts-bold-body-md es-btn--Filled">+ Add candidate</button>
+    </div>
+  </div>
+  <div class="cp-metrics">
+    <div class="cp-metric"><div class="cp-metric__top"><span class="cp-metric__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-user"></use></svg></span><span class="es-status es-status--Success ts-bold-body-md cp-metric__trend">+12%</span></div><div class="cp-metric__body"><span class="cp-metric__value">128</span><span class="cp-metric__label">Total candidates</span></div></div>
+    <div class="cp-metric"><div class="cp-metric__top"><span class="cp-metric__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-file-text"></use></svg></span><span class="es-status es-status--Info ts-bold-body-md cp-metric__trend">+5%</span></div><div class="cp-metric__body"><span class="cp-metric__value">36</span><span class="cp-metric__label">In review</span></div></div>
+    <div class="cp-metric"><div class="cp-metric__top"><span class="cp-metric__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-mail"></use></svg></span><span class="es-status es-status--Warning ts-bold-body-md cp-metric__trend">+2</span></div><div class="cp-metric__body"><span class="cp-metric__value">9</span><span class="cp-metric__label">Offers sent</span></div></div>
+    <div class="cp-metric"><div class="cp-metric__top"><span class="cp-metric__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-check"></use></svg></span><span class="es-status es-status--Success ts-bold-body-md cp-metric__trend">+1</span></div><div class="cp-metric__body"><span class="cp-metric__value">4</span><span class="cp-metric__label">Hired this month</span></div></div>
+  </div>
+  <div class="es-card">
+    <div class="es-card__head">
+      <h4 class="es-card__title">All candidates</h4>
+      <div class="es-card__tools">
+        <span class="cp-search ts-regular-body-md"><svg class="es-ico" aria-hidden="true"><use href="#tb-search"></use></svg>Search candidates…</span>
+        <button type="button" class="es-btn ts-bold-body-md es-btn--Outlined">Status <svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></button>
+        <button type="button" class="es-btn ts-bold-body-md es-btn--Filled">Filter</button>
+      </div>
+    </div>
+    <div class="es-table">
+      <div class="es-table__scroll">
+        <table class="es-table__table">
+          <thead><tr>
+            <th class="es-col ts-bold-body-md" scope="col"><label class="es-col__center"><input type="checkbox" class="es-col__checkbox" /></label></th>
+            <th class="es-col ts-bold-body-md" scope="col"><button type="button" class="es-col__sortbtn"><span>Name</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-selector"></use></svg></span></button></th>
+            <th class="es-col ts-bold-body-md" scope="col">Role</th>
+            <th class="es-col ts-bold-body-md" scope="col">Status</th>
+            <th class="es-col ts-bold-body-md" scope="col">Applied</th>
+            <th class="es-col ts-bold-body-md" scope="col">Actions</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">RA</span>Raihan Allaam</span></td><td class="es-cell ts-regular-body-md">Product Designer</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Success">Active</span></td><td class="es-cell ts-regular-body-md">12 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">DT</span>Dhima Tauvik</span></td><td class="es-cell ts-regular-body-md">Frontend Engineer</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Warning">Pending</span></td><td class="es-cell ts-regular-body-md">15 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">SW</span>Sarah Wijaya</span></td><td class="es-cell ts-regular-body-md">Backend Engineer</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Error">Rejected</span></td><td class="es-cell ts-regular-body-md">18 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">AP</span>Andi Pratama</span></td><td class="es-cell ts-regular-body-md">QA Engineer</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Info">Screening</span></td><td class="es-cell ts-regular-body-md">21 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">MK</span>Maya Kusuma</span></td><td class="es-cell ts-regular-body-md">Project Manager</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Default">Draft</span></td><td class="es-cell ts-regular-body-md">24 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">BS</span>Budi Santoso</span></td><td class="es-cell ts-regular-body-md">DevOps Engineer</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Brand">Shortlisted</span></td><td class="es-cell ts-regular-body-md">27 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">CL</span>Citra Lestari</span></td><td class="es-cell ts-regular-body-md">Data Analyst</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Sem-Teal">Interview</span></td><td class="es-cell ts-regular-body-md">30 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">FN</span>Fajar Nugroho</span></td><td class="es-cell ts-regular-body-md">Mobile Engineer</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Sem-Indigo">Offer sent</span></td><td class="es-cell ts-regular-body-md">02 Feb 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">GP</span>Gita Permata</span></td><td class="es-cell ts-regular-body-md">UX Researcher</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Sem-Lime">Onboarding</span></td><td class="es-cell ts-regular-body-md">05 Feb 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" /></label></td><td class="es-cell ts-regular-body-md"><span class="cp-namecell"><span class="es-avatar ts-bold-body-md es-avatar--sm">HS</span>Hendra Saputra</span></td><td class="es-cell ts-regular-body-md">Security Engineer</td><td class="es-cell ts-regular-body-md"><span class="es-status ts-bold-body-md es-status--Sem-Yellow">On hold</span></td><td class="es-cell ts-regular-body-md">08 Feb 2026</td><td class="es-cell ts-regular-body-md"><span class="cp-rowactions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View details"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="es-table__footer"><nav class="es-pg es-pg--tablefoot ts-regular-body-md" aria-label="Pagination"><span class="es-pg__count">1–10 of 128</span><span class="es-pg__pages"><button type="button" class="es-pg__btn es-pg__navbtn" disabled><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-left"></use></svg></button><button type="button" class="es-pg__btn ts-bold-body-md is-active">1</button><button type="button" class="es-pg__btn ts-bold-body-md">2</button><button type="button" class="es-pg__btn ts-bold-body-md">3</button><button type="button" class="es-pg__btn ts-bold-body-md">13</button><button type="button" class="es-pg__btn es-pg__navbtn"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-right"></use></svg></button></span><span class="es-rpp ts-regular-body-md">Rows per page<button type="button" class="es-rpp__btn ts-bold-body-md is-active">10</button><button type="button" class="es-rpp__btn ts-bold-body-md">25</button><button type="button" class="es-rpp__btn ts-bold-body-md">50</button><input class="es-rpp__input ts-regular-body-md" type="number" min="5" max="50" value="10" aria-label="Custom rows per page (max 50)" /><span>max 50</span></span></nav></div>
+    </div>
+  </div>
+</section>
+
+<section class="ref-section" id="composed-02" data-name="composed-02 — slide-in detail panel (from the right)">
+<a class="ref-anchor" href="#composed-02" aria-label="Link to this section">#</a><h2 class="ref-h">composed-02 — Slide-in detail panel (from the right)</h2>
+<p class="ref-sub">Standard detail behavior for tables, cards and list items: the panel opens ONLY from an explicit action (eye icon, kebab menu item, "View" button) — NEVER from clicking the row/card itself. Fixed header + fixed footer, exactly ONE scrolling body. Shown here in its open state.</p>
+<div class="cp-frame">
+  <div class="cp-frame__ghost ts-regular-body-sm">Page content stays visible (and inert) behind the panel. The panel never replaces the page — closing it returns the user exactly where they were.</div>
+  <div class="cp-panel">
+    <div class="cp-panel__head"><h4 class="es-card__title">Candidate detail</h4><span class="es-status ts-bold-body-md es-status--Success">Active</span><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="Close panel"><svg class="es-ico" aria-hidden="true"><use href="#tb-x"></use></svg></button></div>
+    <div class="cp-panel__body">
+      <dl class="cp-kv ts-regular-body-md"><dt class="ts-regular-body-sm">Name</dt><dd>Raihan Allaam</dd><dt class="ts-regular-body-sm">Email</dt><dd>raihan@example.com</dd><dt class="ts-regular-body-sm">Role</dt><dd>Product Designer</dd><dt class="ts-regular-body-sm">Applied</dt><dd>12 Jan 2026</dd></dl>
+      <div class="cp-field"><label class="ts-regular-body-sm">Role</label><input class="ts-regular-body-md" type="text" value="Product Designer" /></div>
+      <div class="cp-field"><label class="ts-regular-body-sm">Status</label><select class="ts-regular-body-md"><option>Active</option><option>Pending</option><option>On hold</option></select></div>
+      <div class="cp-field"><label class="ts-regular-body-sm">Notes</label><textarea class="ts-regular-body-md" rows="3">Strong portfolio — schedule the interview.</textarea></div>
+    </div>
+    <div class="cp-panel__foot"><button type="button" class="es-btn ts-bold-body-md es-btn--Ghost">Cancel</button><button type="button" class="es-btn ts-bold-body-md es-btn--Filled">Save changes</button></div>
+  </div>
+</section>
+
+<section class="ref-section" id="composed-03" data-name="composed-03 — form section (in a white card)">
+<a class="ref-anchor" href="#composed-03" aria-label="Link to this section">#</a><h2 class="ref-h">composed-03 — Form section (in a white card)</h2>
+<p class="ref-sub">Forms follow the same card law: white card, head with title, two-column field grid, footer with Cancel + primary action on the right.</p>
+<div class="cp-page">
+<div class="es-card">
+  <div class="es-card__head"><h4 class="es-card__title">Edit profile</h4></div>
+  <div class="es-card__body">
+    <div class="cp-grid2">
+      <div class="cp-field"><label class="ts-regular-body-sm">First name</label><input class="ts-regular-body-md" type="text" value="Raihan" /></div>
+      <div class="cp-field"><label class="ts-regular-body-sm">Last name</label><input class="ts-regular-body-md" type="text" value="Allaam" /></div>
+      <div class="cp-field"><label class="ts-regular-body-sm">Email</label><input class="ts-regular-body-md" type="email" value="raihan@example.com" /></div>
+      <div class="cp-field"><label class="ts-regular-body-sm">Department</label><select class="ts-regular-body-md"><option>Design</option><option>Engineering</option></select></div>
+    </div>
+    <div class="cp-field cp-mt"><label class="ts-regular-body-sm">Bio</label><textarea class="ts-regular-body-md" rows="3">UI/UX designer focused on design systems.</textarea></div>
+  </div>
+  <div class="es-card__foot"><button type="button" class="es-btn ts-bold-body-md es-btn--Ghost">Cancel</button><button type="button" class="es-btn ts-bold-body-md es-btn--Filled">Save changes</button></div>
+</section>
+
+<section class="ref-section" id="composed-04" data-name="composed-04 — empty state & confirmation modal">
+<a class="ref-anchor" href="#composed-04" aria-label="Link to this section">#</a><h2 class="ref-h">composed-04 — Empty state &amp; confirmation modal</h2>
+<p class="ref-sub">The empty state lives inside the same white card the table would occupy. Destructive actions ALWAYS go through a confirmation modal first — never delete on a single click. Both illustrations are REAL shipped assets: <code>src/assets/option-menus/empty-data.svg</code> and <code>src/assets/icons-custom/system-warning.svg</code>. Never stand in a Tabler glyph inside a grey circle where an illustration belongs.</p>
+<div class="cp-page">
+  <div class="es-card"><div class="cp-empty">
+    <img class="cp-empty__img cp-empty__img--lg" src="../src/assets/option-menus/empty-data.svg" alt="" />
+    <p class="ts-bold-body-md" style="margin:0;color:var(--color-system-text-head)">No candidates match “javascript ninja”</p>
+    <p class="ts-regular-body-md" style="margin:0">Try a different keyword or clear the active filters.</p>
+    <button type="button" class="es-btn ts-bold-body-md es-btn--Outlined">Clear filters</button>
+  </div></div>
+  <div class="cp-modal cp-mt">
+    <div class="cp-modal__head">
+      <img class="cp-modal__icon" src="../src/assets/icons-custom/system-warning.svg" alt="" />
+      <div>
+        <h4 class="es-card__title" style="margin:0 0 4px">Delete candidate?</h4>
+        <p class="ts-regular-body-md" style="margin:0;color:var(--color-system-text-body)">This permanently removes Raihan Allaam and all related notes. This cannot be undone.</p>
+      </div>
+    </div>
+    <div class="cp-actions cp-mt" style="justify-content:flex-end"><button type="button" class="es-btn ts-bold-body-md es-btn--Ghost">Cancel</button><button type="button" class="es-btn ts-bold-body-md es-btn--Danger">Yes, delete</button></div>
+  </div>
+</section>
+
+<section class="ref-section" id="composed-05" data-name="composed-05 — data table: every column & cell type in one screen">
+<a class="ref-anchor" href="#composed-05" aria-label="Link to this section">#</a><h2 class="ref-h">composed-05 — Data table: every column &amp; cell type in one screen</h2>
+<p class="ref-sub">The proof that <a href="#table-column">molecule-04</a> and <a href="#table-row">molecule-05</a> compose. Ten columns exercising <b>every</b> header type — checkbox select-all, sortable, sorted, inline filter, inline dropdown, icon, subtitle, numeric-right, sticky — against ten cell types — checkbox, photo/avatar + two-line, plain text, chips, status, currency-numeric, date, dot indicator, link, action icons. Nothing here is bespoke: same <code>.es-col</code> / <code>.es-cell</code> classes, same <code>body-md</code> ramp, same white card as <a href="#composed-01">composed-01</a>. Horizontal scroll belongs to <code>.es-table__scroll</code> and nothing else.</p>
+<div class="cp-page">
+  <div class="es-card">
+    <div class="es-card__head">
+      <h4 class="es-card__title">Candidate pipeline — full column set</h4>
+      <div class="es-card__tools">
+        <span class="cp-search ts-regular-body-md"><svg class="es-ico" aria-hidden="true"><use href="#tb-search"></use></svg>Search candidates…</span>
+        <button type="button" class="es-btn ts-bold-body-md es-btn--Outlined">Columns <svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></button>
+      </div>
+    </div>
+    <div class="es-table">
+      <div class="es-table__scroll">
+        <table class="es-table__table">
+          <colgroup><col style="width:48px" /><col style="width:260px" /><col style="width:140px" /><col style="width:210px" /><col style="width:158px" /><col style="width:184px" /><col style="width:168px" /><col style="width:150px" /><col style="width:96px" /><col style="width:104px" /></colgroup>
+          <thead>
+            <tr>
+              <th class="es-col ts-bold-body-md" scope="col"><label class="es-col__center"><input type="checkbox" class="es-col__checkbox" aria-label="Select all" /></label></th>
+              <th class="es-col es-col--sticky is-sorted ts-bold-body-md" scope="col" aria-sort="ascending"><button type="button" class="es-col__sortbtn"><span>Candidate</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-up"></use></svg></span></button></th>
+              <th class="es-col ts-bold-body-md" scope="col"><button type="button" class="es-col__sortbtn"><span>Dept</span><span class="es-col__sorticon"><svg class="es-ico" aria-hidden="true"><use href="#tb-selector"></use></svg></span></button></th>
+              <th class="es-col ts-bold-body-md" scope="col">Skills</th>
+              <th class="es-col ts-bold-body-md" scope="col">Status</th>
+              <th class="es-col es-col--numeric ts-bold-body-md" scope="col"><span class="es-col__title"><span class="es-col__labelwrap"><span>Expected salary</span><span class="es-col__subtitle ts-regular-label-sm">IDR / month</span></span></span></th>
+              <th class="es-col ts-bold-body-md" scope="col"><span class="es-col__title"><span class="es-col__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-calendar"></use></svg></span><span>Applied</span></span></th>
+              <th class="es-col ts-bold-body-md" scope="col">Sync</th>
+              <th class="es-col ts-bold-body-md" scope="col">Detail</th>
+              <th class="es-col ts-bold-body-md" scope="col">Actions</th>
+            </tr>
+            <tr class="es-table__filters">
+              <th class="es-col" scope="col"></th>
+              <th class="es-col" scope="col"><div class="es-col__field"><label class="es-field"><span class="es-field__box"><input class="es-field__input ts-regular-body-md" placeholder="Filter name" /></span></label></div></th>
+              <th class="es-col" scope="col"><div class="es-col__field"><label class="es-field"><span class="es-field__box is-dropdown"><input class="es-field__input ts-regular-body-md" placeholder="All" readonly /><span class="es-field__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></span></span></label></div></th>
+              <th class="es-col" scope="col"><div class="es-col__field"><label class="es-field"><span class="es-field__box"><input class="es-field__input ts-regular-body-md" placeholder="Filter skill" /></span></label></div></th>
+              <th class="es-col" scope="col"><div class="es-col__field"><label class="es-field"><span class="es-field__box is-dropdown"><input class="es-field__input ts-regular-body-md" placeholder="All" readonly /><span class="es-field__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></span></span></label></div></th>
+              <th class="es-col" scope="col"><div class="es-col__field"><label class="es-field"><span class="es-field__box"><input class="es-field__input ts-regular-body-md" placeholder="Min" /></span></label></div></th>
+              <th class="es-col" scope="col"><div class="es-col__field"><label class="es-field"><span class="es-field__box is-dropdown"><input class="es-field__input ts-regular-body-md" placeholder="Any date" readonly /><span class="es-field__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></span></span></label></div></th>
+              <th class="es-col" scope="col"><div class="es-col__field"><label class="es-field"><span class="es-field__box is-dropdown"><input class="es-field__input ts-regular-body-md" placeholder="All" readonly /><span class="es-field__icon"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-down"></use></svg></span></span></label></div></th>
+              <th class="es-col" scope="col"></th>
+              <th class="es-col" scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="is-selected"><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" checked aria-label="Select Athaya Zahrani" /></label></td><td class="es-cell ts-regular-body-md"><span class="es-cell__inline"><img class="es-cell__photo" src="../src/assets/avatars/ava-placeholder-user.svg" alt="" /><span class="es-cell__multi"><span class="es-cell__primary ts-bold-body-md">Athaya Zahrani</span><span class="es-cell__mute ts-regular-body-sm">athaya@esystems.id</span></span></span></td><td class="es-cell ts-regular-body-md">Design</td><td class="es-cell ts-regular-body-md"><span class="es-cell__chips"><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">Figma</span><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">DS</span></span></td><td class="es-cell ts-regular-body-md"><span class="es-status es-status--Success ts-bold-body-md"><span class="es-status__dot"></span>Active</span></td><td class="es-cell es-cell--numeric ts-regular-body-md"><span class="es-cell__mute ts-regular-body-sm">IDR</span> 12.500.000</td><td class="es-cell ts-regular-body-md">12 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="es-cell__indicator"><span class="es-cell__dot es-cell__dot--success"></span>Synced</span></td><td class="es-cell ts-regular-body-md"><a class="es-cell__link" href="#">Open</a></td><td class="es-cell ts-regular-body-md"><span class="es-cell__actions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View Athaya Zahrani"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions for Athaya Zahrani"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" aria-label="Select Bimo Prakoso" /></label></td><td class="es-cell ts-regular-body-md"><span class="es-cell__inline"><span class="es-avatar es-avatar--sm ts-bold-body-md">BP</span><span class="es-cell__multi"><span class="es-cell__primary ts-bold-body-md">Bimo Prakoso</span><span class="es-cell__mute ts-regular-body-sm">bimo@esystems.id</span></span></span></td><td class="es-cell ts-regular-body-md">Engineering</td><td class="es-cell ts-regular-body-md"><span class="es-cell__chips"><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">Vue</span></span></td><td class="es-cell ts-regular-body-md"><span class="es-status es-status--Warning ts-bold-body-md"><span class="es-status__dot"></span>On leave</span></td><td class="es-cell es-cell--numeric ts-regular-body-md"><span class="es-cell__mute ts-regular-body-sm">IDR</span> 18.000.000</td><td class="es-cell ts-regular-body-md">15 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="es-cell__indicator"><span class="es-cell__dot es-cell__dot--warning"></span>Pending</span></td><td class="es-cell ts-regular-body-md"><a class="es-cell__link" href="#">Open</a></td><td class="es-cell ts-regular-body-md"><span class="es-cell__actions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View Bimo Prakoso"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions for Bimo Prakoso"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" aria-label="Select Citra Lestari" /></label></td><td class="es-cell ts-regular-body-md"><span class="es-cell__inline"><img class="es-cell__photo" src="../src/assets/avatars/ava-placeholder-user.svg" alt="" /><span class="es-cell__multi"><span class="es-cell__primary ts-bold-body-md">Citra Lestari</span><span class="es-cell__mute ts-regular-body-sm">citra@esystems.id</span></span></span></td><td class="es-cell ts-regular-body-md">Product</td><td class="es-cell ts-regular-body-md"><span class="es-cell__chips"><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">Roadmap</span><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">SQL</span></span></td><td class="es-cell ts-regular-body-md"><span class="es-status es-status--Info ts-bold-body-md"><span class="es-status__dot"></span>Screening</span></td><td class="es-cell es-cell--numeric ts-regular-body-md"><span class="es-cell__mute ts-regular-body-sm">IDR</span> 16.750.000</td><td class="es-cell ts-regular-body-md">18 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="es-cell__indicator"><span class="es-cell__dot es-cell__dot--info"></span>Syncing</span></td><td class="es-cell ts-regular-body-md"><a class="es-cell__link" href="#">Open</a></td><td class="es-cell ts-regular-body-md"><span class="es-cell__actions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View Citra Lestari"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions for Citra Lestari"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" aria-label="Select Dimas Anggara" /></label></td><td class="es-cell ts-regular-body-md"><span class="es-cell__inline"><span class="es-avatar es-avatar--sm ts-bold-body-md">DA</span><span class="es-cell__multi"><span class="es-cell__primary ts-bold-body-md">Dimas Anggara</span><span class="es-cell__mute ts-regular-body-sm">dimas@esystems.id</span></span></span></td><td class="es-cell ts-regular-body-md">Engineering</td><td class="es-cell ts-regular-body-md"><span class="es-cell__chips"><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">Go</span></span></td><td class="es-cell ts-regular-body-md"><span class="es-status es-status--Error ts-bold-body-md"><span class="es-status__dot"></span>Inactive</span></td><td class="es-cell es-cell--numeric ts-regular-body-md"><span class="es-cell__mute ts-regular-body-sm">IDR</span> 21.200.000</td><td class="es-cell ts-regular-body-md">21 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="es-cell__indicator"><span class="es-cell__dot es-cell__dot--error"></span>Failed</span></td><td class="es-cell ts-regular-body-md"><a class="es-cell__link" href="#">Open</a></td><td class="es-cell ts-regular-body-md"><span class="es-cell__actions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View Dimas Anggara"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions for Dimas Anggara"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+            <tr><td class="es-cell ts-regular-body-md"><label class="es-cell__center"><input type="checkbox" class="es-cell__checkbox" aria-label="Select Gita Permata" /></label></td><td class="es-cell ts-regular-body-md"><span class="es-cell__inline"><img class="es-cell__photo" src="../src/assets/avatars/ava-placeholder-user.svg" alt="" /><span class="es-cell__multi"><span class="es-cell__primary ts-bold-body-md">Gita Permata</span><span class="es-cell__mute ts-regular-body-sm">gita@esystems.id</span></span></span></td><td class="es-cell ts-regular-body-md">Research</td><td class="es-cell ts-regular-body-md"><span class="es-cell__chips"><span class="es-chip es-chip--md es-chip--Neutral ts-bold-body-md">UXR</span></span></td><td class="es-cell ts-regular-body-md"><span class="es-status es-status--Sem-Teal ts-bold-body-md"><span class="es-status__dot"></span>Interview</span></td><td class="es-cell es-cell--numeric ts-regular-body-md"><span class="es-cell__mute ts-regular-body-sm">IDR</span> 14.900.000</td><td class="es-cell ts-regular-body-md">24 Jan 2026</td><td class="es-cell ts-regular-body-md"><span class="es-cell__indicator"><span class="es-cell__dot es-cell__dot--success"></span>Synced</span></td><td class="es-cell ts-regular-body-md"><a class="es-cell__link" href="#">Open</a></td><td class="es-cell ts-regular-body-md"><span class="es-cell__actions"><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="View Gita Permata"><svg class="es-ico" aria-hidden="true"><use href="#tb-eye"></use></svg></button><button type="button" class="es-iconbtn es-iconbtn--Ghost" aria-label="More actions for Gita Permata"><svg class="es-ico" aria-hidden="true"><use href="#tb-dots-vertical"></use></svg></button></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="es-table__footer"><nav class="es-pg es-pg--tablefoot ts-regular-body-md" aria-label="Pagination"><span class="es-pg__count">1–5 of 128</span><span class="es-pg__pages"><button type="button" class="es-pg__btn es-pg__navbtn" aria-label="Previous page" disabled><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-left"></use></svg></button><button type="button" class="es-pg__btn ts-bold-body-md is-active" aria-current="page">1</button><button type="button" class="es-pg__btn ts-bold-body-md">2</button><button type="button" class="es-pg__btn ts-bold-body-md">3</button><button type="button" class="es-pg__btn es-pg__navbtn" aria-label="Next page"><svg class="es-ico" aria-hidden="true"><use href="#tb-chevron-right"></use></svg></button></span><span class="es-rpp ts-regular-body-md">Rows per page<button type="button" class="es-rpp__btn ts-bold-body-md is-active">10</button><button type="button" class="es-rpp__btn ts-bold-body-md">25</button><button type="button" class="es-rpp__btn ts-bold-body-md">50</button><input class="es-rpp__input ts-regular-body-md" type="number" min="5" max="50" value="10" aria-label="Custom rows per page (max 50)" /><span>max 50</span></span></nav></div>
+    </div>
+  </div>
+</section>
+</main>
+<a class="ref-top" href="#top" aria-label="Back to top">↑</a>
+
 
 <div class="ref-section" id="composed-01">
 <h2 class="ref-h">composed-01 — List page: table always in a white card</h2>
@@ -667,5 +937,57 @@
 </div>
 </div>
 
+<script>
+/* Gallery navigation. ~30 lines, no dependencies, degrades to a plain anchor list with JS off
+   — the reference tier must open from a file:// double-click and work. */
+(function () {
+  var toc = document.querySelector(".ref-toc");
+  if (!toc) return;
+  var links = [].slice.call(toc.querySelectorAll("a[data-for]"));
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute("data-for")] = a; });
+
+  /* filter: matches the section id AND its full title, so "table" finds TableColumn,
+     TableRow and DataTable, and "atom-16" finds Tabs. Empty groups hide themselves. */
+  var input = toc.querySelector(".ref-toc__filter");
+  input.addEventListener("input", function () {
+    var q = input.value.trim().toLowerCase();
+    toc.querySelectorAll(".ref-toc__list").forEach(function (ul) {
+      var shown = 0;
+      [].slice.call(ul.children).forEach(function (li) {
+        var hit = !q || li.textContent.toLowerCase().indexOf(q) > -1 ||
+          li.firstChild.getAttribute("data-for").indexOf(q) > -1;
+        li.classList.toggle("is-hidden", !hit);
+        if (hit) shown++;
+      });
+      ul.previousElementSibling.classList.toggle("is-hidden", shown === 0);
+    });
+  });
+  input.addEventListener("keydown", function (e) { if (e.key === "Escape") { input.value = ""; input.dispatchEvent(new Event("input")); } });
+
+  /* scroll-spy: highlight whichever section owns the top of the viewport */
+  var current = null;
+  var io2 = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      var a = byId[en.target.id];
+      if (!a || a === current) return;
+      if (current) current.classList.remove("is-current");
+      a.classList.add("is-current");
+      current = a;
+      var r = a.getBoundingClientRect();
+      if (r.top < 60 || r.bottom > window.innerHeight - 40) a.scrollIntoView({ block: "nearest" });
+    });
+  }, { rootMargin: "0px 0px -75% 0px", threshold: 0 });
+  document.querySelectorAll("section.ref-section[id]").forEach(function (s) { io2.observe(s); });
+
+  /* "/" focuses the filter, the way every docs site people already use behaves */
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "/" && document.activeElement !== input && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) {
+      e.preventDefault(); input.focus(); input.select();
+    }
+  });
+})();
+</script>
 </body>
 </html>

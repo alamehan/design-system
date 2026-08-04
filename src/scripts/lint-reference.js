@@ -228,6 +228,52 @@ for (const f of fs.readdirSync(DIR).filter((x) => x.endsWith(".css") && x !== "_
 if (offRamp) { violations += offRamp; console.log(`\u274c ${offRamp} off-ramp font-size(s).`); }
 else console.log(`\u2705 every literal font-size in reference/css sits on the type ramp [${[...ramp].sort((a, b) => a - b)}]`);
 
+
+/* ------------------------------------------------------------------------
+ * GATE 8 — the gallery anchor contract.
+ *
+ * Every catalog/components/<code>.md carries `Reference: reference/gallery.html#<id>` and
+ * CLAUDE.md §5 names composed anchors by hand. Those ids are the AI grounding chain: an agent
+ * told to open `#table-row` and finding nothing has no visual truth to copy and will invent
+ * one. The gallery may be reordered and regrouped freely — v3.4.5 did exactly that — but an
+ * anchor may never be renamed or dropped without every reference to it moving in the same
+ * change set. Gate the contract, not the layout.
+ * ---------------------------------------------------------------------- */
+const galleryPath = path.join(REF, "gallery.html");
+if (fs.existsSync(galleryPath)) {
+  const gsrc = fs.readFileSync(galleryPath, "utf8");
+  const present = new Set([...gsrc.matchAll(/<(?:section|div)[^>]*\sid="([^"]+)"/g)].map((m) => m[1]));
+  const refs = new Map();
+  const scanFor = (file) => {
+    if (!fs.existsSync(file)) return;
+    for (const m of fs.readFileSync(file, "utf8").matchAll(/gallery\.html#([A-Za-z0-9_-]+)/g)) {
+      if (!refs.has(m[1])) refs.set(m[1], new Set());
+      refs.get(m[1]).add(path.relative(DS_ROOT, file));
+    }
+    for (const m of fs.readFileSync(file, "utf8").matchAll(/`#(composed[A-Za-z0-9_-]*)`/g)) {
+      if (!refs.has(m[1])) refs.set(m[1], new Set());
+      refs.get(m[1]).add(path.relative(DS_ROOT, file));
+    }
+  };
+  scanFor(path.join(DS_ROOT, "CLAUDE.md"));
+  const compDir = path.join(DS_ROOT, "catalog", "components");
+  if (fs.existsSync(compDir)) for (const f of fs.readdirSync(compDir)) scanFor(path.join(compDir, f));
+  let dead = 0;
+  for (const [id, files] of [...refs].sort()) {
+    if (present.has(id)) continue;
+    console.log(`  \u274c gallery.html#${id} is referenced by ${[...files].sort().join(", ")} but no such section exists`);
+    dead++;
+  }
+  /* internal links inside the gallery itself count too */
+  for (const m of gsrc.matchAll(/href="#([A-Za-z0-9_-]+)"/g)) {
+    if (m[1] === "top" || present.has(m[1]) || gsrc.includes(`id="${m[1]}"`)) continue;
+    console.log(`  \u274c gallery.html links to #${m[1]} which does not exist in the page`);
+    dead++;
+  }
+  if (dead) { violations += dead; console.log(`\u274c ${dead} broken gallery anchor(s).`); }
+  else console.log(`\u2705 every referenced gallery anchor exists (${present.size} section ids, ${refs.size} referenced)`);
+}
+
 if (violations) {
   console.log(`\n${violations} reference-tier violation(s). The reference must be token-pure, load every font it names, and draw every icon from the Tabler sprite.`);
   process.exit(1);

@@ -170,8 +170,13 @@ function collect(name, url, man, hist) {
   fs.mkdirSync(path.join(DS, ".release"), { recursive: true });
   /* The panel reads these totals straight from the committed file, so the
      dashboard can show org-wide adoption without any telemetry. */
-  const totals = {
-    configured: configured,
+  /* When nothing is configured there is nothing to measure, so publish the FACT of that and no
+     counters at all. Emitting `repos: 0, installs: 0, ...` produced a file the panel could not
+     tell apart from a real measurement of zero, and ship.js rewrites this file on every
+     release — so every design system update looked to the adopter like their numbers had just
+     been reset to nothing. A structural zero is not a measurement. */
+  const totals = configured ? {
+    configured: true,
     repos: rows.length,
     devs: devs,
     installs: installs,
@@ -182,7 +187,7 @@ function collect(name, url, man, hist) {
     current: rows.length - stale.length,
     byLevel: byLevel,
     byVersion: byVersion,
-  };
+  } : { configured: false };
   fs.writeFileSync(path.join(DS, ".release", "adoption.json"),
     JSON.stringify({ generatedAt: new Date().toISOString(), dsVersion: meVersion, totals, rows }, null, 2) + "\n", "utf8");
 

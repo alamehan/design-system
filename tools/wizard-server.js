@@ -13,13 +13,29 @@ const SUBMODULE_DIR = "design-system";
 const DS_DIR_LOCAL = ".ds";
 const MANIFEST = ".ds/manifest.json";
 const HISTORY = ".ds/history.jsonl";
-const ROLLBACK = ".ds/rollback-point.json";
-const TRASH = ".ds/.trash";
+/* Recovery state lives inside .git/, NOT in the working tree.
+   Until v3.4.5 it sat at .ds/.trash/ and .ds/rollback-point.json, hidden only by the
+   .gitignore block the panel itself installs. Uninstall stripped that block and then LEFT the
+   files on disk, so a repo that was clean before an install came back from the uninstall with
+   a dozen untracked recovery artifacts in `git status`. It removed the raincoat and left you
+   in the rain.
+   .git/ is never shown by git status, never committed, and survives everything short of
+   deleting the clone — which is exactly the guarantee "nothing is ever destroyed" needs. */
+const LEGACY_TRASH = ".ds/.trash";
+const LEGACY_ROLLBACK = ".ds/rollback-point.json";
 const REQUESTS = ".ds/requests";
 const FALLBACK_REPO_URL = "https://github.com/alamehan/design-system.git";
 const LEVEL1_ACCESS_CODE = process.env.DS_L1_CODE || "DSV3-RAIHAN";
 
 let LOCKED = { install: false, revert: false, update: false, rollback: false, legacy: false, panel: false };
+/* The panel runs FROM ds-setup.cjs, so it cannot remove that file while it is serving.
+   The copy is already safe in .git/ds-recovery/; the original goes on process exit. */
+let PENDING_SELF_DELETE = null;
+process.on("exit", () => {
+  if (!PENDING_SELF_DELETE) return;
+  try { fs.rmSync(PENDING_SELF_DELETE, { force: true }); } catch { /* best effort */ }
+});
+for (const sig of ["SIGINT", "SIGTERM"]) process.on(sig, () => process.exit(0));
 let PROGRESS = { active: false, current: 0, total: 0, label: { id: "", en: "" } };
 
 /* bilingual helper — every user-visible server string is a {id,en} pair */
@@ -49,20 +65,46 @@ let ROOT = SCRIPT_DIR;
 (function () { const r = sh("git rev-parse --show-toplevel", { cwd: SCRIPT_DIR }); if (r.ok && r.out) ROOT = r.out.split("\n")[0].trim(); })();
 
 const abs = (p) => path.join(ROOT, p);
+/* .git is a directory in a normal clone and a FILE in a worktree or submodule, so ask git. */
+const GIT_DIR = (function () {
+  const r = sh("git rev-parse --absolute-git-dir");
+  return r.ok && r.out ? r.out.split("\n")[0].trim() : path.join(ROOT, ".git");
+})();
+const RECOVERY = path.join(GIT_DIR, "ds-recovery");
+const ROLLBACK_ABS = path.join(RECOVERY, "rollback-point.json");
+const relRecovery = (p) => path.relative(ROOT, p).split(path.sep).join("/");
 function readIf(p) { try { return fs.readFileSync(abs(p), "utf8"); } catch { return null; } }
+function readAbs(p) { try { return fs.readFileSync(p, "utf8"); } catch { return null; } }
 function writeFile(p, text) { fs.mkdirSync(path.dirname(abs(p)), { recursive: true }); fs.writeFileSync(abs(p), text, "utf8"); }
 function existsNonEmptyDir(p) { try { return fs.statSync(abs(p)).isDirectory() && fs.readdirSync(abs(p)).length > 0; } catch { return false; } }
 const sha = (s) => crypto.createHash("sha256").update(s == null ? "" : s, "utf8").digest("hex");
 
-/* move to trash instead of deleting — nothing is ever destroyed */
+/* Copy aside instead of deleting — nothing is ever destroyed. The copy lands in
+   .git/ds-recovery/, so it is recoverable forever and invisible to `git status`. */
 function toTrash(rel) {
   const src = abs(rel);
   if (!fs.existsSync(src)) return null;
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const dest = abs(path.join(TRASH, rel.replace(/[\\/]/g, "__") + "." + stamp));
+  const dest = path.join(RECOVERY, "trash", rel.replace(/[\\/]/g, "__") + "." + stamp);
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.cpSync(src, dest, { recursive: true });
-  return path.relative(ROOT, dest).split(path.sep).join("/");
+  return relRecovery(dest);
+}
+/* Sweep anything a pre-v3.4.5 install left inside the working tree into .git/ds-recovery/.
+   Moved, never deleted: the bytes survive, they just stop showing up in git status. */
+function sweepLegacyRecovery() {
+  const moved = [];
+  for (const rel of [LEGACY_TRASH, LEGACY_ROLLBACK]) {
+    const src = abs(rel);
+    if (!fs.existsSync(src)) continue;
+    const dest = path.join(RECOVERY, "legacy", path.basename(rel));
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.cpSync(src, dest, { recursive: true });
+    fs.rmSync(src, { recursive: true, force: true });
+    sh('git rm -r --cached --ignore-unmatch -- "' + rel + '"');
+    moved.push(rel);
+  }
+  return moved;
 }
 
 /* --------------------------------------------------------------- payloads */
@@ -80,13 +122,13 @@ const PAYLOADS = {
    install in parallel without a conflict. */
 const GIT_BLOCKS = {
   ".gitignore": [
-    "# Local recovery state and machine-local panel state.",
-    "# Everything else under .ds/ is committed on purpose - see SAFETY.md.",
-    ".ds/.trash/",
-    ".ds/rollback-point.json",
-    "",
     "# The panel is a build artifact of the design system; fetch it, do not commit it.",
     "ds-setup.cjs",
+    "",
+    "# Legacy recovery paths (v3.4.4 and earlier). Recovery state now lives in",
+    "# .git/ds-recovery/, outside the working tree - see SAFETY.md.",
+    ".ds/.trash/",
+    ".ds/rollback-point.json",
   ].join("\n"),
   ".gitattributes": [
     "# .ds/history.jsonl is append-only, so a union merge is always correct",
@@ -102,11 +144,23 @@ function extractHashBlock(src) {
   if (i < 0 || j < 0) return null;
   return src.slice(i, j + HASH_END.length);
 }
-function stripHashBlock(src) {
-  const i = src.indexOf(HASH_BEGIN), j = src.indexOf(HASH_END);
+/* Remove ONLY the managed region, byte-for-byte everywhere else.
+   The previous version ran `.replace(/\n{3,}/g,"\n\n")` over the WHOLE file, so any repo whose
+   .gitignore or CLAUDE.md happened to contain three consecutive newlines came back from an
+   uninstall reformatted — reported by git as a modification the panel never intended to make.
+   A revert that edits bytes it did not install is not a revert. */
+function cutRegion(src, begin, end, endLen) {
+  const i = src.indexOf(begin), j = src.indexOf(end);
   if (i < 0 || j < 0) return src;
-  return (src.slice(0, i) + src.slice(j + HASH_END.length)).replace(/\n{3,}/g, "\n\n").replace(/^\n+/, "");
+  let a = i, b = j + endLen;
+  /* the block was inserted with one blank line in front of it; take that back and nothing more */
+  if (src.slice(0, a).endsWith("\n\n")) a -= 1;
+  if (src[b] === "\n") b += 1;
+  return src.slice(0, a) + src.slice(b);
 }
+function stripBlock(src) { return cutRegion(src, MD_BEGIN, MD_END, MD_END.length); }
+
+function stripHashBlock(src) { return cutRegion(src, HASH_BEGIN, HASH_END, HASH_END.length); }
 
 function markedBlock(rel) { return MD_BEGIN + "\n\n" + PAYLOADS[rel].trim() + "\n\n" + MD_END + "\n"; }
 function extractBlock(src) {
@@ -114,11 +168,6 @@ function extractBlock(src) {
   const i = src.indexOf(MD_BEGIN), j = src.indexOf(MD_END);
   if (i < 0 || j < 0) return null;
   return src.slice(i, j + MD_END.length);
-}
-function stripBlock(src) {
-  const i = src.indexOf(MD_BEGIN), j = src.indexOf(MD_END);
-  if (i < 0 || j < 0) return src;
-  return (src.slice(0, i) + src.slice(j + MD_END.length)).replace(/\n{3,}/g, "\n\n").replace(/^\n+/, "");
 }
 
 /* --------------------------------------------------------- config lines */
@@ -152,8 +201,29 @@ function removeManagedLine(src, kind) {
   if (src == null) return null;
   const lines = src.split("\n");
   const needle = kind === "tw" ? "design-system/dist/tailwind.preset" : "design-system/dist/variables.css";
-  const keep = lines.filter((l) => !(l.includes(LINE_MARK) && l.includes(needle)));
-  if (keep.length !== lines.length) return keep.join("\n");
+  /* The panel always inserts its line as a WHOLE line, so dropping the whole line is right.
+     But a human may have merged something onto it since, and deleting a line that also holds
+     the user's own code is not a revert, it is data loss. Drop the line only when the managed
+     text is all that is on it; otherwise excise just the managed segment. */
+  const managedOnly = (l) => {
+    const t = l.trim();
+    return t.startsWith(kind === "tw" ? "presets:" : '"~/design-system') || t === LINE_MARK ||
+      t.replace(LINE_MARK, "").trim().replace(/,$/, "").length <= 0 ||
+      (t.includes(LINE_MARK) && t.indexOf(needle) < t.indexOf(LINE_MARK) && t.endsWith(LINE_MARK));
+  };
+  const out = [];
+  let touched = false;
+  for (const l of lines) {
+    if (l.includes(LINE_MARK) && l.includes(needle)) {
+      touched = true;
+      if (managedOnly(l)) continue;                       // whole line was ours
+      out.push(l.replace(/\s*presets:\s*\[[^\]]*\],?\s*\/\* design-system:managed \*\//, "")
+                .replace(/\s*"~\/design-system\/dist\/variables\.css",?\s*\/\* design-system:managed \*\//, ""));
+      continue;
+    }
+    out.push(l);
+  }
+  if (touched) return out.join("\n");
   return lines.filter((l) => !l.includes(needle)).join("\n");
 }
 function managedLineOf(src, kind) {
@@ -198,8 +268,16 @@ function adoptionStats() {
   try {
     const raw = JSON.parse(fs.readFileSync(abs(path.join(SUBMODULE_DIR, ".release", "adoption.json")), "utf8"));
     if (raw && raw.totals) {
-      org = raw.totals;
       configured = raw.totals.configured !== false;
+      /* An UNCONFIGURED report is a report nobody has filled in yet: no repo URLs are listed, so
+         every counter in it is a structural zero, not a measurement. Handing those zeros to the
+         panel made the dashboard open on a Team tab reading 0 / 0 forever, and every design
+         system update shipped a fresh all-zero file that looked like the numbers had just been
+         reset. The developer's OWN counts were fine the whole time, one tab away.
+         The comment at the top of this function already promised this behaviour ("rather than
+         showing a zero that looks like real data"); it just checked whether `totals` existed
+         instead of whether it meant anything. org stays null until it means something. */
+      org = configured ? raw.totals : null;
       generatedAt = raw.generatedAt || null;
       reportVersion = raw.dsVersion || null;
     }
@@ -230,14 +308,41 @@ function saveManifest(m) {
   m.managed.sort((a, b) => a.path.localeCompare(b.path));
   writeFile(MANIFEST, JSON.stringify(m, null, 2) + "\n");
 }
+/* Where the append-only log currently lives: the working tree if .ds/ still exists, otherwise
+   the newest archive, so a post-uninstall event still lands in the same file the counters read. */
+function historyTarget() {
+  if (fs.existsSync(abs(DS_DIR_LOCAL))) return abs(HISTORY);
+  try {
+    const dirs = fs.readdirSync(RECOVERY).filter((d) => d.startsWith("ds-")).sort().reverse();
+    for (const d of dirs) {
+      const f = path.join(RECOVERY, d, "history.jsonl");
+      if (fs.existsSync(f)) return f;
+    }
+  } catch { /* none yet */ }
+  return abs(HISTORY);
+}
 function appendHistory(entry) {
   const line = JSON.stringify(Object.assign({ at: new Date().toISOString(), wizard: WIZARD_VERSION }, entry));
-  fs.mkdirSync(abs(DS_DIR_LOCAL), { recursive: true });
-  fs.appendFileSync(abs(HISTORY), line + "\n", "utf8");
+  const target = historyTarget();
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.appendFileSync(target, line + "\n", "utf8");
   telemetry(entry);
 }
 function loadHistory() {
-  const raw = readIf(HISTORY); if (!raw) return [];
+  /* After an uninstall the log may have been archived out of the working tree. Counters that
+     reset to zero because the panel stopped looking would recreate the exact complaint this
+     release fixes, so follow the log to wherever it went. */
+  let raw = readIf(HISTORY);
+  if (!raw) {
+    try {
+      const dirs = fs.readdirSync(RECOVERY).filter((d) => d.startsWith("ds-")).sort().reverse();
+      for (const d of dirs) {
+        const f = path.join(RECOVERY, d, "history.jsonl");
+        if (fs.existsSync(f)) { raw = fs.readFileSync(f, "utf8"); break; }
+      }
+    } catch { /* no recovery dir */ }
+  }
+  if (!raw) return [];
   return raw.split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean).reverse();
 }
 /* stable, non-identifying actor id so the adoption report can count distinct devs */
@@ -439,7 +544,7 @@ function detectState() {
     manifest, unmanaged: installed && !manifest,
     drift: detectDrift(),
     history: loadHistory().slice(0, 100),
-    rollback: (() => { try { return JSON.parse(readIf(ROLLBACK)); } catch { return null; } })(),
+    rollback: (() => { try { return JSON.parse(readAbs(ROLLBACK_ABS)); } catch { return null; } })(),
     panelLatest, panelOutdated: !!(panelLatest && cmpVer(panelLatest, WIZARD_VERSION) > 0),
     prompts: level === "not-installed" ? [] : buildPromptSet(level),
     locked: LOCKED,
@@ -532,23 +637,34 @@ function buildRevertPlan(cfg) {
   }
 
   if (st.subRegistered || st.subPopulated) {
-    steps.push({ title: T("Deinit submodule", "Deinit the submodule"), cmd: "git submodule deinit -f " + SUBMODULE_DIR });
-    steps.push({ title: T("Lepas submodule dari git", "Remove the submodule from git tracking"), cmd: "git rm -f " + SUBMODULE_DIR });
+    /* soft: a submodule that git no longer knows about makes these commands fail, and a failed
+       command used to abort execSteps outright — leaving the repo HALF uninstalled, which is a
+       worse state than either end of the operation. Cleanup steps report and carry on. */
+    steps.push({ title: T("Deinit submodule", "Deinit the submodule"), cmd: "git submodule deinit -f " + SUBMODULE_DIR, soft: true });
+    steps.push({ title: T("Lepas submodule dari git", "Remove the submodule from git tracking"), cmd: "git rm -f " + SUBMODULE_DIR, soft: true });
   }
   if (fs.existsSync(abs(path.join(".git", "modules", SUBMODULE_DIR)))) steps.push({ title: T("Bersihkan state submodule internal", "Clean internal submodule state"), rmrf: ".git/modules/" + SUBMODULE_DIR });
   if (fs.existsSync(abs(SUBMODULE_DIR))) steps.push({ title: T("Hapus sisa folder " + SUBMODULE_DIR + "/", "Remove the leftover " + SUBMODULE_DIR + "/ folder"), rmrf: SUBMODULE_DIR, gitUntrack: true });
 
-  steps.push({ title: T("Hapus struk pemasangan (riwayat & trash dipertahankan)", "Remove the install receipt (history & trash are kept)"), rmfile: MANIFEST });
-  steps.push({ title: T("Hapus .ds/ hanya kalau sudah kosong", "Remove .ds/ only if it is empty"), pruneDs: true });
+  steps.push({ title: T("Rapikan .gitmodules kalau sudah tidak menyebut submodule apa pun", "Tidy .gitmodules if it no longer names any submodule"), pruneGitmodules: true });
+  steps.push({ title: T("Hapus struk pemasangan", "Remove the install receipt"), rmfile: MANIFEST });
+  steps.push({ title: T("Pindahkan sisa recovery lama ke \u2039git\u203a/ds-recovery/", "Move any legacy recovery state into \u2039git\u203a/ds-recovery/"), sweepLegacy: true });
+  if (!cfg || cfg.leaveNoTrace !== false) {
+    steps.push({ title: T("Arsipkan .ds/ ke \u2039git\u203a/ds-recovery/ lalu hapus dari working tree", "Archive .ds/ into \u2039git\u203a/ds-recovery/ then remove it from the working tree"), archiveDs: true });
+    steps.push({ title: T("Pindahkan panel (ds-setup.cjs) ke \u2039git\u203a/ds-recovery/", "Move the panel (ds-setup.cjs) into \u2039git\u203a/ds-recovery/"), archivePanel: true });
+  } else {
+    steps.push({ title: T("Hapus .ds/ hanya kalau sudah kosong", "Remove .ds/ only if it is empty"), pruneDs: true });
+  }
   if (cfg && cfg.commit) steps.push({ title: T("Commit revert", "Commit the revert"), commit: true, commitMsg: "revert: remove design-system" });
+  steps.push({ title: T("Verifikasi working tree kembali bersih", "Verify the working tree came back clean"), verifyClean: true });
 
   if (!steps.length) return { error: T("Tidak ada yang perlu dicopot.", "Nothing to revert.") };
   return {
     steps,
     notTouched: [T("Semua isi repo kamu yang lain", "Everything else in your repo")],
     remains: [
-      T(".ds/history.jsonl — catatan adopsi (tidak dihapus)", ".ds/history.jsonl — the adoption log (kept)"),
-      T(".ds/.trash/ — salinan setiap file yang pernah diubah", ".ds/.trash/ — a copy of every file ever changed"),
+      T("\u2039git\u203a/ds-recovery/ — salinan setiap file yang pernah diubah, riwayat adopsi, dan panel-nya. Di luar working tree, jadi `git status` tetap bersih; tidak ada yang dihapus.",
+        "\u2039git\u203a/ds-recovery/ — a copy of every file ever changed, the adoption log, and the panel itself. Outside the working tree, so `git status` stays clean; nothing is destroyed."),
       T("Commit di riwayat git — dicopot, bukan ditulis ulang", "Commits in your git history — reverted, never rewritten"),
     ],
   };
@@ -645,6 +761,84 @@ async function execSteps(steps, ctx) {
         else push(true, "kept (has your content)");
         continue;
       }
+      if (s.pruneGitmodules) {
+        const src = readIf(".gitmodules");
+        if (src == null) { push(true, "not present"); continue; }
+        /* git leaves an empty (or whitespace-only) .gitmodules behind after `git rm`ing the last
+           submodule, and it stays STAGED as a new file — which is why an uninstall used to leave
+           an "A .gitmodules" sitting in Source Control. */
+        /* git only rewrites .gitmodules when `git rm <path>` succeeds. If the folder was already
+           gone, the stale section survives and the file stays STAGED as an addition — the
+           "A .gitmodules" left sitting in Source Control after an uninstall. Drop our own
+           section explicitly, then remove the file if nothing else claims it. */
+        let out = src.replace(
+          new RegExp('\\[submodule "' + SUBMODULE_DIR.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + '"\\][^\\[]*', "g"), "");
+        if (out !== src) { writeFile(".gitmodules", out); src = out; }
+        if (!/^\s*\[submodule/m.test(src)) {
+          toTrash(".gitmodules");
+          fs.rmSync(abs(".gitmodules"), { force: true });
+          sh('git rm -f --cached --ignore-unmatch -- ".gitmodules"');
+          push(true, "removed (named no submodule)");
+        } else push(true, "kept (still names another submodule)");
+        continue;
+      }
+      if (s.sweepLegacy) {
+        const moved = sweepLegacyRecovery();
+        push(true, moved.length ? "moved out of the working tree: " + moved.join(", ") : "nothing legacy to move");
+        continue;
+      }
+      if (s.archiveDs) {
+        const src = abs(DS_DIR_LOCAL);
+        if (!fs.existsSync(src)) { push(true, "not present"); continue; }
+        /* Only the panel's OWN artifacts move. A file a developer put in .ds/ is theirs
+           (guarantee F11) and an uninstall that quietly filed it away would be exactly the
+           kind of "helpful" overreach this whole release is about.
+           history.jsonl is the further exception: once it is COMMITTED it is team knowledge
+           and the basis of the adoption report, so removing it from the tree would be
+           deleting other people's data. Only an untracked log is archived. */
+        const OWNED = new Set(["bindings.md", "manifest.json", "rollback-point.json", ".trash", "requests"]);
+        const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const dest = path.join(RECOVERY, "ds-" + stamp);
+        const moved = [], left = [];
+        for (const name of fs.readdirSync(src)) {
+          const full = path.join(src, name);
+          let owned = OWNED.has(name);
+          if (name === "history.jsonl") owned = !sh('git ls-files --error-unmatch -- "' + DS_DIR_LOCAL + '/history.jsonl"').ok;
+          if (!owned) { left.push(name); continue; }
+          fs.mkdirSync(dest, { recursive: true });
+          fs.cpSync(full, path.join(dest, name), { recursive: true });
+          fs.rmSync(full, { recursive: true, force: true });
+          sh('git rm -r --cached --ignore-unmatch -- "' + DS_DIR_LOCAL + "/" + name + '"');
+          moved.push(name);
+        }
+        let note = moved.length ? "archived to " + relRecovery(dest) + ": " + moved.join(", ") : "nothing of ours left to archive";
+        if (!fs.readdirSync(src).length) { fs.rmSync(src, { recursive: true, force: true }); note += " \u2014 .ds/ removed (empty)"; }
+        else note += " \u2014 .ds/ kept, it still holds yours: " + left.join(", ");
+        push(true, note);
+        continue;
+      }
+      if (s.archivePanel) {
+        const src = abs("ds-setup.cjs");
+        if (!fs.existsSync(src)) { push(true, "not present"); continue; }
+        const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const dest = path.join(RECOVERY, "ds-setup.cjs." + stamp);
+        fs.mkdirSync(path.dirname(dest), { recursive: true });
+        fs.cpSync(src, dest);
+        PENDING_SELF_DELETE = src;
+        push(true, "copied to " + relRecovery(dest) + " \u2014 removed from the repo when the panel stops");
+        continue;
+      }
+      if (s.verifyClean) {
+        const r = sh("git status --porcelain");
+        if (!r.ok) { push(true, "not a git repo \u2014 skipped"); continue; }
+        const lines = r.out.split("\n").map((l) => l.trim()).filter(Boolean);
+        if (!lines.length) { push(true, "working tree is clean \u2014 back to the pre-install state"); continue; }
+        /* An honest report beats a green tick: name exactly what is left and why. */
+        push(true, lines.length + " path(s) still differ from HEAD:\n" + lines.slice(0, 20).join("\n") +
+          (lines.length > 20 ? "\n\u2026" : "") +
+          "\n\nIf any of these are the design system's doing, they are recoverable from \u2039git\u203a/ds-recovery/.");
+        continue;
+      }
       if (s.pruneDs) {
         try {
           const left = fs.readdirSync(abs(DS_DIR_LOCAL));
@@ -693,6 +887,7 @@ async function execSteps(steps, ctx) {
       if (s.doctor) { const d = runDoctor(); push(d.ok, d.output, { doctor: true }); continue; }
       if (s.cmd) {
         const r = sh(s.cmd);
+        if (!r.ok && s.soft) { push(true, "skipped \u2014 " + (r.out || "command not applicable here"), { cmd: s.cmd, soft: true }); continue; }
         push(r.ok, r.out || "done", { cmd: s.cmd });
         if (!r.ok) return { log, ok: false };
         continue;
@@ -1055,7 +1250,7 @@ const server = http.createServer(async (req, res) => {
     });
   }
   if (req.method === "POST" && url === "/api/rollback-plan") {
-    let rb = null; try { rb = JSON.parse(readIf(ROLLBACK)); } catch {}
+    let rb = null; try { rb = JSON.parse(readAbs(ROLLBACK_ABS)); } catch {}
     if (!rb || !rb.fromCommit) return json(res, 200, { error: T("Belum ada titik rollback.", "No rollback point recorded yet.") });
     return json(res, 200, {
       steps: [
@@ -1144,7 +1339,8 @@ const server = http.createServer(async (req, res) => {
     if (LOCKED.update) return json(res, 400, { error: T("Update sudah dijalankan di sesi ini.", "Update already ran in this session.") });
     const cfg = await body(req);
     const before = detectState().subCommit;
-    writeFile(ROLLBACK, JSON.stringify({ fromCommit: before, at: new Date().toISOString(), wizard: WIZARD_VERSION }, null, 2) + "\n");
+    fs.mkdirSync(path.dirname(ROLLBACK_ABS), { recursive: true });
+    fs.writeFileSync(ROLLBACK_ABS, JSON.stringify({ fromCommit: before, at: new Date().toISOString(), wizard: WIZARD_VERSION }, null, 2) + "\n", "utf8");
     const steps = [{ title: T("Tarik versi terbaru", "Pull the latest version"), cmd: "git submodule update --remote " + SUBMODULE_DIR }];
     steps.push({ title: T("Perbarui struk", "Update the receipt"), manifest: "update" });
     if (cfg.commit) steps.push({ title: T("Commit kenaikan versi", "Commit the version bump"), commit: true, commitMsg: "chore: bump design-system" });
@@ -1157,7 +1353,7 @@ const server = http.createServer(async (req, res) => {
   }
   if (req.method === "POST" && url === "/api/rollback") {
     if (LOCKED.rollback) return json(res, 400, { error: T("Rollback sudah dijalankan di sesi ini.", "Rollback already ran in this session.") });
-    let rb = null; try { rb = JSON.parse(readIf(ROLLBACK)); } catch {}
+    let rb = null; try { rb = JSON.parse(readAbs(ROLLBACK_ABS)); } catch {}
     if (!rb || !rb.fromCommit) return json(res, 400, { error: T("Belum ada titik rollback.", "No rollback point recorded.") });
     const r = await execSteps([
       { title: T("Kembalikan ke " + rb.fromCommit, "Return to " + rb.fromCommit), cmd: 'git -C "' + abs(SUBMODULE_DIR) + '" checkout ' + rb.fromCommit },

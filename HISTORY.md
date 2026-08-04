@@ -292,3 +292,67 @@ components". The grounding chain was one link short of the thing it was groundin
 sixty-four components, for four minor versions. Every catalog entry now carries a `Reference:`
 line, and the thirty-eight specs with no render say so explicitly, because "none yet" is an
 instruction too.
+
+
+---
+
+## v3.4.5 — the uninstall that took off the raincoat
+
+The panel's install writes a `.gitignore` block so that `.ds/.trash/`, `.ds/rollback-point.json`
+and `ds-setup.cjs` never show up in `git status`. The uninstall then strips that block — and
+left every one of those files sitting in the working tree.
+
+So a repo that was clean before the install came back from the uninstall with a dozen untracked
+recovery artifacts in Source Control. Both halves were individually reasonable. Stripping a
+block you installed is right. Keeping recovery copies is right. Together they were a bug, and
+the only way to see it was to run the sequence and look at the result.
+
+The fix is not a smarter strip order. It is that **recovery state should never have been in the
+working tree at all.** `.git/` is invisible to `git status`, never committed, and survives
+everything short of deleting the clone. Nothing is destroyed and nothing is in the way. When a
+guarantee needs a raincoat to hold, put it somewhere it is not raining.
+
+Three smaller faults surfaced while testing the same path, each a variant of *doing more than
+you were asked*:
+
+- `stripHashBlock` collapsed runs of blank lines **across the whole file** while removing one
+  block, so an uninstall silently reformatted `.gitignore` and `CLAUDE.md` in any repo that
+  happened to have three newlines in a row. A revert that edits bytes it did not install is not
+  a revert.
+- `removeManagedLine` deleted the entire line holding the marker. The panel always writes that
+  line alone — but "always" is a statement about the past, and a human merging their own code
+  onto it would have lost it.
+- A failing `git submodule deinit` aborted `execSteps` outright, leaving the repo *half*
+  uninstalled. A cleanup sequence that can stop in the middle has a worse failure mode than
+  either of its endpoints; cleanup steps now report and carry on.
+
+### The zero that was not a measurement
+
+A separate report: the dashboard counters "always go back to 0 every time the design system
+updates". They did, and the cause was not the counters.
+
+`.release/adoption.config.json` ships with `repos: []`. `adoption-report.js` dutifully wrote
+`repos: 0, installs: 0, devs: 0 …` and `ship.js` regenerates that file on every release. The
+panel had no way to distinguish a measurement of zero from an absence of measurement, and the
+adoption card defaulted to the Team tab — so every single update looked like a reset. The
+developer's own counts were correct and cumulative the entire time, sitting one tab away.
+
+What makes this worth writing down is that `adoptionStats()` already carried this comment:
+
+> If the report has never been generated, org is null and the panel says so rather than showing
+> a zero that looks like real data.
+
+The intent was correct, documented, and two years of good judgement went into the sentence. The
+code under it checked whether `totals` existed rather than whether it meant anything. **A
+comment describing the behaviour you wanted is not the behaviour.** The gap between them
+survived four releases because zeros never throw.
+
+### One more, on being caught by your own gate
+
+`visual-audit.py` — written in v3.4.4, after a release that claimed a visual gate which did not
+exist — failed on its first run against the new gallery navigation. The per-section anchor link
+was `opacity: 0` and still hit-testable: precisely the ghost-control fault the gate exists to
+catch, reintroduced by the same hand that wrote the gate, four hours later.
+
+That is the strongest argument for gates there is. Not that they catch other people's mistakes.
+That they catch the ones you make while confident you have understood the failure.

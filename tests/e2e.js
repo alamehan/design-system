@@ -175,9 +175,12 @@ async function api(p, data) {
     console.log("4. restore");
     const rr = await api("/api/restore", { file: "CLAUDE.md" });
     ok(rr.ok === true, "restore succeeds");
-    ok(!!rr.backup && fs.existsSync(path.join(app, rr.backup)), "dev's version preserved in .ds/.trash/");
-    /* now that .trash exists, the trailing-slash ignore pattern can be verified */
-    ok(sh("git check-ignore -q .ds/.trash || echo visible", app).trim() === "", ".ds/.trash is git-ignored once created");
+    ok(!!rr.backup && fs.existsSync(path.join(app, rr.backup)), "dev's version preserved in \u2039git\u203a/ds-recovery/trash/");
+    /* v3.4.5: recovery state lives under the git dir, so it needs no ignore rule at all —
+       assert the stronger property directly. A file git cannot see cannot dirty the tree. */
+    ok(rr.backup.startsWith(".git/"), "recovery copies live inside .git/, not the working tree");
+    ok(!sh("git status --porcelain", app).split("\n").some((l) => l.includes("ds-recovery")),
+      "recovery state is invisible to git status");
     ok(fs.readFileSync(cm, "utf8").includes("My own notes. Do not delete me."), "restore keeps the dev's own content");
     st = await api("/api/state");
     ok(st.drift.filter((x) => x.path === "CLAUDE.md").length === 0, "contract drift cleared");
@@ -209,7 +212,7 @@ async function api(p, data) {
     const ur = await api("/api/update", { commit: false });
     ok(ur.ok === true, "update applies" + (ur.ok ? "" : " \u2014 " + JSON.stringify(ur.log.filter((l) => !l.ok))));
     ok(ur.after !== beforeSha, "submodule pin moved");
-    ok(fs.existsSync(path.join(app, ".ds", "rollback-point.json")), "rollback point recorded");
+    ok(fs.existsSync(path.join(app, ".git", "ds-recovery", "rollback-point.json")), "rollback point recorded in \u2039git\u203a/ds-recovery/");
 
     const rb = await api("/api/rollback", {});
     ok(rb.ok === true, "rollback runs" + (rb.ok ? "" : " \u2014 " + JSON.stringify(rb.log.filter((l) => !l.ok))));
@@ -225,7 +228,10 @@ async function api(p, data) {
     ok(!fs.readFileSync(cm, "utf8").includes("design-system:begin"), "marker block removed");
     ok(fs.existsSync(path.join(app, ".ds", "team-notes.md")), "F11: dev's own .ds file survives uninstall");
     ok(!fs.existsSync(path.join(app, ".ds", "bindings.md")), "bindings removed");
-    ok(fs.existsSync(path.join(app, ".ds", "history.jsonl")), "history preserved");
+    ok(fs.existsSync(path.join(app, ".ds", "history.jsonl")) ||
+      fs.readdirSync(path.join(app, ".git", "ds-recovery")).some((d) =>
+        fs.existsSync(path.join(app, ".git", "ds-recovery", d, "history.jsonl"))),
+      "history preserved (in place if committed, archived if not)");
     const gi2 = fs.readFileSync(path.join(app, ".gitignore"), "utf8");
     ok(gi2.includes("MY-OWN-IGNORE-LINE"), "dev's own .gitignore lines survive uninstall");
     ok(!gi2.includes("design-system:begin"), "the .gitignore block is stripped on uninstall");

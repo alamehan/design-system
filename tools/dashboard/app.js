@@ -499,11 +499,15 @@ function renderHome() {
  * appends rather than starting over.
  *
  * None of this is telemetry. The panel makes no network request to produce it.  */
-var ADOPT_SCOPE = localStorage.getItem("dsAdoptScope") || "team";
+/* Default to the scope that actually HAS data. "team" was the hardcoded default, so a repo
+   whose org report was never configured opened on a tab of permanent zeros while the
+   developer's own cumulative counts sat one tab away, unread. A tab is only defaulted to when
+   it can answer its own question. */
+var ADOPT_SCOPE = localStorage.getItem("dsAdoptScope") || "";
 
 function adoptionCard() {
   var a = (S && S.adoption) || {};
-  var scope = ADOPT_SCOPE;
+  var scope = ADOPT_SCOPE || (a.org ? "team" : "repo");
   if (scope === "team" && !a.org) scope = "repo";
   if (scope === "me" && !a.hasActor) scope = "repo";
 
@@ -546,9 +550,7 @@ function adoptionCard() {
 
   var note;
   if (scope === "team") {
-    note = a.configured === false
-      ? { ic: "info", txt: t("adopt.unconfigured") }
-      : { ic: "clock", txt: t("adopt.org.hint") + (a.generatedAt ? " \u00b7 " + t("adopt.generated") + " " + fmtDate(a.generatedAt) : "") };
+    note = { ic: "clock", txt: t("adopt.org.hint") + (a.generatedAt ? " \u00b7 " + t("adopt.generated") + " " + fmtDate(a.generatedAt) : "") };
   } else if (scope === "me") {
     note = { ic: "shield-check", txt: t("adopt.me.hint") };
   } else {
@@ -556,8 +558,10 @@ function adoptionCard() {
   }
   h += '<div class="note">' + icon(note.ic) + "<span>" + esc(note.txt) + "</span></div>";
 
+  /* Say WHY the team tab is empty. "No repositories are listed yet" is actionable;
+     a disabled tab with no explanation reads as a broken panel. */
   if (!a.org && scope !== "team") h += '<div class="note" style="border-top:none;padding-top:0">' + icon("info") +
-    "<span>" + esc(t("adopt.noteam")) + "</span></div>";
+    "<span>" + esc(t(a.configured === false ? "adopt.unconfigured" : "adopt.noteam")) + "</span></div>";
 
   return h + "</div></div>";
 }
