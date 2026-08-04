@@ -58,3 +58,8 @@
 .cp-empty__icon { width: 56px; height: 56px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-full); background: var(--color-system-surface-strong); color: var(--color-system-text-mute); }
 
 .cp-modal { max-width: 420px; background: var(--color-neutral-pure-white); border: var(--stroke-thin) solid var(--color-system-border-soft); border-radius: var(--radius-md); padding: var(--space-lg); }
+.cp-metric__trend { align-self: flex-start; margin-top: var(--space-3xs); }
+
+/* v3.4.1 gallery polish */
+.cp-empty__img { width: 150px; height: auto; }
+.cp-metric__trend { align-self: flex-start; margin-top: var(--space-3xs); }

@@ -22,7 +22,7 @@
 - **atom-04** CustomButton _(atomic)_ — Neutral low-emphasis button for navigation and breadcrumb. No brand color — uses system surface. Turns muted gray on hover. → `components/atom-04.md`
 - **atom-05** Chip _(atomic)_ — Compact label for tags, filters, selections. Three styles (Neutral/Colored/Gradient), three sizes (MD/SM/CC). Full-radius pill. → `components/atom-05.md`
 - **atom-06** StatusChip _(atomic)_ — Read-only status indicator. Semantic color presets per status. Not interactive. → `components/atom-06.md`
-- **atom-07** Toast _(atomic)_ — Transient notification overlay. Semantic status types × three visual styles. Anatomy: circular custom icon from the shipped set src/asset… → `components/atom-07.md`
+- **atom-07** Toast _(atomic)_ — Transient notification overlay. Semantic status types × three visual styles. Auto-dismisses. Icons come from the bundled custom set (src/… → `components/atom-07.md`
 - **atom-08** Input _(atomic)_ — General-purpose single-line text input. Covers Basic, Search, Password, Number, DatePicker, Dropdown. Single and Multi value modes. → `components/atom-08.md`
 - **atom-09** Textarea _(atomic)_ — Multi-line text input. Same state tokens as Input. Built on FormInputField. → `components/atom-09.md`
 - **atom-10** RichTextEditor _(atomic)_ — WYSIWYG editor with formatting toolbar. For email composition, cover letters, and formatted long-form content. → `components/atom-10.md`
@@ -30,7 +30,7 @@
 - **atom-12** FormControl _(atomic)_ — Selection controls: Checkbox, Radio, Switch. Each has Enabled/Disabled states and Selected/Unselected/Indeterminate values. → `components/atom-12.md`
 - **atom-13** RangeSlider _(atomic)_ — Dual-handle range input for selecting a min–max numeric range. → `components/atom-13.md`
 - **atom-14** Breadcrumb _(atomic)_ — Horizontal navigation trail from root to current page. Built by composing CustomButton items separated by chevron separators. → `components/atom-14.md`
-- **atom-15** DropdownMenu _(atomic)_ — Floating context-menu panel triggered by button or right-click. Five layout types. Items support optional leading icons (icon key / #icon… → `components/atom-15.md`
+- **atom-15** DropdownMenu _(atomic)_ — Floating menu panel triggered by button or right-click. Five layout types. → `components/atom-15.md`
 - **atom-16** Tabs _(atomic)_ — Horizontal tab navigation. Two styles: Basic (pill in container) and Underline (borderless with bottom indicator). Text-only, icon-only, … → `components/atom-16.md`
 
 ## layout (11)

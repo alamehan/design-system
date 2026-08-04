@@ -2,7 +2,7 @@
   "designSystem": "E-Systems Design System (Elabram)",
   "figmaFileKey": "uhJE5ZhaGTYoCQ5lGLVAZW",
   "generatedAt": "2026-08-04",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "totalComponents": 64,
   "totalPages": 12,
   "categories": {
@@ -155,7 +155,7 @@
       "type": "component",
       "category": "atomic",
       "figmaNodeId": "4165:77218",
-      "description": "Transient notification overlay. Semantic status types × three visual styles. Anatomy: circular custom icon from the shipped set src/assets/icons-custom (system-success/warning/error/info.svg, loading.svg for Wait) · bold semantic title + optional subtitle · optional tonal action button · dark circular dismiss. Auto-dismisses.",
+      "description": "Transient notification overlay. Semantic status types × three visual styles. Auto-dismisses. Icons come from the bundled custom set (src/assets/icons-custom: system-success/warning/error/info.svg, loading.svg for Wait); the action button is the standard Button (Tonal) and dismiss is the standard IconButton.",
       "file": "src/components/atom-07-toast.json"
     },
     {
@@ -227,7 +227,7 @@
       "type": "component",
       "category": "atomic",
       "figmaNodeId": "4085:23330",
-      "description": "Floating context-menu panel triggered by button or right-click. Five layout types. Items support optional leading icons (icon key / #icon slot); hasSearch pins a filter field at the top of the panel.",
+      "description": "Floating menu panel triggered by button or right-click. Five layout types.",
       "file": "src/components/atom-15-dropdown-menu.json"
     },
     {
@@ -461,7 +461,7 @@
       "type": "component",
       "category": "basic",
       "figmaNodeId": "4086:87163",
-      "description": "Full data table composed of TableColumn headers, TableRow rows, ScrollBar for horizontal scroll, and Pagination footer. ReplaceMe variant is the empty template; Candidates is a pre-filled example. Compact density by default: cells pad spacing.standard.sm vertically.",
+      "description": "Full data table composed of TableColumn headers, TableRow rows, ScrollBar for horizontal scroll, and Pagination footer. ReplaceMe variant is the empty template; Candidates is a pre-filled example.",
       "file": "src/components/layout-09-data-table.json"
     },
     {

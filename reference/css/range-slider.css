@@ -1,0 +1,22 @@
+/* atom-13 RangeSlider — dual-handle numeric range. min/max/step/showLabels.
+   Source of truth: src/components/atom-13*.json · token-pure CSS (vars only). /* v3.4.1 gallery polish */*/
+
+.es-range { display: flex; flex-direction: column; gap: var(--space-xxs); }
+.es-range__values { display: flex; justify-content: space-between; color: var(--color-system-text-head); }
+.es-range__track { position: relative; height: 6px; border-radius: var(--radius-full); background: var(--color-system-surface-strong); }
+.es-range__fill { position: absolute; top: 0; bottom: 0; border-radius: var(--radius-full); background: var(--color-brand-brand); }
+.es-range__handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  background: var(--color-neutral-pure-white);
+  border: 2px solid var(--color-brand-brand);
+  box-shadow: var(--shadow-Base);
+  cursor: pointer;
+}
+.es-range__handle:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+.es-range__labels { display: flex; justify-content: space-between; color: var(--color-system-text-mute); }
+.es-range.is-disabled { opacity: 0.5; pointer-events: none; }

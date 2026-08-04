@@ -1,0 +1,28 @@
+/* atom-10 RichTextEditor — label + toolbar (standard IconButton components) + content area.
+   Source of truth: src/components/atom-10*.json · token-pure CSS (vars only). /* v3.4.1 gallery polish */*/
+
+.es-rte {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-neutral-pure-white);
+  border: var(--stroke-thin) solid var(--color-system-border-soft);
+  border-radius: var(--radius-md);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.es-rte:focus-within { border-color: var(--color-brand-brand); box-shadow: var(--shadow-State-Focus); }
+.es-rte__toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+  padding: var(--space-3xs);
+  border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
+}
+.es-rte__tool { padding: var(--space-3xs); font-size: 1em; color: var(--color-system-text-body); }
+.es-rte__tool.is-active { background: var(--color-component-button-tonal); color: var(--color-brand-brand); }
+.es-rte__sep { width: var(--stroke-thin); align-self: stretch; margin: var(--space-3xs); background: var(--color-system-border-soft); }
+.es-rte__content { min-height: 120px; padding: var(--space-sm) var(--space-lg); color: var(--color-system-text-head); }
+.es-rte__content.is-placeholder { color: var(--color-system-text-mute); }
+.es-rte.is-error { border-color: var(--color-semantic-error); box-shadow: var(--shadow-State-Error); }
+.es-rte.is-disabled { background: var(--color-neutral-muted); border-color: var(--color-system-border-strong); pointer-events: none; }
+.es-rte.is-disabled .es-rte__content, .es-rte.is-disabled .es-rte__tool { color: var(--color-system-text-mute); }

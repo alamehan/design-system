@@ -4,7 +4,7 @@
 .es-cell {
   background: var(--color-neutral-pure-white);
   border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
-  padding: var(--space-xl) var(--space-md);
+  padding: var(--space-sm) var(--space-md);
   color: var(--color-system-text-head);
   vertical-align: middle;
 }
@@ -40,4 +40,17 @@ tr.is-selected > .es-cell { background: var(--color-brand-brand-surface-soft); }
   color: var(--color-brand-brand);
   padding: var(--space-sm);
   text-align: center;
+}
+
+/* v3.4.1 gallery polish */
+.es-cell__dot--brand { background: var(--color-brand-brand); }
+.es-cell__photo { width: 32px; height: 32px; border-radius: var(--radius-full); display: block; }
+.es-cell__choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border: var(--stroke-thin) solid var(--color-system-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-xxs) var(--space-md);
+  cursor: pointer;
 }

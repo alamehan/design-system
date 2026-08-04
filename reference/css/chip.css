@@ -34,3 +34,14 @@
   color: var(--color-neutral-pure-white);
   box-shadow: var(--shadow-Base);
 }
+
+/* v3.4.1 gallery polish */
+.es-chip__count {
+  display: inline-flex;
+  align-items: center;
+  margin-left: var(--space-3xs);
+  padding: 0 var(--space-xxs);
+  border-radius: var(--radius-full);
+  background: var(--color-system-surface-strong);
+  color: var(--color-system-text-body);
+}

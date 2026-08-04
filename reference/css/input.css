@@ -32,3 +32,24 @@
 .es-field__input:disabled { color: var(--color-system-text-mute); cursor: not-allowed; }
 .es-field__msg { color: var(--color-system-text-mute); }
 .es-field__msg.is-error { color: var(--color-semantic-error); }
+
+/* v3.4.1 gallery polish */
+.es-field__chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3xs); flex: 1; min-width: 0; }
+.es-field__iconbtn {
+  padding: var(--space-3xs);
+  font-size: 1em;
+  border-color: var(--color-system-border-strong);
+  color: var(--color-system-text-body);
+  background: var(--color-neutral-pure-white);
+}
+.es-field__iconbtn:hover:not(:disabled) { background: var(--color-system-surface-soft); }
+.es-field__suffix {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  color: var(--color-system-text-body);
+  border-left: var(--stroke-thin) solid var(--color-system-border-soft);
+  padding-left: var(--space-sm);
+  cursor: pointer;
+  white-space: nowrap;
+}

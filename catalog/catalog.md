@@ -114,9 +114,9 @@ Read-only status indicator. Semantic color presets per status. Not interactive.
 **Spec:** `src/components/atom-06-status-chip.json`
 
 ## atom-07 — Toast  _(atomic)_
-Transient notification overlay. Semantic status types × three visual styles. Anatomy: circular custom icon from the shipped set src/assets/icons-custom (system-success/warning/error/info.svg, loading.svg for Wait) · bold semantic title + optional subtitle · optional tonal action button · dark circular dismiss. Auto-dismisses.
+Transient notification overlay. Semantic status types × three visual styles. Auto-dismisses. Icons come from the bundled custom set (src/assets/icons-custom: system-success/warning/error/info.svg, loading.svg for Wait); the action button is the standard Button (Tonal) and dismiss is the standard IconButton.
 **Props:** style=Filled|Outlined|Others (def Filled); type=Success|Warning|Error|Info|Wait|Brand|Basic (def Success); title:string (def Notification Title); description:string (def null); hasAction:boolean (def false); actionLabel:string (def Undo); isDismissible:boolean (def true); duration:number (def 4000)
-**Tokens:** corner-radius.lg, spacing.standard.sm, spacing.standard.lg, stroke.thin, semantic.success-surface-soft, semantic.success, semantic.error-surface-soft, semantic.error, semantic.warning-surface-soft, semantic.warning, semantic.info-surface-soft, semantic.info, semantic.sem-indigo-surface-soft, semantic.sem-indigo, brand.brand-surface-soft, brand.brand, neutral.pure-white, shadow.Smooth, system.surface-strong, shadow.Base  — class per token: see Token vocabulary
+**Tokens:** corner-radius.lg, spacing.standard.sm, spacing.standard.lg, stroke.thin, semantic.success-surface-soft, semantic.success, semantic.error-surface-soft, semantic.error, semantic.warning-surface-soft, semantic.warning, semantic.info-surface-soft, semantic.info, brand.brand-surface-soft, brand.brand, neutral.pure-white, shadow.Smooth, system.surface-strong, shadow.Base, semantic.sem-indigo-surface-soft, semantic.sem-indigo  — class per token: see Token vocabulary
 **Spec:** `src/components/atom-07-toast.json`
 
 ## atom-08 — Input  _(atomic)_
@@ -162,7 +162,7 @@ Horizontal navigation trail from root to current page. Built by composing Custom
 **Spec:** `src/components/atom-14-breadcrumb.json`
 
 ## atom-15 — DropdownMenu  _(atomic)_
-Floating context-menu panel triggered by button or right-click. Five layout types. Items support optional leading icons (icon key / #icon slot); hasSearch pins a filter field at the top of the panel.
+Floating menu panel triggered by button or right-click. Five layout types.
 **Props:** type=MenuGeneral|DropdownList|DropdownListGrouped|MenuCheckbox|MenuExtended (def MenuGeneral); items:array (def [object Object],[object Object]); isOpen:boolean (def false); placement=bottom-start|bottom-end|top-start|top-end|right-start|left-start (def bottom-start); maxHeight:number (def 320); hasSearch:boolean (def false)
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, corner-radius.lg, spacing.standard.xxs, spacing.standard.none, shadow.Smooth, spacing.standard.sm, spacing.standard.md, corner-radius.md, system.text-head, text-styles.bold.body-md, system.text-body, system.surface-soft, system.text-mute, semantic.error, text-styles.bold.label-sm  — class per token: see Token vocabulary
 **Spec:** `src/components/atom-15-dropdown-menu.json`
@@ -318,7 +318,7 @@ Content slot patterns for the Modal body. Five types cover: Default (text + illu
 **Spec:** `src/components/layout-08-modal-content.json`
 
 ## layout-09 — DataTable  _(basic)_
-Full data table composed of TableColumn headers, TableRow rows, ScrollBar for horizontal scroll, and Pagination footer. ReplaceMe variant is the empty template; Candidates is a pre-filled example. Compact density by default: cells pad spacing.standard.sm vertically.
+Full data table composed of TableColumn headers, TableRow rows, ScrollBar for horizontal scroll, and Pagination footer. ReplaceMe variant is the empty template; Candidates is a pre-filled example.
 **Props:** type=ReplaceMe|Candidates (def ReplaceMe); columns:array (def ); rows:array (def ); isLoading:boolean (def false); isEmpty:boolean (def false); selectedRows:array (def ); sortColumn:string (def null); sortDirection=asc|desc (def asc); density=Compact|Comfortable (def Compact)
 **Tokens:** system.surface-strong, system.border-soft, spacing.standard.sm, neutral.pure-white, system.surface-soft, brand.brand-surface-soft, stroke.thin  — class per token: see Token vocabulary
 **Spec:** `src/components/layout-09-data-table.json`

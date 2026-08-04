@@ -1,6 +1,6 @@
 # ARCHITECTURE — how the whole thing fits together
 
-> Regenerated for **v3.4.0** from the repository as it actually is, not from an
+> Regenerated for **v3.4.1** from the repository as it actually is, not from an
 > earlier draft. Every number here was counted, not remembered.
 > The master diagram also lives standalone in [`system-map.mermaid`](./system-map.mermaid).
 

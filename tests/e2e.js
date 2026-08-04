@@ -186,7 +186,7 @@ async function api(p, data) {
     /* ================================== 6. update + impact + rollback */
     console.log("6. update / impact / rollback");
     const meta = JSON.parse(fs.readFileSync(path.join(origin, "version.json"), "utf8"));
-    const nm = meta.version.split(".").map(Number); nm[1] += 1; nm[2] = 0; meta.version = nm.join("."); /* always one minor above the shipped version so the bump reads as minor */
+    { const nm = meta.version.split(".").map(Number); nm[1] += 1; nm[2] = 0; meta.version = nm.join("."); } /* always one minor above the shipped version so the bump reads as minor */
     fs.writeFileSync(path.join(origin, "version.json"), JSON.stringify(meta, null, 2) + "\n");
     const vcss = path.join(origin, "dist", "variables.css");
     fs.writeFileSync(vcss, fs.readFileSync(vcss, "utf8").replace("--color-brand-brand:", "--color-brand-renamed:"));

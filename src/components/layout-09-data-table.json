@@ -8,7 +8,7 @@
   "section": "Basic Components",
   "role": "component",
   "implementable": true,
-  "description": "Full data table composed of TableColumn headers, TableRow rows, ScrollBar for horizontal scroll, and Pagination footer. ReplaceMe variant is the empty template; Candidates is a pre-filled example. Compact density by default: cells pad spacing.standard.sm vertically.",
+  "description": "Full data table composed of TableColumn headers, TableRow rows, ScrollBar for horizontal scroll, and Pagination footer. ReplaceMe variant is the empty template; Candidates is a pre-filled example.",
   "props": {
     "type": {
       "type": "enum",
@@ -58,8 +58,7 @@
         "Compact",
         "Comfortable"
       ],
-      "default": "Compact",
-      "description": "Row density. Compact (default) pads cells spacing.standard.sm vertically; Comfortable pads spacing.standard.xl."
+      "default": "Compact"
     }
   },
   "tokens": {

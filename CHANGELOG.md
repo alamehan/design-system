@@ -4,23 +4,28 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
-## 3.4.0 — 2026-08-04
+## 3.4.1 — 2026-08-04
 
-**The Component Reference Gallery now shows every component correctly, completely, and compactly — and two components that existed only as specs finally render.**
+Gallery polish sweep — every reference demo now composes the REAL components (supersedes the interim 3.4.0 delivery).
 
-### Fixed — gallery feedback round
-- **Chip** reference now uses the same bold text ramp as StatusChip (`ts-bold-body-md` MD / `ts-bold-label-sm` SM) in a tidied row. The specs were always right — the reference HTML had dropped the text-style classes.
-- **Toast** rebuilt to the Figma design: soft semantic surface + semantic border, circular custom icon from `src/assets/icons-custom` (`system-*.svg`, `loading.svg` for Wait), bold semantic title + subtitle, tonal action button, dark circular dismiss. Spec gains Filled/Outlined `Wait` overrides (sem-indigo).
-- **DataTable** rows are compact by default: cell padding is now `space-sm` vertical (was `space-xl`); `density` prop (Compact default) added to the spec.
+### Fixed
+- Toast: tight title/subtitle spacing; action = the standard Button (Tonal, semantic override); dismiss = the standard IconButton (dark circular); circular custom icons from `src/assets/icons-custom`.
+- Input: multi-value state renders real Chip components; clear/stepper controls are real IconButtons.
+- RichTextEditor: visible bordered content area (was missing); toolbar built from real IconButtons.
+- RangeSlider: stylesheet now ships and is linked — track, brand fill and dual handles render.
+- Checkbox: indeterminate mark uses the sprite minus icon — optically centered on both axes.
+- DropdownMenu: the search variant reuses the real Input component pinned at the top of the panel.
+- Tabs: icons optically centered (icon-only and icon+text); removed the leftover legacy pill group.
+- Empty state uses the bundled `empty-data.svg` illustration; TableRow OnlyPhoto uses the avatar asset.
+- `cp-metric__trend` had no CSS rule (caught by the new post-generation audit).
 
 ### Added
-- **Input** reference: the full matrix — 9 types (Basic | Search | SearchWithIcon | Dropdown | DatePicker | Password | PasswordShow | Number | Special) × Inactive / Active Single / Active Multi (value chips + clear), plus Error and Disabled; new CSS helpers (clear button, value chips, number steppers, Special suffix).
-- **RichTextEditor (atom-10)** and **RangeSlider (atom-13)**: new reference pages and gallery sections — the specs existed since 3.3.0 but had no reference tier.
-- **DropdownMenu**: variants with per-item leading icons and with a search field; `hasSearch` prop added to the spec.
-- **Tabs**: IconAndText and IconOnly variants for both Basic and Underline styles.
-- **TableColumn**: all 11 header types rendered; **TableRow**: all 17 cell types rendered.
-- 12 real Tabler 3.45.0 sprite symbols (calendar, plus, minus, eye-off, copy, trash, bold, italic, underline, list, list-numbers, link) — sprite now carries 27 symbols.
-- **Panel v3.2.0**: new “Gallery stress test” prompt — builds a sample screen from the complete gallery roster, so vibe-coding stress tests always exercise every component.
+- Input reference matrix: 9 types × Inactive / Active Single / Active Multi.
+- New reference pages + gallery sections: RichTextEditor (atom-10), RangeSlider (atom-13).
+- DropdownMenu icon-per-item + search variants (`hasSearch` prop) · Tabs 6 variants · TableColumn all 11 types · TableRow all 17 types · compact DataTable (`density` prop, Compact default).
+- Toast `Wait` type override (sem-indigo) + custom-icon contract in the spec.
+- 12 new Tabler sprite symbols: calendar, minus, plus, eye-off, copy, trash, bold, italic, underline, list, list-numbers, link.
+- Panel v3.2.0: “Gallery stress test” prompt in the prompt library.
 
 ## 3.3.0 — 2026-07-28
 

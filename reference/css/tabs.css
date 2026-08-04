@@ -41,3 +41,10 @@
   color: var(--color-system-text-mute);
 }
 .es-tabs--underline .es-tabs__tab.is-active { border-bottom-color: var(--color-brand-brand); color: var(--color-brand-brand); }
+
+/* v3.4.1 gallery polish */
+.es-tabs__icon { display: inline-flex; align-items: center; justify-content: center; font-size: 1.1em; line-height: 1; }
+.es-tabs__icon svg { display: block; }
+.es-tabs__tab { line-height: 1.2; }
+.es-tabs__tab--icononly { justify-content: center; }
+.es-tabs--underline .es-tabs__tab--icononly { padding: var(--space-sm) var(--space-md); }
