@@ -38,30 +38,11 @@ git push -u origin main
 
 It must live on the **same host and organisation** as the consuming projects, so the frontend team has read access.
 
-Then set your contact details in `ds-meta.json` — the panel reads them live, so the
-handle link on About, the "request the Level 1 code" button and the "send to designer"
-button all work without a rebuild:
+Then set your contact details in `ds-meta.json` — the panel reads the maintainer email live from there, so the "request the Level 1 code" and "send to designer" buttons work:
 
 ```json
-{
-  "maintainer": { "name": "…", "handle": "@…", "url": "https://…", "email": "…", "role": "…" },
-  "explainer": { "video": "docs/explainer.mp4", "poster": "docs/explainer-poster.png", "length": "3 min" }
-}
+{ "maintainer": { "name": "…", "email": "…" } }
 ```
-
-### A1b. The explainer video (optional)
-
-The tour opens with a centred welcome card that can play a short explainer. Drop the file
-at the path named in `explainer.video`, relative to the design system root — `docs/` is a
-good home for it — and the player appears automatically on the next panel load. No
-rebuild, no config change.
-
-Until the file exists the card shows a plain "on its way" placeholder rather than a broken
-player, so shipping the panel before the video is finished is safe. `poster` and `length`
-are both optional; `length` is shown as a small hint in the banner so people know what
-they are committing to before pressing play.
-
-The panel serves video with byte-range replies, so seeking works and Safari will play it.
 
 ### A2. Tell the team one command
 

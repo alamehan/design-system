@@ -102,17 +102,14 @@ function collect(name, url, man, hist) {
 (async function main() {
   console.log("\nadoption-report \u2014 provider: " + provider + "\n");
   let rows = [];
-  let configured = true;
   if (provider === "list") {
     const urls = cfg.repos || [];
     if (!urls.length) {
-      /* Not an error. The panel needs a valid report file to read, and an empty
-         one that says "no repos registered yet" is far more useful to a developer
-         than a missing file that makes the dashboard tell them to run a script. */
-      console.log("No repos listed in .release/adoption.config.json yet \u2014 writing an empty report.");
-      console.log("Add git URLs to `repos` and run this again to get real numbers.\n");
-      configured = false;
-    } else rows = await viaList(urls);
+      console.error("No repos configured. Create .release/adoption.config.json:\n");
+      console.error(JSON.stringify({ provider: "list", repos: ["https://git.company.co/team/portal-nuxt.git"] }, null, 2));
+      process.exit(1);
+    }
+    rows = await viaList(urls);
   } else rows = await viaApi(provider);
 
   rows.sort((a, b) => (a.repo || "").localeCompare(b.repo || ""));
@@ -138,8 +135,6 @@ function collect(name, url, man, hist) {
     "",
     "_Generated " + new Date().toISOString().slice(0, 10) + " against design system v" + meVersion +
       ". Read from committed `.ds/manifest.json` files \u2014 no telemetry._",
-    "",
-    configured ? "" : "> No repositories are listed in `.release/adoption.config.json` yet, so the counts below are all zero.\n> Add git URLs to `repos` and run this again.",
     "",
     "| | |",
     "|---|---|",
@@ -168,23 +163,7 @@ function collect(name, url, man, hist) {
 
   fs.writeFileSync(path.join(DS, "ADOPTION.md"), md, "utf8");
   fs.mkdirSync(path.join(DS, ".release"), { recursive: true });
-  /* The panel reads these totals straight from the committed file, so the
-     dashboard can show org-wide adoption without any telemetry. */
-  const totals = {
-    configured: configured,
-    repos: rows.length,
-    devs: devs,
-    installs: installs,
-    updates: updates,
-    uninstalls: reverts,
-    requests: requests,
-    behind: stale.length,
-    current: rows.length - stale.length,
-    byLevel: byLevel,
-    byVersion: byVersion,
-  };
-  fs.writeFileSync(path.join(DS, ".release", "adoption.json"),
-    JSON.stringify({ generatedAt: new Date().toISOString(), dsVersion: meVersion, totals, rows }, null, 2) + "\n", "utf8");
+  fs.writeFileSync(path.join(DS, ".release", "adoption.json"), JSON.stringify({ generatedAt: new Date().toISOString(), dsVersion: meVersion, rows }, null, 2) + "\n", "utf8");
 
   console.log("\n" + rows.length + " repo(s) \u00b7 " + devs + " dev(s) \u00b7 " + stale.length + " behind");
   console.log("\u2192 ADOPTION.md");

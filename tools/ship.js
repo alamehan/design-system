@@ -29,11 +29,6 @@ const steps = [
   ["Validate page specs", "python3 src/scripts/validate-pages.py"],
   ["Bundle dashboard", "node tools/build-wizard.js"],
   ["Contract check (regression gate)", "node src/scripts/contract-check.js"],
-  /* Regenerating the adoption report here means the file the panel reads is never
-     older than the release. A developer opening the panel should never be told to
-     run a script to see team numbers - that is the maintainer's job, and this is
-     the maintainer's release command. */
-  ["Refresh adoption report", "node src/scripts/adoption-report.js"],
 ];
 
 const bar = "\u2500".repeat(58);

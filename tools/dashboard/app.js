@@ -4,7 +4,7 @@
 
 var I18N = /* @I18N@ */ {};
 var LANG = localStorage.getItem("dsLang") || "id";
-var THEME = localStorage.getItem("dsTheme") || "light"; /* light by default; dark is opt-in */
+var THEME = localStorage.getItem("dsTheme") || "auto";
 var S = null;          /* latest /api/state */
 var OV = null;         /* latest /api/overview */
 var UPD = null;        /* latest update check */
@@ -12,14 +12,6 @@ var PAGE = "home";
 
 /* ------------------------------------------------------------- helpers */
 function $(id) { return document.getElementById(id); }
-/* create-or-reuse, so repeated renders never stack duplicates */
-function elOnce(id, tag, cls, html) {
-  var n = document.getElementById(id);
-  if (!n) { n = document.createElement(tag); n.id = id; }
-  if (cls) n.className = cls;
-  if (html != null) n.innerHTML = html;
-  return n;
-}
 function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
 function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 function t(k, vars) {
@@ -30,12 +22,6 @@ function t(k, vars) {
 /* server-side strings arrive as {id,en} pairs */
 function tx(v) { return v && typeof v === "object" ? (v[LANG] || v.id || v.en || "") : (v || ""); }
 function icon(name, cls) { return '<svg class="ic ' + (cls || "") + '"><use href="#i-' + name + '"/></svg>'; }
-function mailtoHref(email) {
-  return "mailto:" + email +
-    "?subject=" + encodeURIComponent("[Design System] " + (S && S.root ? S.root.split(/[\\/]/).pop() : "question")) +
-    "&body=" + encodeURIComponent("Hi Raihan,\n\n\n\n---\nDesign system: v" + ((OV && OV.version) || "?") +
-      "\nPanel: v" + ((S && S.wizardVersion) || "?") + "\nRepo: " + ((S && (S.originUrl || S.root)) || "?"));
-}
 function fmtDate(iso) { try { return new Date(iso).toLocaleString(LANG === "id" ? "id-ID" : "en-GB", { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return iso; } }
 
 function api(path, data) {
@@ -222,66 +208,26 @@ function go(page) {
   if (page === "about") renderAbout();
 }
 
-/* -------------------------------------------------------------- modal
- * Modals form a stack. Opening a detail view from inside another modal (the
- * eye button on a plan step, for instance) pushes onto it, and a Back button
- * appears automatically. Before v3.3.0 the detail view simply replaced the
- * plan, so the only way out was Close — which threw away the plan the user was
- * halfway through reading. */
-var mStack = [];
-
-function renderModal(opts) {
+/* -------------------------------------------------------------- modal */
+var mOnClose = null;
+function modal(opts) {
   $("mTitle").textContent = opts.title || "";
   $("mDesc").textContent = opts.desc || "";
   $("mBody").innerHTML = opts.body || "";
   $("modal").classList.toggle("wide", !!opts.wide);
-
   var f = $("mFoot"); f.innerHTML = "";
-  if (mStack.length > 1) {
-    var back = el("button", "btn ghost mback", icon("chevron-left") + "<span>" + esc(t("act.back")) + "</span>");
-    back.onclick = modalBack;
-    f.appendChild(back);
-    f.appendChild(el("span", "mspacer"));
-  }
   (opts.buttons || []).forEach(function (b) {
     var btn = el("button", "btn " + (b.kind || ""), (b.icon ? icon(b.icon) : "") + "<span>" + esc(b.label) + "</span>");
-    btn.onclick = function () {
-      if (b.keepOpen === true) { if (b.onClick) b.onClick(); return; }
-      if (b.back === true) { modalBack(); if (b.onClick) b.onClick(); return; }
-      closeModal();
-      if (b.onClick) b.onClick();
-    };
+    btn.onclick = function () { if (b.keepOpen !== true) closeModal(); if (b.onClick) b.onClick(); };
     f.appendChild(btn);
   });
-
   $("scrim").classList.add("on");
+  mOnClose = opts.onClose || null;
   if (opts.after) opts.after();
-  var first = f.querySelector("button.primary") || f.querySelector("button:not(.mback)") || f.querySelector("button");
+  var first = $("mFoot").querySelector("button.primary") || $("mFoot").querySelector("button");
   if (first) first.focus();
 }
-
-/* open a modal, replacing the stack */
-function modal(opts) { mStack = [opts]; renderModal(opts); }
-/* open a modal on top of the current one, keeping a way back */
-function modalPush(opts) { mStack.push(opts); renderModal(opts); }
-function modalBack() {
-  if (mStack.length < 2) return closeModal();
-  mStack.pop();
-  var prev = mStack[mStack.length - 1];
-  renderModal(prev);
-  if (prev.onReturn) prev.onReturn();
-}
-function closeModal() {
-  $("scrim").classList.remove("on");
-  var top = mStack[mStack.length - 1];
-  mStack = [];
-  if (top && top.onClose) top.onClose();
-}
-/* replace what is on top without losing what is underneath it */
-function modalSwap(opts) {
-  if (mStack.length) mStack[mStack.length - 1] = opts; else mStack = [opts];
-  renderModal(opts);
-}
+function closeModal() { $("scrim").classList.remove("on"); if (mOnClose) { var f = mOnClose; mOnClose = null; f(); } }
 
 /* ----------------------------------------------------------- progress */
 function withProgress(progId, promise) {
@@ -341,7 +287,7 @@ function showPlan(opts) {
     h += '<div class="nt rest"><b>' + icon("info") + esc(t("plan.remains")) + "</b><ul>" +
          plan.remains.map(function (x) { return "<li>" + esc(tx(x)) + "</li>"; }).join("") + "</ul></div>";
   }
-  (opts.nested ? modalPush : modal)({
+  modal({
     title: opts.title || t("plan.title"),
     desc: opts.desc || t("plan.lead"),
     body: h, wide: true,
@@ -354,17 +300,12 @@ function showPlan(opts) {
       for (var i = 0; i < peeks.length; i++) {
         peeks[i].onclick = function () {
           var f = this.getAttribute("data-peek"), line = this.getAttribute("data-line");
-          if (!f) {
-            modalPush({ title: t("plan.preview"), body: '<pre class="block">' + esc(line) + "</pre>",
-              buttons: [{ label: t("act.close"), kind: "ghost" }] });
-            return;
-          }
-          modalPush({ title: f, desc: t("plan.preview"), wide: true, body: '<div class="empty">' + icon("loader") + "\u2026</div>", buttons: [] });
+          if (!f) { modal({ title: t("plan.preview"), body: '<pre class="block">' + esc(line) + "</pre>", buttons: [{ label: t("act.close"), kind: "ghost" }] }); return; }
           api("/api/payload", { file: f }).then(function (r) {
-            modalSwap({
+            modal({
               title: f, desc: t("plan.preview"), wide: true,
               body: /\.md$/.test(f) ? mdBlock(r.content || r.error || "") : '<pre class="block">' + esc(r.content || r.error || "") + "</pre>",
-              buttons: [{ label: t("act.copy"), icon: "copy", keepOpen: true, onClick: function () { copy(r.content || ""); } }],
+              buttons: [{ label: t("act.copy"), icon: "copy", keepOpen: true, onClick: function () { copy(r.content || ""); } }, { label: t("act.close"), kind: "ghost" }],
             });
           });
         };
@@ -469,106 +410,17 @@ function renderHome() {
   row(t("home.managed"), S.manifest ? S.manifest.managed.length + " " + t("home.files") : null);
   h += '</dl><div class="note">' + icon("info") + "<span>" + esc(t("home.stack.note")) + "</span></div></div></div>";
 
-  h += adoptionCard();
-
   var man = (S.manifest && S.manifest.managed) || [];
   if (man.length) {
     h += '<details class="fold card"><summary>' + icon("file-text", "chev") + "<span>" + esc(t("home.managed")) +
       '</span><span class="count">' + man.length + '</span></summary><div class="body">' + managedTable(man) + "</div></details>";
   }
   if (o.changelogHead) {
-    h += '<details class="fold card"><summary>' + icon("sparkles", "chev") + "<span>" + esc(t("home.whatsnew")) + " v" + esc(o.version || "") +
+    h += '<details class="fold card" open><summary>' + icon("sparkles", "chev") + "<span>" + esc(t("home.whatsnew")) + " v" + esc(o.version || "") +
       '</span></summary><div class="body">' + mdBlock(o.changelogHead) + "</div></details>";
   }
   b.innerHTML = h;
 }
-
-/* Adoption counters.
- *
- * Three scopes behind one segmented control, because three different people ask
- * three different questions:
- *   TEAM     - every registered repo. This is the number a PM wants. It comes from
- *              design-system/.release/adoption.json, which ship.js now regenerates
- *              on every release, so a developer never has to run anything.
- *   THIS REPO- what happened here, by anyone.
- *   ME       - what this developer did, matched on the same non-identifying actor
- *              hash the report uses. No address is stored anywhere.
- *
- * The counts are cumulative and survive design system updates: .ds/history.jsonl
- * is append-only and committed, and uninstalling deliberately keeps it. Reinstalling
- * appends rather than starting over.
- *
- * None of this is telemetry. The panel makes no network request to produce it.  */
-var ADOPT_SCOPE = localStorage.getItem("dsAdoptScope") || "team";
-
-function adoptionCard() {
-  var a = (S && S.adoption) || {};
-  var scope = ADOPT_SCOPE;
-  if (scope === "team" && !a.org) scope = "repo";
-  if (scope === "me" && !a.hasActor) scope = "repo";
-
-  var src = scope === "team" ? (a.org || {}) : scope === "me" ? (a.mine || {}) : (a.repo || {});
-  var cells;
-  if (scope === "team") {
-    cells = [
-      [src.repos, "adopt.repos", "git-branch"],
-      [src.installs, "adopt.installs", "download"],
-      [src.updates, "adopt.updates", "arrow-up-circle"],
-      [src.uninstalls, "adopt.uninstalls", "trash-2"],
-      [src.devs, "adopt.devs", "user-round"],
-      [src.requests, "adopt.requests", "mail"],
-      [src.current, "adopt.current", "circle-check"],
-      [src.behind, "adopt.behind", "clock", src.behind > 0],
-    ];
-  } else {
-    cells = [
-      [src.install, "adopt.installs", "download"],
-      [src.update, "adopt.updates", "arrow-up-circle"],
-      [src.rollback, "adopt.rollbacks", "rotate-ccw"],
-      [src.uninstall, "adopt.uninstalls", "trash-2"],
-      [src.request, "adopt.requests", "mail"],
-      [src.adopt, "adopt.adopted", "shield-check"],
-    ];
-  }
-
-  var tabs = [["team", "adopt.scope.team", !!a.org], ["repo", "adopt.scope.repo", true], ["me", "adopt.scope.me", !!a.hasActor]];
-  var h = '<div class="card" data-tour="adoption"><div class="body">' +
-    '<div class="adopthead"><h2>' + icon("activity") + esc(t("adopt.title")) + "</h2>" +
-    '<div class="scopesw">' + tabs.map(function (x) {
-      return '<button data-scope="' + x[0] + '"' + (x[2] ? "" : " disabled") +
-        (scope === x[0] ? ' class="sel"' : "") + ">" + esc(t(x[1])) + "</button>";
-    }).join("") + "</div></div>";
-
-  h += '<div class="adopt">' + cells.map(function (c) {
-    return '<div><div class="av2' + (c[3] ? " warn2" : "") + '">' + esc(c[0] == null ? 0 : c[0]) + "</div>" +
-      '<div class="al">' + icon(c[2]) + "<span>" + esc(t(c[1])) + "</span></div></div>";
-  }).join("") + "</div>";
-
-  var note;
-  if (scope === "team") {
-    note = a.configured === false
-      ? { ic: "info", txt: t("adopt.unconfigured") }
-      : { ic: "clock", txt: t("adopt.org.hint") + (a.generatedAt ? " \u00b7 " + t("adopt.generated") + " " + fmtDate(a.generatedAt) : "") };
-  } else if (scope === "me") {
-    note = { ic: "shield-check", txt: t("adopt.me.hint") };
-  } else {
-    note = { ic: "git-commit-horizontal", txt: t("adopt.repo.hint") };
-  }
-  h += '<div class="note">' + icon(note.ic) + "<span>" + esc(note.txt) + "</span></div>";
-
-  if (!a.org && scope !== "team") h += '<div class="note" style="border-top:none;padding-top:0">' + icon("info") +
-    "<span>" + esc(t("adopt.noteam")) + "</span></div>";
-
-  return h + "</div></div>";
-}
-
-document.addEventListener("click", function (e) {
-  var b = e.target.closest ? e.target.closest("[data-scope]") : null;
-  if (!b || b.disabled) return;
-  ADOPT_SCOPE = b.getAttribute("data-scope");
-  localStorage.setItem("dsAdoptScope", ADOPT_SCOPE);
-  renderHome();
-});
 
 function managedTable(man) {
   var rows = man.map(function (m) {
@@ -718,7 +570,7 @@ function renderVersions() {
     '<div class="prog" id="verProg"><div class="bar"><div class="fill"></div></div><div class="lbl"></div></div><div class="log" id="verLog"></div></div></div>';
 
   if (o.changelogHead) {
-    h += '<details class="fold card"><summary>' + icon("history", "chev") + "<span>" + esc(t("ver.changelog")) + '</span></summary><div class="body">' + mdBlock(o.changelogHead) + "</div></details>";
+    h += '<details class="fold card" open><summary>' + icon("history", "chev") + "<span>" + esc(t("ver.changelog")) + '</span></summary><div class="body">' + mdBlock(o.changelogHead) + "</div></details>";
   }
   b.innerHTML = h;
 
@@ -770,9 +622,10 @@ function showImpact() {
       return '<tr><td class="mono">' + esc(f.file) + "</td><td>" + esc(f.hits) + "</td></tr>";
     }), ["file", "hits"]);
     $("btnDoUpdate").onclick = function () {
+      closeModal();
       api("/api/update-plan", {}).then(function (plan) {
         if (plan.error) return toast(tx(plan.error), true);
-        showPlan({ plan: plan, nested: true, title: t("ver.update"), onConfirm: function () {
+        showPlan({ plan: plan, title: t("ver.update"), onConfirm: function () {
           withProgress("verProg", api("/api/update", { commit: false })).then(function (res) {
             if (res.error) return toast(tx(res.error), true);
             renderLog($("verLog"), res); refresh();
@@ -795,21 +648,19 @@ function showDiff(path) {
     }).join("\n");
     $("mBody").innerHTML = '<div class="callout">' + icon("info") + "<div>" + esc(t("diff.restoreNote")) + " " + esc(r.wizardVersion || "") + ". " + esc(t("diff.backupNote")) + "</div></div>" +
       '<pre class="block diff">' + (lines || "\u2014") + "</pre>";
-    modalSwap({
-      title: path, desc: t("diff.title"), wide: true, body: $("mBody").innerHTML,
-      buttons: [
-        { label: t("act.restore"), icon: "rotate-ccw", keepOpen: true, onClick: function () { doRestore(path, true); } },
-        { label: t("act.sendDesigner"), kind: "primary", icon: "mail", keepOpen: true, onClick: function () { changeRequest(path, true); } },
-        { label: t("act.close"), kind: "ghost" },
-      ],
+    $("mFoot").innerHTML = "";
+    [{ l: t("act.restore"), k: "", f: function () { closeModal(); doRestore(path); } },
+     { l: t("act.sendDesigner"), k: "primary", f: function () { closeModal(); changeRequest(path); } },
+     { l: t("act.close"), k: "ghost", f: closeModal }].forEach(function (b) {
+      var btn = el("button", "btn " + b.k, esc(b.l)); btn.onclick = b.f; $("mFoot").appendChild(btn);
     });
   });
 }
 
-function doRestore(path, nested) {
+function doRestore(path) {
   api("/api/restore-plan", { file: path }).then(function (plan) {
     if (plan.error) return toast(tx(plan.error), true);
-    showPlan({ plan: plan, nested: nested, title: t("act.restore") + " \u2014 " + path, onConfirm: function () {
+    showPlan({ plan: plan, title: t("act.restore") + " \u2014 " + path, onConfirm: function () {
       api("/api/restore", { file: path }).then(function (r) {
         if (r.error) return toast(tx(r.error), true);
         toast(t("log.done")); refresh();
@@ -818,8 +669,8 @@ function doRestore(path, nested) {
   });
 }
 
-function changeRequest(path, nested) {
-  (nested ? modalPush : modal)({
+function changeRequest(path) {
+  modal({
     title: t("cr.title"), desc: t("cr.lead"),
     body: '<label class="field" style="margin-top:0"><span>' + esc(t("cr.reason")) + '</span><textarea id="crReason" placeholder="' + esc(t("cr.reason.ph")) + '"></textarea></label>',
     buttons: [
@@ -876,33 +727,14 @@ function renderDocs() {
   (OV.docs || []).forEach(function (f) { h += '<button data-doc="' + esc(f) + '">' + icon("file-text") + "<span>" + esc(f) + "</span></button>"; });
   h += "</div><div id="+'"docView"'+" style=\"margin-top:16px\"></div>";
   b.innerHTML = h;
-
-  var openDoc = null;
-  function closeDoc() {
-    openDoc = null;
-    $("docView").innerHTML = "";
-    var all = b.querySelectorAll("[data-doc]");
-    for (var k = 0; k < all.length; k++) all[k].classList.remove("sel");
-  }
-
   var bs = b.querySelectorAll("[data-doc]");
   for (var i = 0; i < bs.length; i++) (function (btn) {
     btn.onclick = function () {
       var f = btn.getAttribute("data-doc");
-      /* clicking the open document again closes it */
-      if (openDoc === f) return closeDoc();
-      openDoc = f;
-      var all = b.querySelectorAll("[data-doc]");
-      for (var k = 0; k < all.length; k++) all[k].classList.toggle("sel", all[k] === btn);
       var view = $("docView");
       view.innerHTML = '<div class="empty">' + icon("loader") + "\u2026</div>";
       fetch("/ds/" + f.split("/").map(encodeURIComponent).join("/")).then(function (r) { return r.text(); }).then(function (txt) {
-        if (openDoc !== f) return; /* the user moved on while it loaded */
-        view.innerHTML = '<div class="card docopen"><div class="dochead">' + icon("file-text") +
-          "<span>" + esc(f) + '</span><button class="docx" id="docClose" aria-label="' + esc(t("act.close")) + '" title="' + esc(t("act.close")) + '">' +
-          icon("x") + "</button></div>" +
-          '<div class="body">' + mdBlock(txt, { full: true }) + "</div></div>";
-        $("docClose").onclick = closeDoc;
+        view.innerHTML = '<div class="card"><div class="body"><h2>' + icon("file-text") + esc(f) + "</h2>" + mdBlock(txt, { full: true }) + "</div></div>";
         view.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     };
@@ -916,9 +748,6 @@ function renderAbout() {
   var name = m.name || "Raihan Allaam";
   var initials = name.split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
 
-  var handle = m.handle || "@alamehan";
-  var site = m.url || "https://alamehan.github.io/";
-
   var h = '<div class="layers" style="margin-bottom:20px">' +
     '<div class="layer"><span class="lb">Truth</span><span class="lt"><b>' + esc(t("about.truth")) + "</b><span>" + esc(t("about.truth.d")) + "</span></span></div>" +
     '<div class="layer"><span class="lb">Reference</span><span class="lt"><b>' + esc(t("about.ref")) + "</b><span>" + esc(t("about.ref.d")) + "</span></span></div>" +
@@ -927,11 +756,11 @@ function renderAbout() {
 
   h += '<div class="card"><div class="body"><h2>' + icon("user-round") + esc(t("about.author")) + "</h2>" +
     '<div class="author"><div class="av">' + esc(initials) + "</div><div>" +
-    '<div class="nm">' + esc(name) + ' <a class="handle" href="' + esc(site) + '" target="_blank" rel="noopener noreferrer" title="' + esc(site) + '">' + esc(handle) + "</a></div>" +
+    '<div class="nm">' + esc(name) + ' <span style="color:var(--faint);font-weight:400">(@alamehan)</span></div>' +
     '<div class="rl">' + esc(m.role || "UI/UX Designer, ITS Elabram") + "</div>" +
-    (m.email ? '<div class="lk"><a href="' + esc(mailtoHref(m.email)) + '">' + icon("mail") + "<span>" + esc(t("about.contact")) + "</span></a>" +
-      '<button class="btn ghost" id="copyMail" title="' + esc(m.email) + '">' + icon("copy") + "<span>" + esc(t("about.copyMail")) + "</span></button></div>" : "") +
-    "</div></div>" +
+    '<div class="lk"><a href="https://alamehan.github.io/" target="_blank" rel="noopener noreferrer">' + icon("globe") + "<span>alamehan.github.io</span></a>" +
+    (m.email ? '<a href="mailto:' + esc(m.email) + '">' + icon("mail") + "<span>" + esc(t("about.contact")) + "</span></a>" : "") +
+    "</div></div></div>" +
     '<div class="note">' + icon("shield-check") + "<span>" + esc(t("about.offline")) + "</span></div></div></div>";
 
   h += '<div class="card"><div class="body"><h2>' + icon("info") + esc(t("about.build")) + '</h2><dl class="props">' +
@@ -946,69 +775,32 @@ function renderAbout() {
   h += '<div class="actions"><button class="btn" id="aboutTour">' + icon("play") + "<span>" + esc(t("more.tour")) + "</span></button></div>";
   $("aboutBody").innerHTML = h;
   $("aboutTour").onclick = startTour;
-  if ($("copyMail")) $("copyMail").onclick = function () { copy(m.email, t("about.mailCopied")); };
 }
 
 /* ========================================================= PROMPTS page */
 var promptsDrawn = false;
-var promptBodies = {};
-
-/* Bound once, at load. Attaching these inside renderPrompts() added a fresh pair
-   every time the library was redrawn - so after an uninstall and reinstall each
-   copy fired twice. */
-function promptFilled(id) {
-  var txt = promptBodies[id] || "", box = $("pf-" + id);
-  if (box) {
-    var ins = box.querySelectorAll("[data-ph]");
-    for (var i = 0; i < ins.length; i++) {
-      var v = ins[i].value.trim();
-      if (v) txt = txt.split(ins[i].getAttribute("data-ph")).join(v);
-    }
-  }
-  return txt;
-}
-function promptRefresh(id) {
-  var pre = $("pb-" + id); if (pre) pre.textContent = promptFilled(id);
-  var box = $("pf-" + id); if (!box) return;
-  var ins = box.querySelectorAll("[data-ph]"), left = 0;
-  for (var i = 0; i < ins.length; i++) if (!ins[i].value.trim()) left++;
-  var bd = $("pn-" + id);
-  if (bd) { bd.textContent = left ? left + " " + t("prompts.fill") : t("prompts.ready"); bd.className = "badge" + (left ? "" : " ok"); }
-}
-document.addEventListener("input", function (e) {
-  var n = e.target;
-  if (!n.getAttribute || !n.getAttribute("data-ph")) return;
-  var box = n.parentNode;
-  while (box && (!box.id || box.id.indexOf("pf-") !== 0)) box = box.parentNode;
-  if (box) promptRefresh(box.id.slice(3));
-});
-document.addEventListener("click", function (e) {
-  var b = e.target.closest ? e.target.closest("[data-pc]") : null;
-  if (b) copy(promptFilled(b.getAttribute("data-pc")));
-});
-
 function renderPrompts() {
   var lib = $("promptLib");
-  var intro = $("promptIntro");
-  if (!S || S.level === "not-installed") {
-    intro.hidden = true;
-    lib.innerHTML = '<div class="empty">' + icon("lock") + esc(t("prompts.locked")) + "</div>";
-    promptsDrawn = false;
-    return;
-  }
-  var list = S.prompts || [];
-  if (!list.length) { intro.hidden = true; lib.innerHTML = '<div class="empty">' + icon("lock") + esc(t("prompts.locked")) + "</div>"; promptsDrawn = false; return; }
-  intro.hidden = false;
+  if (!S || S.level === "not-installed") { lib.innerHTML = '<div class="empty">' + icon("lock") + esc(t("prompts.locked")) + "</div>"; promptsDrawn = false; return; }
   if (promptsDrawn) return;
+  var list = S.prompts || []; if (!list.length) return;
   promptsDrawn = true;
-  var cats = [], byCat = {};
-  promptBodies = {};
-  list.forEach(function (p) { promptBodies[p.id] = p.body; if (!byCat[p.cat]) { byCat[p.cat] = []; cats.push(p.cat); } byCat[p.cat].push(p); });
+  var bodies = {}, cats = [], byCat = {};
+  list.forEach(function (p) { bodies[p.id] = p.body; if (!byCat[p.cat]) { byCat[p.cat] = []; cats.push(p.cat); } byCat[p.cat].push(p); });
 
-  function phOf(id) {
-    var m = (promptBodies[id] || "").match(/\[[^\]\n]+\]/g) || [], u = [];
-    m.forEach(function (x) { if (u.indexOf(x) < 0) u.push(x); });
-    return u;
+  function phOf(id) { var m = bodies[id].match(/\[[^\]\n]+\]/g) || [], u = []; m.forEach(function (x) { if (u.indexOf(x) < 0) u.push(x); }); return u; }
+  function filled(id) {
+    var txt = bodies[id], box = $("pf-" + id);
+    if (box) { var ins = box.querySelectorAll("[data-ph]"); for (var i = 0; i < ins.length; i++) { var v = ins[i].value.trim(); if (v) txt = txt.split(ins[i].getAttribute("data-ph")).join(v); } }
+    return txt;
+  }
+  function refresh1(id) {
+    var pre = $("pb-" + id); if (pre) pre.textContent = filled(id);
+    var box = $("pf-" + id); if (!box) return;
+    var ins = box.querySelectorAll("[data-ph]"), left = 0;
+    for (var i = 0; i < ins.length; i++) if (!ins[i].value.trim()) left++;
+    var bd = $("pn-" + id);
+    if (bd) { bd.textContent = left ? left + " " + t("prompts.fill") : t("prompts.ready"); bd.className = "badge" + (left ? "" : " ok"); }
   }
 
   var h = "";
@@ -1034,102 +826,25 @@ function renderPrompts() {
     });
   });
   lib.innerHTML = h;
-  list.forEach(function (p) { promptRefresh(p.id); });
+  list.forEach(function (p) { refresh1(p.id); });
+  lib.addEventListener("input", function (e) {
+    var n = e.target; if (!n.getAttribute || !n.getAttribute("data-ph")) return;
+    var box = n.parentNode; while (box && (!box.id || box.id.indexOf("pf-") !== 0)) box = box.parentNode;
+    if (box) refresh1(box.id.slice(3));
+  });
+  lib.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest("[data-pc]") : null;
+    if (b) copy(filled(b.getAttribute("data-pc")));
+  });
 }
 
 /* =============================================================== SETUP */
-/* A comparison TABLE, not two cards.
- * The first attempt rendered two bordered boxes directly beneath two bordered
- * radio options, so it read as a second set of choices. A table is unambiguously
- * information. The selected column is tinted, nothing else. */
-function levelCompare(active) {
-  var rows = [
-    ["setup.cmp.ai", "on", "on"],
-    ["setup.cmp.gallery", "on", "on"],
-    ["setup.cmp.classes", "off", "on"],
-    ["setup.cmp.dark", "off", "on"],
-    ["setup.cmp.build", "off", "cost:setup.cmp.build.v"],
-    ["setup.cmp.code", "off", "on"],
-  ];
-  function cellHtml(v) {
-    if (v === "on") return '<span class="on">' + icon("check") + "</span>";
-    if (v === "off") return '<span class="off">\u2013</span>';
-    return '<span class="cost">' + esc(t(v.slice(5))) + "</span>";
-  }
-  var h = '<div class="lvlwrap"><div class="lvlq">' + icon("info") + "<span>" + esc(t("setup.cmp.q")) + "</span></div>" +
-    '<table class="lvl"><thead><tr><th></th>' +
-    '<th class="' + (active === "0" ? "pick" : "") + '">' + esc(t("setup.level0.short")) + "</th>" +
-    '<th class="' + (active === "1" ? "pick" : "") + '">' + esc(t("setup.level1.short")) + "</th></tr></thead><tbody>";
-  rows.forEach(function (r) {
-    h += "<tr><th>" + esc(t(r[0])) + "</th>" +
-      '<td class="' + (active === "0" ? "pickcol" : "") + '">' + cellHtml(r[1]) + "</td>" +
-      '<td class="' + (active === "1" ? "pickcol" : "") + '">' + cellHtml(r[2]) + "</td></tr>";
-  });
-  return h + "</tbody></table></div>";
-}
-
 function renderSetup() {
   if (!S) return;
   $("repoUrl").value = $("repoUrl").value || S.defaultRepoUrl || "";
   var installed = S.level !== "not-installed";
+  $("alreadyBanner").style.display = installed ? "flex" : "none";
   $("btnProcess").querySelector("span").textContent = installed ? t("setup.recheck") : t("setup.process");
-
-  var sel = (document.querySelector("input[name=lv]:checked") || {}).value || "0";
-  $("lvlCompare").innerHTML = levelCompare(sel);
-
-  /* ---- installed: the page becomes a receipt, and the form folds away ----
-     The fold is permanent markup. An earlier version appended #setupForm into a
-     container it later cleared with innerHTML = "", which destroyed the form node
-     outright: after an uninstall renderSetup() then threw on a null reference,
-     and because render() calls renderPrompts() after it, the Prompts tab kept
-     stale content too. Two visible bugs, one piece of DOM surgery. Nothing is
-     moved now. */
-  var done = $("setupDone");
-  var fold = $("setupFold");
-  if (!installed) {
-    done.innerHTML = "";
-    fold.classList.add("always");   /* summary hidden, form always visible */
-    fold.open = true;
-    delete fold.dataset.touched;    /* so a reinstall starts folded again */
-  } else {
-    fold.classList.remove("always");
-    if (!fold.dataset.touched) fold.open = false;
-    var hint = elOnce("reinstallHint", "p", "hint", esc(t("setup.reinstall.hint")));
-    if (hint.parentNode !== $("setupFoldBody")) $("setupFoldBody").insertBefore(hint, $("setupFoldBody").firstChild);
-    var man = (S.manifest && S.manifest.managed) || [];
-    var mf = S.manifest || {};
-    var h = '<div class="donecard"><div class="dh">' + icon("circle-check", "ic-lg") + "<b>" + esc(t("setup.done.title")) + "</b></div>" +
-      '<div class="dsub">' + esc(t("setup.done.sub")) + '</div><dl class="props">' +
-      "<dt>" + esc(t("setup.done.level")) + "</dt><dd><b>" + esc(t("setup.level" + S.level + ".short")) + "</b> \u00b7 " + esc(t("setup.level" + S.level + ".tag")) + "</dd>" +
-      "<dt>" + esc(t("setup.done.version")) + "</dt><dd>v" + esc(mf.dsVersion || (OV && OV.version) || "?") + ' <span class="mono" style="color:var(--faint)">' + esc(mf.dsCommit || "") + "</span></dd>" +
-      "<dt>" + esc(t("setup.done.when")) + "</dt><dd>" + esc(mf.installedAt ? fmtDate(mf.installedAt) : "\u2014") + "</dd>" +
-      "<dt>" + esc(t("setup.done.files")) + "</dt><dd>" + man.length + " " + esc(t("home.files")) + "</dd></dl></div>";
-
-    /* the honest next step depends on where they are */
-    if (String(S.level) === "0") {
-      h += '<div class="nextup">' + icon("arrow-up-circle") + "<div><b>" + esc(t("setup.next.l1.t")) + "</b><p>" + esc(t("setup.next.l1.d")) +
-        '</p><div class="acts"><button class="btn primary" id="goL1">' + icon("arrow-up-circle") + "<span>" + esc(t("setup.next.l1.cta")) + "</span></button>" +
-        '<button class="btn ghost" id="goHealth2">' + icon("heart-pulse") + "<span>" + esc(t("nav.health")) + "</span></button></div></div></div>";
-    } else {
-      h += '<div class="nextup">' + icon("circle-check") + "<div><b>" + esc(t("setup.next.done.t")) + "</b><p>" + esc(t("setup.next.done.d")) +
-        '</p><div class="acts"><button class="btn" id="goHealth2">' + icon("heart-pulse") + "<span>" + esc(t("nav.health")) + "</span></button>" +
-        '<button class="btn ghost" id="goPrompts2">' + icon("library") + "<span>" + esc(t("nav.prompts")) + "</span></button></div></div></div>";
-    }
-
-    if (man.length) h += '<details class="fold card"><summary>' + icon("shield-check", "chev") + "<span>" + esc(t("setup.done.written")) +
-      '</span><span class="count">' + man.length + '</span></summary><div class="body">' + managedTable(man) + "</div></details>";
-
-    done.innerHTML = h;
-    if ($("goL1")) $("goL1").onclick = function () {
-      fold.dataset.touched = "1";
-      fold.open = true;
-      var l1 = document.querySelector('#levels label[data-v="1"]');
-      if (l1) l1.click();
-      fold.scrollIntoView({ behavior: "smooth", block: "center" });
-    };
-    if ($("goHealth2")) $("goHealth2").onclick = function () { go("health"); };
-    if ($("goPrompts2")) $("goPrompts2").onclick = function () { go("prompts"); };
-  }
 
   var lg = S.legacy || {};
   if (lg.found && lg.items && lg.items.length) {
@@ -1143,165 +858,50 @@ function renderSetup() {
   $("btnProcess").disabled = !!lk.install;
   $("lockNote").style.display = lk.install ? "flex" : "none";
 
-  /* A bare mailto: link is a dead end when no mail client is registered - the
-     click appears to do nothing at all. So this is a button that opens the draft
-     AND copies the address, then says which it did. */
   var mail = S.maintainerEmail;
   var ask = $("askCode");
   if (mail) {
+    ask.href = "mailto:" + mail + "?subject=" + encodeURIComponent("[Design System] Level 1 access code request") +
+      "&body=" + encodeURIComponent("Repo: " + (S.originUrl || S.root) + "\n\nHi, could I get the Level 1 access code for the design system? Thanks!");
     ask.style.display = "";
-    ask.title = mail;
-    ask.onclick = function () {
-      var href = "mailto:" + mail +
-        "?subject=" + encodeURIComponent("[Design System] Level 1 access code \u2014 " + (S.root || "").split(/[\\/]/).pop()) +
-        "&body=" + encodeURIComponent(
-          "Hi Raihan,\n\nCould I get the Level 1 access code for this repo?\n\n---\nRepo: " +
-          (S.originUrl || S.root || "?") + "\nDesign system: v" + ((OV && OV.version) || "?") +
-          "\nPanel: v" + (S.wizardVersion || "?"));
-      copy(mail, t("setup.l1code.copied"));
-      try { window.location.href = href; } catch (e) {}
-    };
   } else ask.style.display = "none";
 }
 
-/* ===================================================== GUIDED TOUR
- * Each step names the page it belongs to, so the tour navigates there before it
- * measures anything. In v3.3.0 the "hero" step had no page: when the panel
- * opened on Setup (which it does whenever the design system is not installed
- * yet), the tour tried to spotlight a hidden element, got a zero-sized rect, and
- * parked its card in the top-left corner pointing at nothing.
- *
- * Two guards now make that impossible:
- *   - every non-centred step declares `page`
- *   - visibleNode() refuses an element that is hidden or zero-sized, falling
- *     back to the pill-navigation button for that destination, and skipping the
- *     step only if even that is gone.
- */
+/* ===================================================== GUIDED TOUR */
 var TOUR = [
-  { centre: "welcome", k: "tour.welcome" },
-  { page: "home", sel: '[data-tour="nav"]', k: "tour.nav" },
-  { page: "home", sel: '[data-tour="hero"]', k: "tour.hero" },
-  { page: "home", sel: '[data-tour="stats"]', fb: '.navb[data-nav="home"]', k: "tour.stats", needs: "installed" },
-  { page: "home", sel: '[data-tour="adoption"]', fb: '.navb[data-nav="home"]', k: "tour.adoption", needs: "installed" },
-  { page: "setup", sel: '[data-tour="level"]', fb: '.navb[data-nav="setup"]', k: "tour.level" },
-  { page: "setup", sel: '[data-tour="process"]', fb: '.navb[data-nav="setup"]', k: "tour.process" },
-  { page: "health", sel: '[data-tour="p-health"]', fb: '.navb[data-nav="health"]', k: "tour.health" },
-  { page: "versions", sel: '[data-tour="p-versions"]', fb: '.navb[data-nav="versions"]', k: "tour.versions" },
-  { page: "prompts", sel: '[data-tour="p-prompts"]', fb: '.navb[data-nav="prompts"]', k: "tour.prompts" },
-  { page: "docs", sel: '[data-tour="p-docs"]', fb: '.navb[data-nav="docs"]', k: "tour.docs" },
-  { page: "about", sel: '[data-tour="p-about"]', fb: '.navb[data-nav="about"]', k: "tour.about" },
-  { page: "home", sel: '[data-tour="lang"]', k: "tour.lang" },
-  { page: "home", sel: '[data-tour="more"]', k: "tour.more" },
-  { centre: "finish", k: "tour.finish" },
+  { sel: '[data-tour="hero"]', k: "tour.hero" },
+  { sel: '[data-tour="nav"]', k: "tour.nav" },
+  { sel: '[data-tour="stats"]', k: "tour.stats", page: "home", optional: true },
+  { sel: '[data-tour="level"]', k: "tour.level", page: "setup" },
+  { sel: '[data-tour="process"]', k: "tour.process", page: "setup" },
+  { sel: '[data-tour="drift"]', k: "tour.drift", page: "health", optional: true },
+  { sel: '[data-tour="lang"]', k: "tour.lang" },
 ];
-var tourAt = 0, tourSteps = [], tourFrom = "home";
-
-function visibleNode(step) {
-  var cands = [step.sel, step.fb];
-  for (var i = 0; i < cands.length; i++) {
-    if (!cands[i]) continue;
-    var n = document.querySelector(cands[i]);
-    if (!n) continue;
-    var r = n.getBoundingClientRect();
-    if (n.offsetParent !== null && r.width > 2 && r.height > 2) return n;
-  }
-  return null;
-}
+var tourAt = 0, tourSteps = [];
 
 function startTour() {
   closeMore();
-  var installed = S && S.level !== "not-installed";
-  tourSteps = TOUR.filter(function (x) { return !(x.needs === "installed" && !installed); });
+  tourSteps = TOUR.filter(function (s) { return !s.optional || document.querySelector(s.sel) || s.page; });
   tourAt = 0;
-  tourFrom = PAGE;
   $("tourScrim").classList.add("on");
   tourShow();
 }
-
 function endTour() {
-  var v = $("tourCard").querySelector("video");
-  if (v) { try { v.pause(); } catch (e) {} }
   $("tourScrim").classList.remove("on");
-  $("tourCard").classList.remove("centered");
   localStorage.setItem("dsTourSeen", "1");
-  if (tourFrom && tourFrom !== PAGE) go(tourFrom);
 }
-
-function tourProg() {
-  var pct = tourSteps.length < 2 ? 100 : Math.round((tourAt + 1) / tourSteps.length * 100);
-  return '<div class="tour-prog"><i style="width:' + pct + '%"></i></div>';
-}
-
-function tourNav(extra) {
-  return tourProg() + '<div class="tf"><span class="sp"></span>' +
-    '<button class="btn ghost" id="tSkip">' + esc(t("tour.skip")) + "</button>" +
-    (tourAt > 0 ? '<button class="btn" id="tPrev">' + esc(t("tour.back")) + "</button>" : "") +
-    '<button class="btn primary" id="tNext">' + esc(extra || (tourAt === tourSteps.length - 1 ? t("tour.done") : t("tour.next"))) + "</button></div>";
-}
-
-function tourBind(last) {
-  $("tSkip").onclick = endTour;
-  $("tNext").onclick = function () { if (last) return endTour(); tourAt++; tourShow(); };
-  if ($("tPrev")) $("tPrev").onclick = function () { tourAt--; tourShow(); };
-}
-
 function tourShow() {
   var st = tourSteps[tourAt];
   if (!st) return endTour();
-  if (st.centre) return tourCentre(st);
-
-  var needsNav = st.page && PAGE !== st.page;
-  if (needsNav) go(st.page);
+  if (st.page && PAGE !== st.page) go(st.page);
   setTimeout(function () {
-    var node = visibleNode(st);
-    if (!node) {
-      /* nothing to point at: move on rather than spotlighting a void */
-      if (tourAt < tourSteps.length - 1) { tourAt++; return tourShow(); }
-      return endTour();
-    }
+    var node = document.querySelector(st.sel);
+    if (!node) { if (tourAt < tourSteps.length - 1) { tourAt++; return tourShow(); } return endTour(); }
     node.scrollIntoView({ behavior: "smooth", block: "center" });
-    setTimeout(function () { tourPlace(node, st); }, 250);
-  }, needsNav ? 110 : 0);
+    setTimeout(function () { tourPlace(node, st); }, 260);
+  }, st.page && PAGE !== st.page ? 90 : 0);
 }
-
-/* Centred cards: the opening welcome (which can play the explainer) and the
-   closing summary. Nothing to point at, so nothing is spotlighted. */
-function tourCentre(st) {
-  var hole = $("tourHole"), card = $("tourCard");
-  hole.style.width = "0px"; hole.style.height = "0px";
-  hole.style.left = "50%"; hole.style.top = "50%";
-  card.classList.add("centered");
-  card.style.left = ""; card.style.top = "";
-
-  var last = tourAt === tourSteps.length - 1;
-  var head = "", body = "";
-
-  if (st.centre === "welcome") {
-    var ex = (S && S.explainer) || {};
-    head = '<div class="tbanner">' + icon("lightbulb") + "<span>" + esc(t("tour.video.banner")) + "</span>" +
-      (ex.length ? "<b>" + esc(ex.length) + "</b>" : "") + "</div>";
-    if (ex.video) {
-      head += '<video class="tvid" controls preload="metadata" playsinline' +
-        (ex.poster ? ' poster="/ds/' + ex.poster.split("/").map(encodeURIComponent).join("/") + '"' : "") +
-        '><source src="/ds/' + ex.video.split("/").map(encodeURIComponent).join("/") + '"></video>';
-    } else {
-      head += '<div class="tvid tvid-soon">' + icon("play", "ic-xl") +
-        "<b>" + esc(t("tour.video.soon")) + "</b><span>" + esc(t("tour.video.soon.d")) + "</span></div>";
-    }
-  } else {
-    head = '<div class="tbanner ok">' + icon("circle-check") + "<span>" + esc(t("tour.finish.banner")) + "</span></div>";
-    body = '<ul class="tlist"><li>' + t("tour.finish.a") + "</li><li>" + t("tour.finish.b") + "</li><li>" + t("tour.finish.c") + "</li></ul>";
-  }
-
-  card.innerHTML = '<div class="twelcome">' + head +
-    '<div class="twrap"><div class="tstep">' + esc(t("tour.step")) + " " + (tourAt + 1) + "/" + tourSteps.length + "</div>" +
-    "<h4>" + esc(t(st.k + ".t")) + "</h4><p>" + esc(t(st.k + ".d")) + "</p>" + body +
-    tourNav(st.centre === "welcome" ? t("tour.begin") : t("tour.done")) + "</div></div>";
-  tourBind(last);
-}
-
 function tourPlace(node, st) {
-  $("tourCard").classList.remove("centered");
   var r = node.getBoundingClientRect(), pad = 8;
   var hole = $("tourHole"), card = $("tourCard");
   hole.style.left = (r.left - pad) + "px";
@@ -1309,16 +909,25 @@ function tourPlace(node, st) {
   hole.style.width = (r.width + pad * 2) + "px";
   hole.style.height = (r.height + pad * 2) + "px";
 
+  var dots = "";
+  for (var i = 0; i < tourSteps.length; i++) dots += '<i class="' + (i === tourAt ? "on" : "") + '"></i>';
   card.innerHTML = '<div class="tstep">' + esc(t("tour.step")) + " " + (tourAt + 1) + "/" + tourSteps.length + "</div>" +
-    "<h4>" + esc(t(st.k + ".t")) + "</h4><p>" + esc(t(st.k + ".d")) + "</p>" + tourNav();
+    "<h4>" + esc(t(st.k + ".t")) + "</h4><p>" + esc(t(st.k + ".d")) + "</p>" +
+    '<div class="tf"><div class="tour-dots">' + dots + '</div><span class="sp"></span>' +
+    '<button class="btn ghost" id="tSkip">' + esc(t("tour.skip")) + "</button>" +
+    (tourAt > 0 ? '<button class="btn" id="tPrev">' + esc(t("tour.back")) + "</button>" : "") +
+    '<button class="btn primary" id="tNext">' + esc(tourAt === tourSteps.length - 1 ? t("tour.done") : t("tour.next")) + "</button></div>";
 
   var cw = Math.min(322, window.innerWidth - 32), ch = card.offsetHeight || 190;
   var below = r.bottom + 14, above = r.top - ch - 14;
-  var top = (below + ch < window.innerHeight - 96) ? below : (above > 12 ? above : Math.max(12, (window.innerHeight - ch) / 2));
+  var top = (below + ch < window.innerHeight - 90) ? below : (above > 12 ? above : Math.max(12, (window.innerHeight - ch) / 2));
   var left = Math.min(Math.max(12, r.left + r.width / 2 - cw / 2), window.innerWidth - cw - 12);
   card.style.top = top + "px";
   card.style.left = left + "px";
-  tourBind(tourAt === tourSteps.length - 1);
+
+  $("tSkip").onclick = endTour;
+  $("tNext").onclick = function () { if (tourAt === tourSteps.length - 1) return endTour(); tourAt++; tourShow(); };
+  if ($("tPrev")) $("tPrev").onclick = function () { tourAt--; tourShow(); };
 }
 
 /* ============================================================== state */
@@ -1348,7 +957,6 @@ document.querySelectorAll("#levels label").forEach(function (l) {
     document.querySelectorAll("#levels label").forEach(function (x) { x.classList.remove("sel"); });
     l.classList.add("sel"); l.querySelector("input").checked = true;
     $("l1box").style.display = l.getAttribute("data-v") === "1" ? "block" : "none";
-    $("lvlCompare").innerHTML = levelCompare(l.getAttribute("data-v"));
   };
 });
 
@@ -1368,15 +976,9 @@ document.addEventListener("keydown", function (e) {
   if (e.key !== "Escape") return;
   if ($("tourScrim").classList.contains("on")) return endTour();
   if ($("morePop").classList.contains("on")) return closeMore();
-  if ($("scrim").classList.contains("on")) return (mStack.length > 1 ? modalBack() : closeModal());
-  if ($("docClose")) $("docClose").click();
+  if ($("scrim").classList.contains("on")) closeModal();
 });
-window.addEventListener("resize", function () {
-  if (!$("tourScrim").classList.contains("on")) return;
-  var st = tourSteps[tourAt];
-  if (st && st.welcome) return; /* centred by CSS; re-rendering would restart the video */
-  tourShow();
-});
+window.addEventListener("resize", function () { if ($("tourScrim").classList.contains("on")) tourShow(); });
 
 function cfg() {
   return {

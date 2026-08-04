@@ -1,5 +1,5 @@
 {
-  "version": "3.2.0",
+  "version": "3.4.0",
   "cssVars": [
     "--color-brand-accent",
     "--color-brand-accent-strong",
@@ -1804,6 +1804,10 @@
     "layout-09.sortDirection": [
       "asc",
       "desc"
+    ],
+    "layout-09.density": [
+      "Comfortable",
+      "Compact"
     ],
     "layout-10.type": [
       "FullDatePicker",

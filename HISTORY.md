@@ -122,12 +122,6 @@ a markdown file cannot stop a commit. Every lesson here is now mechanical:
 | The panel must survive its own full lifecycle | `tests/e2e.js`, 84 assertions |
 | Uninstall must be exact and non-destructive | `.ds/manifest.json` + `.ds/.trash/` |
 | A button variant must never lose its own hover contrast | `tests/e2e.js` CSS invariant |
-| Embedded payloads must really be in the bundle | `buildGuard()` in `build-wizard.js` + `tests/e2e.js` |
-| The ID and EN dictionaries must not disagree | `build-wizard.js`, at build time |
-| The bundle must not silently bloat | `tests/e2e.js` budget tripwire |
-| No descendant `.ic` rule may repaint a button's icon | `tests/e2e.js` selector check |
-| `.btn` must style any element, not only `<button>` | `tests/e2e.js` selector check |
-| Uninstall must leave the UI indistinguishable from never-installed | `tests/e2e.js` post-revert assertions |
 
 The last row is a small bug with a useful shape: a generic `:hover` rule set the
 background of *every* button, while the primary variant overrode only `filter`. White
@@ -139,55 +133,3 @@ return.
 
 **A programmatic check is still not a visual verdict** (law #1 stands). But a visual
 verdict given against a lying artifact is worth nothing, so the gates come first.
-
-### A postscript, from the same cycle
-
-Two more silent failures turned up while polishing the panel, and both are worth
-recording because they rhyme with everything above.
-
-**The tour pointed at nothing.** Its second step spotlighted the Home hero, but the panel
-opens on Setup whenever the design system is not installed. No step declared which page it
-belonged to, so the tour measured a hidden element, got a zero-sized rectangle, and drew
-its card in the corner beside an invisible hole. It never threw. It looked, to code, like a
-tour that worked. It took a human opening the panel and saying "this one is nonsense".
-
-**Adding CSS minification deleted the fonts.** The minifier strips comments; the font
-payload's placeholder *was* a comment. So `/* @FONTS@ */` vanished, the substitution
-matched nothing, and the bundle shipped with zero `@font-face` rules. The existing guard
-looked for placeholders that were **left behind** — it had nothing to say about one that had
-been **removed**. Same font, same layer, same class of failure as #4 above, one release
-later, through a completely different door.
-
-The lesson is not "check for fonts". It is that a guard which asserts *the absence of a
-marker* is weaker than one which asserts *the presence of the payload*. `buildGuard()` now
-does the latter, and `tests/e2e.js` repeats the check independently, because a build script
-that verifies its own output is one bug away from verifying nothing.
-
-### One more, on the difference between passing and working
-
-A third review pass found six more faults, and not one of them could have been caught
-by the test suite as it stood. They were all found by a person opening the panel and
-looking at it.
-
-The most instructive was a single line of CSS. `.nextup .ic { color: var(--accent) }`
-is a descendant selector, so it reached inside a primary button sitting in that
-container and painted its icon accent-on-accent — invisible. The button worked. The
-tests passed. The icon simply was not there.
-
-The second most instructive was structural. To fold the install form away after a
-successful install, the code *moved* the form node into a container it rendered — and
-that container was later cleared with `innerHTML = ""`. So an uninstall destroyed the
-form outright, `renderSetup()` threw on the next null reference, and because
-`render()` calls `renderPrompts()` straight afterwards, the Prompts tab kept stale
-contents too. Two unrelated-looking bug reports, one piece of DOM surgery.
-
-Both are now gates: a check that rejects any descendant `.ic` rule setting a colour
-(which found a further offender the moment it ran), and post-uninstall assertions that
-the served state is indistinguishable from never-installed.
-
-But the honest lesson is narrower than "add more gates". It is that **the gates cover
-the failures we have already had**. The suite grew from 61 to 99 assertions across
-this release, and every single addition was written *after* a human said "this looks
-wrong". A test suite is a memory, not an imagination — so the visual pass is not a
-formality to be automated away, it is the only step that can find something nobody has
-thought of yet.

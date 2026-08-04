@@ -31,7 +31,9 @@
       <h1 class="page" data-i18n="setup.title">Pasang design system</h1>
       <p class="lead" data-i18n="setup.lead"></p>
 
-      <div id="setupDone"></div>
+      <div class="callout ok" id="alreadyBanner" style="display:none">
+        <svg class="ic"><use href="#i-circle-check"/></svg><div data-i18n="setup.installed"></div>
+      </div>
 
       <div class="card" id="legacyCard" style="display:none"><div class="body">
         <h2><svg class="ic" style="color:var(--warn)"><use href="#i-triangle-alert"/></svg> <span data-i18n="legacy.title"></span></h2>
@@ -45,10 +47,7 @@
         <div class="log" id="legacyLog"></div>
       </div></div>
 
-      <details class="fold card setupfold" id="setupFold" open>
-        <summary><svg class="ic chev"><use href="#i-settings"/></svg><span data-i18n="setup.reinstall"></span></summary>
-        <div class="body" id="setupFoldBody">
-      <div class="card plain" data-tour="level"><div class="body">
+      <div class="card" data-tour="level"><div class="body">
         <label class="field" style="margin-top:0"><span data-i18n="setup.level">Level adopsi</span>
           <div class="choice" id="levels">
             <label class="sel" data-v="0"><input type="radio" name="lv" value="0" checked><span><b data-i18n="setup.level0"></b><span data-i18n="setup.level0.desc"></span></span></label>
@@ -56,18 +55,12 @@
           </div>
         </label>
 
-        <div id="lvlCompare"></div>
-
         <div id="l1box" style="display:none">
-          <div class="callout acc" style="margin:15px 0 0">
-            <svg class="ic"><use href="#i-info"/></svg>
-            <div><b data-i18n="setup.l1why.t"></b><br><span data-i18n="setup.l1why.d"></span></div>
-          </div>
           <label class="field"><span data-i18n="setup.l1code"></span>
             <input type="text" id="l1code" spellcheck="false" autocomplete="off">
             <small data-i18n="setup.l1code.hint"></small>
           </label>
-          <div class="actions"><button class="btn" id="askCode" type="button"><svg class="ic"><use href="#i-mail"/></svg><span data-i18n="setup.l1code.ask"></span></button></div>
+          <div class="actions"><a class="btn ghost" id="askCode" href="#"><svg class="ic"><use href="#i-mail"/></svg><span data-i18n="setup.l1code.ask"></span></a></div>
         </div>
 
         <label class="check"><input type="checkbox" id="doCommit"><span><span data-i18n="setup.commit"></span><br><small style="color:var(--faint)" data-i18n="setup.commit.hint"></small></span></label>
@@ -88,45 +81,41 @@
         <div class="log" id="installLog"></div>
         <div class="callout ok" id="doneRibbon" style="display:none;margin-top:15px"><svg class="ic"><use href="#i-sparkles"/></svg><div data-i18n="setup.done"></div></div>
       </div></div>
-        </div>
-      </details>
     </section>
 
     <!-- =================================================== HEALTH -->
     <section data-page="health" hidden>
-      <h1 class="page" data-tour="p-health" data-i18n="nav.health">Kesehatan</h1>
+      <h1 class="page" data-i18n="nav.health">Kesehatan</h1>
       <p class="lead" data-i18n="health.lead"></p>
       <div id="healthBody"></div>
     </section>
 
     <!-- ================================================= VERSIONS -->
     <section data-page="versions" hidden>
-      <h1 class="page" data-tour="p-versions" data-i18n="nav.versions">Versi</h1>
+      <h1 class="page" data-i18n="nav.versions">Versi</h1>
       <p class="lead" data-i18n="ver.lead"></p>
       <div id="versBody"></div>
     </section>
 
     <!-- ================================================== PROMPTS -->
     <section data-page="prompts" hidden>
-      <h1 class="page" data-tour="p-prompts" data-i18n="prompts.title">Pustaka prompt AI</h1>
+      <h1 class="page" data-i18n="prompts.title">Pustaka prompt AI</h1>
       <p class="lead" data-i18n="prompts.lead"></p>
-      <div id="promptIntro" hidden>
-        <div class="callout acc"><svg class="ic"><use href="#i-shapes"/></svg><div data-i18n="prompts.stack"></div></div>
-        <div class="callout"><svg class="ic"><use href="#i-lightbulb"/></svg><div data-i18n="prompts.tip"></div></div>
-      </div>
+      <div class="callout acc"><svg class="ic"><use href="#i-shapes"/></svg><div data-i18n="prompts.stack"></div></div>
+      <div class="callout"><svg class="ic"><use href="#i-lightbulb"/></svg><div data-i18n="prompts.tip"></div></div>
       <div id="promptLib"></div>
     </section>
 
     <!-- ===================================================== DOCS -->
     <section data-page="docs" hidden>
-      <h1 class="page" data-tour="p-docs" data-i18n="docs.title">Dokumen &amp; galeri</h1>
+      <h1 class="page" data-i18n="docs.title">Dokumen &amp; galeri</h1>
       <p class="lead" data-i18n="docs.lead"></p>
       <div id="docsBody"></div>
     </section>
 
     <!-- ==================================================== ABOUT -->
     <section data-page="about" hidden>
-      <h1 class="page" data-tour="p-about" data-i18n="about.title">Tentang</h1>
+      <h1 class="page" data-i18n="about.title">Tentang</h1>
       <p class="lead" data-i18n="about.lead"></p>
       <div id="aboutBody"></div>
     </section>
@@ -150,7 +139,7 @@
     <button data-lang="id">ID</button><button data-lang="en">EN</button>
   </div>
 
-  <div class="morewrap" data-tour="more">
+  <div class="morewrap">
     <button class="morebtn" id="btnMore" aria-haspopup="true" aria-expanded="false" aria-label="More"><svg class="ic"><use href="#i-ellipsis"/></svg></button>
     <div class="morepop" id="morePop" role="menu">
       <div class="mhead"><svg class="ic"><use href="#i-shapes"/></svg><span data-i18n="more.panel"></span> <b id="wizVer">—</b></div>

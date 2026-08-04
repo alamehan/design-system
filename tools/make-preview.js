@@ -30,10 +30,6 @@ const html = JSON.parse(m[1]);
 const changelog = fs.readFileSync(path.join(DS, "CHANGELOG.md"), "utf8")
   .split("\n").slice(0, 34).join("\n");
 
-/* DS_PREVIEW_STATE=fresh reproduces the state the tour bug needed: nothing
-   installed, so the panel opens on Setup and Home is hidden. */
-const FRESH = process.env.DS_PREVIEW_STATE === "fresh";
-
 const STATE = {
   wizardVersion: meta.wizardVersion,
   builtForDs: meta.version,
@@ -41,23 +37,15 @@ const STATE = {
   isGit: true,
   defaultRepoUrl: "https://git.example.co/design/design-system.git",
   originUrl: "https://git.example.co/design/design-system.git",
-  maintainerEmail: "raihan.a@elabram.com",
-  maintainer: {
-    name: "Raihan Allaam", handle: "@alamehan", url: "https://alamehan.github.io/",
-    email: "raihan.a@elabram.com", role: "UI/UX Designer, ITS Elabram",
-  },
-  /* Set DS_PREVIEW_VIDEO=1 to preview the player state instead of the placeholder. */
-  explainer: process.env.DS_PREVIEW_VIDEO
-    ? { video: "docs/explainer.mp4", poster: null, length: "3 min", declared: "docs/explainer.mp4" }
-    : { video: null, poster: null, length: "3 min", declared: "docs/explainer.mp4" },
-  subRegistered: !FRESH, subPopulated: !FRESH, subCommit: FRESH ? null : "a1b2c3d",
-  level: FRESH ? "not-installed" : "0",
+  maintainerEmail: "raihan@its-elabram.example",
+  maintainer: { name: "Raihan Allaam", email: "raihan@its-elabram.example", role: "UI/UX Designer, ITS Elabram" },
+  subRegistered: true, subPopulated: true, subCommit: "a1b2c3d", level: "0",
   level1tw: false, level1css: false, halfWired: false,
   nuxtConfig: "nuxt.config.js", hasTailwindConfig: true,
   files: { "CLAUDE.md": true, ".ds/bindings.md": true },
   dirty: false,
   legacy: { found: false, items: [], confirmPhrase: "HAPUS DS LAMA" },
-  manifest: FRESH ? null : {
+  manifest: {
     schema: "ds-manifest-v1", adoptionId: "preview", wizardVersion: meta.wizardVersion,
     installedAt: "2026-07-20T09:12:00.000Z", updatedAt: "2026-07-28T04:00:00.000Z",
     level: "0", dsVersion: meta.version, dsCommit: "a1b2c3d",
@@ -70,30 +58,20 @@ const STATE = {
   },
   unmanaged: false,
   /* one living drift, so the attention card and its actions are visible */
-  drift: FRESH ? [] : [{ path: ".ds/bindings.md", mode: "file", klass: "living", state: "modified" }],
-  history: FRESH ? [] : [
+  drift: [{ path: ".ds/bindings.md", mode: "file", klass: "living", state: "modified" }],
+  history: [
     { at: "2026-07-28T04:00:00.000Z", event: "update", level: "0", dsCommit: "a1b2c3d" },
     { at: "2026-07-24T11:30:00.000Z", event: "change-request", file: ".ds/bindings.md" },
     { at: "2026-07-20T09:12:00.000Z", event: "install", level: "0", dsCommit: "77f0e21" },
   ],
-  rollback: FRESH ? null : { fromCommit: "77f0e21", at: "2026-07-28T03:58:00.000Z", wizard: meta.wizardVersion },
+  rollback: { fromCommit: "77f0e21", at: "2026-07-28T03:58:00.000Z", wizard: meta.wizardVersion },
   panelLatest: meta.wizardVersion, panelOutdated: false,
   prompts: [],
-  adoption: {
-    org: { repos: 7, devs: 14, installs: 9, updates: 23, uninstalls: 1, requests: 5, behind: 2, current: 5,
-           byLevel: { "0": 4, "1": 3 }, byVersion: { "3.2.0": 2, "3.3.0": 5 } },
-    repo: FRESH ? { install: 2, update: 4, uninstall: 1, request: 1, rollback: 1, adopt: 0 }
-                : { install: 1, update: 3, uninstall: 0, request: 1, rollback: 1, adopt: 0 },
-    mine: FRESH ? { install: 1, update: 2, uninstall: 1, request: 0, rollback: 0, adopt: 0 }
-                : { install: 1, update: 2, uninstall: 0, request: 1, rollback: 0, adopt: 0 },
-    hasActor: true, configured: true,
-    generatedAt: "2026-07-28T02:00:00.000Z", reportVersion: meta.version,
-  },
   locked: { install: false, revert: false, update: false, rollback: false, legacy: false, panel: false },
 };
 
 const OVERVIEW = {
-  installed: !FRESH, version: meta.version,
+  installed: true, version: meta.version,
   tokenCount: 185, pages: 12, specs: 76, reference: 27, catalog: 76,
   typeface: "Fustat \u00b7 DM Mono",
   icons: "Tabler 272 + 100 ext \u00b7 Custom 94",
@@ -109,7 +87,7 @@ const banner = `
   font:600 12px/1.4 Fustat,system-ui,sans-serif;padding:9px 16px;display:flex;gap:10px;align-items:center;
   box-shadow:0 1px 6px rgba(0,0,0,.25)">
   <span style="background:#f59e0b;color:#111827;border-radius:100px;padding:1px 8px;font-size:10.5px;letter-spacing:.05em">PREVIEW</span>
-  <span>${FRESH ? "NOT-INSTALLED / post-uninstall state \u2014 Setup must show its form, Prompts must be empty, the tour must never point at a hidden element. " : ""}Real panel v${meta.wizardVersion} UI \u2014 canned data, no server. The tour opens on load. Check: welcome card, hover the blue buttons, Docs \u2192 open a file \u2192 sticky \u00d7, About \u2192 @alamehan link + Contact.</span>
+  <span>Real panel v${meta.wizardVersion} UI \u2014 canned data, no server. Hover the blue buttons, switch ID/EN, open \u22ef \u2192 Play tour.</span>
   <button onclick="document.getElementById('pv-banner').remove()"
     style="margin-left:auto;background:none;border:1px solid #4b5563;color:#d1d5db;border-radius:5px;
     padding:2px 9px;font:inherit;cursor:pointer">dismiss</button>
@@ -166,13 +144,6 @@ const stub = `
   var realFetch = window.fetch;
   window.fetch = function (url, opt) {
     var p = String(url).split("?")[0];
-    if (/\.(mp4|webm|m4v)$/.test(p)) {
-      /* a 1-frame black mp4 so the player chrome is real in the preview */
-      var b = atob("AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAAhtZGF0");
-      var u8 = new Uint8Array(b.length);
-      for (var i = 0; i < b.length; i++) u8[i] = b.charCodeAt(i);
-      return Promise.resolve(new Response(u8, { status: 200, headers: { "Content-Type": "video/mp4" } }));
-    }
     if (p.indexOf("/ds/") === 0) {
       return Promise.resolve(new Response(
         "# " + decodeURIComponent(p.slice(4)) + "\\n\\nThis document is served from the installed design system.\\n\\n" +

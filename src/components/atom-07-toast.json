@@ -8,7 +8,7 @@
   "section": "Atomic Components",
   "role": "component",
   "implementable": true,
-  "description": "Transient notification overlay. Semantic status types × three visual styles. Auto-dismisses.",
+  "description": "Transient notification overlay. Semantic status types × three visual styles. Anatomy: circular custom icon from the shipped set src/assets/icons-custom (system-success/warning/error/info.svg, loading.svg for Wait) · bold semantic title + optional subtitle · optional tonal action button · dark circular dismiss. Auto-dismisses.",
   "props": {
     "style": {
       "type": "enum",
@@ -118,6 +118,16 @@
       {
         "when": {
           "style": "Filled",
+          "type": "Wait"
+        },
+        "tokens": {
+          "background": "semantic.sem-indigo-surface-soft",
+          "border-color": "semantic.sem-indigo"
+        }
+      },
+      {
+        "when": {
+          "style": "Filled",
           "type": "Brand"
         },
         "tokens": {
@@ -171,6 +181,17 @@
           "background": "neutral.pure-white",
           "border-color": "semantic.info",
           "icon-gradient": "paint-style.Gradients/Grad Sky",
+          "shadow": "shadow.Smooth"
+        }
+      },
+      {
+        "when": {
+          "style": "Outlined",
+          "type": "Wait"
+        },
+        "tokens": {
+          "background": "neutral.pure-white",
+          "border-color": "semantic.sem-indigo",
           "shadow": "shadow.Smooth"
         }
       },

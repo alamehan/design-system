@@ -8,7 +8,7 @@
   "section": "Atomic Components",
   "role": "component",
   "implementable": true,
-  "description": "Floating menu panel triggered by button or right-click. Five layout types.",
+  "description": "Floating context-menu panel triggered by button or right-click. Five layout types. Items support optional leading icons (icon key / #icon slot); hasSearch pins a filter field at the top of the panel.",
   "props": {
     "type": {
       "type": "enum",
@@ -52,6 +52,11 @@
     "maxHeight": {
       "type": "number",
       "default": 320
+    },
+    "hasSearch": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show a search/filter field pinned at the top of the panel (context-menu style). Filters items by label."
     }
   },
   "tokens": {
