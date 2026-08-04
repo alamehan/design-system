@@ -8,7 +8,7 @@
   "section": "Atomic Components",
   "role": "component",
   "implementable": true,
-  "description": "Transient notification overlay. Semantic status types × three visual styles. Auto-dismisses. Icons come from the bundled custom set (src/assets/icons-custom: system-success/warning/error/info.svg, loading.svg for Wait); the action button is the standard Button (Tonal) and dismiss is the standard IconButton.",
+  "description": "Transient notification overlay. Semantic status types × three visual styles. Auto-dismisses.",
   "props": {
     "style": {
       "type": "enum",
@@ -185,16 +185,6 @@
           "icon-background": "brand.brand-surface-soft",
           "icon-border": "neutral.pure-white",
           "icon-shadow": "shadow.Base"
-        }
-      },
-      {
-        "when": {
-          "style": "Filled",
-          "type": "Wait"
-        },
-        "tokens": {
-          "background": "semantic.sem-indigo-surface-soft",
-          "border-color": "semantic.sem-indigo"
         }
       }
     ]

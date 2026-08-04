@@ -50,7 +50,7 @@
 .es-menu-enter,
 .es-menu-leave-to { opacity: 0; transform: translateY(calc(-1 * var(--space-xxs))); }
 
-/* v3.4.1 gallery polish */
+/* v3.4.2 gallery polish */
 .es-menu__search {
   padding: var(--space-3xs);
   border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);

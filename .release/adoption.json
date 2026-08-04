@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-08-04T06:03:29.094Z",
+  "dsVersion": "3.4.2",
+  "totals": {
+    "configured": false,
+    "repos": 0,
+    "devs": 0,
+    "installs": 0,
+    "updates": 0,
+    "uninstalls": 0,
+    "requests": 0,
+    "behind": 0,
+    "current": 0,
+    "byLevel": {},
+    "byVersion": {}
+  },
+  "rows": []
+}

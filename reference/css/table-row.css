@@ -42,7 +42,7 @@ tr.is-selected > .es-cell { background: var(--color-brand-brand-surface-soft); }
   text-align: center;
 }
 
-/* v3.4.1 gallery polish */
+/* v3.4.2 gallery polish */
 .es-cell__dot--brand { background: var(--color-brand-brand); }
 .es-cell__photo { width: 32px; height: 32px; border-radius: var(--radius-full); display: block; }
 .es-cell__choice {

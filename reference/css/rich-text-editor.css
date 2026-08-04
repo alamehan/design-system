@@ -1,5 +1,6 @@
 /* atom-10 RichTextEditor — label + toolbar (standard IconButton components) + content area.
-   Source of truth: src/components/atom-10*.json · token-pure CSS (vars only). /* v3.4.1 gallery polish */*/
+   Source of truth: src/components/atom-10*.json · token-pure CSS (vars only). */
+/* v3.4.2 gallery polish */
 
 .es-rte {
   display: flex;

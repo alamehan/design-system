@@ -168,6 +168,52 @@ function dsMeta() {
 }
 function maintainerEmail() { return process.env.DS_DESIGNER_EMAIL || (dsMeta().maintainer || {}).email || null; }
 
+/* The motion explainer is optional. Report only what is really on disk so the
+   welcome step can show a placeholder instead of a broken player. */
+/* Adoption statistics.
+ *
+ * Two honest scopes, never mixed:
+ *   - "org"  : totals from design-system/.release/adoption.json, produced by
+ *              adoption-report.js reading COMMITTED .ds/manifest.json files
+ *              across the configured repos. No telemetry, no network call here.
+ *   - "repo" : event counts from this repository's own .ds/history.jsonl.
+ *
+ * If the report has never been generated, org is null and the panel says so
+ * rather than showing a zero that looks like real data. */
+function adoptionStats() {
+  const blank = () => ({ install: 0, update: 0, uninstall: 0, request: 0, rollback: 0, adopt: 0 });
+  const repo = blank(), mine = blank();
+  const me = actorId();
+  const KEY = { install: "install", update: "update", revert: "uninstall", "change-request": "request", rollback: "rollback", adopt: "adopt" };
+  /* history.jsonl is append-only AND committed, so these counts are cumulative:
+     they survive updates, and an uninstall does not wipe them (revert keeps the
+     log on purpose). Reinstalling appends rather than restarting from zero. */
+  for (const h of loadHistory()) {
+    const k = KEY[h.event];
+    if (!k) continue;
+    repo[k]++;
+    if (h.actor && me && h.actor === me) mine[k]++;
+  }
+  let org = null, generatedAt = null, reportVersion = null, configured = null;
+  try {
+    const raw = JSON.parse(fs.readFileSync(abs(path.join(SUBMODULE_DIR, ".release", "adoption.json")), "utf8"));
+    if (raw && raw.totals) {
+      org = raw.totals;
+      configured = raw.totals.configured !== false;
+      generatedAt = raw.generatedAt || null;
+      reportVersion = raw.dsVersion || null;
+    }
+  } catch { /* no submodule yet, or a build older than v3.3.0 */ }
+  return { repo, mine, org, configured, generatedAt, reportVersion, hasActor: !!me };
+}
+
+function explainerInfo() {
+  const ex = dsMeta().explainer || {};
+  const base = abs(SUBMODULE_DIR);
+  const rel = (p) => (p && fs.existsSync(path.join(base, p)) ? p : null);
+  return { video: rel(ex.video), poster: rel(ex.poster), length: ex.length || null, declared: ex.video || null };
+}
+
 function defaultRepoUrl() {
   if (process.env.DS_REPO_URL) return process.env.DS_REPO_URL;
   try { const rc = JSON.parse(readIf(".dsrc.json") || "{}"); if (rc.repoUrl) return rc.repoUrl; } catch {}
@@ -383,6 +429,8 @@ function detectState() {
     defaultRepoUrl: defaultRepoUrl(), originUrl: originUrl(),
     maintainerEmail: maintainerEmail(),
     maintainer: dsMeta().maintainer || null,
+    explainer: explainerInfo(),
+    adoption: adoptionStats(),
     subRegistered, subPopulated, subCommit, level,
     level1tw, level1css, halfWired: installed && (level1tw !== level1css),
     nuxtConfig: nx, hasTailwindConfig: tw != null,
@@ -393,7 +441,7 @@ function detectState() {
     history: loadHistory().slice(0, 100),
     rollback: (() => { try { return JSON.parse(readIf(ROLLBACK)); } catch { return null; } })(),
     panelLatest, panelOutdated: !!(panelLatest && cmpVer(panelLatest, WIZARD_VERSION) > 0),
-    prompts: buildPromptSet(level),
+    prompts: level === "not-installed" ? [] : buildPromptSet(level),
     locked: LOCKED,
   };
 }
@@ -880,8 +928,6 @@ function buildPromptSet(level) {
       "Audit [SCOPE] against the design system. Report: hardcoded hex or px that a token covers, components rebuilt by hand where a mapped one exists, spec deviations, and scroll-contract violations. Produce a table, ranked worst first. Do not change any code yet."),
     p("review", "Review", "Review my changes", "Check a diff before it goes up.",
       "Review the current diff against the design system rules. Flag every violation with the file, line and the rule it breaks. Then propose the minimal fix for each."),
-    p("stress", "Verify", "Gallery stress test", "Build a sample from the COMPLETE component gallery.",
-      "Build a throwaway showcase page at pages/ds-stress.vue that exercises the FULL component gallery (design-system/reference/gallery.html):\n- Inputs: all 9 types (Basic, Search, SearchWithIcon, Dropdown, DatePicker, Password, PasswordShow, Number, Special) in Inactive, Active Single and Active Multi states \u2014 multi values render as real Chip components.\n- Toasts: all 5 semantic types with the custom icon set from design-system/src/assets/icons-custom (loading icon for Wait); action = Button (Tonal), dismiss = IconButton.\n- Chips vs StatusChips side by side (same bold text ramp), Tabs in all 6 variants, DropdownMenu plain / with item icons / with search, RichTextEditor and RangeSlider.\n- One compact DataTable inside a white card: at least 8 TableColumn types and 12 TableRow types, plus pagination.\nAnything that cannot map to an existing component must be reported as a bindings gap \u2014 never hand-rolled."),
   ];
 }
 
@@ -917,8 +963,33 @@ const server = http.createServer(async (req, res) => {
     const base = abs(SUBMODULE_DIR);
     const full = path.resolve(base, rel);
     if (!full.startsWith(base + path.sep) || !fs.existsSync(full) || !fs.statSync(full).isFile()) return json(res, 404, { error: "not found" });
-    const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".gif": "image/gif", ".json": "application/json; charset=utf-8", ".woff2": "font/woff2", ".md": "text/plain; charset=utf-8" };
-    res.writeHead(200, { "Content-Type": types[path.extname(full).toLowerCase()] || "text/plain; charset=utf-8" });
+    const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp", ".json": "application/json; charset=utf-8", ".woff2": "font/woff2", ".md": "text/plain; charset=utf-8", ".mp4": "video/mp4", ".webm": "video/webm", ".m4v": "video/mp4" };
+    const ctype = types[path.extname(full).toLowerCase()] || "text/plain; charset=utf-8";
+
+    /* Video needs byte-range replies or the browser cannot seek (and Safari
+       refuses to start playback at all without them). */
+    if (/^video\//.test(ctype)) {
+      const size = fs.statSync(full).size;
+      const range = req.headers.range;
+      if (range) {
+        const m2 = /bytes=(\d*)-(\d*)/.exec(range) || [];
+        const start = m2[1] ? parseInt(m2[1], 10) : 0;
+        const end = m2[2] ? parseInt(m2[2], 10) : size - 1;
+        if (start >= size || end >= size || start > end) {
+          res.writeHead(416, { "Content-Range": "bytes */" + size });
+          return res.end();
+        }
+        res.writeHead(206, {
+          "Content-Type": ctype, "Content-Length": end - start + 1,
+          "Content-Range": "bytes " + start + "-" + end + "/" + size, "Accept-Ranges": "bytes",
+        });
+        return fs.createReadStream(full, { start, end }).pipe(res);
+      }
+      res.writeHead(200, { "Content-Type": ctype, "Content-Length": size, "Accept-Ranges": "bytes" });
+      return fs.createReadStream(full).pipe(res);
+    }
+
+    res.writeHead(200, { "Content-Type": ctype });
     return res.end(fs.readFileSync(full));
   }
 

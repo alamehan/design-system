@@ -1,6 +1,6 @@
 # ARCHITECTURE — how the whole thing fits together
 
-> Regenerated for **v3.4.1** from the repository as it actually is, not from an
+> Regenerated for **v3.4.2** from the repository as it actually is, not from an
 > earlier draft. Every number here was counted, not remembered.
 > The master diagram also lives standalone in [`system-map.mermaid`](./system-map.mermaid).
 
@@ -117,7 +117,7 @@ flowchart TD
     NX["nuxt.config.js<br/>1 marked line — L1 only"]
     SUB["design-system/<br/>pinned read-only submodule"]
   end
-  PANEL["ds-setup.cjs<br/>panel v3.2.0"] -->|writes, all marked| CM & BD & GI & TW & NX
+  PANEL["ds-setup.cjs<br/>panel v3.1.0"] -->|writes, all marked| CM & BD & GI & TW & NX
   PANEL -->|records| MF & HS
   PANEL -->|adds| SUB
   MF -->|drives| REV["exact uninstall · drift · restore · rollback"]
@@ -200,9 +200,10 @@ it silently became the agent's idea of the token vocabulary.
 | Reference components | **27 files / 25 of 52 codes** | see §9 |
 | Reference stylesheets | **30** | token-pure, lint-enforced |
 | Tabler icons in the reference sprite | **15** | MIT, inlined per file |
-| Panel bundle | **278 KB**, one file, zero dependencies | `tools/ds-setup.cjs` |
-| Panel i18n keys | **196 × 2 locales** | `tools/dashboard/i18n.json` |
-| End-to-end assertions | **84** | `tests/e2e.js` |
+| Lucide icons in the panel sprite | **48** | ISC, all of them used |
+| Panel bundle | **301 KB**, one file, zero dependencies | `tools/ds-setup.cjs` |
+| Panel i18n keys | **269 × 2 locales** | `tools/dashboard/i18n.json` |
+| End-to-end assertions | **99** | `tests/e2e.js` |
 
 ---
 

@@ -1,7 +1,5 @@
 {
+  "_comment": "Fill in 'repos' with the git URLs of every project that adopts the design system, then run: node src/scripts/adoption-report.js. It clones each one shallowly, reads the COMMITTED .ds/manifest.json and .ds/history.jsonl, and writes ADOPTION.md + .release/adoption.json. No telemetry, no network calls from the panel. Alternatively set 'provider' to 'github' or 'gitlab' to discover repos through an org API.",
   "provider": "list",
-  "_comment": "The 'list' provider works on ANY git host, including self-hosted. Switch to github/gitlab once the repo lives on the office host and a token is available.",
-  "repos": [],
-  "org": null,
-  "apiBase": null
+  "repos": []
 }

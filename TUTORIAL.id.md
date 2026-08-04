@@ -214,3 +214,23 @@ Buka dashboard seperti biasa (`node ds-setup.cjs`). Kalau di repo masih ada sisa
 - **Panel menulis `.gitignore` + `.gitattributes`** (blok bertanda). `.ds/` tidak
   diignore seluruhnya — alasannya di [SAFETY.id.md §2b](./SAFETY.id.md).
 - Peta lengkap arsitektur: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
+
+---
+
+## Slot video explainer
+
+Tur di panel dibuka dengan kartu sambutan di tengah yang bisa memutar video penjelasan
+singkat. Cara masangnya: taruh filenya di path yang disebut `explainer.video` dalam
+`ds-meta.json`, relatif ke root design system (`docs/` tempat yang enak), lalu panel
+otomatis nampilin playernya. Nggak perlu rebuild.
+
+```json
+{ "explainer": { "video": "docs/explainer.mp4", "poster": "docs/explainer-poster.png", "length": "3 min" } }
+```
+
+Selama filenya belum ada, kartunya nampilin placeholder biasa — bukan player rusak —
+jadi aman kalau panelnya dikirim dulu sebelum videonya kelar. `poster` dan `length`
+opsional; `length` muncul sebagai petunjuk kecil di banner biar orang tau durasinya
+sebelum menekan play.
+
+Panel melayani video dengan byte-range, jadi seek jalan dan Safari mau memutarnya.

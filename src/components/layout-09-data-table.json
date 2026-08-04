@@ -51,14 +51,6 @@
         "desc"
       ],
       "default": "asc"
-    },
-    "density": {
-      "type": "enum",
-      "values": [
-        "Compact",
-        "Comfortable"
-      ],
-      "default": "Compact"
     }
   },
   "tokens": {

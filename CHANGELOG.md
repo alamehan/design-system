@@ -4,28 +4,21 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
-## 3.4.1 — 2026-08-04
-
-Gallery polish sweep — every reference demo now composes the REAL components (supersedes the interim 3.4.0 delivery).
-
+## 3.4.2 — 2026-08-04
 ### Fixed
-- Toast: tight title/subtitle spacing; action = the standard Button (Tonal, semantic override); dismiss = the standard IconButton (dark circular); circular custom icons from `src/assets/icons-custom`.
-- Input: multi-value state renders real Chip components; clear/stepper controls are real IconButtons.
-- RichTextEditor: visible bordered content area (was missing); toolbar built from real IconButtons.
-- RangeSlider: stylesheet now ships and is linked — track, brand fill and dual handles render.
-- Checkbox: indeterminate mark uses the sprite minus icon — optically centered on both axes.
-- DropdownMenu: the search variant reuses the real Input component pinned at the top of the panel.
-- Tabs: icons optically centered (icon-only and icon+text); removed the leftover legacy pill group.
-- Empty state uses the bundled `empty-data.svg` illustration; TableRow OnlyPhoto uses the avatar asset.
-- `cp-metric__trend` had no CSS rule (caught by the new post-generation audit).
-
+- Reference CSS comment-marker artifact (`*/*/`) that invalidated the first rule of toast.css / rich-text-editor.css / range-slider.css (Toast stacked vertically, RTE borderless, mini action buttons).
+- Icon-only Tabs optical centering; Checkbox indeterminate mark centering.
 ### Added
-- Input reference matrix: 9 types × Inactive / Active Single / Active Multi.
-- New reference pages + gallery sections: RichTextEditor (atom-10), RangeSlider (atom-13).
-- DropdownMenu icon-per-item + search variants (`hasSearch` prop) · Tabs 6 variants · TableColumn all 11 types · TableRow all 17 types · compact DataTable (`density` prop, Compact default).
-- Toast `Wait` type override (sem-indigo) + custom-icon contract in the spec.
-- 12 new Tabler sprite symbols: calendar, minus, plus, eye-off, copy, trash, bold, italic, underline, list, list-numbers, link.
-- Panel v3.2.0: “Gallery stress test” prompt in the prompt library.
+- Mandatory visual audit gate: headless-Chromium computed-style checks on the reference gallery before packaging.
+- DataTable compact sample with filter header row (real Input/Dropdown), sorting, selection, row actions and pagination.
+
+## 3.4.1 — 2026-08-04
+### Fixed
+- Gallery raw-design sweep: Toast action/dismiss are real Button/IconButton components; Input multi-values are real Chips; DropdownMenu search uses the real Input; stray placeholder text removed; EmptyState uses the real illustration set.
+
+## 3.4.0 — 2026-08-04
+### Added
+- Component reference gallery upgrade: Chip text ramp aligned with StatusChip; Toast redesigned per Figma; Input 9 types × 3 states; RichTextEditor (atom-10); RangeSlider (atom-13); DropdownMenu icon + search variants; Tabs icon variants; TableColumn 11 variants; TableRow 17 variants; new sprite icons.
 
 ## 3.3.0 — 2026-07-28
 
@@ -61,10 +54,41 @@ Gallery polish sweep — every reference demo now composes the REAL components (
 - `SAFETY.id.md` / `SAFETY.en.md`: the file table goes from four rows to six, with a new §2b on git housekeeping.
 - The design system's own `.gitignore` now documents what is *deliberately committed*, so nobody tidies away `dist/`, `catalog/` or `tools/ds-setup.cjs`.
 
+### Fixed — a second review pass, all found by looking at the running panel
+- **The Prompts tab kept its contents after an uninstall, and the Setup page never reset.** One cause, two symptoms: the install form was being *moved* into a container that the receipt view later cleared with `innerHTML = ""`, which destroyed the form node outright. `renderSetup()` then threw on a null reference after any uninstall, and because `render()` calls `renderPrompts()` immediately afterwards, that never ran either. The form now lives inside permanent markup and is folded away with a CSS class — nothing is moved. The server also stops serving prompts entirely once nothing is installed, and `tests/e2e.js` asserts the whole post-uninstall state is indistinguishable from never-installed.
+- **The tour's Next button spilled outside its card.** One dot per step is fine at 8 steps and impossible at 15: the dots plus three buttons are wider than a 322 px card. Replaced with a slim progress bar, which is a fixed width whatever the step count — the exact position was already stated as "Step n/m" directly above.
+- **The primary button's icon was invisible.** `.nextup .ic { color: var(--accent) }` is a descendant selector, so it reached inside the button and painted the icon accent-on-accent. Every container icon rule now uses the child combinator, and a new e2e check rejects any descendant `.ic` rule that sets a colour — it found one more offender on its first run.
+- **"Request a code" had no button styling and did nothing when clicked.** It was an `<a class="btn">`, but the stylesheet scoped every button rule to `button.btn`, so it fell through to plain link text. And a bare `mailto:` is a dead end when no mail client is registered — the click simply appears to do nothing. It is now a real button, `.btn` is no longer element-scoped, and clicking it copies the address *and* opens the draft, then says which happened.
+- **The Level 0 / Level 1 explainer looked like a second set of radio options** — two bordered cards directly beneath two bordered choices. It is now a comparison table, which cannot be mistaken for something clickable, with six concise rows instead of eight prose bullets.
+- **Prompt field listeners were attached on every redraw**, so after an uninstall and reinstall each copy button fired twice. They are bound once at load and delegated.
+
+### Changed — adoption statistics
+- **Team numbers are visible without anyone running anything.** `ship.js` now regenerates the adoption report as part of every release, and `adoption-report.js` writes a valid report even with no repos configured (flagged `configured: false`) instead of exiting with instructions. Telling a developer to run a maintainer's script to see a dashboard number was the wrong shape of solution.
+- **Three scopes behind one switch: Team, This repo, Me.** "Me" matches on the same non-identifying actor hash the report already used, so a developer can see their own activity without any address being stored. The counts are cumulative and survive design system updates: `.ds/history.jsonl` is append-only and committed, and uninstalling deliberately keeps it — a fact now asserted by the test suite rather than merely intended.
+
+### Fixed — found by looking at the panel instead of only testing it
+- **The tour spotlighted a hidden element.** Step 2 targeted the Home hero, but the panel opens on Setup whenever the design system is not installed, and no step declared which page it belonged to. The hidden element measured zero, so the card parked in the top-left corner pointing at nothing. Every step now declares its page, and a `visibleNode()` guard refuses an element that is hidden or zero-sized — falling back to that destination's pill-navigation button, and skipping the step entirely if even that is gone.
+- **A detail view could not be backed out of.** Opening a plan step's preview with the eye button replaced the plan, leaving only Close and Copy — so the only way out discarded the plan you were halfway through reading. Modals are now a proper stack: nested views get an automatic **Back** button, Escape pops one level instead of closing everything, and the diff → Restore and diff → Send-to-designer paths keep the diff underneath them.
+- **The page header sat 4 px above the next card**, so the title looked glued to the content below it. Vertical rhythm is now a consistent 24/20 px.
+- **The bundle shipped with no fonts at all, briefly, during this cycle.** Adding CSS minification made the minifier delete `/* @FONTS@ */` as a comment, so the substitution found nothing — and the "unreplaced placeholder" guard could not fire, because the placeholder had been *removed* rather than left behind. The substitution now goes through a non-comment sentinel, and a new `buildGuard()` proves both `@font-face` rules and the base64 payload are in the output. `tests/e2e.js` asserts the same three things independently.
+
+### Added
+- **Adoption statistics on Home, for reporting.** Repos adopted, installs, updates, uninstalls, distinct developers, change requests, how many are on the latest version and how many are behind. Read from `design-system/.release/adoption.json`, which `adoption-report.js` now writes with a `totals` block. Counted from **committed receipts** — still no telemetry, and the panel makes no network call to produce them. This-repo-only counts are shown separately and labelled, and if the report has never been generated the card says so rather than displaying a zero that would read as "nobody adopted it".
+- **A Level 0 vs Level 1 comparison** sits directly under the level choice and highlights whichever is selected, so the difference does not have to be inferred from two one-line descriptions. Choosing Level 1 also reveals a callout naming the two lines it will add and where.
+- **The Setup page becomes a receipt once installed** — level, version, commit, install date, and how many files are managed — instead of re-offering the same form as though nothing had happened. The next sensible step is offered explicitly (upgrade to Level 1 from Level 0, otherwise Health and the prompt library), what was written is available as a fold, and the install form moves inside a **Reinstall or change level** fold rather than disappearing.
+- **The tour is now 15 steps instead of 8**, covering all seven destinations, the language switch and the ⋯ menu, with a closing summary card. Steps that need an installed design system are dropped automatically when there is nothing to show, and the tour returns you to the page you started on.
+- `build-wizard.js` validates `i18n.json` and **fails the build if the ID and EN dictionaries disagree**, so a missing translation cannot reach a bundle.
+
 ### Changed
+- **The tour now opens with a centred welcome card that can play a motion explainer.** The video path is declared in `ds-meta.json` (`explainer.video`, relative to the design system root) and resolved against what is actually on disk, so the card degrades to a plain placeholder instead of a broken player when the file is not there yet. The panel serves video with byte-range replies so seeking works and Safari will play it at all.
+- **Light is now the default theme.** Dark mode is opt-in from the ⋯ menu rather than following the OS preference automatically.
+- **Every accordion starts closed**, on every page.
+- **Documents in the Docs tab toggle.** Clicking the open document closes it, there is a sticky header with a close button that stays visible while scrolling, and Escape closes it too.
+- **About page:** the maintainer handle *is* the portfolio link rather than printing a bare URL beside it, and the contact button now builds a real `mailto:` with a prefilled subject and a footer carrying the design system version, panel version and repo — plus a copy-address button for anyone without a mail client configured. The maintainer email in `ds-meta.json` is now a real address, so both this and the Level 1 code request work out of the box.
 - Reference version stamps: `REF v3.3.0`. Truth layer is unchanged — 185 tokens, 86 dark overrides, 12 text styles, 76 specs, 487 colour keys — so `contract-check.js` reports no public-surface change.
-- Panel bundle 234 KB → 278 KB (markdown renderer, tour, About, 58-icon sprite). Still one file, still zero dependencies, still no network.
-- `tests/e2e.js`: 61 → **84 assertions**, now covering git-block drift and restore, the ignore rules themselves, the button-contrast invariant, and both dynamic i18n key families.
+- Panel bundle 234 KB → 301 KB, and the **budget in `tests/e2e.js` was raised from 300 KB to 320 KB, once and deliberately.** Every genuinely wasteful byte was removed first: 10 unused icons dropped from the sprite (58 → 48), the bundle's CSS minified (sources keep their comments — they are what maintainers read), and the dictionary embedded compact instead of pretty-printed. What remains is content. The number is a tripwire against someone vendoring a library, not a target to nudge each release.
+- `.release/adoption.config.json` ships as a template with an empty repo list, so generating the first report is filling in URLs rather than guessing a file format. Still one file, still zero dependencies, still no network.
+- `tests/e2e.js`: 61 → **99 assertions**, now covering git-block drift and restore, the ignore rules themselves, the button-contrast invariant, and both dynamic i18n key families.
 
 ## 3.2.0 — 2026-07-28
 

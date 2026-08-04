@@ -52,11 +52,6 @@
     "maxHeight": {
       "type": "number",
       "default": 320
-    },
-    "hasSearch": {
-      "type": "boolean",
-      "default": false,
-      "description": "Pin a search field (the standard Input component) at the top of the panel."
     }
   },
   "tokens": {

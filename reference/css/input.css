@@ -33,7 +33,7 @@
 .es-field__msg { color: var(--color-system-text-mute); }
 .es-field__msg.is-error { color: var(--color-semantic-error); }
 
-/* v3.4.1 gallery polish */
+/* v3.4.2 gallery polish */
 .es-field__chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3xs); flex: 1; min-width: 0; }
 .es-field__iconbtn {
   padding: var(--space-3xs);
