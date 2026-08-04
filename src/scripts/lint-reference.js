@@ -195,6 +195,39 @@ if (deadVars.size) {
   console.log("\u2705 every var() used in reference/ resolves to a real token");
 }
 
+
+/* ------------------------------------------------------------------------
+ * GATE 7 — every literal font-size in reference CSS must sit on the type ramp.
+ *
+ * The ramp is read from src/foundations.json, not hardcoded. Sizes of 12.5, 13, 15, 20 and
+ * 24px had accumulated in the composed scaffolding and the avatar scale used an `em` fraction
+ * that resolved to 10px — five values that do not exist anywhere in the foundations. Each one
+ * looked fine alone and made the tier read as inconsistent together.
+ *
+ * visual-audit.py catches this at render time; this catches it without a browser, so it still
+ * fires in an environment where playwright is not installed.
+ * ---------------------------------------------------------------------- */
+const foundations = JSON.parse(fs.readFileSync(path.join(DS_ROOT, "src", "foundations.json"), "utf8"));
+const ramp = new Set();
+for (const weight of Object.values(foundations["text-styles"] || {}))
+  for (const style of Object.values(weight || {})) {
+    const v = (style || {}).$value || {};
+    if (v.fontSize && typeof v.fontSize.value === "number") ramp.add(v.fontSize.value);
+  }
+let offRamp = 0;
+for (const f of fs.readdirSync(DIR).filter((x) => x.endsWith(".css") && x !== "_fonts.css")) {
+  const src = fs.readFileSync(path.join(DIR, f), "utf8");
+  src.split("\n").forEach((line, i) => {
+    const m = line.match(/font-size:\s*([\d.]+)px/);
+    if (m && !ramp.has(Math.round(parseFloat(m[1])))) {
+      console.log(`  \u274c css/${f}:${i + 1}  font-size: ${m[1]}px is off the ramp [${[...ramp].sort((a, b) => a - b)}]`);
+      offRamp++;
+    }
+  });
+}
+if (offRamp) { violations += offRamp; console.log(`\u274c ${offRamp} off-ramp font-size(s).`); }
+else console.log(`\u2705 every literal font-size in reference/css sits on the type ramp [${[...ramp].sort((a, b) => a - b)}]`);
+
 if (violations) {
   console.log(`\n${violations} reference-tier violation(s). The reference must be token-pure, load every font it names, and draw every icon from the Tabler sprite.`);
   process.exit(1);

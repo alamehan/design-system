@@ -8,7 +8,7 @@ This file never references a specific consumer project. Repo-specific profile + 
 1. Read this file once per session.
 2. Read `catalog/TOKENS.md` once per session (token vocabulary — the ONLY tokens that exist).
 3. Scan `catalog/INDEX.md` to find the component(s) you need.
-4. Read ONLY the relevant `catalog/components/<code>.md` spec file(s) for the task at hand.
+4. Read ONLY the relevant `catalog/components/<code>.md` spec file(s) for the task at hand. **Every entry carries a `**Reference:**` line** — open that file and copy its structure and class names. It is the rendered, token-pure, spec-true implementation. If the line says `none yet`, no rendered implementation exists: compose from atoms (§2) and do not invent one.
 5. If the consumer repo has a bindings file (e.g. `.ds/bindings.md`), read it to translate specs into that repo's components and utility classes.
 
 Do NOT read the full catalog or all spec files up front. Load per need.
@@ -33,6 +33,9 @@ A missing bindings entry never blocks work: inspect the repo directly, then writ
 
 - No hardcoded hex colors, no magic px for anything a token covers. Use token classes / CSS vars (`var(--…)`) exactly as listed in the catalog.
 - Text styles: use `.ts-<weight>-<role>-<size>` classes exactly as listed. They are global and never prefixed.
+- **The type ramp is 11 / 12 / 14 / 16 / 18 / 22 px and nothing else exists.** `label-sm` 11 · `body-sm` 12 · `body-md` 14 (the default body size) · `body-lg` 16 · `title-md` 18 · `title-lg` 22. A size between two steps (13, 15, 20, 24) is not a judgement call, it is a bug — `visual-audit.py` fails on any rendered font-size off the ramp.
+- **A component's size is spec data.** Each spec's `text-style` token decides its `ts-*` class; do not pick a smaller one because a specimen looks tight. `lint-typography.js` compares the two.
+- **Box model: `border-box`, and form controls inherit typography.** The design system assumes what Tailwind preflight provides — `*, *::before, *::after { box-sizing: border-box }` and `button, input, select, textarea { font: inherit; color: inherit }`. A repo without a preflight-equivalent reset MUST add one, or every `width: 100%` element with padding will overflow its container by its own padding + border, and every unstyled `<button>` will render in 13.33px Arial.
 - **Icons are Tabler.** Write icon classes as full literals (e.g. `i-tabler-user`), never string-concatenated, or the CSS scanner will miss them. Respect any utility prefix rule from the consumer repo profile. Tabler (asset-06/07) plus the Elabram custom set (asset-08) are the only icon sources for product UI — never substitute another library.
 - **Typeface is Fustat** (body) and **DM Mono** (code), per `src/foundations.json`. Do not introduce another font. In `reference/`, a named font MUST have a matching `@font-face` in `reference/css/_fonts.css` — `lint-reference.js` fails otherwise, because a named-but-unloaded font invalidates every visual verdict (see `HISTORY.md` law #2).
 - Never rebuild the app shell (sidebar/navbar/layout) unless explicitly asked.
@@ -50,12 +53,17 @@ Consumer repos may carry a bindings file (COMPONENT-MAP + TOKEN-MAP) that transl
 
 **Two-tier reference** — `reference/gallery.html` has two parts:
 - **Part 1 — Base components** is the default grounding tier. Use it for everyday tasks.
-- **Part 2 — Composed samples** shows assembled screens (list page with table-in-card, slide-in detail panel, form section, empty/confirm states). Consult it ONLY when the requirement needs an assembled screen or more detail than a single component — do not load it by default.
+- **Part 2 — Composed samples** shows assembled screens. Consult it ONLY when the requirement needs an assembled screen or more detail than a single component — do not load it by default.
+  - `#composed-01` list page: table always in a white card · `#composed-02` slide-in detail panel · `#composed-03` form section in a card · `#composed-04` empty state + confirmation modal · `#composed-05` data table exercising EVERY TableColumn and TableRow type in one screen.
+  - `#composed-05` is the reference to copy for any non-trivial table: it is the only place all ten header types and all ten cell types appear together, in the geometry they actually ship with.
 
 **Defaults** (apply unless the requirement explicitly says otherwise):
 - **Breadcrumb is opt-in.** Never render a breadcrumb by default — add one only when explicitly requested.
 - **Tables always live inside a white card** (card head with title/toolbar + table + footer) — never bare on the page canvas.
 - **Table paging:** default 10 rows per page (5–10 acceptable). More rows = pagination. Provide a rows-per-page control with presets (10/25/50) plus a free numeric input, hard-capped at 50.
+- **Table footer order is count (left) · pagination (CENTRE) · rows-per-page (right).** Paging is the frequent action and owns the optical centre; rows-per-page is set once and belongs on the trailing edge. See `.es-pg--tablefoot`.
+- **A destructive button declares its own foreground.** Use the `Danger` variant; never paint a red background onto a variant-less button, or the label stays at the inherited body colour — black on red.
+- **Never hide an interactive control with `opacity` alone.** It stays clickable and tab-focusable while invisible. If a hover-reveal is wanted, the modifier must also set `pointer-events`, and keep a `:focus-within` escape.
 - **Explicit-affordance law:** clicking a table row, card, or list item must never navigate or open a slide-in panel/modal by itself. Every open/navigate/destructive action needs its own explicit control (view icon, kebab menu item, button). This applies everywhere — tables, cards, lists.
 - **Destructive actions** always go through a confirmation modal first.
 - Slide-in detail panels open from the right, with fixed header/footer and exactly ONE scrolling body (see §3 scroll contract).

@@ -72,7 +72,27 @@ for(const g of Object.keys(grouped).sort()){out+='- **'+g+'**: '+grouped[g].map(
 out+='\n---\n\n';
 const CATASSET={'asset-01-avatar.json':['avatars','variant'],'asset-02-option-menu.json':['option-menus','type'],'asset-03-character-expression.json':['characters','type'],'asset-04-animated-illustration.json':['illustrations','type'],'asset-05-complex-illustration.json':['illustrations','type'],'asset-08-icon-custom.json':['icons-custom','name'],'asset-09-logo.json':['logos','type']};
 function fileLine(fn,d){if(fn==='asset-06-icon-tabler.json'||fn==='asset-07-icon-tabler-extended.json')return '**Files:** none needed \u2014 icons render from `@iconify-json/tabler` as `i-tabler-<name>` classes (prepend your repo\'s Tailwind prefix if it has one, e.g. `tw-i-tabler-<name>`).';const m=CATASSET[fn];if(!m)return null;const variants=(((d.props||{})[m[1]]||{}).values)||[];if(!variants.length)return null;const dir=path.join(SRC,'assets',m[0]);const files=fs.existsSync(dir)?fs.readdirSync(dir).filter(x=>/\.(svg|png|gif)$/i.test(x)).map(x=>x.replace(/\.[^.]+$/,'')):[];const shipped=variants.filter(v=>files.includes(v));const missing=variants.filter(v=>!files.includes(v));if(!missing.length)return '**Files:** '+shipped.length+'/'+variants.length+' shipped \u2014 every variant has a real file.';if(!shipped.length)return '**Files:** 0/'+variants.length+' shipped \u2014 catalog names only (no asset files exist for this set); NEVER reference files for it.';return '**Files:** '+shipped.length+'/'+variants.length+' shipped \u2014 '+(shipped.length<=missing.length?('ONLY these variants have files: '+shipped.join(', ')+'. NEVER reference files for the others.'):('all EXCEPT: '+missing.join(', ')+' (no files \u2014 never reference these).'));}
-for(const d of specs){out+='## '+(d.code||'')+' \u2014 '+(d.name||d.__file)+'  _('+(d.category||'')+')_\n';if(d.description)out+=d.description+'\n';if(d.props&&Object.keys(d.props).length){out+='**Props:** ';const ps=[];for(const pk in d.props){const p=d.props[pk];let s=pk;if(p&&p.type==='enum'&&Array.isArray(p.values))s+='='+p.values.join('|');else if(p&&p.type)s+=':'+p.type;if(p&&p.default!==undefined)s+=' (def '+p.default+')';ps.push(s);}out+=ps.join('; ')+'\n';}if(d.tokens){const tr=tokenRefs(d.tokens);if(tr.length)out+='**Tokens:** '+tr.join(', ')+'  \u2014 class per token: see Token vocabulary\n';}const fl=fileLine(d.__file,d);if(fl)out+=fl+'\n';out+='**Spec:** `src/components/'+d.__file+'`\n\n';}
+/* refLine — point every catalog entry at its rendered visual truth.
+ * Until v3.4.4 a catalog spec listed its tokens and its JSON path and stopped there, so an AI
+ * agent grounding on catalog/components/<code>.md was never told that a pixel-accurate HTML+CSS
+ * implementation of that exact component exists. The gallery calls itself "the visual truth for
+ * all components"; that claim is only actionable if the catalog links to it. */
+const GALLERY_IDS = (() => {
+  const g = path.join(DS, 'reference', 'gallery.html');
+  if (!fs.existsSync(g)) return new Set();
+  return new Set([...fs.readFileSync(g, 'utf8').matchAll(/<(?:section|div) class="ref-section" id="([^"]+)"/g)].map(m => m[1]));
+})();
+function refLine(d) {
+  const id = d.id;
+  if (!id) return null;
+  const out = [];
+  if (fs.existsSync(path.join(DS, 'reference', 'components', id + '.html'))) out.push('`reference/components/' + id + '.html`');
+  if (GALLERY_IDS.has(id)) out.push('`reference/gallery.html#' + id + '`');
+  if (fs.existsSync(path.join(DS, 'reference', 'pages', id + '.html'))) out.push('`reference/pages/' + id + '.html`');
+  if (!out.length) return '**Reference:** none yet \u2014 no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md \u00a72) and do NOT invent one.';
+  return '**Reference:** ' + out.join(' \u00b7 ') + '  \u2014 copy the structure and class names from here; it is token-pure and spec-true.';
+}
+for(const d of specs){out+='## '+(d.code||'')+' \u2014 '+(d.name||d.__file)+'  _('+(d.category||'')+')_\n';if(d.description)out+=d.description+'\n';if(d.props&&Object.keys(d.props).length){out+='**Props:** ';const ps=[];for(const pk in d.props){const p=d.props[pk];let s=pk;if(p&&p.type==='enum'&&Array.isArray(p.values))s+='='+p.values.join('|');else if(p&&p.type)s+=':'+p.type;if(p&&p.default!==undefined)s+=' (def '+p.default+')';ps.push(s);}out+=ps.join('; ')+'\n';}if(d.tokens){const tr=tokenRefs(d.tokens);if(tr.length)out+='**Tokens:** '+tr.join(', ')+'  \u2014 class per token: see Token vocabulary\n';}const fl=fileLine(d.__file,d);if(fl)out+=fl+'\n';const rl=refLine(d);if(rl&&!d.__file.startsWith('page-'))out+=rl+'\n';out+='**Spec:** `src/components/'+d.__file+'`\n\n';}
 fs.writeFileSync(path.join(CAT,'catalog.md'),out);
 const idxPath=path.join(CAT,'index.json');
 const idx=JSON.parse(fs.readFileSync(idxPath,'utf8'));

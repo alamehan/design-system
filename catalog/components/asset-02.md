@@ -2,4 +2,5 @@
 Action illustration icons for the DropdownMenu(OptionMenus) and ContentBlock(OptionMenus) layouts. 24 variants covering HR workflow actions: email, consent, import, export, reporting, and finance operations. Each is a 64×64px illustration icon.
 **Props:** type=send-email|manual-consent|share-link|import-contract|import-candidate|import-job|import-resources|compose-email|generate-resume|import-candidate-cv|import-cv-letter|import-certificate-and-license|import-profile-images|import-video-cv|import-restricted-files|uploaded-zip-rar|report-extend|report-join|report-exit|claim|incentive|payroll|salary|empty-data (def empty-data)
 **Files:** 24/24 shipped — every variant has a real file.
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-02-option-menu.json`

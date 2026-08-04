@@ -1,12 +1,15 @@
 /* atom-08 Input — single-line field with label/helper/error + focus ring. v-model. Icons via #left/#right. Variants: basic|search|dropdown|date (spec types Basic/Search/SearchWithIcon/Dropdown/DatePicker).
    Source of truth: src/components/atom-08*.json · token-pure CSS (vars only). */
 
-.es-field { display: flex; flex-direction: column; gap: var(--space-xxs); }
+.es-field { display: flex; flex-direction: column; gap: var(--space-xxs); min-width: 0; }
 .es-field__label { color: var(--color-system-text-body); }
 .es-field__req { color: var(--color-semantic-error); }
 .es-field__box {
   display: flex;
   align-items: center;
+  /* A flex item defaults to min-width:auto, so the <input>'s intrinsic ~20ch width became a
+     hard floor and the field burst out of every narrow container it was put in. */
+  min-width: 0;
   gap: var(--space-sm);
   background: var(--color-neutral-pure-white);
   border: var(--stroke-thin) solid var(--color-system-border-soft);

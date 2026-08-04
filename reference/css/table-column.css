@@ -5,9 +5,7 @@
   background: var(--color-system-surface-strong);
   border-right: var(--stroke-thin) solid var(--color-system-border-soft);
   border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
-  /* spec padding is a single `spacing.standard.sm`; the horizontal side is widened to
-     `md` so header labels sit on the same optical gutter as TableRow cells
-     (layout-11 padding-x = spacing.standard.md). A 2px column offset is visible. */
+  /* spec: layout-10 padding-y = spacing.standard.sm, padding-x = spacing.standard.md */
   padding: var(--space-sm) var(--space-md);
   color: var(--color-system-text-head);
   text-align: left;
@@ -38,9 +36,12 @@
 }
 .es-col__sortbtn:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); border-radius: var(--radius-md); }
 .es-col__sorticon { display: inline-flex; align-items: center; color: var(--color-system-text-mute); flex: none; }
+/* Sorting accents the INDICATOR, never the label. layout-10 base sets
+   `text-color: system.text-head` with no sorted override — recolouring the title to brand
+   invented a state the spec does not have and made two of eleven headers read as links. */
 .es-col.is-sorted .es-col__sorticon,
 .es-col__sortbtn:hover .es-col__sorticon { color: var(--color-brand-brand); }
-.es-col.is-sorted .es-col__sortbtn { color: var(--color-brand-brand); }
+.es-col__sortbtn { color: var(--color-system-text-head); }
 .es-col--numeric { text-align: right; }
 .es-col--numeric .es-col__title,
 .es-col--numeric .es-col__sortbtn { justify-content: flex-end; width: 100%; }

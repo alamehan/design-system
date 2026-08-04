@@ -3,4 +3,5 @@ Larger full-scene illustration assets. 2 variants: document-preview (used in doc
 **Props:** type=document-preview|privacy-policy (def document-preview)
 **Tokens:** neutral.pure-white  — class per token: see Token vocabulary
 **Files:** 0/2 shipped — catalog names only (no asset files exist for this set); NEVER reference files for it.
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-05-complex-illustration.json`

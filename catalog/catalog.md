@@ -24,18 +24,21 @@ User profile picture asset. 41 variants: 20 male personas (ava-man-1 to ava-man-
 **Props:** variant=ava-man-1|ava-man-2|ava-man-3|ava-man-4|ava-man-5|ava-man-6|ava-man-7|ava-man-8|ava-man-9|ava-man-10|ava-man-11|ava-man-12|ava-man-13|ava-man-14|ava-man-15|ava-man-16|ava-man-17|ava-man-18|ava-man-19|ava-man-20|ava-woman-1|ava-woman-2|ava-woman-3|ava-woman-4|ava-woman-5|ava-woman-6|ava-woman-7|ava-woman-8|ava-woman-9|ava-woman-10|ava-woman-11|ava-woman-12|ava-woman-13|ava-woman-14|ava-woman-15|ava-woman-16|ava-woman-17|ava-woman-18|ava-woman-19|ava-woman-20|ava-placeholder-user (def ava-placeholder-user); size=xs|sm|md|lg|xl (def md)
 **Tokens:** corner-radius.full, system.border-soft, stroke.thin  — class per token: see Token vocabulary
 **Files:** 1/41 shipped — ONLY these variants have files: ava-placeholder-user. NEVER reference files for the others.
+**Reference:** `reference/components/avatar.html` · `reference/gallery.html#avatar`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/asset-01-avatar.json`
 
 ## asset-02 — OptionMenu  _(foundation)_
 Action illustration icons for the DropdownMenu(OptionMenus) and ContentBlock(OptionMenus) layouts. 24 variants covering HR workflow actions: email, consent, import, export, reporting, and finance operations. Each is a 64×64px illustration icon.
 **Props:** type=send-email|manual-consent|share-link|import-contract|import-candidate|import-job|import-resources|compose-email|generate-resume|import-candidate-cv|import-cv-letter|import-certificate-and-license|import-profile-images|import-video-cv|import-restricted-files|uploaded-zip-rar|report-extend|report-join|report-exit|claim|incentive|payroll|salary|empty-data (def empty-data)
 **Files:** 24/24 shipped — every variant has a real file.
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-02-option-menu.json`
 
 ## asset-03 — CharacterExpression  _(foundation)_
 Mascot character illustrations expressing emotions. 40 variants across 14 emotion categories. Used in empty states, loading screens, confirmations, and modal body (ModalContent). Each is a 128×128px illustration.
 **Props:** type=think-1|think-2|think-3|tutor-1|tutor-2|tutor-3|calm-1|calm-2|no-idea-1|no-idea-2|info-1|info-2|hidden-1|hidden-2|success-1|success-2|success-3|love-1|love-2|love-3|surprise-1|surprise-2|surprise-3|sorry-1|sorry-2|confuse-1|confuse-2|confuse-3|no-1|no-2|no-3|no-4|mindful-1|mindful-2|search-1|search-2|other-time|other-photo|other-sleep|other-sstt (def info-1)
 **Files:** 40/40 shipped — every variant has a real file.
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-03-character-expression.json`
 
 ## asset-04 — AnimatedIllustration  _(foundation)_
@@ -43,6 +46,7 @@ GIF animation illustrations for loading states, redirects, and process feedback.
 **Props:** type=GIF-comment|GIF-animation-resume|GIF-animation-fetch-data|GIF-animation-choose-candidate|GIF-animation-task-completed|GIF-animation-data-collection|GIF-animation-multi-factor-authentication|GIF-animation-redirecting-2|GIF-animation-change-password|GIF-animation-link-has-expired|GIF-animation-reset-password|GIF-animation-redirecting-1|GIF-animation-loading|GIF-animation-magic-wand (def GIF-animation-loading)
 **Tokens:** neutral.pure-white  — class per token: see Token vocabulary
 **Files:** 0/14 shipped — catalog names only (no asset files exist for this set); NEVER reference files for it.
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-04-animated-illustration.json`
 
 ## asset-05 — ComplexIllustration  _(foundation)_
@@ -50,24 +54,28 @@ Larger full-scene illustration assets. 2 variants: document-preview (used in doc
 **Props:** type=document-preview|privacy-policy (def document-preview)
 **Tokens:** neutral.pure-white  — class per token: see Token vocabulary
 **Files:** 0/2 shipped — catalog names only (no asset files exist for this set); NEVER reference files for it.
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-05-complex-illustration.json`
 
 ## asset-06 — Icon (Tabler)  _(foundation)_
 Primary icon library. 272 Tabler icons at 24×24px. Stroke-based vectors — color is set by the parent element's fill/color, not the icon itself. Used across all UI components (buttons, inputs, table rows, menus, etc.).
 **Props:** name=address-book|adjustments|alarm|alarm-plus|alert-circle|alert-triangle|align-center|align-justified|align-left|align-right|app-window|arrow-autofit-content|arrow-autofit-height|arrow-autofit-width|arrow-back-up|arrow-bar-left|arrow-bar-right|arrow-forward-up|arrow-left|arrow-right|atom|backpack|ban|bell|bell-ringing|bell-school|binoculars|bold|bolt|book|book-2|bookmark|bookmark-filled|border-radius|border-sides|box-margin|box-padding|brand-facebook|brand-instagram|brand-linkedin|brand-tailwind|brand-x|briefcase|briefcase-2|browser|building|building-factory-2|building-skyscraper|cake|calculator|calendar-check|calendar-clock|calendar-event|calendar-month|calendar-plus|calendar-repeat|calendar-search|calendar-star|calendar-user|calendar-week|camera|car|carambola|caret-down|cash|category|certificate|certificate-2|chart-bar-popular|checks|chevron-down|chevron-left|chevron-right|chevron-up|chevrons-left|chevrons-right|circle-check-filled|circle-check-outlined|circle-filled|circle-filled-2|circle-outlined|circle-plus|circle-plus-filled|circle-x|clipboard-check|clipboard-list|clipboard-text|clock|clock-12|clock-24|clock-exclamation|clock-play|clock-plus|cloud-upload|color-swatch|columns|contract|copy|copy-check|copy-minus|copy-plus|copy-x|cpu|database|device-floppy|device-laptop|devices|devices-pin|door-exit|dots-vertical|download|edit|engine|external-link|eye|eye-closed|eye-off|file-arrow-right|file-certificate|file-cv|file-database|file-description|file-dollar|file-download|file-info|file-like|file-pencil|file-search|file-smile|file-spreadsheet|file-symlink|file-text-spark|file-upload|filter-search|first-aid-kit|flag|folder-open|friends|gift|gift-card|grip-horizontal|grip-vertical|hand-stop|heart-handshake|help-square-rounded|help-square-rounded-filled|hexagon-plus|hexagon-plus-filled|hexagons|history|home|hourglass-high|icons|id|id-badge-2|indent-decrease|indent-increase|info-circle-filled|info-circle-outlined|italic|language|layout|layout-board|layout-grid|layout-grid-add|layout-list|layout-rows|layout-sidebar-left-expand|layout-sidebar-right-expand|link|list|list-check|list-details|list-numbers|lock|login-2|logout|mail|mail-plus|man|map-2|map-pin|maximize|menu-2|message-plus|minimize|minus|mood-spark|numbers|package-export|package-import|pencil|pencil-plus|pencil-search|phone|phone-plus|phone-spark|pin-end|pin-invoke|player-pause|player-pause-filled|player-play|player-play-filled|player-stop|player-stop-filled|plus|printer|puzzle|puzzle-2|refresh|replace|report-money|report-search|rocket|ruler-measure|school|script|search|send-2|server-spark|settings-2|share|smart-home|sort-ascending|sort-ascending-letters|sort-descending|sort-descending-letters|sparkles|speakerphone|square|square-check|square-minus|stopwatch|table|table-options|tag|template|text-grammar|timezone|tool|traffic-cone|transfer-in|transfer-out|trash|trophy|typeface|typography|underline|unlink|upload|urgent|user-bolt|user-check|user-cog|user-heart|user-plus|user-scan|user-search|user-share|user-square-rounded|user-star|user-up|users-group|users-plus|video|vocabulary|volume|wallet|wash-dry-shade|woman|world|x (def search); color:string (def inherit); size:number (def 24)
 **Files:** none needed — icons render from `@iconify-json/tabler` as `i-tabler-<name>` classes (prepend your repo's Tailwind prefix if it has one, e.g. `tw-i-tabler-<name>`).
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-06-icon-tabler.json`
 
 ## asset-07 — Icon (Tabler Extended)  _(foundation)_
 Extended Tabler icon set. 100 additional icons not in the primary set. Same 24×24px format and stroke-based rendering as Icon(Tabler). Both sets together form the complete icon library.
 **Props:** name=adjustments-horizontal|archive|arrow-down|arrow-merge|arrow-merge-alt-left|arrow-merge-alt-right|arrow-up|arrows-maximize|arrows-minimize|at|blend-mode|box|bug|building-bank|building-store|caret-up|cash-minus|cash-plus|check|chevrons-down|chevrons-up|circle-half|credit-card|credit-card-pay|credit-card-refund|database-search|device-desktop|device-imac|directions|exchange-filled|exchange-outlined|exclamation-circle|file-plus|forms|health-recognition|hearts|inbox|key|layers-intersect|layout-bottombar-collapse-filled|layout-bottombar-collapse-outlined|layout-navbar-collapse-filled|layout-navbar-collapse-outlined|layout-sidebar-left-collapse-filled|layout-sidebar-right-collapse-filled|license|lifebuoy|logout-2|mail-share|mailbox|mailbox-off|message|message-circle|message-reply|messages|moneybag-minus|moneybag-plus|mood-happy|mood-kid|mood-plus|mood-smile|news|page-break|paperclip|phone-outgoing|pin-filled|pin-outlined|pinned-filled|pinned-off|pinned-outlined|qrcode|receipt|receipt-tax|rubber-stamp|scan|shield|shield-check|shield-lock|signature|sitemap|status-change|stethoscope|sticker|tags|thumb-down-filled|thumb-down-outlined|thumb-up-filled|thumb-up-outlined|toggle-left|toggle-right|user-edit|versions-filled|versions-outlined|writing-sign|writing|photo-up|video-plus|arrows-sort|filter|mail-check (def filter); color:string (def inherit); size:number (def 24)
 **Files:** none needed — icons render from `@iconify-json/tabler` as `i-tabler-<name>` classes (prepend your repo's Tailwind prefix if it has one, e.g. `tw-i-tabler-<name>`).
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-07-icon-tabler-extended.json`
 
 ## asset-08 — Icon (Custom)  _(foundation)_
 Custom-designed icons specific to Elabram. 94 variants across 7 groups: navigation icons (default + active states), system status icons, social media brand icons, country flags, file type icons, and folder icons. 24×24px SVG format.
 **Props:** name=dashboard|crm-computer|briefcase|users-alt|user-bag|file-invoice|money-check-edit|garage|to-do-alt|chart-user|people-poll|envelope-bulk|document-gear|table-list|file-import|file-export|bars-progress|chart-tree-map|hand-holding-box|convert-document|cv|chart-pie-simple-circle-currency|book-bookmark|bell|bell-notification-social-media|file-edit|dashboard-active|crm-computer-active|briefcase-active|users-alt-active|user-bag-active|file-invoice-active|money-check-edit-active|garage-active|to-do-alt-active|chart-user-active|people-poll-active|envelope-bulk-active|document-gear-active|table-list-active|file-import-active|file-export-active|bars-progress-active|chart-tree-map-active|hand-holding-box-active|convert-document-active|cv-active|chart-pie-simple-circle-currency-active|book-bookmark-active|bell-active|bell-notification-social-media-active|file-edit-active|system-success|system-warning|system-error|system-info|system-wait-1|system-wait-2|social-linkedin|social-facebook|social-instagram|social-x|social-youtube|social-tiktok|social-link|image-placeholder|loading|artificial-intelligence|google-calendar|flag-id|flag-my|flag-th|flag-ph|filetype-pdf|filetype-png|filetype-jpg|filetype-jpeg|filetype-doc|filetype-xls|filetype-zip|filetype-rar|filetype-audio|filetype-video|file-folder-1|file-folder-2|file-folder-3|file-documents|file-images|file-videos|file-audios|file-zipper|folder-zip-rar-1|folder-zip-rar-2|matching (def dashboard); isActive:boolean (def false)
 **Files:** 35/94 shipped — ONLY these variants have files: system-success, system-warning, system-error, system-info, system-wait-1, system-wait-2, social-linkedin, social-facebook, social-instagram, social-x, social-youtube, social-tiktok, social-link, image-placeholder, loading, artificial-intelligence, filetype-pdf, filetype-png, filetype-jpg, filetype-jpeg, filetype-doc, filetype-xls, filetype-zip, filetype-rar, filetype-audio, filetype-video, file-folder-1, file-folder-2, file-folder-3, file-documents, file-images, file-videos, file-audios, file-zipper, matching. NEVER reference files for the others.
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-08-icon-custom.json`
 
 ## asset-09 — Logo  _(foundation)_
@@ -75,264 +83,308 @@ Client/company logo placeholder set. 10 variants (logo-1 to logo-10) representin
 **Props:** type=logo-1|logo-2|logo-3|logo-4|logo-5|logo-6|logo-7|logo-8|logo-9|logo-10 (def logo-1)
 **Tokens:** corner-radius.md  — class per token: see Token vocabulary
 **Files:** 0/10 shipped — catalog names only (no asset files exist for this set); NEVER reference files for it.
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/asset-09-logo.json`
 
 ## atom-01 — Button  _(atomic)_
 Primary interactive element for triggering actions. Supports five visual styles and three states.
 **Props:** type=Filled|Outlined|Tonal|Elevated|Ghost (def Filled); state=Default|Hover|Disabled (def Default); label:string (def Button); hasIconLeft:boolean (def false); hasIconRight:boolean (def false)
 **Tokens:** corner-radius.md, spacing.standard.sm, spacing.standard.lg, text-styles.bold.body-md, brand.brand, neutral.pure-white, component.button-hover, neutral.muted, system.text-mute, stroke.thin, brand.brand-surface-soft, system.border-medium, component.button-tonal, component.button-tonal-hover, shadow.Base  — class per token: see Token vocabulary
+**Reference:** `reference/components/button.html` · `reference/gallery.html#button`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-01-button.json`
 
 ## atom-02 — IconButton  _(atomic)_
 Square button that contains only an icon. Same styles as Button but no label.
 **Props:** type=Filled|Outlined|Tonal|Elevated|Ghost (def Filled); state=Default|Hover|Disabled (def Default); icon:string (def edit)
 **Tokens:** corner-radius.md, spacing.standard.sm, brand.brand, neutral.pure-white, component.button-hover, system.text-mute, stroke.thin, brand.brand-surface-soft, component.button-tonal, component.button-tonal-hover, shadow.Base  — class per token: see Token vocabulary
+**Reference:** `reference/components/icon-button.html` · `reference/gallery.html#icon-button`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-02-icon-button.json`
 
 ## atom-03 — SplitButton  _(atomic)_
 Two-part button: primary action (left) + dropdown trigger (right). 2px gap between parts.
 **Props:** type=Filled|Outlined|Tonal (def Filled); state=Default|Hover|Disabled (def Default); label:string (def Action); dropdownItems:array (def )
 **Tokens:** spacing.standard.3xs, brand.brand, neutral.pure-white, component.button-hover, neutral.muted, system.text-mute, stroke.thin, component.button-tonal  — class per token: see Token vocabulary
+**Reference:** `reference/components/split-button.html` · `reference/gallery.html#split-button`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-03-split-button.json`
 
 ## atom-04 — CustomButton  _(atomic)_
 Neutral low-emphasis button for navigation and breadcrumb. No brand color — uses system surface. Turns muted gray on hover.
 **Props:** state=Default|Hover (def Default); label:string (def Label); hasIconLeft:boolean (def false); hasIconRight:boolean (def false)
 **Tokens:** corner-radius.md, spacing.standard.sm, spacing.standard.lg, text-styles.bold.body-md, system.surface-strong, system.text-body, neutral.muted, system.text-head  — class per token: see Token vocabulary
+**Reference:** `reference/components/custom-button.html` · `reference/gallery.html#custom-button`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-04-custom-button.json`
 
 ## atom-05 — Chip  _(atomic)_
 Compact label for tags, filters, selections. Three styles (Neutral/Colored/Gradient), three sizes (MD/SM/CC). Full-radius pill.
 **Props:** style=Neutral|Colored|Gradient (def Neutral); type=MD-1|MD-2|SM-1|SM-2|CC (def MD-1); label:string (def Label); hasIconLeft:boolean (def false); hasIconRight:boolean (def false); count:number (def null)
 **Tokens:** corner-radius.full, system.surface-strong, system.border-strong, stroke.thin, system.text-head, system.text-body, spacing.standard.xxs, spacing.standard.lg, text-styles.bold.body-md, spacing.standard.3xs, spacing.standard.sm, text-styles.bold.label-sm, brand.brand-surface-soft, brand.brand, brand.brand-strong, neutral.pure-white, shadow.Base, spacing.standard.none  — class per token: see Token vocabulary
+**Reference:** `reference/components/chip.html` · `reference/gallery.html#chip` · `reference/pages/chip.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-05-chip.json`
 
 ## atom-06 — StatusChip  _(atomic)_
 Read-only status indicator. Semantic color presets per status. Not interactive.
 **Props:** type=Default|Brand|Success|Warning|Error|Info|Sem-Teal|Sem-Lime|Sem-Indigo|Sem-Yellow|Black (def Default); label:string (def Status)
 **Tokens:** corner-radius.full, spacing.standard.xxs, spacing.standard.lg, stroke.thin, text-styles.bold.body-md, system.surface-strong, system.border-strong, system.text-head, brand.brand-surface-soft, brand.brand, brand.brand-strong, semantic.success-surface-soft, semantic.success, semantic.success-strong, semantic.warning-surface-soft, semantic.warning, semantic.warning-strong, semantic.error-surface-soft, semantic.error, semantic.error-strong, semantic.info-surface-soft, semantic.info, semantic.info-strong, semantic.sem-teal-surface-soft, semantic.sem-teal, semantic.sem-teal-strong, semantic.sem-lime-surface-soft, semantic.sem-lime, semantic.sem-lime-strong, semantic.sem-indigo-surface-soft, semantic.sem-indigo, semantic.sem-indigo-strong, semantic.sem-yellow-surface-soft, semantic.sem-yellow, semantic.sem-yellow-strong, neutral.pure-black, neutral.pure-white  — class per token: see Token vocabulary
+**Reference:** `reference/components/status-chip.html` · `reference/gallery.html#status-chip`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-06-status-chip.json`
 
 ## atom-07 — Toast  _(atomic)_
 Transient notification overlay. Semantic status types × three visual styles. Auto-dismisses.
 **Props:** style=Filled|Outlined|Others (def Filled); type=Success|Warning|Error|Info|Wait|Brand|Basic (def Success); title:string (def Notification Title); description:string (def null); hasAction:boolean (def false); actionLabel:string (def Undo); isDismissible:boolean (def true); duration:number (def 4000)
 **Tokens:** corner-radius.lg, spacing.standard.sm, spacing.standard.lg, stroke.thin, semantic.success-surface-soft, semantic.success, semantic.error-surface-soft, semantic.error, semantic.warning-surface-soft, semantic.warning, semantic.info-surface-soft, semantic.info, brand.brand-surface-soft, brand.brand, neutral.pure-white, shadow.Smooth, system.surface-strong, shadow.Base  — class per token: see Token vocabulary
+**Reference:** `reference/components/toast.html` · `reference/gallery.html#toast` · `reference/pages/toast.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-07-toast.json`
 
 ## atom-08 — Input  _(atomic)_
 General-purpose single-line text input. Covers Basic, Search, Password, Number, DatePicker, Dropdown. Single and Multi value modes.
 **Props:** type=Basic|Search|SearchWithIcon|Password|PasswordShow|Number|Special|DatePicker|Dropdown (def Basic); state=Inactive|Active Single|Active Multi (def Inactive); label:string (def Label); placeholder:string (def Placeholder); helperText:string (def null); isRequired:boolean (def false); isDisabled:boolean (def false); isError:boolean (def false); errorText:string (def Error message)
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, corner-radius.md, spacing.standard.sm, spacing.standard.lg, text-styles.regular.body-md, system.text-head, system.text-mute, system.text-body, spacing.standard.xxs, brand.brand, shadow.State-Focus, semantic.error, shadow.State-Error, neutral.muted, system.border-strong  — class per token: see Token vocabulary
+**Reference:** `reference/components/input.html` · `reference/gallery.html#input` · `reference/pages/input.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-08-input.json`
 
 ## atom-09 — Textarea  _(atomic)_
 Multi-line text input. Same state tokens as Input. Built on FormInputField.
 **Props:** state=Inactive|Active|Focus|Error|Disabled (def Inactive); label:string (def Label); placeholder:string (def Write something...); rows:number (def 4); maxLength:number (def null); showCharCount:boolean (def false); isResizable:boolean (def true); helperText:string (def null); errorText:string (def Error message)
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, corner-radius.md, spacing.standard.sm, spacing.standard.lg, text-styles.regular.body-md, system.text-head, system.text-mute, system.text-body, brand.brand, shadow.State-Focus, semantic.error, shadow.State-Error, neutral.muted, system.border-strong  — class per token: see Token vocabulary
+**Reference:** `reference/components/textarea.html` · `reference/gallery.html#textarea`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-09-textarea.json`
 
 ## atom-10 — RichTextEditor  _(atomic)_
 WYSIWYG editor with formatting toolbar. For email composition, cover letters, and formatted long-form content.
 **Props:** state=Inactive|Active|Focus|Error|Disabled (def Inactive); label:string (def Label); placeholder:string (def Write something...); toolbarActions:array (def bold,italic,underline,bulletList,numberedList,link); minHeight:number (def 160); isRequired:boolean (def false); errorText:string (def Error message)
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, corner-radius.md, spacing.standard.sm, spacing.standard.lg, text-styles.regular.body-md, system.text-head, system.text-mute, system.surface-soft, system.text-body, brand.brand, shadow.State-Focus, semantic.error, shadow.State-Error, neutral.muted, system.border-strong  — class per token: see Token vocabulary
+**Reference:** `reference/gallery.html#rich-text-editor` · `reference/pages/rich-text-editor.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-10-rich-text-editor.json`
 
 ## atom-11 — FormInputField  _(atomic)_
 Reusable field shell used inside Input, Textarea, RichTextEditor. Handles background, border, radius, padding for Single and Multi layouts.
 **Props:** type=Single|Multi (def Single); state=Inactive|Active|Focus|Error|Disabled (def Inactive)
 **Tokens:** spacing.standard.xxs, neutral.pure-white, system.border-soft, stroke.thin, corner-radius.md, spacing.standard.sm, spacing.standard.lg, brand.brand, shadow.State-Focus, semantic.error, shadow.State-Error, neutral.muted, system.border-strong  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/atom-11-form-input-field.json`
 
 ## atom-12 — FormControl  _(atomic)_
 Selection controls: Checkbox, Radio, Switch. Each has Enabled/Disabled states and Selected/Unselected/Indeterminate values.
 **Props:** type=CheckboxVertical|CheckboxHorizontal|RadioVertical|RadioHorizontal|Switch (def CheckboxVertical); state=Enabled|Disabled (def Enabled); checked:boolean (def false); indeterminate:boolean (def false); label:string (def Option)
 **Tokens:** spacing.standard.sm, text-styles.regular.body-md, system.text-head, brand.brand, system.text-mute, neutral.pure-white, shadow.Base, spacing.standard.3xs, neutral.muted  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/atom-12-form-control.json`
 
 ## atom-13 — RangeSlider  _(atomic)_
 Dual-handle range input for selecting a min–max numeric range.
 **Props:** state=Enabled|Disabled (def Enabled); min:number (def 0); max:number (def 100); valueMin:number (def 10); valueMax:number (def 90); step:number (def 1); showLabels:boolean (def true)
 **Tokens:** neutral.muted, brand.brand, text-styles.bold.label-sm, system.text-head, system.text-mute  — class per token: see Token vocabulary
+**Reference:** `reference/gallery.html#range-slider` · `reference/pages/range-slider.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-13-range-slider.json`
 
 ## atom-14 — Breadcrumb  _(atomic)_
 Horizontal navigation trail from root to current page. Built by composing CustomButton items separated by chevron separators.
 **Props:** type=Basic|Brand (def Basic); items:array (def [object Object],[object Object],[object Object]); maxVisible:number (def null)
 **Tokens:** system.text-mute, spacing.standard.none, system.surface-strong, neutral.muted, system.text-body, system.text-head, corner-radius.md, spacing.standard.sm, spacing.standard.lg, text-styles.bold.body-md, component.button-tonal, brand.brand  — class per token: see Token vocabulary
+**Reference:** `reference/components/breadcrumb.html` · `reference/gallery.html#breadcrumb`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-14-breadcrumb.json`
 
 ## atom-15 — DropdownMenu  _(atomic)_
 Floating menu panel triggered by button or right-click. Five layout types.
 **Props:** type=MenuGeneral|DropdownList|DropdownListGrouped|MenuCheckbox|MenuExtended (def MenuGeneral); items:array (def [object Object],[object Object]); isOpen:boolean (def false); placement=bottom-start|bottom-end|top-start|top-end|right-start|left-start (def bottom-start); maxHeight:number (def 320)
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, corner-radius.lg, spacing.standard.xxs, spacing.standard.none, shadow.Smooth, spacing.standard.sm, spacing.standard.md, corner-radius.md, system.text-head, text-styles.bold.body-md, system.text-body, system.surface-soft, system.text-mute, semantic.error, text-styles.bold.label-sm  — class per token: see Token vocabulary
+**Reference:** `reference/components/dropdown-menu.html` · `reference/gallery.html#dropdown-menu` · `reference/pages/dropdown-menu.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-15-dropdown-menu.json`
 
 ## atom-16 — Tabs  _(atomic)_
 Horizontal tab navigation. Two styles: Basic (pill in container) and Underline (borderless with bottom indicator). Text-only, icon-only, or icon+text items.
 **Props:** type=BasicTextOnly|BasicIconOnly|BasicIconAndText|UnderlineTextOnly|UnderlineIconOnly|UnderlineIconAndText (def BasicTextOnly); activeIndex:number (def 0); items:array (def [object Object],[object Object],[object Object])
 **Tokens:** spacing.standard.sm, spacing.standard.md, text-styles.bold.body-md, neutral.muted, corner-radius.lg, spacing.standard.3xs, neutral.pure-white, system.text-body, system.text-head, corner-radius.md, spacing.standard.none, brand.brand, system.border-strong, stroke.thin, system.text-mute, corner-radius.none  — class per token: see Token vocabulary
+**Reference:** `reference/components/tabs.html` · `reference/gallery.html#tabs` · `reference/pages/tabs.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/atom-16-tabs.json`
 
 ## composite-01 — InfoBlock  _(advanced)_
 Flexible data display unit. 10 types covering: section titles, icon+body text, icon+body+action, multi-value rich content, label+small body, and experience layout. Used extensively as the building block inside CandidateCard, FilterField, NotificationCard, and CandidateInfoBlock.
 **Props:** type=TitleMD|BodyMD|BodyMDRichSingle1Text|BodyMDRichSingle1Chip|BodyMDRichSingle2|BodyMDRichMulti|BodyMDPlusAction|BodyMDPlusCounter|BodySMPlusLabel|Experience (def BodyMD)
 **Tokens:** spacing.standard.sm, system.text-body, text-styles.bold.title-md, system.text-head, system.surface-strong, system.border-strong, corner-radius.full, text-styles.bold.body-sm, system.text-mute, text-styles.regular.body-md, text-styles.regular.body-sm, text-styles.bold.label-sm, text-styles.regular.label-sm, spacing.standard.3xs  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-01-info-block.json`
 
 ## composite-02 — ContentBlock  _(advanced)_
 Surface-soft row block pattern for filter panels and lists. 8 types: menu with arrow, accordion (open/closed), option menus with avatar, toggle fields (checkbox list), applied filters chip list, displayed filters, and option menus big.
 **Props:** type=MenuWithArrow|AccordionOpen|AccordionClose|OptionMenus|OptionMenusBig|ToggleFields|AppliedFilters|DisplayedFilters (def MenuWithArrow)
 **Tokens:** system.surface-soft, system.border-soft, stroke.thin, corner-radius.md, spacing.standard.sm, spacing.standard.lg, text-styles.regular.body-md, system.text-head, neutral.pure-white, system.surface-strong, corner-radius.full, text-styles.regular.body-sm, system.text-body, brand.brand-surface-soft, brand.brand  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-02-content-block.json`
 
 ## composite-03 — QuickSuggest  _(advanced)_
 Horizontal row of pre-defined suggestion chips shown below a filter field input. Lets users quickly select common filter values without typing. Always embedded inside FilterField.
 **Props:** type=Default (def Default); suggestions:array (def Suggestion 1,Suggestion 2,Suggestion 3)
 **Tokens:** spacing.standard.xxs  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-03-quick-suggest.json`
 
 ## composite-04 — FilterField  _(advanced)_
 Individual filter row inside FilterPanel. 5 types: General (text/dropdown input + checkbox list + suggestions), Date (date picker variant), Phone (phone input), MaxMin (two side-by-side inputs), Slider (RangeSlider). All share white background with soft border.
 **Props:** type=General|Date|Phone|MaxMin|Slider (def General); label:string (def Filter Name); icon:string (def null)
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, spacing.standard.lg, spacing.standard.xxl, spacing.standard.sm  — class per token: see Token vocabulary
+**Reference:** `reference/components/filter-field.html` · `reference/gallery.html#filter-field`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/composite-04-filter-field.json`
 
 ## composite-05 — FileUpload  _(advanced)_
 File upload area for 5 document types: CV, Photo, Document, Sheet, Archive. Each type has Default (empty dropzone) and Uploaded (showing preview + file info) states. Dropzone uses brand.brand dashed border; uploaded preview uses surface-strong background.
 **Props:** fileType=CV|Photo|Document|Sheet|Archive (def CV); state=Default|Uploaded (def Default); fileName:string (def null); fileSize:string (def null); isRequired:boolean (def false); maxSizeMB:number (def 5); acceptedFormats:array (def .pdf,.doc,.docx)
 **Tokens:** neutral.pure-white, brand.brand, stroke.thin, corner-radius.md, spacing.standard.3xl, spacing.standard.xxl, system.surface-strong, spacing.standard.lg, shadow.Base, system.border-soft, spacing.standard.sm  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-05-file-upload.json`
 
 ## composite-06 — CandidateInfoBlock  _(advanced)_
 Data display block for candidate profile fields inside a Panel. 5 types: SingleValue (label + one value + action icon), MultiValue (label + chip array), Grouped (surface-strong card with multiple InfoBlocks), Experience (timeline row with company/role/duration), SingleMulti (label + multiple single-value rows).
 **Props:** type=SingleValue|MultiValue|Grouped|Experience|SingleMulti (def SingleValue); label:string (def Field Label); value:string|array (def Field Value)
 **Tokens:** spacing.standard.lg, text-styles.bold.body-md, system.text-mute, text-styles.regular.body-md, system.text-head, system.surface-strong, corner-radius.md, spacing.standard.xxl, spacing.standard.xs, text-styles.bold.body-sm, text-styles.regular.label-sm, system.text-body  — class per token: see Token vocabulary
+**Reference:** `reference/components/candidate-info-block.html` · `reference/gallery.html#candidate-info-block`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/composite-06-candidate-info-block.json`
 
 ## composite-07 — FilterPanel  _(advanced)_
 Complete vertical filter drawer composing multiple FilterField rows. Has a sticky header (search/title), a scrollable body of FilterField rows, and a sticky footer with Clear and Apply buttons.
 **Props:** type=Default (def Default); filters:array (def ); activeFilters:object (def [object Object]); onApply:function; onClear:function
 **Tokens:** corner-radius.lg, neutral.pure-white, system.border-soft, stroke.thin, spacing.standard.lg, spacing.standard.xxl, spacing.standard.none, spacing.standard.sm, system.surface-soft, system.border-strong  — class per token: see Token vocabulary
+**Reference:** `reference/components/filter-panel.html` · `reference/gallery.html#filter-panel`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/composite-07-filter-panel.json`
 
 ## composite-08 — CandidateCard  _(advanced)_
 Candidate summary card for list views. Shows avatar, name, headline, key info rows (location, salary, experience), status chips, and action buttons. Uses Shadow/Smooth for card elevation.
 **Props:** type=Default|Example (def Default); candidateId:string (def null); isSelected:boolean (def false); hoverActions:boolean (def false)
 **Tokens:** neutral.pure-white, system.border-strong, stroke.thin, corner-radius.md, spacing.standard.lg, spacing.standard.xxl, shadow.Smooth, system.border-soft, brand.brand-surface-soft, brand.brand  — class per token: see Token vocabulary
+**Reference:** `reference/components/candidate-card.html` · `reference/gallery.html#candidate-card`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/composite-08-candidate-card.json`
 
 ## composite-09 — ResumeCard  _(advanced)_
 Resume template selection card. Shows a visual preview thumbnail, template name, and owner. Hover state reveals action buttons (preview, select, more). Used inside the Resume Template Panel.
 **Props:** type=Default|Example|DefaultOnHover|ExampleOnHover|Default2|DefaultOnHover2 (def Default); templateId:string (def null); title:string (def Template Name); owner:string (def Owner Name); isSelected:boolean (def false)
 **Tokens:** neutral.pure-white, system.border-strong, stroke.thin, corner-radius.md, spacing.standard.lg, shadow.Smooth, system.surface-strong, component.button-tonal, spacing.standard.sm, corner-radius.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-09-resume-card.json`
 
 ## composite-10 — ConsentToast  _(advanced)_
 Domain-specific toast for data consent notifications. Three copywriting variants with different messaging. Copywriting 1 & 2 use Warning style; Copywriting 3 uses Error style. Built on top of Toast(Filled). Includes action buttons for consent response.
 **Props:** type=Copywriting1|Copywriting2|Copywriting3 (def Copywriting1)
 **Tokens:** corner-radius.lg, spacing.standard.sm, spacing.standard.lg, stroke.thin, semantic.warning-surface-soft, semantic.warning, semantic.error-surface-soft, semantic.error  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-10-consent-toast.json`
 
 ## composite-11 — NotificationCard  _(advanced)_
 Individual notification row in the NotificationList. Three states: Default (white), Hover1 (header highlighted), Hover2 (detail highlighted). Each row has a summary header and an expandable detail section.
 **Props:** state=Default|Hover1|Hover2 (def Default); isRead:boolean (def false); isExpanded:boolean (def false)
 **Tokens:** system.border-soft, stroke.thin, spacing.standard.sm, spacing.standard.lg, spacing.standard.md, neutral.pure-white, system.surface-medium  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-11-notification-card.json`
 
 ## composite-12 — NotificationList  _(advanced)_
 Complete notification feed panel. Sticky header with title and mark-all-read action. Scrollable list of NotificationCard rows.
 **Props:** type=Default (def Default); notifications:array (def ); unreadCount:number (def 0); onMarkAllRead:function
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, spacing.standard.sm, spacing.standard.lg, text-styles.bold.body-md, system.text-head  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-12-notification-list.json`
 
 ## composite-13 — DocumentGallery  _(advanced)_
 Multi-page document preview gallery. Shows all pages of a resume/document as a vertical stack of white page cards. Four template styles: ModernProfessional, CreativePortfolio, FreshGraduate, ExampleOfPrivacyPolicy.
 **Props:** type=ModernProfessional|CreativePortfolio|FreshGraduate|ExampleOfPrivacyPolicy (def ModernProfessional); pages:number (def 3)
 **Tokens:** neutral.pure-white, spacing.standard.3xl, spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-13-document-gallery.json`
 
 ## composite-14 — EmbedViewer  _(advanced)_
 Dark-theme embedded viewer for VideoPlayer and DocumentViewer. Uses the component.embed-* token set (dark gray UI). Includes a top control bar, a canvas area, and playback/navigation controls.
 **Props:** type=VideoPlayer|DocumentViewer (def VideoPlayer); src:string (def null); title:string (def null)
 **Tokens:** component.embed-topbar, component.embed-text, component.embed-text-mute, component.embed-separator, component.embed-canvas, component.embed-darken  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-14-embed-viewer.json`
 
 ## composite-15 — WhatsAppChat  _(advanced)_
 WhatsApp-style chat interface for consent communication. Three variants: Default (generic chat), ConsentRecruiterPOV (recruiter sending consent request), ConsentCandidatePOV (candidate receiving consent). Uses social.social-white background with system border.
 **Props:** type=Default|ConsentRecruiterPOV|ConsentCandidatePOV (def Default); messages:array (def )
 **Tokens:** socials.social-white, system.border-strong, stroke.thin, corner-radius.md, text-styles.regular.body-sm, system.text-head, neutral.pure-white  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-15-whatsapp-chat.json`
 
 ## composite-16 — InteractiveFlow  _(advanced)_
 Multi-step interactive overlay flows for complex operations. 26 variants covering: AI Generate Text (6 steps), Consent Share Link (4 steps), Salary (Edit/Default), Half/Full Address, Email Carbon Copy (2 steps), Generate CV in PDF (3 steps), Sync Candidate Data (4 steps), Notification Filter (2 steps). Each variant is a Modal-like overlay with step-specific content.
 **Props:** type=AIGenerateText1|AIGenerateText2|AIGenerateText3|AIGenerateText4|AIGenerateText5|AIGenerateText6|ConsentShareLink1|ConsentShareLink2|ConsentShareLink3|ConsentShareLink4|SalaryDefault|SalaryEdit|HalfAddress|FullAddress|EmailCarbonCopy1|EmailCarbonCopy2|GenerateCVInPDF1|GenerateCVInPDF2|GenerateCVInPDF3|SyncCandidateData1|SyncCandidateData2|SyncCandidateData3|SyncCandidateData4|NotificationFilter1|NotificationFilter2 (def AIGenerateText1); isOpen:boolean (def false); step:number (def 1)
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, corner-radius.lg, shadow.2XL, spacing.standard.xl, spacing.standard.xxl, spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/composite-16-interactive-flow.json`
 
 ## layout-01 — AppBar  _(basic)_
 Top navigation bar. Fixed at the top of every page. Contains the logo, navigation menu items, user avatar, and notification icon. Two variants: DefaultUser (logged-in user's own session) and OtherUser (viewing as another user).
 **Props:** type=DefaultUser|OtherUser (def DefaultUser)
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, spacing.standard.lg, spacing.standard.md  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/layout-01-app-bar.json`
 
 ## layout-02 — Sidebar  _(basic)_
 Vertical navigation rail on the left side. Default state shows icon-only menu items. Hover state expands to show icon + label. Uses dark theme (component.sidebar-background) inside a near-black outer shell.
 **Props:** state=Default|Hover (def Default)
 **Tokens:** neutral.pure-black, spacing.standard.xs, component.sidebar-background, corner-radius.md, spacing.standard.xxs, spacing.standard.sm, spacing.standard.md, component.sidebar-active  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/layout-02-sidebar.json`
 
 ## layout-03 — Pagination  _(basic)_
 Page navigation bar for paginated data. Default shows row count, page buttons, and items-per-page selector. Compact shows only count and prev/next.
 **Props:** type=Default|Compact (def Default); currentPage:number (def 1); totalPages:number (def 10); totalItems:number (def 999); itemsPerPage:number (def 9); itemsPerPageOptions:array (def 9,25,50,100)
 **Tokens:** system.surface-strong, system.border-soft, stroke.thin, spacing.standard.xxl, text-styles.regular.body-md, system.text-head, brand.brand, neutral.pure-white, corner-radius.md  — class per token: see Token vocabulary
+**Reference:** `reference/components/pagination.html` · `reference/gallery.html#pagination`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/layout-03-pagination.json`
 
 ## layout-04 — ScrollBar  _(basic)_
 Custom scrollbar overlay for scrollable containers. Vertical and horizontal variants. Track uses system border color; thumb uses white with Smooth shadow for lift effect.
 **Props:** type=Vertical|Horizontal (def Vertical)
 **Tokens:** system.border-soft, corner-radius.full, neutral.pure-white, shadow.Smooth  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/layout-04-scroll-bar.json`
 
 ## layout-05 — Panel  _(basic)_
 Slide-in side panel that displays detailed content alongside the main view. Two layout types: SingleCard (one full-width content card) and MultiCard (grid of cards in the body). Composed of PanelSection parts (header, body, footer).
 **Props:** type=SingleCard|MultiCard (def SingleCard); title:string (def Panel Title); isOpen:boolean (def false); width:number (def 480)
 **Tokens:** system.border-strong, stroke.thin, neutral.pure-white, system.border-soft, spacing.standard.xl, spacing.standard.xxl, spacing.standard.sm, text-styles.bold.title-md, system.text-head, system.surface-strong, spacing.standard.lg, corner-radius.md  — class per token: see Token vocabulary
+**Reference:** `reference/components/panel.html` · `reference/gallery.html#panel`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/layout-05-panel.json`
 
 ## layout-06 — PanelSection  _(basic)_
 Individual section zones of a Panel or DataTable: header, sub-header, footer, document viewer header, video player bar, text editor bar. Used as building blocks inside Panel and DataTable.
 **Props:** type=HeaderTitle|HeaderOption|SubHeader|FooterDefault|HeaderDocViewer|BarVideoPlayer|TextEditor (def HeaderTitle)
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, spacing.standard.xl, spacing.standard.xxl, spacing.standard.sm, text-styles.bold.title-md, system.text-head, spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** `reference/components/panel-section.html` · `reference/gallery.html#panel-section`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/layout-06-panel-section.json`
 
 ## layout-07 — Modal  _(basic)_
 Full-screen overlay dialog for critical actions and confirmations. Two types: System (body has surface-strong background with white card inside) and Browser (body is plain white — used for document/file content).
 **Props:** type=DefaultSystem|ExampleSystem|DefaultBrowser|ExampleBrowser (def DefaultSystem); title:string (def Modal Title); isOpen:boolean (def false); size=sm|md|lg|fullscreen (def md); hasBackdrop:boolean (def true)
 **Tokens:** corner-radius.none, shadow.2XL, neutral.pure-white, system.border-soft, stroke.thin, spacing.standard.xl, spacing.standard.xxl, spacing.standard.sm, text-styles.bold.title-md, system.text-head, system.surface-strong, spacing.standard.lg, corner-radius.md  — class per token: see Token vocabulary
+**Reference:** `reference/components/modal.html` · `reference/gallery.html#modal`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/layout-07-modal.json`
 
 ## layout-08 — ModalContent  _(basic)_
 Content slot patterns for the Modal body. Five types cover: Default (text + illustration), Form (inputs + controls + table), ListCard (selectable items), FileCard (document items with actions), FileContentOnly (file list).
 **Props:** type=Default|Form|ListCard|FileCard|FileContentOnly (def Default)
 **Tokens:** spacing.standard.lg, neutral.pure-white, system.border-soft, stroke.thin, corner-radius.md, spacing.standard.sm, text-styles.regular.body-md, system.text-head, text-styles.regular.body-sm, system.text-mute, system.surface-strong, corner-radius.full, spacing.standard.xs  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/layout-08-modal-content.json`
 
 ## layout-09 — DataTable  _(basic)_
 Full data table composed of TableColumn headers, TableRow rows, ScrollBar for horizontal scroll, and Pagination footer. ReplaceMe variant is the empty template; Candidates is a pre-filled example.
 **Props:** type=ReplaceMe|Candidates (def ReplaceMe); columns:array (def ); rows:array (def ); isLoading:boolean (def false); isEmpty:boolean (def false); selectedRows:array (def ); sortColumn:string (def null); sortDirection=asc|desc (def asc)
 **Tokens:** system.surface-strong, system.border-soft, spacing.standard.sm, neutral.pure-white, system.surface-soft, brand.brand-surface-soft, stroke.thin  — class per token: see Token vocabulary
+**Reference:** `reference/components/data-table.html` · `reference/gallery.html#data-table` · `reference/pages/data-table.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/layout-09-data-table.json`
 
 ## layout-10 — TableColumn  _(basic)_
 Header cell pattern for DataTable columns. 11 types covering: title-only, sortable title, checkbox select-all, inline search, inline select, date picker, and the ReplaceMe slot. All share surface-strong background with border.
 **Props:** type=OnlyTitle|TitleAndSort|WithSubtitle|OnlyCheckbox|TitleWithIcon1|TitleWithIcon2|FullSearch|FullSearchWithIcon|FullSelect|FullDatePicker|ReplaceMe (def OnlyTitle); label:string (def Column); width:number (def 160); isSorted:boolean (def false); sortDir=asc|desc|none (def none)
-**Tokens:** system.surface-strong, system.border-soft, stroke.thin, spacing.standard.sm, text-styles.bold.body-md, system.text-head, brand.brand-surface-soft, brand.brand, corner-radius.md  — class per token: see Token vocabulary
+**Tokens:** spacing.standard.sm, spacing.standard.md, system.surface-strong, system.border-soft, stroke.thin, text-styles.bold.body-md, system.text-head, brand.brand-surface-soft, brand.brand, corner-radius.md  — class per token: see Token vocabulary
+**Reference:** `reference/components/table-column.html` · `reference/gallery.html#table-column` · `reference/pages/table-column.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/layout-10-table-column.json`
 
 ## layout-11 — TableRow  _(basic)_
 Data row cell pattern for DataTable. 17 types covering: text, links, multi-text, chips, status chips, action buttons, checkboxes, photos, indicators, currency, and the ReplaceMe slot. All share white background with soft border.
 **Props:** type=TextOnly|TextLink|TextMulti|TextMultiLink|TextIndicator|TextCurrency1|TextCurrency2|ChipStatus|ChipMulti|ActionIcons|ActionDropdown|OnlyCheckbox|OnlyPhoto|ChooseBox|ChooseRadio|EmptyValue|ReplaceMe (def TextOnly); value:string|number|array (def Value); isHovered:boolean (def false); isSelected:boolean (def false)
 **Tokens:** neutral.pure-white, system.surface-soft, brand.brand-surface-soft, system.border-soft, stroke.thin, spacing.standard.md, spacing.standard.xl, text-styles.regular.body-md, system.text-head, system.text-mute, brand.brand, corner-radius.md, spacing.standard.sm, spacing.standard.xxs  — class per token: see Token vocabulary
+**Reference:** `reference/components/table-row.html` · `reference/gallery.html#table-row` · `reference/pages/table-row.html`  — copy the structure and class names from here; it is token-pure and spec-true.
 **Spec:** `src/components/layout-11-table-row.json`
 
 ## page-01 — Sample Pages 1 — Candidate Pipeline  _()_
@@ -387,69 +439,81 @@ Same employment detail side panel as page-11, showing an in-review contract (V1 
 Panel body content for the filter block panel. Contains a search input at the top, followed by filter category sections. Slots directly into Panel(SingleCard) body — no background/padding of its own.
 **Props:** type=FilterBlockContent (def FilterBlockContent); searchQuery:string (def ); filterSections:array (def )
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-01-filter-block-panel.json`
 
 ## panel-02 — ActionPanel  _(panel-content)_
 Panel body content for quick-action forms. Two states: Filled (form has data) and Unfilled (empty initial state). Contains stacked form inputs. Domain use: bulk actions, quick-edit, batch assignment on candidate records.
 **Props:** type=Filled|Unfilled (def Unfilled); fields:array (def )
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-02-action-panel.json`
 
 ## panel-03 — CandidateDetailsPanel  _(panel-content)_
 The main candidate detail panel body. 8 variants covering the candidate tabs: Profile, Interview, Comment, and History sub-tabs (MH/CA/CH/LA/JA). Each variant shows a different view of the candidate's data using CandidateInfoBlock, Timeline entries, and note/comment sections.
 **Props:** type=Profile|Interview|Comment|HistoryMH|HistoryCA|HistoryCH|HistoryLA|HistoryJA (def Profile); candidateId:string (def null)
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-03-candidate-details-panel.json`
 
 ## panel-04 — ResumeTemplatePanel  _(panel-content)_
 Panel body content for browsing and selecting resume templates. Three variants: PublicTemplate (community templates), MyTemplate (user's own), PrebuiltTemplate (system defaults). Contains a ResumeCard grid and action buttons.
 **Props:** type=PublicTemplate|MyTemplate|PrebuiltTemplate (def PrebuiltTemplate); templates:array (def )
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-04-resume-template-panel.json`
 
 ## panel-05 — ResumeBuilderPanel  _(panel-content)_
 Panel body content for the resume builder editor. 25 variants covering all resume section editors: Home (default view), Personal Information, Working Experience (collapse/expand), Formal Education (collapse/expand), Skills, Courses, Achievements, Additional Information, and a Design Tab for template/style customization. Two-column layout: left navigation + right editor.
 **Props:** type=HomeDefault|PersonalInformation|WorkingExperienceCollapse|WorkingExperienceExpand|FormalEducationCollapse|FormalEducationExpand|Skills|SkillsPlaceholder|SkillsToggle|Course|CoursePlaceholder|CourseToggle|Achievement|AchievementPlaceholder|AchievementToggle|AdditionalInformation|AdditionalInformationPlaceholder|AdditionalInformationToggle|DesignTab (def HomeDefault); resumeId:string (def null)
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-05-resume-builder-panel.json`
 
 ## panel-06 — ConsentRequestPanel  _(panel-content)_
 Panel body content for sending consent requests. 4 variants: ManualConsent (checkbox acknowledgment + textarea), SendEmail (email form + attachment), RequestConsent1 and RequestConsent2 (different consent request flows). Contains form inputs, file upload, and consent controls.
 **Props:** type=ManualConsent|SendEmail|RequestConsent1|RequestConsent2 (def ManualConsent); candidateName:string (def null)
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-06-consent-request-panel.json`
 
 ## panel-07 — SmartContentPanel  _(panel-content)_
 AI-powered content generation panel body. 4-step flow: SelectClient → ChooseOptions → ComposeEmail → GenerateResume. Each step shows relevant controls with progress feedback. Uses Toast(Filled) for AI generation status.
 **Props:** type=SelectClient|ChooseOptions|ComposeEmail|GenerateResume (def SelectClient)
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-07-smart-content-panel.json`
 
 ## panel-08 — ConsentInfoPanel  _(panel-content)_
 Panel body content showing consent status and history. 21 variants combining: consent method (ShareLink/ManualUpload/SendEmail) × status (Accepted/Pending/Declined) × tab (Details/Events/ProofOfConsent). Shows consent timeline, status details, and proof documentation.
 **Props:** method=ShareLink|ManualUpload|SendEmail (def SendEmail); status=Accepted|Pending|Declined (def Pending); tab=Details|Events|ProofOfConsent (def Details)
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-08-consent-info-panel.json`
 
 ## panel-09 — ReferencePanel  _(panel-content)_
 Panel body content for viewing candidate reference letters. Two states: Read (letter has been opened) and Unread (not yet viewed). Shows the reference letter document viewer on the left and metadata/actions on the right.
 **Props:** type=Read|Unread (def Unread); referenceId:string (def null)
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-09-reference-panel.json`
 
 ## panel-10 — FileInfoPanel  _(panel-content)_
 Panel body content for file management actions. 3 variants: FileHistory (shows version history), EditTag (tag editor for a file), LinkTo (links a file to a job/candidate). Each shows relevant file info and action controls.
 **Props:** type=FileHistoryWithData|EditTagWithData|LinkToWithData (def FileHistoryWithData); fileId:string (def null)
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-10-file-info-panel.json`
 
 ## panel-11 — WorkflowPanel  _(panel-content)_
 Panel body content for candidate workflow/pipeline management. Shows the candidate's current status in the recruitment workflow, stage history, and available workflow actions. Uses Toast for important stage alerts.
 **Props:** type=Default (def Default); candidateId:string (def null)
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-11-workflow-panel.json`
 
 ## panel-12 — NotificationPanel  _(panel-content)_
 Panel body content for the notification/activity feed. Shows activity grouped by category: General, Jobs, Contract, Invoice, Payroll. Each category section is a collapsible group of activity items.
 **Props:** type=Default (def Default); categories:array (def General,Jobs,Contract,Invoice,Payroll); activities:object (def [object Object])
 **Tokens:** spacing.standard.lg  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-12-notification-panel.json`
 

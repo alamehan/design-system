@@ -4,20 +4,40 @@
 
 .cp-page { border: var(--stroke-thin) solid var(--color-system-border-soft); border-radius: var(--radius-md); background: var(--color-system-surface-soft); padding: var(--space-xxl); }
 .cp-pagehead { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-lg); margin-bottom: var(--space-lg); flex-wrap: wrap; }
-.cp-title { font-size: 20px; font-weight: 700; margin: 0; color: var(--color-system-text-head); }
-.cp-sub { font-size: 13px; color: var(--color-system-text-mute); margin: 2px 0 0; }
+.cp-title { font-size: 22px; line-height: 28px; font-weight: 700; margin: 0; color: var(--color-system-text-head); }  /* = ts-bold-title-lg */
+.cp-sub { font-size: 14px; line-height: 20px; color: var(--color-system-text-mute); margin: 2px 0 0; }  /* = ts-regular-body-md */
 .cp-actions { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
 
 .cp-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-lg); }
-.cp-metric { background: var(--color-neutral-pure-white); border: var(--stroke-thin) solid var(--color-system-border-soft); border-radius: var(--radius-md); padding: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-xs); align-items: flex-start; }
-.cp-metric__icon { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: var(--color-brand-brand-surface-soft); color: var(--color-brand-brand); }
-.cp-metric__value { font-size: 24px; font-weight: 700; color: var(--color-system-text-head); }
-.cp-metric__label { font-size: 12.5px; color: var(--color-system-text-mute); }
+/* KPI card. Two rows on a shared baseline grid rather than four left-aligned items of
+   four different sizes stacked on top of each other — the icon and the trend chip anchor
+   the top row, the number and its label read as one block underneath. */
+.cp-metric {
+  background: var(--color-neutral-pure-white);
+  border: var(--stroke-thin) solid var(--color-system-border-soft);
+  border-radius: var(--radius-md);
+  padding: var(--space-xxl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+.cp-metric__top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
+.cp-metric__icon {
+  width: 36px; height: 36px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--color-brand-brand-surface-soft);
+  color: var(--color-brand-brand);
+  font-size: 1.15em;
+}
+.cp-metric__body { display: flex; flex-direction: column; gap: var(--space-3xs); min-width: 0; }
+.cp-metric__value { font-size: 22px; line-height: 28px; font-weight: 700; color: var(--color-system-text-head); }  /* = ts-bold-title-lg */
+.cp-metric__label { font-size: 12px; line-height: 16px; color: var(--color-system-text-mute); }  /* = ts-regular-body-sm */
 
 /* the white card — tables, forms and empty states always live inside one */
 .es-card { background: var(--color-neutral-pure-white); border: var(--stroke-thin) solid var(--color-system-border-soft); border-radius: var(--radius-md); overflow: hidden; }
 .es-card__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg); padding: var(--space-lg); border-bottom: var(--stroke-thin) solid var(--color-system-border-soft); flex-wrap: wrap; }
-.es-card__title { font-size: 15px; font-weight: 700; margin: 0; color: var(--color-system-text-head); }
+.es-card__title { font-size: 16px; line-height: 24px; font-weight: 700; margin: 0; color: var(--color-system-text-head); }  /* = ts-bold-body-lg */
 .es-card__tools { display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
 .es-card__body { padding: var(--space-lg); }
 .es-card__foot { display: flex; justify-content: flex-end; gap: var(--space-sm); padding: var(--space-lg); border-top: var(--stroke-thin) solid var(--color-system-border-soft); }
@@ -26,7 +46,14 @@
 .cp-search { display: inline-flex; align-items: center; gap: var(--space-xs); border: var(--stroke-thin) solid var(--color-system-border-soft); border-radius: var(--radius-md); padding: var(--space-xs) var(--space-sm); color: var(--color-system-text-mute); background: var(--color-neutral-pure-white); min-width: 200px; }
 
 /* rows-per-page control (table footer, next to pagination) */
-.es-rpp { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-system-text-mute); }
+/* Footer order is count (left) · pagination (CENTRE) · rows-per-page (right).
+   Paging is the frequent action, so it owns the optical centre; rows-per-page is a
+   set-once control and belongs out of the way on the trailing edge. */
+.es-pg--tablefoot { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-lg); }
+.es-pg--tablefoot .es-pg__count { justify-self: start; }
+.es-pg--tablefoot .es-pg__pages { justify-self: center; }
+.es-pg--tablefoot .es-rpp { justify-self: end; }
+.es-rpp { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-system-text-mute); flex-wrap: wrap; justify-content: flex-end; }
 .es-rpp__btn { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 28px; border: var(--stroke-thin) solid var(--color-system-border-soft); background: var(--color-neutral-pure-white); border-radius: var(--radius-md); color: var(--color-system-text-body); cursor: pointer; }
 .es-rpp__btn:hover:not(.is-active) { background: var(--color-system-surface-soft); }
 .es-rpp__btn.is-active { background: var(--color-brand-brand); border-color: var(--color-brand-brand); color: var(--color-neutral-pure-white); }
@@ -75,4 +102,4 @@
 .cp-empty__img--lg { width: 128px; }
 .cp-modal__icon { width: 32px; height: 32px; flex: none; }
 .cp-modal__head { display: flex; align-items: flex-start; gap: var(--space-lg); }
-.cp-metric__trend { align-self: flex-start; margin-top: var(--space-3xs); }
+.cp-metric__trend { flex: none; }

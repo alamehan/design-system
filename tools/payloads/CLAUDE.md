@@ -2,7 +2,7 @@
 
 **Bootstrap chain (read in this order):**
 1. This file (repo profile + golden rules).
-2. `design-system/CLAUDE.md` — universal design-system laws (§0–§4).
+2. `design-system/CLAUDE.md` — universal design-system laws (§0–§5).
 3. `design-system/catalog/INDEX.md` → only the `catalog/components/<code>.md` you need.
 4. `.ds/bindings.md` — spec → THIS repo's components/classes. Trust it, and heal it (§4 Self-Healing Map Law).
 

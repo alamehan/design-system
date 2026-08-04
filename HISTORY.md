@@ -249,3 +249,46 @@ resolved to. It cannot tell you that the rule you meant to write was never match
 place, because the element still has *a* computed style — the default one. Law #2 holds, and it
 is narrower than it looks: the on-screen stamp proves you are looking at the right build, and
 then a person still has to look.
+
+
+---
+
+## v3.4.4 — the gate that only existed in a changelog
+
+The v3.4.2 release notes contain this line:
+
+> Mandatory visual audit gate: headless-Chromium computed-style checks on the reference gallery
+> before packaging.
+
+There was no such script. Not in `src/scripts/`, not in `tools/`, not in `ship.js`, not as a
+dependency. The sentence was written, believed, and then relied upon — and the release that
+carried it shipped a reference tier in which every `width:100%` field overflowed its container
+by 26px, because nothing in `reference/` had ever set `box-sizing: border-box`.
+
+That is a worse failure than an absent gate. An absent gate leaves people careful. A gate that
+exists only in prose makes them relaxed about the exact thing it claimed to cover.
+
+The script is written now, and the box model is the reason it had to be. `content-box` is the
+browser default; `border-box` is what Tailwind preflight gives the product. The reference had
+been rendering in one and documenting the other, which means every measurement anybody had ever
+taken off `gallery.html` was taken in the wrong model. No stylesheet linter can see this: each
+rule resolves exactly as written. Only a layout engine knows the box came out 26px too wide.
+
+Two smaller lessons, both worth more than they look.
+
+**A detector that cannot fail its own test case is not a detector.** The first version of the
+invisible-but-clickable check tested `getComputedStyle(el).opacity` on each control. Opacity does
+not inherit — it composites — so a button inside a container at `opacity: 0` reports its own
+opacity as `1`. The check ran clean against the exact CandidateCard bug it had been written for.
+It was only caught because the bug was deliberately reintroduced to watch the gate go red, and it
+did not. Every gate in this repository is now negative-tested that way before it is trusted; a
+gate that has never been seen to fail is a green light of unknown wattage.
+
+**The catalog never told anyone the reference existed.** `catalog/components/atom-16.md` gave an
+AI agent the tokens and the path to the spec JSON and stopped. It never mentioned
+`reference/components/tabs.html` — a pixel-accurate, token-pure, spec-true implementation sitting
+in the same repository, under a heading that describes itself as "the visual truth for all
+components". The grounding chain was one link short of the thing it was grounding on, for
+sixty-four components, for four minor versions. Every catalog entry now carries a `Reference:`
+line, and the thirty-eight specs with no render say so explicitly, because "none yet" is an
+instruction too.

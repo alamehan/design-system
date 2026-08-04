@@ -1,4 +1,5 @@
 ## panel-05 — ResumeBuilderPanel  _(panel-content)_
 Panel body content for the resume builder editor. 25 variants covering all resume section editors: Home (default view), Personal Information, Working Experience (collapse/expand), Formal Education (collapse/expand), Skills, Courses, Achievements, Additional Information, and a Design Tab for template/style customization. Two-column layout: left navigation + right editor.
 **Props:** type=HomeDefault|PersonalInformation|WorkingExperienceCollapse|WorkingExperienceExpand|FormalEducationCollapse|FormalEducationExpand|Skills|SkillsPlaceholder|SkillsToggle|Course|CoursePlaceholder|CourseToggle|Achievement|AchievementPlaceholder|AchievementToggle|AdditionalInformation|AdditionalInformationPlaceholder|AdditionalInformationToggle|DesignTab (def HomeDefault); resumeId:string (def null)
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/panel-05-resume-builder-panel.json`

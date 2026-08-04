@@ -1,6 +1,6 @@
 # Adoption report
 
-_Generated 2026-08-04 against design system v3.4.3. Read from committed `.ds/manifest.json` files — no telemetry._
+_Generated 2026-08-04 against design system v3.4.4. Read from committed `.ds/manifest.json` files — no telemetry._
 
 > No repositories are listed in `.release/adoption.config.json` yet, so the counts below are all zero.
 > Add git URLs to `repos` and run this again.

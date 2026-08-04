@@ -9,6 +9,7 @@
  *   3. stamp-reference.js  single-source the version stamp into reference/
  *   4. lint-reference.js   reference integrity: token purity, fonts, icons, class/asset/var resolution
  *   4b. lint-typography.js  reference sizes match the spec JSONs
+ *   4c. visual-audit.py     renders every reference file and checks overflow / ghosts / fonts / ramp
  *   5. validate-pages.py   page specs: refs resolve, geometry present
  *   6. build-wizard.js     bundle tools/dashboard/ -> tools/ds-setup.cjs
  *   7. contract-check.js   refuse breaking changes without a MAJOR + alias
@@ -28,6 +29,7 @@ const steps = [
   ["Stamp reference files", "node src/scripts/stamp-reference.js"],
   ["Lint reference (integrity)", "node src/scripts/lint-reference.js"],
   ["Lint typography (spec conformance)", "node src/scripts/lint-typography.js"],
+  ["Visual audit (headless Chromium)", "python3 src/scripts/visual-audit.py"],
   ["Validate page specs", "python3 src/scripts/validate-pages.py"],
   ["Bundle dashboard", "node tools/build-wizard.js"],
   ["Contract check (regression gate)", "node src/scripts/contract-check.js"],

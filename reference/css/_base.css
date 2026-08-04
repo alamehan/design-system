@@ -1,11 +1,33 @@
-/* Reference gallery scaffolding only — NOT part of the design system. */
+/* Reference gallery scaffolding — NOT part of the design system, EXCEPT the box-model
+   contract below, which is. */
+
+/* ------------------------------------------------------------------------------------
+   BOX MODEL CONTRACT — border-box.
+   Until v3.4.3 nothing in reference/ ever set this, so the whole tier rendered in the
+   browser default `content-box` while the first adopter (portal-nuxt) runs Tailwind
+   preflight, which resets everything to `border-box`. Two consequences, both bad:
+     1. every `width: 100%` element with padding overflowed its container by exactly
+        (padding-x * 2 + border * 2) — 26px for an .es-field__box. That is the
+        "mencong / overflow" seen across the inline table filters.
+     2. every measurement a designer took off the reference was taken in a box model
+        the product does not use, so the reference was not the visual truth it claims
+        to be.
+   The design system assumes border-box. Say so, and set it.
+   ------------------------------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+/* Form controls do NOT inherit typography from their ancestors by UA default — a <button> with
+   no explicit font renders in 13.33px Arial no matter what the page is set to. Tailwind
+   preflight resets this in the product; the reference must match or it renders a different
+   typeface from the thing it documents. */
+button, input, select, textarea { font: inherit; color: inherit; }
+
 body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--color-system-text-head); background: var(--color-neutral-pure-white, #fff); }
 .ref-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
 .ref-col { display: flex; flex-direction: column; gap: 12px; margin: 12px 0; }
 .ref-section { padding: 20px 0; border-bottom: 1px solid var(--color-system-border-soft); }
-.ref-h { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
-.ref-sub { font-size: 13px; color: var(--color-system-text-mute); margin: 0 0 12px; }
-.ref-stamp { font-size: 12px; opacity: .7; }
+.ref-h { font-size: 18px; font-weight: 700; line-height: 24px; margin: 0 0 4px; }  /* = ts-bold-title-md */
+.ref-sub { font-size: 12px; line-height: 16px; color: var(--color-system-text-mute); margin: 0 0 12px; }  /* = ts-regular-body-sm */
+.ref-stamp { font-size: 12px; line-height: 16px; opacity: .7; }  /* = ts-regular-body-sm */
 
 /* Shared icon box. Replaces the repeated inline `width:1em;height:1em;flex:none`.
    `display:block` is the part that matters: an inline <svg> rests on the text baseline and

@@ -2,4 +2,5 @@
 Selection controls: Checkbox, Radio, Switch. Each has Enabled/Disabled states and Selected/Unselected/Indeterminate values.
 **Props:** type=CheckboxVertical|CheckboxHorizontal|RadioVertical|RadioHorizontal|Switch (def CheckboxVertical); state=Enabled|Disabled (def Enabled); checked:boolean (def false); indeterminate:boolean (def false); label:string (def Option)
 **Tokens:** spacing.standard.sm, text-styles.regular.body-md, system.text-head, brand.brand, system.text-mute, neutral.pure-white, shadow.Base, spacing.standard.3xs, neutral.muted  — class per token: see Token vocabulary
+**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
 **Spec:** `src/components/atom-12-form-control.json`

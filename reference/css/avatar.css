@@ -1,4 +1,7 @@
-/* asset-01 Avatar — image (src, e.g. shipped ava-*.svg) or initials fallback. Full radius + soft border per spec.
+/* Initials sit on the type ramp in px, not on an em fraction of whatever the caller happens to
+   be. `0.625em` resolved to 10px — a size that does not exist in foundations. The avatar box is
+   already fixed px, so its label should be too.
+   asset-01 Avatar — image (src, e.g. shipped ava-*.svg) or initials fallback. Full radius + soft border per spec.
    Source of truth: src/components/asset-01*.json · token-pure CSS (vars only). */
 
 .es-avatar {
@@ -13,8 +16,8 @@
   color: var(--color-brand-brand-strong);
 }
 .es-avatar__img { width: 100%; height: 100%; object-fit: cover; }
-.es-avatar--xs { width: 24px; height: 24px; font-size: 0.625em; }
-.es-avatar--sm { width: 32px; height: 32px; font-size: 0.75em; }
-.es-avatar--md { width: 40px; height: 40px; }
-.es-avatar--lg { width: 48px; height: 48px; font-size: 1.125em; }
-.es-avatar--xl { width: 64px; height: 64px; font-size: 1.375em; }
+.es-avatar--xs { width: 24px; height: 24px; font-size: 11px; line-height: 16px; }   /* ramp: label-sm */
+.es-avatar--sm { width: 32px; height: 32px; font-size: 12px; line-height: 16px; }   /* ramp: body-sm  */
+.es-avatar--md { width: 40px; height: 40px; font-size: 14px; line-height: 20px; }   /* ramp: body-md  */
+.es-avatar--lg { width: 48px; height: 48px; font-size: 18px; line-height: 24px; }   /* ramp: title-md */
+.es-avatar--xl { width: 64px; height: 64px; font-size: 22px; line-height: 28px; }   /* ramp: title-lg */

@@ -4,6 +4,40 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
+## 3.4.4 — 2026-08-04
+
+**Nothing in `reference/` ever set `box-sizing`. The whole tier rendered in a box model the product does not use.**
+
+### Fixed — the box model
+- **`*, *::before, *::after { box-sizing: border-box }` was never declared anywhere in the reference tier**, so every file rendered in the browser default `content-box` while the first adopter (portal-nuxt) runs Tailwind preflight, which is `border-box`. Two consequences: every `width: 100%` element with padding overflowed its container by exactly padding-x×2 + border×2 — **26px for an `.es-field__box`**, which is the visible skew across all inline table filters — and every measurement taken off the reference was taken in the wrong box model, so the reference was not the visual truth it claims to be.
+- **`button, input, select, textarea { font: inherit; color: inherit }` was also missing.** A `<button>` with no explicit font renders in 13.33px Arial regardless of the page; one sort-button label in `components/data-table.html` was doing exactly that. Preflight resets this in the product; the reference now matches.
+- `.es-field` and `.es-field__box` gained `min-width: 0`. A flex item defaults to `min-width: auto`, so an `<input>`'s intrinsic ~20ch width became a hard floor and the field burst out of every narrow container — 162px past the FilterField card.
+- `CLAUDE.md` §3 now states the box-model contract, so a consumer repo without a preflight-equivalent reset is told to add one.
+
+### Fixed — the type ramp
+- Five sizes that exist nowhere in `foundations.json` had accumulated: `.cp-title` 20px, `.cp-sub` / `.ref-sub` 13px, `.cp-metric__value` 24px, `.cp-metric__label` 12.5px, `.es-card__title` 15px. All moved onto the 11/12/14/16/18/22 ramp.
+- `.es-avatar--xs` used `font-size: 0.625em`, which resolved to **10px** — a size the design system does not have. All five avatar sizes now carry explicit ramp values, matching their already-fixed px boxes.
+
+### Fixed — reported visually
+- **Sorted column headers turned brand-blue and read as links.** `layout-10` sets `text-color: system.text-head` with no sorted override; sorting accents the indicator, never the label.
+- **The KPI cards were four left-aligned items at four sizes stacked vertically.** Rebuilt as two rows: icon and trend chip anchor the top, number and label read as one block underneath.
+- **Table footer order corrected to count (left) · pagination (CENTRE) · rows-per-page (right)** via `.es-pg--tablefoot`. Paging is the frequent action and owns the optical centre.
+- Every `ReplaceMe` placeholder specimen removed from the TableColumn and TableRow showcases.
+- Gallery scaffolding normalised: 12 headings and 12 captions were using `ts-*` component classes instead of `.ref-h` / `.ref-sub`.
+
+### Added
+- **`composed-05` — data table with every column and cell type in one screen.** Ten header types (checkbox select-all, sortable, sorted, inline filter, inline dropdown, icon, subtitle, numeric-right, sticky) against ten cell types (checkbox, photo/avatar + two-line, text, chips, status, currency-numeric, date, dot indicator, link, action icons). molecule-04 and molecule-05 are now proven in composition, not only as isolated specimens.
+- **`src/scripts/visual-audit.py` — the headless-Chromium gate.** The v3.4.2 notes claimed "mandatory visual audit gate: headless-Chromium computed-style checks on the reference gallery before packaging". **No such script was ever in this repository.** A gate that exists only in a changelog is worse than no gate, because everyone downstream believes the check happened. It is written now, runs in `ship.js`, and checks what static linting structurally cannot: horizontal overflow, invisible-but-hit-testable controls, images that failed to decode, the typeface actually in effect, and rendered font-size against the ramp. Playwright is author-side only — absent, the script **skips loudly** and never reports a pass it did not earn.
+- **`lint-reference.js` GATE 7** — literal `font-size` in reference CSS must sit on the ramp read from `foundations.json`. Catches the same fault without a browser.
+- **Every `catalog/components/<code>.md` now carries a `**Reference:**` line** pointing at its rendered implementation (`reference/components/<id>.html`, the gallery anchor, and the standalone page). Previously an agent grounding on a catalog spec was given its tokens and its JSON path and was never told a pixel-accurate implementation existed — while the gallery calls itself the visual truth for all components. 26 specs link to a real render; 38 say `none yet` explicitly, which is itself an instruction (compose from atoms, do not invent).
+- `CLAUDE.md` gained the type ramp, the box-model contract, the destructive-button rule, the opacity rule, the footer order, and the composed-sample inventory including which one to copy for a non-trivial table.
+
+### Changed — spec
+- **`layout-10` TableColumn `padding` split into `padding-y: spacing.standard.sm` + `padding-x: spacing.standard.md`.** A single `sm` left header labels 2px off the cell gutter beneath them. Closed officially in the spec rather than patched in CSS (HISTORY.md law #4).
+
+### Note on the ghost detector
+The first version of the invisible-but-clickable check did not fire on the very bug it was written for. Opacity does not inherit, it composites: a `<button>` inside a container at `opacity: 0` still reports its own computed opacity as `1`. The check now uses `checkVisibility({opacityProperty: true})` plus an `elementFromPoint` hit-test, and was verified by reintroducing the original fault.
+
 ## 3.4.3 — 2026-08-04
 
 **The reference tier was full of class names that matched no CSS rule. Nothing failed; things just quietly stopped being styled.**
