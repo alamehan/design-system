@@ -26,4 +26,12 @@
   text-align: center;
   color: var(--color-system-text-mute);
 }
-.es-table__footer { border-top: var(--stroke-thin) solid var(--color-system-border-soft); }
+.es-table__footer,
+.es-table__foot { border-top: var(--stroke-thin) solid var(--color-system-border-soft); }
+/* the inline filter row that sits directly under the header row */
+.es-table__table thead tr.es-table__filters .es-col {
+  background: var(--color-neutral-pure-white);
+  padding: var(--space-xs) var(--space-md);
+  white-space: normal;
+}
+/* field shrinking for the inline filter row lives in table-column.css (.es-col__field) */

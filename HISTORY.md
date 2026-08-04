@@ -191,3 +191,61 @@ this release, and every single addition was written *after* a human said "this l
 wrong". A test suite is a memory, not an imagination — so the visual pass is not a
 formality to be automated away, it is the only step that can find something nobody has
 thought of yet.
+
+
+---
+
+## v3.4.3 — the class-name audit
+
+The author opened `gallery.html` and reported six things that looked wrong: pill tabs with no
+background, a CandidateCard whose action button only appeared on hover, three table sections that
+were "berantakan", icons sitting too high next to their labels, an oversized illustration, and a
+red button with black text. Six reports; one cause underneath most of them.
+
+**Every one of those sections referenced a CSS class that did not exist.**
+
+    HTML said                 CSS actually defined
+    es-tabs--pill        ->   .es-tabs--basic
+    es-btn--Fill         ->   .es-btn--Filled
+    es-row               ->   (nothing)
+    es-table__head       ->   (nothing)
+    es-col__label/__sort ->   (nothing)
+    es-status__dot       ->   (nothing)
+    cp-card              ->   (nothing)
+
+A class that matches no rule does not throw, does not warn, and does not appear in a
+token-purity check. It just silently drops a background, a flex container, or a foreground
+colour. The DataTable showcase was a div-flex table whose flex container never existed, so every
+`flex: 1.2` on a child resolved against a plain block parent and the entire tier stacked
+vertically. The red Delete button carried `style="background:var(--color-semantic-error)"` on a
+variant-less button and inherited body colour for its label.
+
+Three lessons, all now gates.
+
+**1. Purity is not conformance.** `lint-reference.js` proved the reference had no hardcoded hex,
+loaded every font it named, and drew every icon from the real Tabler sprite — and passed while
+three sections rendered at 12px against specs that say 14px. Sizes live in the spec JSONs, so
+`lint-typography.js` now reads them and checks the HTML against them.
+
+**2. A gate that only reads one file type has a blind spot the shape of the other one.** GATE 2
+(v3.3.0) exists so a named font is always loaded. It reads `reference/css/*.css`. Eleven files in
+`reference/pages/` set `font-family: var(--font-family-base, sans-serif)` in an inline `<style>`
+block against a variable that has never existed in this repository — and rendered in the system
+font, which is precisely the failure GATE 2 was written to prevent, arriving through the door
+GATE 2 does not watch. GATE 6 now reads the HTML too.
+
+**3. Invisible is not hidden.** `.es-ccard__actions` used `opacity: 0` for a hover-reveal. The
+button stayed in the tab order and stayed clickable the whole time; it simply could not be seen.
+The author read that as "the button doesn't show up", which is the correct reading. Hiding an
+interactive control is a `pointer-events` and focus-management problem, not an opacity problem —
+and in a reference gallery, whose entire job is to show what a component looks like, the resting
+state must be the visible one. The spec was updated alongside the CSS rather than left
+contradicting it.
+
+A fourth observation, worth keeping: the author found all six of these by looking, after a
+release whose own notes recorded "mandatory visual audit gate: headless-Chromium computed-style
+checks on the reference gallery before packaging". A computed-style check confirms what a rule
+resolved to. It cannot tell you that the rule you meant to write was never matched in the first
+place, because the element still has *a* computed style — the default one. Law #2 holds, and it
+is narrower than it looks: the on-screen stamp proves you are looking at the right build, and
+then a person still has to look.

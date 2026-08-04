@@ -7,7 +7,8 @@
  *   1. build.js            compile + validate every token ref + audit assets
  *   2. split-catalog.js    regenerate the AI grounding catalog
  *   3. stamp-reference.js  single-source the version stamp into reference/
- *   4. lint-reference.js   token purity (no hardcoded hex in reference/)
+ *   4. lint-reference.js   reference integrity: token purity, fonts, icons, class/asset/var resolution
+ *   4b. lint-typography.js  reference sizes match the spec JSONs
  *   5. validate-pages.py   page specs: refs resolve, geometry present
  *   6. build-wizard.js     bundle tools/dashboard/ -> tools/ds-setup.cjs
  *   7. contract-check.js   refuse breaking changes without a MAJOR + alias
@@ -25,7 +26,8 @@ const steps = [
   ["Build tokens + specs", "node src/scripts/build.js"],
   ["Split AI catalog", "node src/scripts/split-catalog.js"],
   ["Stamp reference files", "node src/scripts/stamp-reference.js"],
-  ["Lint reference (token purity)", "node src/scripts/lint-reference.js"],
+  ["Lint reference (integrity)", "node src/scripts/lint-reference.js"],
+  ["Lint typography (spec conformance)", "node src/scripts/lint-typography.js"],
   ["Validate page specs", "python3 src/scripts/validate-pages.py"],
   ["Bundle dashboard", "node tools/build-wizard.js"],
   ["Contract check (regression gate)", "node src/scripts/contract-check.js"],

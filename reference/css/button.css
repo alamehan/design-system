@@ -30,7 +30,15 @@
 .es-btn--Ghost { background: transparent; color: var(--color-brand-brand); }
 .es-btn--Ghost:hover:not(:disabled) { background: var(--color-brand-brand-surface-soft); }
 
+/* Destructive. A red surface MUST carry its own foreground: a bare
+   `style="background:var(--color-semantic-error)"` on a variant-less button leaves the text at the
+   inherited body colour (black on red) and fails contrast. Declare resting + hover together. */
+.es-btn--Danger { background: var(--color-semantic-error); color: var(--color-neutral-pure-white); border-color: var(--color-semantic-error); }
+.es-btn--Danger:hover:not(:disabled) { background: var(--color-semantic-error-strong); border-color: var(--color-semantic-error-strong); }
+.es-btn--Danger .es-btn__icon { color: currentColor; }
+
 .es-btn:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+.es-btn svg { display: block; }
 
 .es-btn:disabled {
   cursor: not-allowed;

@@ -21,7 +21,7 @@
    Embedded fonts: Fustat & DM Mono, SIL Open Font License 1.1.
    Embedded icons: Lucide, ISC License.
 
-   Panel v3.2.0  ·  built for design system v3.4.2
+   Panel v3.2.0  ·  built for design system v3.4.3
    ===================================================================== */
 "use strict";
 const http = require("http");
@@ -31,7 +31,7 @@ const fs = require("fs");
 const path = require("path");
 
 const WIZARD_VERSION = "3.2.0";
-const BUILT_FOR_DS = "3.4.2";
+const BUILT_FOR_DS = "3.4.3";
 
 /* ---------------------------------------------------------------- config */
 const SUBMODULE_DIR = "design-system";

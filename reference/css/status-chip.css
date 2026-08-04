@@ -9,6 +9,18 @@
   border-radius: var(--radius-full);
   white-space: nowrap;
 }
+/* Optional leading dot. Undefined until now, so every `<span class="es-status__dot">` in the
+   reference rendered as a zero-size nothing. Inherits the chip's own semantic colour. */
+.es-status { gap: var(--space-sm); }
+.es-status__dot {
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: var(--radius-full);
+  background: currentColor;
+  flex: none;
+}
+.es-status svg { display: block; }
+
 .es-status--Default { background: var(--color-system-surface-strong); border-color: var(--color-system-border-strong); color: var(--color-system-text-head); }
 .es-status--Brand { background: var(--color-brand-brand-surface-soft); border-color: var(--color-brand-brand); color: var(--color-brand-brand-strong); }
 .es-status--Success { background: var(--color-semantic-success-surface-soft); border-color: var(--color-semantic-success); color: var(--color-semantic-success-strong); }

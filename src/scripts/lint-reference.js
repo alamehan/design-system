@@ -6,7 +6,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const DIR = path.resolve(__dirname, "..", "..", "reference", "css");
+const DS_ROOT = path.resolve(__dirname, "..", "..");
+const DIR = path.join(DS_ROOT, "reference", "css");
 const WHITELIST = [/var\(--[^)]+,\s*#fff\)/i]; // documented fallback in _base.css only
 let violations = 0;
 for (const f of fs.readdirSync(DIR).filter((f) => f.endsWith(".css"))) {
@@ -91,6 +92,107 @@ if (handDrawn || externalUse) {
   violations++;
 } else {
   console.log(`\u2705 all icons come from the inlined Tabler sprite (${spriteUsers} file(s))`);
+}
+
+
+/* ------------------------------------------------------------------------
+ * GATE 4 — every class the reference HTML uses must exist in the reference CSS.
+ *
+ * This is the gate that would have caught v3.4.2's worst bug. `es-tabs--pill`,
+ * `es-row`, `es-table__head`, `es-col__label`, `es-col__sort`, `es-status__dot`,
+ * `es-btn--Fill` and `cp-card` were all written into gallery.html while the CSS defined
+ * `--basic`, `.es-cell`, `--Filled` and nothing at all for the rest. A class that resolves
+ * to nothing does not throw, does not warn, and does not show up in a token-purity check —
+ * it just silently drops the background, the flex container or the button colour, and the
+ * whole DataTable tier collapsed into a vertical stack because of it.
+ *
+ * A typo in a class name is the single cheapest way to break the visual truth. Gate it.
+ * ---------------------------------------------------------------------- */
+const cssBlob = fs.readdirSync(DIR).filter((f) => f.endsWith(".css"))
+  .map((f) => fs.readFileSync(path.join(DIR, f), "utf8")).join("\n")
+  + fs.readFileSync(path.join(DS_ROOT, "dist", "variables.css"), "utf8");
+const cssClasses = new Set((cssBlob.match(/\.[A-Za-z0-9_-]+/g) || []).map((c) => c.slice(1)));
+const GATED_PREFIX = /^(es-|cp-|ref-|ts-)/;
+const undef = new Map();
+for (const f of htmlFiles(REF)) {
+  const html = fs.readFileSync(f, "utf8");
+  const rel = path.relative(REF, f);
+  // classes declared in a page's own inline <style> count as defined for that page
+  const local = new Set(((html.match(/<style>[\s\S]*?<\/style>/g) || []).join("\n")
+    .match(/\.[A-Za-z0-9_-]+/g) || []).map((c) => c.slice(1)));
+  for (const attr of html.match(/class="[^"]*"/g) || []) {
+    for (const c of attr.slice(7, -1).split(/\s+/)) {
+      if (!c || !GATED_PREFIX.test(c)) continue;
+      if (cssClasses.has(c) || local.has(c)) continue;
+      if (!undef.has(c)) undef.set(c, new Set());
+      undef.get(c).add(rel);
+    }
+  }
+}
+if (undef.size) {
+  console.log(`\n\u274c ${undef.size} class(es) used in reference/ resolve to no CSS rule:`);
+  for (const [c, files] of [...undef].sort()) console.log(`   .${c}  <- ${[...files].sort().join(", ")}`);
+  console.log("   A class that matches nothing fails silently. Define it, or fix the name.");
+  violations += undef.size;
+} else {
+  console.log("\u2705 every es-/cp-/ref-/ts- class used in reference/ resolves to a CSS rule");
+}
+
+/* ------------------------------------------------------------------------
+ * GATE 5 — every local asset a reference file points at must exist on disk.
+ *
+ * gallery.html and pages/table-row.html referenced `assets/avatars/avatar-1.svg` and
+ * `avatar-2.svg`. Only `ava-placeholder-user.svg` was ever shipped, so both specimens
+ * rendered as broken-image boxes. Over file:// there is no console anyone reads.
+ * ---------------------------------------------------------------------- */
+let brokenAssets = 0;
+for (const f of htmlFiles(REF)) {
+  const html = fs.readFileSync(f, "utf8");
+  for (const m of html.match(/src="[^"]+"/g) || []) {
+    const url = m.slice(5, -1);
+    if (/^(https?:|data:|#)/.test(url)) continue;
+    const target = path.resolve(path.dirname(f), url);
+    if (!fs.existsSync(target)) {
+      console.log(`  \u274c ${path.relative(REF, f)}: src="${url}" does not exist`);
+      brokenAssets++;
+    }
+  }
+}
+if (brokenAssets) { violations += brokenAssets; console.log(`\u274c ${brokenAssets} broken asset reference(s).`); }
+else console.log("\u2705 every local asset referenced by reference/ exists on disk");
+
+/* ------------------------------------------------------------------------
+ * GATE 6 — every var(--…) used anywhere in the reference must resolve.
+ *
+ * `_base.css` asked for `--color-system-text-muted` (the real token is `--color-system-text-mute`)
+ * so every section caption fell back to body colour, and eleven files in reference/pages/ set
+ * `font-family: var(--font-family-base, sans-serif)` against a variable that has never existed —
+ * they rendered in the system font, which is exactly the failure GATE 2 was written to stop.
+ * GATE 2 only reads CSS files; this one reads the HTML too.
+ * ---------------------------------------------------------------------- */
+const tokenNames = new Set((fs.readFileSync(path.join(DS_ROOT, "dist", "variables.css"), "utf8")
+  .match(/--[A-Za-z0-9-]+\s*:/g) || []).map((m) => m.replace(/\s*:$/, "")));
+const localVars = new Set((cssBlob.match(/^\s*(--[A-Za-z0-9-]+)\s*:/gm) || [])
+  .map((m) => m.trim().replace(/\s*:$/, "")));
+const deadVars = new Map();
+const scan = (text, label) => {
+  for (const m of text.match(/var\((--[A-Za-z0-9-]+)/g) || []) {
+    const name = m.slice(4);
+    if (tokenNames.has(name) || localVars.has(name)) continue;
+    if (!deadVars.has(name)) deadVars.set(name, new Set());
+    deadVars.get(name).add(label);
+  }
+};
+for (const f of fs.readdirSync(DIR).filter((f) => f.endsWith(".css")))
+  scan(fs.readFileSync(path.join(DIR, f), "utf8"), "css/" + f);
+for (const f of htmlFiles(REF)) scan(fs.readFileSync(f, "utf8"), path.relative(REF, f));
+if (deadVars.size) {
+  console.log(`\n\u274c ${deadVars.size} var() reference(s) resolve to nothing:`);
+  for (const [v, files] of [...deadVars].sort()) console.log(`   ${v}  <- ${[...files].sort().join(", ")}`);
+  console.log("   A dead var() silently falls back \u2014 to the system font, or to inherited colour.");
+  violations += deadVars.size;
+} else {
+  console.log("\u2705 every var() used in reference/ resolves to a real token");
 }
 
 if (violations) {

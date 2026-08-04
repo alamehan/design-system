@@ -1,8 +1,19 @@
 /* Reference gallery scaffolding only — NOT part of the design system. */
-body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--color-system-text-head); background: var(--color-system-surface-white, #fff); }
+body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--color-system-text-head); background: var(--color-neutral-pure-white, #fff); }
 .ref-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
 .ref-col { display: flex; flex-direction: column; gap: 12px; margin: 12px 0; }
 .ref-section { padding: 20px 0; border-bottom: 1px solid var(--color-system-border-soft); }
 .ref-h { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
-.ref-sub { font-size: 13px; color: var(--color-system-text-muted, inherit); margin: 0 0 12px; }
+.ref-sub { font-size: 13px; color: var(--color-system-text-mute); margin: 0 0 12px; }
 .ref-stamp { font-size: 12px; opacity: .7; }
+
+/* Shared icon box. Replaces the repeated inline `width:1em;height:1em;flex:none`.
+   `display:block` is the part that matters: an inline <svg> rests on the text baseline and
+   reads as sitting too high next to its label. */
+.es-ico { width: 1em; height: 1em; flex: none; display: block; }
+.es-ico--lg { font-size: 1.15em; }
+
+/* a fixed-size demo surface for components that need a viewport (Modal, Panel) */
+.ref-stage { position: relative; height: 420px; overflow: hidden; border: 1px solid var(--color-system-border-soft); border-radius: var(--radius-md); background: var(--color-system-surface-soft); }
+/* variant caption above each specimen */
+.ref-label { font-size: 11px; line-height: 16px; letter-spacing: 0.5px; color: var(--color-system-text-mute); }

@@ -4,10 +4,13 @@
 .es-cell {
   background: var(--color-neutral-pure-white);
   border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
-  padding: var(--space-sm) var(--space-md);
+  /* spec: layout-11 padding-y = spacing.standard.xl (14px), padding-x = spacing.standard.md (10px).
+     Was sm/md — that is where the whole table tier lost its row pitch and read as cramped. */
+  padding: var(--space-xl) var(--space-md);
   color: var(--color-system-text-head);
   vertical-align: middle;
 }
+.es-cell svg { display: block; }
 tr:hover > .es-cell { background: var(--color-system-surface-soft); }
 tr.is-selected > .es-cell { background: var(--color-brand-brand-surface-soft); }
 .es-cell__mute { color: var(--color-system-text-mute); }
@@ -26,6 +29,11 @@ tr.is-selected > .es-cell { background: var(--color-brand-brand-surface-soft); }
 .es-cell__currency { display: flex; align-items: baseline; gap: var(--space-sm); }
 .es-cell__chips { display: inline-flex; flex-wrap: wrap; gap: var(--space-sm); }
 .es-cell__actions { display: inline-flex; align-items: center; gap: var(--space-xxs); }
+.es-cell__inline { display: inline-flex; align-items: center; gap: var(--space-sm); min-width: 0; }
+.es-cell--numeric { text-align: right; font-variant-numeric: tabular-nums; }
+tr.is-hover > .es-cell { background: var(--color-system-surface-soft); }
+tr.is-disabled > .es-cell { color: var(--color-system-text-mute); opacity: 0.55; }
+tr.is-disabled > .es-cell * { pointer-events: none; }
 .es-cell--ActionIcons .es-cell__actions > *,
 .es-cell__actionbtn {
   background: var(--color-neutral-pure-white);

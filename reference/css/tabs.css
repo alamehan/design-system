@@ -1,7 +1,7 @@
 /* atom-16 Tabs — Basic (pill) or Underline. v-model = active index. items: [{label, icon?}].
    Source of truth: src/components/atom-16*.json · token-pure CSS (vars only). */
 
-.es-tabs { display: inline-flex; }
+.es-tabs { display: inline-flex; align-self: flex-start; }
 .es-tabs__tab {
   display: inline-flex;
   align-items: center;
@@ -13,19 +13,24 @@
 }
 .es-tabs__tab:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
 
-/* Basic (pill in a muted container) */
-.es-tabs--basic {
+/* Basic (pill in a muted container).
+   `--pill` is the alias the gallery + pages use for the same variant; the spec prop values are
+   Basic*, so both class names must resolve or the container background silently disappears. */
+.es-tabs--basic,
+.es-tabs--pill {
   gap: var(--space-3xs);
   background: var(--color-neutral-muted);
   border-radius: var(--radius-lg);
   padding: var(--space-3xs);
 }
-.es-tabs--basic .es-tabs__tab {
+.es-tabs--basic .es-tabs__tab,
+.es-tabs--pill .es-tabs__tab {
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
   color: var(--color-system-text-body);
 }
-.es-tabs--basic .es-tabs__tab.is-active { background: var(--color-neutral-pure-white); color: var(--color-system-text-head); }
+.es-tabs--basic .es-tabs__tab.is-active,
+.es-tabs--pill .es-tabs__tab.is-active { background: var(--color-neutral-pure-white); color: var(--color-system-text-head); box-shadow: var(--shadow-Base); }
 
 /* Underline */
 .es-tabs--underline {
@@ -41,6 +46,10 @@
   color: var(--color-system-text-mute);
 }
 .es-tabs--underline .es-tabs__tab.is-active { border-bottom-color: var(--color-brand-brand); color: var(--color-brand-brand); }
+
+/* icon-only pill/basic tabs keep the same optical box as text tabs */
+.es-tabs--basic .es-tabs__tab--icononly,
+.es-tabs--pill .es-tabs__tab--icononly { padding: var(--space-sm) var(--space-md); }
 
 /* v3.4.2 gallery polish */
 .es-tabs__icon { display: inline-flex; align-items: center; justify-content: center; font-size: 1.1em; line-height: 1; }

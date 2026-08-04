@@ -17,3 +17,6 @@
 .es-bc__current { display: inline-flex; padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-md); color: var(--color-system-text-head); }
 .es-bc__current--brand { background: var(--color-component-button-tonal); color: var(--color-brand-brand); }
 .es-bc__sep { display: inline-flex; align-items: center; color: var(--color-system-text-mute); padding: 0 var(--space-xxs); font-size: 1.05em; }
+
+/* the <nav> wrapper — flex lives on __list, but the class must still resolve */
+.es-bc { display: block; }

@@ -5,17 +5,24 @@
   background: var(--color-system-surface-strong);
   border-right: var(--stroke-thin) solid var(--color-system-border-soft);
   border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
-  padding: var(--space-sm);
+  /* spec padding is a single `spacing.standard.sm`; the horizontal side is widened to
+     `md` so header labels sit on the same optical gutter as TableRow cells
+     (layout-11 padding-x = spacing.standard.md). A 2px column offset is visible. */
+  padding: var(--space-sm) var(--space-md);
   color: var(--color-system-text-head);
   text-align: left;
   vertical-align: middle;
   white-space: nowrap;
 }
+/* Every icon inside a header cell is optically centred on the label.
+   A bare inline <svg> sits on the text baseline and reads as "floating too high" —
+   this is why the sort/filter glyphs looked misaligned across the whole table tier. */
+.es-col svg { display: block; }
 .es-col:last-child { border-right: none; }
 .es-col__title { display: flex; align-items: center; gap: var(--space-sm); }
 .es-col__labelwrap { display: inline-flex; flex-direction: column; min-width: 0; }
 .es-col__subtitle { color: var(--color-system-text-mute); }
-.es-col__icon { display: inline-flex; align-items: center; font-size: 1.15em; }
+.es-col__icon { display: inline-flex; align-items: center; justify-content: center; font-size: 1.15em; flex: none; }
 .es-col__center { display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .es-col__checkbox { accent-color: var(--color-brand-brand); cursor: pointer; }
 .es-col__sortbtn {
@@ -30,10 +37,24 @@
   cursor: pointer;
 }
 .es-col__sortbtn:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); border-radius: var(--radius-md); }
-.es-col__sorticon { color: var(--color-system-text-mute); }
+.es-col__sorticon { display: inline-flex; align-items: center; color: var(--color-system-text-mute); flex: none; }
+.es-col.is-sorted .es-col__sorticon,
+.es-col__sortbtn:hover .es-col__sorticon { color: var(--color-brand-brand); }
+.es-col.is-sorted .es-col__sortbtn { color: var(--color-brand-brand); }
+.es-col--numeric { text-align: right; }
+.es-col--numeric .es-col__title,
+.es-col--numeric .es-col__sortbtn { justify-content: flex-end; width: 100%; }
+.es-col--sticky { position: sticky; left: 0; z-index: 1; box-shadow: var(--shadow-SM); }
+/* stacked header: label on top, inline filter/dropdown underneath */
+.es-col--stacked .es-col__title { flex-direction: column; align-items: stretch; gap: var(--space-xs); }
 .es-col__sorticon.is-asc .es-col__sortdown { opacity: 0.35; }
 .es-col__sorticon.is-desc .es-col__sortup { opacity: 0.35; }
-.es-col__field { display: flex; align-items: center; gap: var(--space-sm); }
+.es-col__field { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; width: 100%; }
+/* An <input> brings an intrinsic ~20ch minimum into table auto-layout. Without this the inline
+   filter/dropdown widens its own column and clips its trailing icon. */
+.es-col__field .es-field,
+.es-col__field .es-field__box { width: 100%; min-width: 0; }
+.es-col__field .es-field__input { width: 100%; min-width: 0; }
 .es-col__fieldicon { color: var(--color-system-text-mute); flex-shrink: 0; }
 .es-col__input,
 .es-col__select {

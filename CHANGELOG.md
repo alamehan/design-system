@@ -4,6 +4,39 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
+## 3.4.3 — 2026-08-04
+
+**The reference tier was full of class names that matched no CSS rule. Nothing failed; things just quietly stopped being styled.**
+
+### Fixed — the silent class-name drift
+- **`es-tabs--pill` was never defined** (the rule is `.es-tabs--basic`), so every pill tab lost the `neutral.muted` container the atom-16 spec calls for and rendered as bare text. Both names now resolve.
+- **`.es-row`, `.es-table__head`, `.es-table__filters`, `.es-table__foot`, `.es-col__label`, `.es-col__sort` were never defined.** The DataTable / TableColumn / TableRow showcases were built as div-flex tables against them, so the flex container never existed and every `flex: 1.2` hint on a child did nothing — the whole table tier collapsed into a vertical stack of cells. All three sections are rebuilt on the SAME markup contract as `composed-01`: a real `<table>`, `.es-col` on `<th>`, `.es-cell` on `<td>`.
+- **`es-btn--Fill` was never defined** (the rule is `--Filled`), so the destructive button in the composed samples carried an inline red background with no foreground and painted its label in inherited black-on-red. Added a real **`.es-btn--Danger`** variant that declares resting *and* hover, foreground included.
+- **`.es-status__dot` and `.cp-card` were never defined** — status dots rendered at zero size, and the composed-sample cards rendered as unstyled text blocks.
+- **`--color-system-text-muted` and `--color-system-surface-white` are not tokens** (`--color-system-text-mute` / `--color-neutral-pure-white` are). Every section caption in the gallery fell back to body colour.
+- **Eleven files in `reference/pages/` set `font-family: var(--font-family-base, sans-serif)` against a variable that has never existed** — they rendered in the system font, the exact failure GATE 2 was written to stop in 3.3.0. GATE 2 only reads CSS files; the dead variable was in an inline `<style>` block.
+- **`assets/avatars/avatar-1.svg` and `avatar-2.svg` do not exist** — only `ava-placeholder-user.svg` was ever shipped. Two TableRow specimens were broken-image boxes in `gallery.html` and `pages/table-row.html`.
+
+### Fixed — spec conformance
+- **TableColumn was rendering at `bold.body-sm` and TableRow at `regular.body-sm`.** Both specs say `body-md`. **StatusChip — a single-size component per atom-06 — was appearing at `label-sm` inside tables.** All corrected to the spec.
+- **`.es-cell` padding was `sm / md`; layout-11 says `xl / md`.** Restored, which brings the row back to the 48px pitch measured during the v1.6 benchmark rebuild.
+- 278 inline `style="width:1em;height:1em;flex:none"` icon boxes replaced with a `.es-ico` class that also sets `display: block`. An inline `<svg>` rests on the text baseline and reads as floating above its label — this was the "icons sit too high" complaint across the whole table tier.
+- Inline filter fields no longer blow out their column: an `<input>` carries an intrinsic ~20ch minimum that table auto-layout treats as a hard floor, which pushed the Actions column out of the shell.
+
+### Fixed — CandidateCard actions were invisible but still clickable
+- `.es-ccard__actions` had `opacity: 0` at rest, revealed on hover. A real `<button>` at `opacity: 0` stays clickable and tab-focusable while nobody can see it, and it made the reference tier unreadable — the View profile action looked missing. **Actions are visible by default**; the hover-reveal density is now opt-in via `.es-ccard--hoveractions` (with a `:focus-within` escape so keyboard users never lose a focused control). The composite-08 spec records the change rather than leaving the CSS and the spec disagreeing.
+
+### Fixed — illustrations
+- `composed-04` stood a Tabler glyph inside a grey circle where an illustration belongs. It now uses the real shipped assets: `option-menus/empty-data.svg` and `icons-custom/system-warning.svg`.
+- `.cp-empty__img` was 150px against artwork authored at 64px — a >2× upscale that dominated its own card. Now 96px, with `--lg` at 128px for a full-width empty state.
+
+### Added — four gates, because none of the above could fail loudly
+- **`lint-reference.js` GATE 4** — every `es-`/`cp-`/`ref-`/`ts-` class used in `reference/` must resolve to a CSS rule.
+- **`lint-reference.js` GATE 5** — every local `src="…"` in `reference/` must exist on disk.
+- **`lint-reference.js` GATE 6** — every `var(--…)` used in `reference/`, **HTML included**, must resolve to a real token.
+- **`src/scripts/lint-typography.js`** — the size of a component is spec data, not a per-specimen styling choice. Checks every spec-bound element in `reference/` against the `text-style` token in its spec JSON. Documented scoped density zones (`.es-toast__action`, which carries its own padding tokens) are exempt by name, never by silence.
+- All four were negative-tested: each original bug was reintroduced one at a time and the matching gate fired. `ship.js` now runs 9 steps.
+
 ## 3.4.2 — 2026-08-04
 ### Fixed
 - Reference CSS comment-marker artifact (`*/*/`) that invalidated the first rule of toast.css / rich-text-editor.css / range-slider.css (Toast stacked vertically, RTE borderless, mini action buttons).

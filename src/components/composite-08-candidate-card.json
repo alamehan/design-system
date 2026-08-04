@@ -1,102 +1,108 @@
 {
-  "_schema": "elabram-component-v1",
-  "id": "candidate-card",
-  "name": "CandidateCard",
-  "figmaName": "[🧱]-card-candidates",
-  "figmaNodeId": "4088:23833",
-  "category": "advanced",
-  "section": "Advanced Components",
-  "role": "component",
-  "implementable": true,
-  "description": "Candidate summary card for list views. Shows avatar, name, headline, key info rows (location, salary, experience), status chips, and action buttons. Uses Shadow/Smooth for card elevation.",
-  "props": {
-    "type": {
-      "type": "enum",
-      "values": [
-        "Default",
-        "Example"
-      ],
-      "default": "Default"
-    },
-    "candidateId": {
-      "type": "string",
-      "default": null
-    },
-    "isSelected": {
-      "type": "boolean",
-      "default": false
-    }
+ "_schema": "elabram-component-v1",
+ "id": "candidate-card",
+ "name": "CandidateCard",
+ "figmaName": "[🧱]-card-candidates",
+ "figmaNodeId": "4088:23833",
+ "category": "advanced",
+ "section": "Advanced Components",
+ "role": "component",
+ "implementable": true,
+ "description": "Candidate summary card for list views. Shows avatar, name, headline, key info rows (location, salary, experience), status chips, and action buttons. Uses Shadow/Smooth for card elevation.",
+ "props": {
+  "type": {
+   "type": "enum",
+   "values": [
+    "Default",
+    "Example"
+   ],
+   "default": "Default"
   },
-  "tokens": {
-    "card": {
-      "background": "neutral.pure-white",
-      "border-color": "system.border-strong",
-      "border-width": "stroke.thin",
-      "radius": "corner-radius.md",
-      "padding-y": "spacing.standard.lg",
-      "padding-x": "spacing.standard.xxl",
-      "gap": "spacing.standard.lg",
-      "shadow": "shadow.Smooth"
-    },
-    "divider": {
-      "color": "system.border-soft",
-      "width": "stroke.thin"
-    },
-    "selected": {
-      "background": "brand.brand-surface-soft",
-      "border-color": "brand.brand"
-    }
+  "candidateId": {
+   "type": "string",
+   "default": null
   },
-  "subcomponents": [
-    "avatar",
-    "status-chip",
-    "info-block",
-    "icon-button",
-    "button"
+  "isSelected": {
+   "type": "boolean",
+   "default": false
+  },
+  "hoverActions": {
+   "type": "boolean",
+   "default": false,
+   "description": "Reveal #actions on hover/focus only. Off by default: opacity:0 leaves a clickable, tab-focusable control nobody can see."
+  }
+ },
+ "tokens": {
+  "card": {
+   "background": "neutral.pure-white",
+   "border-color": "system.border-strong",
+   "border-width": "stroke.thin",
+   "radius": "corner-radius.md",
+   "padding-y": "spacing.standard.lg",
+   "padding-x": "spacing.standard.xxl",
+   "gap": "spacing.standard.lg",
+   "shadow": "shadow.Smooth"
+  },
+  "divider": {
+   "color": "system.border-soft",
+   "width": "stroke.thin"
+  },
+  "selected": {
+   "background": "brand.brand-surface-soft",
+   "border-color": "brand.brand"
+  }
+ },
+ "subcomponents": [
+  "avatar",
+  "status-chip",
+  "info-block",
+  "icon-button",
+  "button"
+ ],
+ "anatomy": {
+  "root": {
+   "element": "div",
+   "role": "listitem"
+  },
+  "profile": {
+   "element": "div",
+   "optional": false,
+   "note": "Avatar + name + headline + status chips"
+  },
+  "divider": {
+   "element": "hr",
+   "optional": false
+  },
+  "info-rows": {
+   "element": "div",
+   "optional": false,
+   "note": "Array of InfoBlock rows (location, salary, etc.)"
+  },
+  "actions": {
+   "element": "div",
+   "optional": true,
+   "note": "Action buttons. VISIBLE by default; opt in to the hover-reveal density with the `hoverActions` modifier. Never ship an invisible-but-focusable control."
+  }
+ },
+ "usage": {
+  "generic": "CandidateCard(type='Default', candidateId='c-001')",
+  "notes": "Render in a grid or list inside the candidates DataTable or Panel body."
+ },
+ "a11y": {
+  "role": "listitem",
+  "aria": {
+   "aria-selected": "true when selected"
+  }
+ },
+ "guidelines": {
+  "do": [
+   "Show the most critical info upfront (name, headline, status).",
+   "Keep the primary action visible; use hoverActions only in dense grids where the noise is real."
   ],
-  "anatomy": {
-    "root": {
-      "element": "div",
-      "role": "listitem"
-    },
-    "profile": {
-      "element": "div",
-      "optional": false,
-      "note": "Avatar + name + headline + status chips"
-    },
-    "divider": {
-      "element": "hr",
-      "optional": false
-    },
-    "info-rows": {
-      "element": "div",
-      "optional": false,
-      "note": "Array of InfoBlock rows (location, salary, etc.)"
-    },
-    "actions": {
-      "element": "div",
-      "optional": true,
-      "note": "Action buttons visible on hover"
-    }
-  },
-  "usage": {
-    "generic": "CandidateCard(type='Default', candidateId='c-001')",
-    "notes": "Render in a grid or list inside the candidates DataTable or Panel body."
-  },
-  "a11y": {
-    "role": "listitem",
-    "aria": {
-      "aria-selected": "true when selected"
-    }
-  },
-  "guidelines": {
-    "do": [
-      "Show the most critical info upfront (name, headline, status).",
-      "Keep action buttons visible on hover only to reduce visual noise."
-    ],
-    "dont": [
-      "Don't show more than 5 info rows in the card body."
-    ]
-  },
-  "code": "composite-08"
+  "dont": [
+   "Don't show more than 5 info rows in the card body.",
+   "Don't hide an action with opacity alone — it stays clickable and tab-focusable while invisible."
+  ]
+ },
+ "code": "composite-08"
 }
