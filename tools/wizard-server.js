@@ -90,6 +90,38 @@ function toTrash(rel) {
   fs.cpSync(src, dest, { recursive: true });
   return relRecovery(dest);
 }
+/* Byte-exact insurance.
+   Before the panel first writes to a file it keeps a pristine copy in .git/ds-recovery/original/.
+   The revert strips its own markers as before, and then CHECKS the result against that copy: if
+   a single byte differs, the original is restored verbatim. Careful surgery plus a proof beats
+   careful surgery alone, and the proof is what the developer actually asked for — the repo back
+   the way it was. */
+function origPath(rel) { return path.join(RECOVERY, "original", rel.replace(/[\\/]/g, "__")); }
+function snapshotOriginal(rel) {
+  const src = abs(rel), dest = origPath(rel);
+  if (fs.existsSync(dest)) return;                        // first write wins; never overwrite
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  if (fs.existsSync(src)) fs.copyFileSync(src, dest);
+  else fs.writeFileSync(dest, "\u0000__DS_DID_NOT_EXIST__", "utf8");
+}
+/* Returns a short verdict string for the step log. */
+function restoreOriginalIfDrifted(rel) {
+  const dest = origPath(rel);
+  if (!fs.existsSync(dest)) return null;                  // nothing recorded (pre-3.4.6 install)
+  const snap = fs.readFileSync(dest, "utf8");
+  if (snap === "\u0000__DS_DID_NOT_EXIST__") {
+    if (!fs.existsSync(abs(rel))) return "did not exist before the install, still absent";
+    fs.rmSync(abs(rel), { force: true });
+    sh('git rm --cached --ignore-unmatch -- "' + rel + '"');
+    return "removed \u2014 the file did not exist before the install";
+  }
+  const now = readIf(rel);
+  if (now === snap) return "byte-identical to the pre-install original";
+  writeFile(rel, snap);
+  return "restored byte-for-byte from the pre-install snapshot (the strip left " +
+    Math.abs((now == null ? 0 : now.length) - snap.length) + " byte(s) of drift)";
+}
+
 /* Sweep anything a pre-v3.4.5 install left inside the working tree into .git/ds-recovery/.
    Moved, never deleted: the bytes survive, they just stop showing up in git status. */
 function sweepLegacyRecovery() {
@@ -631,6 +663,10 @@ function buildRevertPlan(cfg) {
     }
   }
 
+  /* Prove it, do not assume it. */
+  for (const f of ["CLAUDE.md", ".gitignore", ".gitattributes", "tailwind.config.js", nuxtConfigName()]) {
+    if (fs.existsSync(origPath(f))) steps.push({ title: T("Pastikan " + f + " sama persis seperti sebelum install", "Verify " + f + " matches its pre-install original"), verifyOriginal: f });
+  }
   if (readIf("CLAUDE.md") != null) steps.push({ title: T("Hapus CLAUDE.md kalau jadi kosong", "Remove CLAUDE.md if it becomes empty"), pruneClaude: true });
   for (const g of Object.keys(GIT_BLOCKS)) {
     if (readIf(g) != null) steps.push({ title: T("Hapus " + g + " kalau jadi kosong", "Remove " + g + " if it becomes empty"), pruneEmpty: g });
@@ -701,6 +737,7 @@ async function execSteps(steps, ctx) {
         push(true, "ok"); continue;
       }
       if (s.write) {
+        snapshotOriginal(s.write);
         const body = GIT_BLOCKS[s.write] !== undefined ? hashBlock(s.write)
           : s.write === "CLAUDE.md" ? markedBlock("CLAUDE.md") : PAYLOADS[s.write];
         writeFile(s.write, body); push(true, "wrote " + s.write); continue;
@@ -709,12 +746,18 @@ async function execSteps(steps, ctx) {
         const isGit = GIT_BLOCKS[s.append] !== undefined;
         const prev = readIf(s.append) || "";
         if ((isGit ? extractHashBlock(prev) : extractBlock(prev)) != null) { push(true, "(section already present)"); continue; }
-        writeFile(s.append, (prev ? prev.replace(/\n*$/, "\n\n") : "") + (isGit ? hashBlock(s.append) : markedBlock(s.append)));
+        /* Append WITHOUT rewriting the existing tail. `prev.replace(/\n*$/, "\n\n")` normalised
+           whatever trailing newlines the developer's file had into exactly two — so a file
+           ending in no newline, or in three, could never be restored byte-for-byte afterwards
+           however careful the strip was. The install was the lossy half, not the revert. */
+        snapshotOriginal(s.append);
+        const pad = prev === "" ? "" : prev.endsWith("\n\n") ? "" : prev.endsWith("\n") ? "\n" : "\n\n";
+        writeFile(s.append, prev + pad + (isGit ? hashBlock(s.append) : markedBlock(s.append)));
         push(true, "appended to " + s.append); continue;
       }
       if (s.edit) {
-        if (s.edit === "tw") { const p = planTailwindEdit(readIf("tailwind.config.js")); if (p.changed) writeFile("tailwind.config.js", p.out); }
-        else if (s.edit === "nuxt") { const nx = nuxtConfigName(), p = planNuxtEdit(readIf(nx), nx); if (p.changed) writeFile(nx, p.out); }
+        if (s.edit === "tw") { snapshotOriginal("tailwind.config.js"); const p = planTailwindEdit(readIf("tailwind.config.js")); if (p.changed) writeFile("tailwind.config.js", p.out); }
+        else if (s.edit === "nuxt") { const nx = nuxtConfigName(); snapshotOriginal(nx); const p = planNuxtEdit(readIf(nx), nx); if (p.changed) writeFile(nx, p.out); }
         else if (s.edit === "tw-remove") { const src = readIf("tailwind.config.js"); if (src != null) { toTrash("tailwind.config.js"); writeFile("tailwind.config.js", removeManagedLine(src, "tw")); } }
         else if (s.edit === "nuxt-remove") { const nx = nuxtConfigName(), src = readIf(nx); if (src != null) { toTrash(nx); writeFile(nx, removeManagedLine(src, "css")); } }
         else if (s.edit === "claude-strip") { const src = readIf("CLAUDE.md"); if (src != null) { toTrash("CLAUDE.md"); writeFile("CLAUDE.md", stripBlock(src)); } }
@@ -759,6 +802,11 @@ async function execSteps(steps, ctx) {
         const src = readIf("CLAUDE.md");
         if (src != null && src.trim() === "") { toTrash("CLAUDE.md"); fs.rmSync(abs("CLAUDE.md"), { force: true }); sh('git rm --cached --ignore-unmatch -- "CLAUDE.md"'); push(true, "removed (was empty)"); }
         else push(true, "kept (has your content)");
+        continue;
+      }
+      if (s.verifyOriginal) {
+        const verdict = restoreOriginalIfDrifted(s.verifyOriginal);
+        push(true, verdict || "no pre-install snapshot on record (installed by an older panel)");
         continue;
       }
       if (s.pruneGitmodules) {
@@ -824,8 +872,19 @@ async function execSteps(steps, ctx) {
         const dest = path.join(RECOVERY, "ds-setup.cjs." + stamp);
         fs.mkdirSync(path.dirname(dest), { recursive: true });
         fs.cpSync(src, dest);
-        PENDING_SELF_DELETE = src;
-        push(true, "copied to " + relRecovery(dest) + " \u2014 removed from the repo when the panel stops");
+        /* Node reads a CJS entry file once at startup and keeps no handle, so removing it now is
+           safe and — crucially — actually happens. v3.4.5 deferred this to a process-exit hook,
+           which never fires if the developer just closes the browser tab and walks away, so
+           `ds-setup.cjs` sat there untracked exactly as before the fix. Try now, keep the hook
+           only as a fallback for platforms that refuse. */
+        try {
+          fs.rmSync(src, { force: true });
+          sh('git rm --cached --ignore-unmatch -- "ds-setup.cjs"');
+          push(true, "moved to " + relRecovery(dest) + " and removed from the repo");
+        } catch (e) {
+          PENDING_SELF_DELETE = src;
+          push(true, "copied to " + relRecovery(dest) + " \u2014 the original is locked by this OS, it goes when the panel stops");
+        }
         continue;
       }
       if (s.verifyClean) {

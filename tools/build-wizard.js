@@ -89,7 +89,31 @@ for (const net of ["fonts.googleapis.com", "fonts.gstatic.com", "cdn.jsdelivr", 
 }
 
 /* ---- bundle ---- */
-const server = fs.readFileSync(SERVER, "utf8");
+/* The dashboard CSS has been minified since v2.x, but the server source went into the bundle
+   verbatim — comments and all. Comments are for the maintainer reading tools/wizard-server.js,
+   not for the single-file artifact a developer downloads; the source keeps every one of them.
+   This strips WHOLE-LINE comments only: no expression rewriting, no touching a line that also
+   holds code, and it refuses to run inside a template literal. If the result does not parse,
+   the original is used unchanged — a smaller bundle is never worth a broken one. */
+function stripWholeLineComments(src) {
+  const lines = src.split("\n");
+  const out = [];
+  let inBlock = false, inTemplate = false;
+  for (const line of lines) {
+    const t = line.trim();
+    if (inTemplate) { out.push(line); if ((line.match(/(?<!\\)`/g) || []).length % 2 === 1) inTemplate = false; continue; }
+    if (inBlock) { if (t.endsWith("*/")) inBlock = false; continue; }
+    if (t.startsWith("/*")) { if (!t.endsWith("*/")) inBlock = true; continue; }
+    if (t.startsWith("//")) continue;
+    if ((line.match(/(?<!\\)`/g) || []).length % 2 === 1) inTemplate = true;
+    out.push(line);
+  }
+  const stripped = out.join("\n").replace(/\n{3,}/g, "\n\n");
+  try { new Function(stripped.replace(/\/\* @WIZARD_VERSION@ \*\//, "0").replace(/\/\* @DS_VERSION@ \*\//, '"0"')); }
+  catch (e) { console.log("  (comment strip skipped: " + e.message + ")"); return src; }
+  return stripped;
+}
+const server = stripWholeLineComments(fs.readFileSync(SERVER, "utf8"));
 const banner =
 `#!/usr/bin/env node
 /* =====================================================================

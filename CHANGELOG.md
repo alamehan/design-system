@@ -4,6 +4,25 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
+## 3.4.6 — 2026-08-04
+
+**Two files still survived the uninstall, and the gallery index covered the thing it was indexing.**
+
+### Fixed — the uninstall's remaining two files
+- **The install itself was the lossy half.** Appending a managed block ran `prev.replace(/\n*$/, "\n\n")`, which normalised whatever trailing newlines the developer's file had into exactly two. A `.gitignore` ending in no newline, or in three, could never be restored byte-for-byte afterwards no matter how careful the strip was — the original bytes were gone before the revert ever ran. The append no longer rewrites the existing tail.
+- **The revert now proves its work instead of assuming it.** Before the panel first writes to any file it keeps a pristine copy in `.git/ds-recovery/original/`. After stripping its markers the revert compares the result against that copy and, if a single byte differs, restores the original verbatim — and says so in the step log. Files that did not exist before the install are removed rather than left behind empty.
+- **`ds-setup.cjs` was never actually deleted.** v3.4.5 deferred the removal to a `process.on("exit")` hook, which does not fire when a developer closes the browser tab and walks away — so the panel file sat there untracked exactly as it had before the fix. It is now removed immediately after being copied to recovery (Node keeps no handle on a CJS entry file once loaded), with the exit hook kept only as a fallback for platforms that refuse.
+
+### Fixed — the gallery index
+- **`position: fixed` was the wrong tool.** composed-05 is 1316px of table, so the page scrolls horizontally — and a fixed element does not move when it does. Scroll right and the index sat on top of the content it exists to index. The page header had the mirror fault: stamp, title and intro lived *outside* the scrolling column, so they rendered underneath the index at x=0. The page is now a single grid; the index is a real column that participates in layout and cannot overlap anything, and `min-width: 0` on the content column keeps a wide table scrolling inside its own `.es-table__scroll` instead of stretching the document.
+- **Index entries are one line, always.** A three-line wrap for `composed-05` made the index taller than the thing it indexes. Entries truncate with an ellipsis and carry the full name as a tooltip.
+- **The index collapses** to a 48px rail via a toggle or `Ctrl/Cmd + \`, and the content column takes the width back. The state persists — a preference you have to re-set on every page load is not a preference. Pressing `/` re-opens it and focuses the filter.
+- Literal `\uXXXX` escape sequences had leaked into the markup during the v3.4.5 build and rendered as text.
+
+### Changed
+- `visual-audit.py`'s overflow rule is now "the parent's `overflow-x` is `visible`". A container declaring `hidden`, `clip`, `auto` or `scroll` has taken responsibility for what sticks out — that is how `text-overflow: ellipsis` works at all. Only `visible` overflow spills onto the page, and only that is a fault. Re-verified: removing the `box-sizing` reset still trips it.
+- **`build-wizard.js` strips whole-line comments from the embedded server source.** The e2e budget assertion says to look for waste before arguing for a new number, and shipping the maintainer's comments inside a single-file artifact is waste — `tools/wizard-server.js` keeps every one of them. Whole lines only, never a line that also holds code, never inside a template literal, and the original is used unchanged if the result does not parse. 323 KB → 313 KB, back under the 320 KB tripwire without moving it.
+
 ## 3.4.5 — 2026-08-04
 
 **Uninstall removed the `.gitignore` block that was hiding its own recovery files, then left the files on disk.**

@@ -21,7 +21,7 @@
    Embedded fonts: Fustat & DM Mono, SIL Open Font License 1.1.
    Embedded icons: Lucide, ISC License.
 
-   Panel v3.3.0  ·  built for design system v3.4.5
+   Panel v3.3.1  ·  built for design system v3.4.6
    ===================================================================== */
 "use strict";
 const http = require("http");
@@ -30,22 +30,13 @@ const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
-const WIZARD_VERSION = "3.3.0";
-const BUILT_FOR_DS = "3.4.5";
+const WIZARD_VERSION = "3.3.1";
+const BUILT_FOR_DS = "3.4.6";
 
-/* ---------------------------------------------------------------- config */
 const SUBMODULE_DIR = "design-system";
 const DS_DIR_LOCAL = ".ds";
 const MANIFEST = ".ds/manifest.json";
 const HISTORY = ".ds/history.jsonl";
-/* Recovery state lives inside .git/, NOT in the working tree.
-   Until v3.4.5 it sat at .ds/.trash/ and .ds/rollback-point.json, hidden only by the
-   .gitignore block the panel itself installs. Uninstall stripped that block and then LEFT the
-   files on disk, so a repo that was clean before an install came back from the uninstall with
-   a dozen untracked recovery artifacts in `git status`. It removed the raincoat and left you
-   in the rain.
-   .git/ is never shown by git status, never committed, and survives everything short of
-   deleting the clone — which is exactly the guarantee "nothing is ever destroyed" needs. */
 const LEGACY_TRASH = ".ds/.trash";
 const LEGACY_ROLLBACK = ".ds/rollback-point.json";
 const REQUESTS = ".ds/requests";
@@ -53,8 +44,6 @@ const FALLBACK_REPO_URL = "https://github.com/alamehan/design-system.git";
 const LEVEL1_ACCESS_CODE = process.env.DS_L1_CODE || "DSV3-RAIHAN";
 
 let LOCKED = { install: false, revert: false, update: false, rollback: false, legacy: false, panel: false };
-/* The panel runs FROM ds-setup.cjs, so it cannot remove that file while it is serving.
-   The copy is already safe in .git/ds-recovery/; the original goes on process exit. */
 let PENDING_SELF_DELETE = null;
 process.on("exit", () => {
   if (!PENDING_SELF_DELETE) return;
@@ -63,19 +52,14 @@ process.on("exit", () => {
 for (const sig of ["SIGINT", "SIGTERM"]) process.on(sig, () => process.exit(0));
 let PROGRESS = { active: false, current: 0, total: 0, label: { id: "", en: "" } };
 
-/* bilingual helper — every user-visible server string is a {id,en} pair */
 const T = (id, en) => ({ id, en: en || id });
 
-/* ------------------------------------------------------------- markers */
 const MD_BEGIN = "<!-- design-system:begin (managed by the Design System panel - do not edit inside) -->";
 const MD_END = "<!-- design-system:end -->";
 const LINE_MARK = "/* design-system:managed */";
-/* .gitignore and .gitattributes have no comment syntax other than #, so the
-   same begin/end contract is expressed with hash comments. */
 const HASH_BEGIN = "# design-system:begin (managed by the Design System panel - do not edit inside)";
 const HASH_END = "# design-system:end";
 
-/* --------------------------------------------------------------- shell */
 function sh(cmd, opts) {
   const o = Object.assign({ cwd: ROOT, encoding: "utf8", stdio: "pipe", maxBuffer: 16 * 1024 * 1024 }, opts || {});
   try { return { ok: true, out: String(execSync(cmd, o) || "").trim() }; }
@@ -90,7 +74,6 @@ let ROOT = SCRIPT_DIR;
 (function () { const r = sh("git rev-parse --show-toplevel", { cwd: SCRIPT_DIR }); if (r.ok && r.out) ROOT = r.out.split("\n")[0].trim(); })();
 
 const abs = (p) => path.join(ROOT, p);
-/* .git is a directory in a normal clone and a FILE in a worktree or submodule, so ask git. */
 const GIT_DIR = (function () {
   const r = sh("git rev-parse --absolute-git-dir");
   return r.ok && r.out ? r.out.split("\n")[0].trim() : path.join(ROOT, ".git");
@@ -104,8 +87,6 @@ function writeFile(p, text) { fs.mkdirSync(path.dirname(abs(p)), { recursive: tr
 function existsNonEmptyDir(p) { try { return fs.statSync(abs(p)).isDirectory() && fs.readdirSync(abs(p)).length > 0; } catch { return false; } }
 const sha = (s) => crypto.createHash("sha256").update(s == null ? "" : s, "utf8").digest("hex");
 
-/* Copy aside instead of deleting — nothing is ever destroyed. The copy lands in
-   .git/ds-recovery/, so it is recoverable forever and invisible to `git status`. */
 function toTrash(rel) {
   const src = abs(rel);
   if (!fs.existsSync(src)) return null;
@@ -115,8 +96,31 @@ function toTrash(rel) {
   fs.cpSync(src, dest, { recursive: true });
   return relRecovery(dest);
 }
-/* Sweep anything a pre-v3.4.5 install left inside the working tree into .git/ds-recovery/.
-   Moved, never deleted: the bytes survive, they just stop showing up in git status. */
+function origPath(rel) { return path.join(RECOVERY, "original", rel.replace(/[\\/]/g, "__")); }
+function snapshotOriginal(rel) {
+  const src = abs(rel), dest = origPath(rel);
+  if (fs.existsSync(dest)) return;                        // first write wins; never overwrite
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  if (fs.existsSync(src)) fs.copyFileSync(src, dest);
+  else fs.writeFileSync(dest, "\u0000__DS_DID_NOT_EXIST__", "utf8");
+}
+function restoreOriginalIfDrifted(rel) {
+  const dest = origPath(rel);
+  if (!fs.existsSync(dest)) return null;                  // nothing recorded (pre-3.4.6 install)
+  const snap = fs.readFileSync(dest, "utf8");
+  if (snap === "\u0000__DS_DID_NOT_EXIST__") {
+    if (!fs.existsSync(abs(rel))) return "did not exist before the install, still absent";
+    fs.rmSync(abs(rel), { force: true });
+    sh('git rm --cached --ignore-unmatch -- "' + rel + '"');
+    return "removed \u2014 the file did not exist before the install";
+  }
+  const now = readIf(rel);
+  if (now === snap) return "byte-identical to the pre-install original";
+  writeFile(rel, snap);
+  return "restored byte-for-byte from the pre-install snapshot (the strip left " +
+    Math.abs((now == null ? 0 : now.length) - snap.length) + " byte(s) of drift)";
+}
+
 function sweepLegacyRecovery() {
   const moved = [];
   for (const rel of [LEGACY_TRASH, LEGACY_ROLLBACK]) {
@@ -132,19 +136,11 @@ function sweepLegacyRecovery() {
   return moved;
 }
 
-/* --------------------------------------------------------------- payloads */
 const PAYLOADS = {
   "CLAUDE.md": "# portal-nuxt — AI Instructions (thin profile)\n\n**Bootstrap chain (read in this order):**\n1. This file (repo profile + golden rules).\n2. `design-system/CLAUDE.md` — universal design-system laws (§0–§5).\n3. `design-system/catalog/INDEX.md` → only the `catalog/components/<code>.md` you need.\n4. `.ds/bindings.md` — spec → THIS repo's components/classes. Trust it, and heal it (§4 Self-Healing Map Law).\n\n## Repo profile\n\n- Nuxt **2.15.8** / Vue **2.6.14**, **Options API only** (no Composition API, no `<script setup>`).\n- Tailwind 3.4.16 with prefix **`tw-`** for ALL Tailwind utilities. Design-system global classes (`.ts-*`, `.title-*`, `.body-*`, `.label-*`, CSS vars `var(--…)`) are NEVER prefixed.\n- Components auto-import: use tag names like `<GlobalsUiButton>` (from `components/globals/ui/button/index.vue`); never manual-import path strings.\n- Heavy legacy stack coexists: Kendo UI Vue, Bootstrap 4/Metronic CSS, jQuery. Do NOT remove or rewrite them; scope your work.\n- Scoped CSS: to style child-component internals use `::v-deep` (Vue 2 syntax).\n- Icons are **Tabler** via `@egoist/tailwindcss-icons`: always full literal classes (`i-tabler-user`), never string-built. Tabler is the only icon set for product UI — never substitute another.\n- Typeface is **Fustat** (body) and **DM Mono** (code), per `design-system/src/foundations.json`.\n\n## Golden rules\n\n1. **Reuse first:** existing `GlobalsUi*` primitives via `.ds/bindings.md`; the design system defines HOW they should look, this repo defines WITH WHAT they are built.\n2. **No hardcoded hex / magic px.** Use the token utilities listed in the bindings TOKEN-MAP (Level 0) or preset classes (Level 1).\n3. **Never rebuild the app shell** (sidebar/navbar/layout) unless explicitly asked.\n4. **One scroll region per layout.** Never nest competing scroll containers.\n5. `design-system/` is a READ-ONLY pinned submodule. Never edit files inside it from this repo.\n6. When the bindings map is wrong/stale/missing an entry you resolved by inspecting the repo, update `.ds/bindings.md` in the same change set.\n7. Health check anytime: `node design-system/src/scripts/doctor.js` (read-only).\n\n## UI defaults (always apply to NEW UI)\n\n- No breadcrumb by default — add one only when the requirement explicitly asks for it.\n- Tables ALWAYS live inside a white card (card head with title/toolbar + table + footer) — never bare on the page.\n- Default 10 rows per page (5–10 ok); more = pagination; provide a rows-per-page control (presets 10/25/50 + custom numeric input, hard max 50).\n- Clicking a row/card/list item never navigates or opens a panel — every open/navigate/destructive action needs its own explicit control (view icon, kebab menu, button). Destructive actions always confirm via modal first.\n- The reference gallery has two tiers: ground on Part 1 (base components) by default; consult Part 2 (composed samples) ONLY when the task needs an assembled screen (list page, detail panel, form section, empty/confirm states).\n\n## Git housekeeping\n\nThe panel also maintains marked blocks in `.gitignore` and `.gitattributes`. `.ds/` is **not** ignored wholesale: `manifest.json`, `bindings.md`, `history.jsonl` and `requests/` are committed on purpose — the first is the install receipt, the second is shared team knowledge you and every agent depend on. Only machine-local recovery state is ignored.\n\n## About this section\n\nEverything between the `design-system:begin` / `design-system:end` markers above is written and maintained by the Design System panel. Edit outside the markers freely — your content is never touched. To remove it, run the panel and choose Uninstall; only the marked block is stripped.\n",
   ".ds/bindings.md": "# .ds/bindings.md — Spec ↔ Execution map (portal-nuxt)\n\nds-version: 3.3.0 · map-updated: 2026-07-28 · adoption-level: 0 (reference-only)\n\n**What this is:** the translation layer between design-system specs (`design-system/catalog/`) and THIS repo's real components and utility classes. AI must use this map when building UI here.\n\n**Self-Healing Map Law (design-system CLAUDE.md §4):** if any entry below is stale, wrong, or missing and you resolved the truth by inspecting the repo — update this file in the same change set. `doctor.js` verifies all component paths and color names below.\n\n**Status legend:** `ok` mapped · `drift` partial (usable, deviates from spec) · `gap` compose from `design-system/reference/`\n\n---\n\n## COMPONENT-MAP\n\n| DS spec | Use in this repo | File | Status |\n|---|---|---|---|\n| atom-01 Button | `<GlobalsUiButton>` | `components/globals/ui/button/index.vue` | ok |\n| atom-02 IconButton | `<GlobalsUiButton :onlyIcon=\"true\">` | `components/globals/ui/button/index.vue` | drift |\n| atom-03 SplitButton | — | — | gap compose: `reference/components/split-button.html` |\n| atom-04 CustomButton | `<GlobalsUiButton btnType=\"cancelGray\">` (nearest) | `components/globals/ui/button/index.vue` | drift |\n| atom-05 Chip | — | — | gap compose: `reference/components/chip.html` |\n| atom-06 StatusChip | `<GlobalsUiChipStatus>` | `components/globals/ui/chipStatus.vue` | ok |\n| atom-07 Toast | SweetAlert2 wrapper (legacy) | app plugin | drift visual drift vs spec; new toasts: follow `reference/components/toast.html` styles |\n| atom-08 Input (text) | `<GlobalsUiInputText>` | `components/globals/ui/input/text.vue` | ok |\n| atom-08 Input (date) | `<GlobalsUiInputDatePicker>` (Kendo) | `components/globals/ui/input/datePicker.vue` | drift Kendo-rendered |\n| atom-08 Input (select) | `<GlobalsUiInputDropdownKendo>` | `components/globals/ui/input/dropdownKendo.vue` | drift Kendo-rendered |\n| atom-08 Input (numeric) | `<GlobalsUiInputNumericKendo>` | `components/globals/ui/input/numericKendo.vue` | drift Kendo-rendered |\n| atom-09 Textarea | `<GlobalsUiInputTextArea>` | `components/globals/ui/input/textArea.vue` | ok |\n| atom-10 RichTextEditor | `<GlobalsUiInputTinyEditor>` (TinyMCE) | `components/globals/ui/input/tinyEditor.vue` | drift |\n| atom-12 Checkbox | `<GlobalsUiInputCheckboxKendo>` | `components/globals/ui/input/checkboxKendo.vue` | drift Kendo-rendered |\n| atom-12 Radio | `<GlobalsUiInputRadioKendo>` | `components/globals/ui/input/radioKendo.vue` | drift Kendo-rendered |\n| atom-12 Switch | `<GlobalsUiInputSwitchKendo>` | `components/globals/ui/input/switchKendo.vue` | drift Kendo-rendered |\n| atom-16 Tabs | — | — | gap compose: `reference/components/tabs.html` |\n| Avatar (asset-01 usage) | — | — | gap compose: `reference/components/avatar.html` |\n| Breadcrumb | — | — | gap compose: `reference/components/breadcrumb.html` |\n| Modal (confirmation) | `<GlobalsUiModalConfirmation>` | `components/globals/ui/modal/confirmation.vue` | ok |\n| Slide panel | `<GlobalsUiSlidePanel>` | `components/globals/ui/slidePanel.vue` | ok |\n| Dropdown menu | `<GlobalsUiDropdown>` | `components/globals/ui/dropdown.vue` | ok |\n| Tooltip | `<GlobalsUiTooltip>` | `components/globals/ui/tooltip.vue` | ok |\n| Empty state | `<GlobalsUiEmptyState>` | `components/globals/ui/emptyState.vue` | ok |\n| Field error text | `<GlobalsUiErrorText>` | `components/globals/ui/errorText.vue` | ok |\n| Info callout | `<GlobalsUiWarningInfo>` | `components/globals/ui/warningInfo.vue` | drift |\n| Data table + pagination | Kendo Grid (legacy pattern) | per-domain components | drift heavy drift; for NEW simple tables follow `reference/components/data-table.html` |\n\n### Variant translation — atom-01 Button → `<GlobalsUiButton btnType>`\n\n| DS variant | btnType | Note |\n|---|---|---|\n| Filled | `filled` | default |\n| Outlined | `outlined` | |\n| Tonal | `tonal` | |\n| Elevated | `elevated` | |\n| Ghost | `ghost` | |\n| — (no spec) | `error`, `errorOutlined`, `cancelGray`, `outlineBlack`, `errorSurfaceSoft`, `filledWarning`, `filledSuccess` | driftNote: frontend extensions beyond spec — allowed for existing flows; for NEW UI prefer the five spec variants |\n\nKey props: `text`, `textSize`, `textWeight`, `btnWidth`, `btnHeight`, `btnPaddingY/X`, `iconLeft`, `iconRight`, `onlyIcon`, `isLoad`, `disabled`.\n\n### Variant translation — atom-06 StatusChip → `<GlobalsUiChipStatus statusType>`\n\n| DS type | statusType |\n|---|---|\n| Default | `MD-1-Default` |\n| Success | `MD-1-Success` |\n| Warning | `MD-1-Warning` |\n| Error | `MD-1-Error` |\n| Black | `MD-1-Black` |\n| Brand | `MD-1-Brand` (small: `SM-1-Brand`; borderless: `brand-noborder`) |\n| Sem-Indigo / Sem-Teal / Sem-Lime / Sem-Yellow | `MD-1-SemIndigo` / `MD-1-SemTeal` / `MD-1-SemLime` / `MD-1-SemYellow` |\n\ndriftNote: DS `Info` type has no statusType counterpart yet → gap; use `MD-1-Default` or extend `chipStatus.vue`.\n\n---\n\n## TOKEN-MAP (Level 0 — legacy frozen classes)\n\nAt Level 0 the DS preset is NOT wired; use the repo's existing camelCase color utilities. Values are identical hex to DS tokens (verified 2026-07-15). At Level 1+ prefer preset kebab classes (e.g. `tw-bg-brand-brand`).\n\n| DS token | Utility here (prefix `tw-`) |\n|---|---|\n| brand.brand | `tw-bg-brand` / `tw-text-brand` / `tw-border-brand` |\n| brand.brand-strong | `…-brandStrong` |\n| brand.brand-surface-soft | `…-brandSurfaceSoft` |\n| elabram.blue / orange | `…-elabramBlue` / `…-elabramOrange` |\n| semantic.success / warning / error / info | `…-success` / `…-warning` / `…-error` / `…-info` (+ `Strong`, `SurfaceSoft`, `SurfaceStrong` suffixes) |\n| semantic.sem-teal / sem-lime / sem-indigo / sem-yellow | `…-semTeal` / `…-semLime` / `…-semIndigo` / `…-semYellow` families |\n| system.text-head / text-body / text-muted | `tw-text-textHead` / `tw-text-textBody` / `tw-text-textMuted` |\n| system.surface-soft / -medium / -strong | `…-surfaceSoft` / `…-surfaceMedium` / `…-surfaceStrong` |\n| system.border-soft / -medium / -strong | `tw-border-borderSoft` / `…-borderMedium` / `…-borderStrong` |\n| pure.white / black / gray / muted | `…-pureWhite` / `…-pureBlack` / `…-pureGray` / `…-pureMuted` |\n| gradient.text-gradient(-brand) | `tw-bg-text-gradient` / `tw-bg-text-gradient-brand` |\n\n**Text styles:** DS `.ts-<weight>-<role>-<size>` → here use the UNPREFIXED global classes `.title-lg` `.title-md` `.body-xl` `.body-lg` `.body-md` `.body-sm` `.label-sm` (defined in `assets/css/tailwind.css`) + `tw-font-medium|semibold|bold` for weight. Example: `.ts-bold-body-md` → `class=\"body-md tw-font-bold\"`.\n\n**Radius:** identical scale — `tw-rounded-sm|DEFAULT|md|lg|xl|2xl|3xl|full` (2/4/6/8/12/16/24/9999px) matches DS radius tokens.\n\n**Spacing:** repo uses a 4px numeric grid (`tw-p-2` = 8px). DS named steps map to the nearest grid value; if a DS spec demands an off-grid value (e.g. 10px), use arbitrary value `tw-p-[10px]` — allowed ONLY when the spec explicitly states that pixel value.\n\ndriftNote: no dark mode at Level 0 (colors are frozen hex; `darkMode` not configured). Expected — resolved by Level 1.\n\n---\n\n## GAPS (compose from reference, then record here)\n\n`chip`, `split-button`, `tabs`, `avatar`, `breadcrumb`, `pagination` (non-Kendo), `candidate-card`, `filter-field`, `filter-panel`, `candidate-info-block`, `panel-section`, `custom-button`, `toast` (spec-conformant). For each: read `design-system/catalog/components/<code>.md` + copy structure/classes from `design-system/reference/components/<name>.html` (token-pure CSS in `reference/css/<name>.css`), adapt to Vue 2 + `tw-` prefix rules, then add the new component to the COMPONENT-MAP above.\n\n---\n\n## About this file\n\nThis file is yours to evolve. The Self-Healing Map Law (`design-system/CLAUDE.md` §4) asks you — and any AI agent working here — to correct it whenever reality disagrees with it. The Design System panel therefore treats changes here as expected, not as damage: it will offer to send your version to the design system maintainer so useful corrections land in the shipped template.\n",
 };
 
-/* Git housekeeping the panel owns, each as a marked block appended to whatever
-   the repo already has.
-   .ds/ is deliberately NOT ignored wholesale: manifest.json, bindings.md,
-   history.jsonl and requests/ are team knowledge and the basis of the adoption
-   report, so they must be committed. Only machine-local recovery state is
-   ignored. history.jsonl is append-only, so merge=union lets two developers
-   install in parallel without a conflict. */
 const GIT_BLOCKS = {
   ".gitignore": [
     "# The panel is a build artifact of the design system; fetch it, do not commit it.",
@@ -169,16 +165,10 @@ function extractHashBlock(src) {
   if (i < 0 || j < 0) return null;
   return src.slice(i, j + HASH_END.length);
 }
-/* Remove ONLY the managed region, byte-for-byte everywhere else.
-   The previous version ran `.replace(/\n{3,}/g,"\n\n")` over the WHOLE file, so any repo whose
-   .gitignore or CLAUDE.md happened to contain three consecutive newlines came back from an
-   uninstall reformatted — reported by git as a modification the panel never intended to make.
-   A revert that edits bytes it did not install is not a revert. */
 function cutRegion(src, begin, end, endLen) {
   const i = src.indexOf(begin), j = src.indexOf(end);
   if (i < 0 || j < 0) return src;
   let a = i, b = j + endLen;
-  /* the block was inserted with one blank line in front of it; take that back and nothing more */
   if (src.slice(0, a).endsWith("\n\n")) a -= 1;
   if (src[b] === "\n") b += 1;
   return src.slice(0, a) + src.slice(b);
@@ -195,7 +185,6 @@ function extractBlock(src) {
   return src.slice(i, j + MD_END.length);
 }
 
-/* --------------------------------------------------------- config lines */
 const PRESET_LINE = '  presets: [require("./design-system/dist/tailwind.preset.js")], ' + LINE_MARK;
 const CSS_LINE = '    "~/design-system/dist/variables.css", ' + LINE_MARK;
 
@@ -221,15 +210,10 @@ function planNuxtEdit(src, name) {
   const i = m.index + m[0].length;
   return { changed: true, out: src.slice(0, i) + "\n" + CSS_LINE + src.slice(i) };
 }
-/* marker-first removal, with a content fallback for pre-marker installs */
 function removeManagedLine(src, kind) {
   if (src == null) return null;
   const lines = src.split("\n");
   const needle = kind === "tw" ? "design-system/dist/tailwind.preset" : "design-system/dist/variables.css";
-  /* The panel always inserts its line as a WHOLE line, so dropping the whole line is right.
-     But a human may have merged something onto it since, and deleting a line that also holds
-     the user's own code is not a revert, it is data loss. Drop the line only when the managed
-     text is all that is on it; otherwise excise just the managed segment. */
   const managedOnly = (l) => {
     const t = l.trim();
     return t.startsWith(kind === "tw" ? "presets:" : '"~/design-system') || t === LINE_MARK ||
@@ -257,32 +241,16 @@ function managedLineOf(src, kind) {
   return src.split("\n").filter((l) => l.includes(needle))[0] || null;
 }
 
-/* ---------------------------------------------------------- ds metadata */
 function dsMeta() {
   try { return JSON.parse(fs.readFileSync(abs(path.join(SUBMODULE_DIR, "ds-meta.json")), "utf8")); } catch { return {}; }
 }
 function maintainerEmail() { return process.env.DS_DESIGNER_EMAIL || (dsMeta().maintainer || {}).email || null; }
 
-/* The motion explainer is optional. Report only what is really on disk so the
-   welcome step can show a placeholder instead of a broken player. */
-/* Adoption statistics.
- *
- * Two honest scopes, never mixed:
- *   - "org"  : totals from design-system/.release/adoption.json, produced by
- *              adoption-report.js reading COMMITTED .ds/manifest.json files
- *              across the configured repos. No telemetry, no network call here.
- *   - "repo" : event counts from this repository's own .ds/history.jsonl.
- *
- * If the report has never been generated, org is null and the panel says so
- * rather than showing a zero that looks like real data. */
 function adoptionStats() {
   const blank = () => ({ install: 0, update: 0, uninstall: 0, request: 0, rollback: 0, adopt: 0 });
   const repo = blank(), mine = blank();
   const me = actorId();
   const KEY = { install: "install", update: "update", revert: "uninstall", "change-request": "request", rollback: "rollback", adopt: "adopt" };
-  /* history.jsonl is append-only AND committed, so these counts are cumulative:
-     they survive updates, and an uninstall does not wipe them (revert keeps the
-     log on purpose). Reinstalling appends rather than restarting from zero. */
   for (const h of loadHistory()) {
     const k = KEY[h.event];
     if (!k) continue;
@@ -294,14 +262,6 @@ function adoptionStats() {
     const raw = JSON.parse(fs.readFileSync(abs(path.join(SUBMODULE_DIR, ".release", "adoption.json")), "utf8"));
     if (raw && raw.totals) {
       configured = raw.totals.configured !== false;
-      /* An UNCONFIGURED report is a report nobody has filled in yet: no repo URLs are listed, so
-         every counter in it is a structural zero, not a measurement. Handing those zeros to the
-         panel made the dashboard open on a Team tab reading 0 / 0 forever, and every design
-         system update shipped a fresh all-zero file that looked like the numbers had just been
-         reset. The developer's OWN counts were fine the whole time, one tab away.
-         The comment at the top of this function already promised this behaviour ("rather than
-         showing a zero that looks like real data"); it just checked whether `totals` existed
-         instead of whether it meant anything. org stays null until it means something. */
       org = configured ? raw.totals : null;
       generatedAt = raw.generatedAt || null;
       reportVersion = raw.dsVersion || null;
@@ -327,14 +287,11 @@ function originUrl() {
   return r.ok ? r.out.trim() : null;
 }
 
-/* ------------------------------------------------------------- manifest */
 function loadManifest() { try { return JSON.parse(readIf(MANIFEST)); } catch { return null; } }
 function saveManifest(m) {
   m.managed.sort((a, b) => a.path.localeCompare(b.path));
   writeFile(MANIFEST, JSON.stringify(m, null, 2) + "\n");
 }
-/* Where the append-only log currently lives: the working tree if .ds/ still exists, otherwise
-   the newest archive, so a post-uninstall event still lands in the same file the counters read. */
 function historyTarget() {
   if (fs.existsSync(abs(DS_DIR_LOCAL))) return abs(HISTORY);
   try {
@@ -354,9 +311,6 @@ function appendHistory(entry) {
   telemetry(entry);
 }
 function loadHistory() {
-  /* After an uninstall the log may have been archived out of the working tree. Counters that
-     reset to zero because the panel stopped looking would recreate the exact complaint this
-     release fixes, so follow the log to wherever it went. */
   let raw = readIf(HISTORY);
   if (!raw) {
     try {
@@ -370,7 +324,6 @@ function loadHistory() {
   if (!raw) return [];
   return raw.split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean).reverse();
 }
-/* stable, non-identifying actor id so the adoption report can count distinct devs */
 function actorId() {
   if (process.env.DS_NO_ACTOR) return "anon";
   const r = sh("git config user.email");
@@ -378,7 +331,6 @@ function actorId() {
   return sha(r.out.trim().toLowerCase()).slice(0, 12);
 }
 
-/* current managed-region content for a given entry */
 function currentRegion(entry) {
   const src = readIf(entry.path);
   if (src == null) return null;
@@ -407,7 +359,6 @@ function detectDrift() {
   return out;
 }
 
-/* build the managed[] list by inspecting the repo as it is right now */
 function surveyManaged() {
   const managed = [];
   const claude = readIf("CLAUDE.md");
@@ -427,10 +378,8 @@ function surveyManaged() {
   return managed;
 }
 
-/* --------------------------------------------------------- unified diff */
 function diffLines(a, b) {
   const A = String(a == null ? "" : a).split("\n"), B = String(b == null ? "" : b).split("\n");
-  /* LCS table — inputs here are small (one file / one block) */
   const n = A.length, m = B.length;
   const L = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1));
   for (let i = n - 1; i >= 0; i--)
@@ -445,7 +394,6 @@ function diffLines(a, b) {
   }
   while (i < n) out.push("- " + A[i++]);
   while (j < m) out.push("+ " + B[j++]);
-  /* trim long runs of context */
   const keep = new Array(out.length).fill(false);
   out.forEach((l, k) => { if (l[0] !== " ") for (let d = -3; d <= 3; d++) if (out[k + d] !== undefined) keep[k + d] = true; });
   const res = []; let skipping = false;
@@ -457,7 +405,6 @@ function diffLines(a, b) {
   return res.join("\n");
 }
 
-/* ------------------------------------------------------------- legacy */
 const LEGACY_PHRASE = "HAPUS DS LAMA";
 function detectLegacy() {
   const items = [];
@@ -481,14 +428,12 @@ function detectLegacy() {
   if (nsrc && nsrc.includes("plugins/design-system")) items.push({ path: nx, note: T("baris plugin DS lama", "old DS plugin line"), edit: "nuxt-plugin-remove" });
   return { found: items.length > 0, items, confirmPhrase: LEGACY_PHRASE };
 }
-/* marker/section-aware, not a keyword sweep: only the contiguous v1 pointer block goes */
 function stripLegacyClaude(src) {
   const lines = src.split("\n");
   const out = [];
   let i = 0;
   while (i < lines.length) {
     if (/@design-system\/CLAUDE\.md/.test(lines[i])) {
-      /* drop this line plus an immediately adjacent heading/bullet that introduces it */
       if (out.length && /^\s*([#>*-]|\d+\.)/.test(out[out.length - 1]) && !out[out.length - 1].trim().startsWith("#!")) out.pop();
       i++;
       while (i < lines.length && lines[i].trim() === "") i++;
@@ -499,7 +444,6 @@ function stripLegacyClaude(src) {
   return out.join("\n").replace(/\n{3,}/g, "\n\n").replace(/^\n+/, "");
 }
 
-/* ----------------------------------------------------------- telemetry */
 function telemetry(entry) {
   const url = process.env.DS_TELEMETRY_URL || dsMeta().telemetryUrl;
   const m = loadManifest();
@@ -519,7 +463,6 @@ function telemetry(entry) {
   } catch {}
 }
 
-/* --------------------------------------------------------------- state */
 function detectState() {
   const isGit = sh("git rev-parse --is-inside-work-tree").ok;
   const gm = readIf(".gitmodules") || "";
@@ -541,7 +484,6 @@ function detectState() {
   const manifest = loadManifest();
   const installed = level !== "not-installed";
 
-  /* panel self-update */
   let panelLatest = null;
   if (subPopulated) {
     const shipped = readIf(path.join(SUBMODULE_DIR, "tools", "ds-setup.cjs"));
@@ -576,7 +518,6 @@ function detectState() {
   };
 }
 
-/* ---------------------------------------------------------------- plans */
 function buildInstallPlan(cfg) {
   const st = detectState();
   const steps = [];
@@ -646,7 +587,6 @@ function buildRevertPlan(cfg) {
       else steps.push({ title: T("Hapus " + e.path + " (disalin dulu ke .ds/.trash/)", "Remove " + e.path + " (copied to .ds/.trash/ first)"), rmfile: e.path });
     }
   } else {
-    /* no receipt: fall back to conservative detection, still file-level */
     if (st.level1tw) steps.push({ title: T("Hapus baris preset dari tailwind.config.js", "Remove the preset line from tailwind.config.js"), edit: "tw-remove" });
     if (st.level1css) steps.push({ title: T("Hapus baris variables.css dari " + st.nuxtConfig, "Remove the variables.css line from " + st.nuxtConfig), edit: "nuxt-remove" });
     if (extractBlock(readIf("CLAUDE.md")) != null) steps.push({ title: T("Hapus bagian bertanda dari CLAUDE.md", "Remove the marked section from CLAUDE.md"), edit: "claude-strip" });
@@ -656,15 +596,15 @@ function buildRevertPlan(cfg) {
     }
   }
 
+  for (const f of ["CLAUDE.md", ".gitignore", ".gitattributes", "tailwind.config.js", nuxtConfigName()]) {
+    if (fs.existsSync(origPath(f))) steps.push({ title: T("Pastikan " + f + " sama persis seperti sebelum install", "Verify " + f + " matches its pre-install original"), verifyOriginal: f });
+  }
   if (readIf("CLAUDE.md") != null) steps.push({ title: T("Hapus CLAUDE.md kalau jadi kosong", "Remove CLAUDE.md if it becomes empty"), pruneClaude: true });
   for (const g of Object.keys(GIT_BLOCKS)) {
     if (readIf(g) != null) steps.push({ title: T("Hapus " + g + " kalau jadi kosong", "Remove " + g + " if it becomes empty"), pruneEmpty: g });
   }
 
   if (st.subRegistered || st.subPopulated) {
-    /* soft: a submodule that git no longer knows about makes these commands fail, and a failed
-       command used to abort execSteps outright — leaving the repo HALF uninstalled, which is a
-       worse state than either end of the operation. Cleanup steps report and carry on. */
     steps.push({ title: T("Deinit submodule", "Deinit the submodule"), cmd: "git submodule deinit -f " + SUBMODULE_DIR, soft: true });
     steps.push({ title: T("Lepas submodule dari git", "Remove the submodule from git tracking"), cmd: "git rm -f " + SUBMODULE_DIR, soft: true });
   }
@@ -695,9 +635,7 @@ function buildRevertPlan(cfg) {
   };
 }
 
-/* ------------------------------------------------------------ execution */
 function stageExisting(paths) {
-  /* F10: git add aborts entirely on a missing pathspec — filter first, then verify */
   const present = paths.filter((p) => fs.existsSync(abs(p)) || sh('git ls-files --error-unmatch -- "' + p + '"').ok);
   if (!present.length) return { staged: [], ok: false };
   for (const p of present) sh('git add -- "' + p + '"');
@@ -726,6 +664,7 @@ async function execSteps(steps, ctx) {
         push(true, "ok"); continue;
       }
       if (s.write) {
+        snapshotOriginal(s.write);
         const body = GIT_BLOCKS[s.write] !== undefined ? hashBlock(s.write)
           : s.write === "CLAUDE.md" ? markedBlock("CLAUDE.md") : PAYLOADS[s.write];
         writeFile(s.write, body); push(true, "wrote " + s.write); continue;
@@ -734,12 +673,14 @@ async function execSteps(steps, ctx) {
         const isGit = GIT_BLOCKS[s.append] !== undefined;
         const prev = readIf(s.append) || "";
         if ((isGit ? extractHashBlock(prev) : extractBlock(prev)) != null) { push(true, "(section already present)"); continue; }
-        writeFile(s.append, (prev ? prev.replace(/\n*$/, "\n\n") : "") + (isGit ? hashBlock(s.append) : markedBlock(s.append)));
+        snapshotOriginal(s.append);
+        const pad = prev === "" ? "" : prev.endsWith("\n\n") ? "" : prev.endsWith("\n") ? "\n" : "\n\n";
+        writeFile(s.append, prev + pad + (isGit ? hashBlock(s.append) : markedBlock(s.append)));
         push(true, "appended to " + s.append); continue;
       }
       if (s.edit) {
-        if (s.edit === "tw") { const p = planTailwindEdit(readIf("tailwind.config.js")); if (p.changed) writeFile("tailwind.config.js", p.out); }
-        else if (s.edit === "nuxt") { const nx = nuxtConfigName(), p = planNuxtEdit(readIf(nx), nx); if (p.changed) writeFile(nx, p.out); }
+        if (s.edit === "tw") { snapshotOriginal("tailwind.config.js"); const p = planTailwindEdit(readIf("tailwind.config.js")); if (p.changed) writeFile("tailwind.config.js", p.out); }
+        else if (s.edit === "nuxt") { const nx = nuxtConfigName(); snapshotOriginal(nx); const p = planNuxtEdit(readIf(nx), nx); if (p.changed) writeFile(nx, p.out); }
         else if (s.edit === "tw-remove") { const src = readIf("tailwind.config.js"); if (src != null) { toTrash("tailwind.config.js"); writeFile("tailwind.config.js", removeManagedLine(src, "tw")); } }
         else if (s.edit === "nuxt-remove") { const nx = nuxtConfigName(), src = readIf(nx); if (src != null) { toTrash(nx); writeFile(nx, removeManagedLine(src, "css")); } }
         else if (s.edit === "claude-strip") { const src = readIf("CLAUDE.md"); if (src != null) { toTrash("CLAUDE.md"); writeFile("CLAUDE.md", stripBlock(src)); } }
@@ -786,16 +727,14 @@ async function execSteps(steps, ctx) {
         else push(true, "kept (has your content)");
         continue;
       }
+      if (s.verifyOriginal) {
+        const verdict = restoreOriginalIfDrifted(s.verifyOriginal);
+        push(true, verdict || "no pre-install snapshot on record (installed by an older panel)");
+        continue;
+      }
       if (s.pruneGitmodules) {
         const src = readIf(".gitmodules");
         if (src == null) { push(true, "not present"); continue; }
-        /* git leaves an empty (or whitespace-only) .gitmodules behind after `git rm`ing the last
-           submodule, and it stays STAGED as a new file — which is why an uninstall used to leave
-           an "A .gitmodules" sitting in Source Control. */
-        /* git only rewrites .gitmodules when `git rm <path>` succeeds. If the folder was already
-           gone, the stale section survives and the file stays STAGED as an addition — the
-           "A .gitmodules" left sitting in Source Control after an uninstall. Drop our own
-           section explicitly, then remove the file if nothing else claims it. */
         let out = src.replace(
           new RegExp('\\[submodule "' + SUBMODULE_DIR.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + '"\\][^\\[]*', "g"), "");
         if (out !== src) { writeFile(".gitmodules", out); src = out; }
@@ -815,12 +754,6 @@ async function execSteps(steps, ctx) {
       if (s.archiveDs) {
         const src = abs(DS_DIR_LOCAL);
         if (!fs.existsSync(src)) { push(true, "not present"); continue; }
-        /* Only the panel's OWN artifacts move. A file a developer put in .ds/ is theirs
-           (guarantee F11) and an uninstall that quietly filed it away would be exactly the
-           kind of "helpful" overreach this whole release is about.
-           history.jsonl is the further exception: once it is COMMITTED it is team knowledge
-           and the basis of the adoption report, so removing it from the tree would be
-           deleting other people's data. Only an untracked log is archived. */
         const OWNED = new Set(["bindings.md", "manifest.json", "rollback-point.json", ".trash", "requests"]);
         const stamp = new Date().toISOString().replace(/[:.]/g, "-");
         const dest = path.join(RECOVERY, "ds-" + stamp);
@@ -849,8 +782,14 @@ async function execSteps(steps, ctx) {
         const dest = path.join(RECOVERY, "ds-setup.cjs." + stamp);
         fs.mkdirSync(path.dirname(dest), { recursive: true });
         fs.cpSync(src, dest);
-        PENDING_SELF_DELETE = src;
-        push(true, "copied to " + relRecovery(dest) + " \u2014 removed from the repo when the panel stops");
+        try {
+          fs.rmSync(src, { force: true });
+          sh('git rm --cached --ignore-unmatch -- "ds-setup.cjs"');
+          push(true, "moved to " + relRecovery(dest) + " and removed from the repo");
+        } catch (e) {
+          PENDING_SELF_DELETE = src;
+          push(true, "copied to " + relRecovery(dest) + " \u2014 the original is locked by this OS, it goes when the panel stops");
+        }
         continue;
       }
       if (s.verifyClean) {
@@ -858,7 +797,6 @@ async function execSteps(steps, ctx) {
         if (!r.ok) { push(true, "not a git repo \u2014 skipped"); continue; }
         const lines = r.out.split("\n").map((l) => l.trim()).filter(Boolean);
         if (!lines.length) { push(true, "working tree is clean \u2014 back to the pre-install state"); continue; }
-        /* An honest report beats a green tick: name exactly what is left and why. */
         push(true, lines.length + " path(s) still differ from HEAD:\n" + lines.slice(0, 20).join("\n") +
           (lines.length > 20 ? "\n\u2026" : "") +
           "\n\nIf any of these are the design system's doing, they are recoverable from \u2039git\u203a/ds-recovery/.");
@@ -929,7 +867,6 @@ function runDoctor() {
   return { ok: r.ok, output: r.out };
 }
 
-/* ------------------------------------------------------------- overview */
 function dsInfo() {
   if (!existsNonEmptyDir(SUBMODULE_DIR)) return { installed: false };
   const base = abs(SUBMODULE_DIR);
@@ -944,7 +881,6 @@ function dsInfo() {
   const rootBlock = vars.split(":root {")[1] ? vars.split(":root {")[1].split("}")[0] : "";
   const tokenCount = (rootBlock.match(/--[\w-]+\s*:/g) || []).length || null;
 
-  /* product stack, read live from the design system — never hard-coded */
   let typeface = null, icons = null, pages = null;
   try {
     const f = JSON.parse(rd("src/foundations.json"));
@@ -996,7 +932,6 @@ function checkUpdate() {
   return { upToDate: behind === 0, behind, newCommits };
 }
 
-/* --------------------------------------------------- pre-flight impact */
 function impactReport() {
   if (!existsNonEmptyDir(SUBMODULE_DIR)) return { error: T("Belum terpasang.", "Not installed.") };
   const base = abs(SUBMODULE_DIR);
@@ -1028,7 +963,6 @@ function impactReport() {
     bump = B[0] > A[0] ? "major" : B[1] > A[1] ? "minor" : B[2] > A[2] ? "patch" : "same";
   }
 
-  /* scan the consumer for usage of anything that disappears */
   const needles = tokensRemoved.map((v) => v).concat(tokensRemoved.map((v) => v.replace(/^--color-/, "").replace(/^--/, "")));
   const affected = [];
   if (tokensRemoved.length) {
@@ -1054,7 +988,6 @@ function impactReport() {
   return { fromVersion, toVersion, bump, tokensAdded, tokensRemoved, specsAdded, specsRemoved, affected: affected.slice(0, 200) };
 }
 
-/* ---------------------------------------------------- change requests */
 function buildChangeRequest(file, reason, lang) {
   const m = loadManifest();
   const entry = m ? m.managed.filter((e) => e.path === file)[0] : null;
@@ -1114,7 +1047,6 @@ function buildChangeRequest(file, reason, lang) {
   return { savedTo: rel, body, mailto, hasEmail: !!to };
 }
 
-/* ----------------------------------------------------------- prompts */
 function buildPromptSet(level) {
   const PRE = "Before writing any code, read CLAUDE.md at the repo root and follow its full instruction chain (design-system/CLAUDE.md -> design-system/catalog/INDEX.md -> .ds/bindings.md).";
   const STACK = "Product stack: Fustat typeface, Tabler icons (full literal classes like i-tabler-user), and the .ts-* text-style classes. Never substitute another icon set.";
@@ -1151,7 +1083,6 @@ function buildPromptSet(level) {
   ];
 }
 
-/* ------------------------------------------------------------- server */
 const args = process.argv.slice(2);
 const NO_OPEN = args.includes("--no-open");
 const pi = args.indexOf("--port");
@@ -1186,8 +1117,6 @@ const server = http.createServer(async (req, res) => {
     const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp", ".json": "application/json; charset=utf-8", ".woff2": "font/woff2", ".md": "text/plain; charset=utf-8", ".mp4": "video/mp4", ".webm": "video/webm", ".m4v": "video/mp4" };
     const ctype = types[path.extname(full).toLowerCase()] || "text/plain; charset=utf-8";
 
-    /* Video needs byte-range replies or the browser cannot seek (and Safari
-       refuses to start playback at all without them). */
     if (/^video\//.test(ctype)) {
       const size = fs.statSync(full).size;
       const range = req.headers.range;
@@ -1213,7 +1142,6 @@ const server = http.createServer(async (req, res) => {
     return res.end(fs.readFileSync(full));
   }
 
-  /* ---- read-only, always available ---- */
   if (req.method === "GET" && url === "/api/state") return json(res, 200, detectState());
   if (req.method === "GET" && url === "/api/progress") return json(res, 200, PROGRESS);
   if (req.method === "GET" && url === "/api/overview") return json(res, 200, dsInfo());
@@ -1235,7 +1163,6 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { diff: diffLines(pristineRegion(e), currentRegion(e)), wizardVersion: WIZARD_VERSION });
   }
 
-  /* ---- plans (read-only) ---- */
   if (req.method === "POST" && url === "/api/plan") return json(res, 200, buildInstallPlan(await body(req)));
   if (req.method === "POST" && url === "/api/revert-plan") return json(res, 200, buildRevertPlan(await body(req)));
   if (req.method === "POST" && url === "/api/legacy-plan") {
@@ -1323,7 +1250,6 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
-  /* ---- mutating ---- */
   if (req.method === "POST" && url === "/api/apply") {
     if (LOCKED.install) return json(res, 400, { error: T("Install sudah dijalankan di sesi ini.", "Install already ran in this session.") });
     const cfg = await body(req);
@@ -1412,7 +1338,6 @@ const server = http.createServer(async (req, res) => {
   }
   if (req.method === "POST" && url === "/api/adopt") {
     if (!detectState().unmanaged) return json(res, 400, { error: T("Sudah punya struk.", "Already has a receipt.") });
-    /* add markers to any config lines that predate them — content unchanged */
     for (const kind of ["tw", "css"]) {
       const file = kind === "tw" ? "tailwind.config.js" : nuxtConfigName();
       const src = readIf(file); if (src == null) continue;

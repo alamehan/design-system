@@ -356,3 +356,52 @@ catch, reintroduced by the same hand that wrote the gate, four hours later.
 
 That is the strongest argument for gates there is. Not that they catch other people's mistakes.
 That they catch the ones you make while confident you have understood the failure.
+
+
+---
+
+## v3.4.6 — fixing the revert when the install was the bug
+
+v3.4.5 made the uninstall byte-exact and it was still not byte-exact, because the analysis had
+stopped one function too early. `stripHashBlock` was made surgical; the *append* that put the
+block there was not. It ran `prev.replace(/\n*$/, "\n\n")` — normalising the developer's
+trailing newlines before writing. A file ending in no newline, or three, had already lost those
+bytes by the time anyone asked for them back. No amount of care in the removal can restore what
+the insertion destroyed.
+
+The general shape: **when a round trip does not come back clean, suspect the outbound leg.** The
+revert was the visible half and it absorbed two releases of attention while the install quietly
+did the damage.
+
+The fix is not only a better append. It is that the revert now **proves** its result: a pristine
+copy of every file goes into `.git/ds-recovery/original/` before the panel's first write, and
+the revert diffs against it and restores verbatim on any drift. Careful surgery plus a proof
+beats careful surgery alone, and the proof is what was actually asked for — the repo back the
+way it was.
+
+The second leftover was simpler and more embarrassing. `ds-setup.cjs` was scheduled for deletion
+in a `process.on("exit")` hook. That hook does not fire when someone closes the browser tab and
+walks away, which is what everybody does. The step log said "removed from the repo when the
+panel stops" and was technically true and practically useless: **a cleanup conditioned on an
+event that usually does not happen is not a cleanup.**
+
+### And a layout lesson about the word "fixed"
+
+The new gallery index used `position: fixed`. Correct on every page that does not scroll
+sideways. composed-05 is 1316px of table, so the page does scroll sideways — and a fixed element
+stays put while the content slides underneath it. The index covered the thing it exists to index,
+and only at the one scroll position nobody tests at.
+
+Its mirror image was in the same file: the page header sat *outside* the scrolling column, so it
+rendered under the index at x=0. Two opposite mistakes, one cause — the layout was assembled out
+of offsets rather than declared as a structure. A grid cannot overlap itself.
+
+### On the budget that was about to be raised
+
+The comment-strip in `build-wizard.js` exists because the bundle crossed its 320 KB tripwire and
+the e2e assertion beside that number says, in as many words: look for waste first and only then
+argue for a new number. There was waste — the maintainer's comments were being shipped inside a
+single-file artifact where nobody reads them, while the source keeps every one. 323 KB became
+313 KB. The number did not move.
+
+A budget you raise whenever you reach it is a log of your own growth, not a limit.

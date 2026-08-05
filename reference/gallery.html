@@ -40,81 +40,85 @@
 </head>
 <body id="top">
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><!-- Tabler Icons 3.45.0 - MIT License - https://tabler.io/icons --><symbol id="tb-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10" /></symbol><symbol id="tb-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6l6 -6" /></symbol><symbol id="tb-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6l6 6" /></symbol><symbol id="tb-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6" /></symbol><symbol id="tb-dots" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></symbol><symbol id="tb-dots-vertical" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /> <path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></symbol><symbol id="tb-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /> <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></symbol><symbol id="tb-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4" /> <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" /> <path d="M9 9l1 0" /> <path d="M9 13l6 0" /> <path d="M9 17l6 0" /></symbol><symbol id="tb-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /> <path d="M3 7l9 6l9 -6" /></symbol><symbol id="tb-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10.5 -10.5a2.83 2.83 0 1 0 -4 -4l-10.5 10.5v4" /> <path d="M13.5 6.5l4 4" /></symbol><symbol id="tb-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /> <path d="M21 21l-6 -6" /></symbol><symbol id="tb-search-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.04 5.06a7 7 0 0 0 9.91 9.89m1.58 -2.43a7 7 0 0 0 -9.04 -9.06" /> <path d="M3 3l18 18" /></symbol><symbol id="tb-selector" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4 -4l4 4" /> <path d="M16 15l-4 4l-4 -4" /></symbol><symbol id="tb-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /> <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></symbol><symbol id="tb-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6l-12 12" /> <path d="M6 6l12 12" /></symbol><symbol id="tb-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /> <path d="M16 3v4" /> <path d="M8 3v4" /> <path d="M4 11h16" /> <path d="M11 15h1" /> <path d="M12 15v3" /></symbol><symbol id="tb-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l14 0" /></symbol><symbol id="tb-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l0 14" /> <path d="M5 12l14 0" /></symbol><symbol id="tb-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" /> <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" /> <path d="M3 3l18 18" /></symbol><symbol id="tb-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /> <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></symbol><symbol id="tb-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l16 0" /> <path d="M10 11l0 6" /> <path d="M14 11l0 6" /> <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /> <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></symbol><symbol id="tb-bold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z" /> <path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7" /></symbol><symbol id="tb-italic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5l6 0" /> <path d="M7 19l6 0" /> <path d="M14 5l-4 14" /></symbol><symbol id="tb-underline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5v5a5 5 0 0 0 10 0v-5" /> <path d="M5 19h14" /></symbol><symbol id="tb-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l11 0" /> <path d="M9 12l11 0" /> <path d="M9 18l11 0" /> <path d="M5 6l0 .01" /> <path d="M5 12l0 .01" /> <path d="M5 18l0 .01" /></symbol><symbol id="tb-list-numbers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 6h9" /> <path d="M11 12h9" /> <path d="M12 18h8" /> <path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /> <path d="M6 10v-6l-2 2" /></symbol><symbol id="tb-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15l6 -6" /> <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /> <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /></symbol><symbol id="tb-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /> <path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /> <path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /> <path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /></symbol><symbol id="tb-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" /> <path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></symbol><symbol id="tb-chevron-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6 -6l6 6" /></symbol></svg>
-<p class="ref-stamp">REF v3.4.5 · generated 2026-08-04</p>
-<h1 class="ref-h">Component Reference Gallery</h1>
-<p class="ref-sub">Plain HTML + CSS, token-pure. Open directly in a browser. This is the visual truth for all components — every <code>catalog/components/&lt;code&gt;.md</code> links back here by anchor, so <b>section ids are a contract and never change</b>.<br /><b>Part 1 — Base components</b> (Assets → Atoms → Molecules → Composites → Layout → Organisms) is the default grounding tier. <b><a href="#composed">Part 2 — Composed samples</a></b> shows assembled screens; consult it only when the task needs that level of detail — <a href="#composed-05">composed-05</a> is the one to copy for any non-trivial table.</p>
+<div class="ref-shell" id="shell">
 <nav class="ref-toc" aria-label="Component index">
   <div class="ref-toc__inner">
-    <p class="ref-toc__title">Component index</p>
+    <div class="ref-toc__bar">
+      <p class="ref-toc__title">Component index</p>
+      <button type="button" class="ref-toc__toggle" id="tocToggle" aria-controls="shell" aria-expanded="true" title="Collapse the index (Ctrl/Cmd + \)"><span aria-hidden="true">«</span><span class="ref-sr">Collapse the index</span></button>
+    </div>
     <input class="ref-toc__filter" type="search" placeholder="Filter components…" aria-label="Filter components" autocomplete="off" />
     <p class="ref-toc__group">Assets</p>
     <ul class="ref-toc__list" data-tier="asset">
-      <li><a href="#avatar" data-for="avatar"><span class="ref-toc__code">asset-01</span><span class="ref-toc__name">Avatar</span></a></li>
+      <li><a href="#avatar" data-for="avatar" title="asset-01 Avatar"><span class="ref-toc__code">asset-01</span><span class="ref-toc__name">Avatar</span></a></li>
     </ul>
     <p class="ref-toc__group">Atoms — actions</p>
     <ul class="ref-toc__list" data-tier="atom">
-      <li><a href="#button" data-for="button"><span class="ref-toc__code">atom-01</span><span class="ref-toc__name">Button</span></a></li>
-      <li><a href="#icon-button" data-for="icon-button"><span class="ref-toc__code">atom-02</span><span class="ref-toc__name">IconButton</span></a></li>
-      <li><a href="#split-button" data-for="split-button"><span class="ref-toc__code">atom-03</span><span class="ref-toc__name">SplitButton</span></a></li>
-      <li><a href="#custom-button" data-for="custom-button"><span class="ref-toc__code">atom-04</span><span class="ref-toc__name">CustomButton</span></a></li>
+      <li><a href="#button" data-for="button" title="atom-01 Button"><span class="ref-toc__code">atom-01</span><span class="ref-toc__name">Button</span></a></li>
+      <li><a href="#icon-button" data-for="icon-button" title="atom-02 IconButton"><span class="ref-toc__code">atom-02</span><span class="ref-toc__name">IconButton</span></a></li>
+      <li><a href="#split-button" data-for="split-button" title="atom-03 SplitButton"><span class="ref-toc__code">atom-03</span><span class="ref-toc__name">SplitButton</span></a></li>
+      <li><a href="#custom-button" data-for="custom-button" title="atom-04 CustomButton"><span class="ref-toc__code">atom-04</span><span class="ref-toc__name">CustomButton</span></a></li>
     </ul>
     <p class="ref-toc__group">Atoms — data display</p>
     <ul class="ref-toc__list" data-tier="atom">
-      <li><a href="#chip" data-for="chip"><span class="ref-toc__code">atom-05</span><span class="ref-toc__name">Chip</span></a></li>
-      <li><a href="#status-chip" data-for="status-chip"><span class="ref-toc__code">atom-06</span><span class="ref-toc__name">StatusChip</span></a></li>
-      <li><a href="#toast" data-for="toast"><span class="ref-toc__code">atom-07</span><span class="ref-toc__name">Toast</span></a></li>
+      <li><a href="#chip" data-for="chip" title="atom-05 Chip"><span class="ref-toc__code">atom-05</span><span class="ref-toc__name">Chip</span></a></li>
+      <li><a href="#status-chip" data-for="status-chip" title="atom-06 StatusChip"><span class="ref-toc__code">atom-06</span><span class="ref-toc__name">StatusChip</span></a></li>
+      <li><a href="#toast" data-for="toast" title="atom-07 Toast"><span class="ref-toc__code">atom-07</span><span class="ref-toc__name">Toast</span></a></li>
     </ul>
     <p class="ref-toc__group">Atoms — form controls</p>
     <ul class="ref-toc__list" data-tier="atom">
-      <li><a href="#input" data-for="input"><span class="ref-toc__code">atom-08</span><span class="ref-toc__name">Input</span></a></li>
-      <li><a href="#textarea" data-for="textarea"><span class="ref-toc__code">atom-09</span><span class="ref-toc__name">Textarea</span></a></li>
-      <li><a href="#rich-text-editor" data-for="rich-text-editor"><span class="ref-toc__code">atom-10</span><span class="ref-toc__name">RichTextEditor</span></a></li>
-      <li><a href="#checkbox" data-for="checkbox"><span class="ref-toc__code">atom-12</span><span class="ref-toc__name">Checkbox</span></a></li>
-      <li><a href="#radio" data-for="radio"><span class="ref-toc__code">atom-12</span><span class="ref-toc__name">Radio</span></a></li>
-      <li><a href="#switch" data-for="switch"><span class="ref-toc__code">atom-12</span><span class="ref-toc__name">Switch</span></a></li>
-      <li><a href="#range-slider" data-for="range-slider"><span class="ref-toc__code">atom-13</span><span class="ref-toc__name">RangeSlider</span></a></li>
+      <li><a href="#input" data-for="input" title="atom-08 Input"><span class="ref-toc__code">atom-08</span><span class="ref-toc__name">Input</span></a></li>
+      <li><a href="#textarea" data-for="textarea" title="atom-09 Textarea"><span class="ref-toc__code">atom-09</span><span class="ref-toc__name">Textarea</span></a></li>
+      <li><a href="#rich-text-editor" data-for="rich-text-editor" title="atom-10 RichTextEditor"><span class="ref-toc__code">atom-10</span><span class="ref-toc__name">RichTextEditor</span></a></li>
+      <li><a href="#checkbox" data-for="checkbox" title="atom-12 Checkbox"><span class="ref-toc__code">atom-12</span><span class="ref-toc__name">Checkbox</span></a></li>
+      <li><a href="#radio" data-for="radio" title="atom-12 Radio"><span class="ref-toc__code">atom-12</span><span class="ref-toc__name">Radio</span></a></li>
+      <li><a href="#switch" data-for="switch" title="atom-12 Switch"><span class="ref-toc__code">atom-12</span><span class="ref-toc__name">Switch</span></a></li>
+      <li><a href="#range-slider" data-for="range-slider" title="atom-13 RangeSlider"><span class="ref-toc__code">atom-13</span><span class="ref-toc__name">RangeSlider</span></a></li>
     </ul>
     <p class="ref-toc__group">Atoms — navigation</p>
     <ul class="ref-toc__list" data-tier="atom">
-      <li><a href="#breadcrumb" data-for="breadcrumb"><span class="ref-toc__code">atom-14</span><span class="ref-toc__name">Breadcrumb</span></a></li>
-      <li><a href="#dropdown-menu" data-for="dropdown-menu"><span class="ref-toc__code">atom-15</span><span class="ref-toc__name">DropdownMenu</span></a></li>
-      <li><a href="#tabs" data-for="tabs"><span class="ref-toc__code">atom-16</span><span class="ref-toc__name">Tabs</span></a></li>
+      <li><a href="#breadcrumb" data-for="breadcrumb" title="atom-14 Breadcrumb"><span class="ref-toc__code">atom-14</span><span class="ref-toc__name">Breadcrumb</span></a></li>
+      <li><a href="#dropdown-menu" data-for="dropdown-menu" title="atom-15 DropdownMenu"><span class="ref-toc__code">atom-15</span><span class="ref-toc__name">DropdownMenu</span></a></li>
+      <li><a href="#tabs" data-for="tabs" title="atom-16 Tabs"><span class="ref-toc__code">atom-16</span><span class="ref-toc__name">Tabs</span></a></li>
     </ul>
     <p class="ref-toc__group">Molecules — table parts</p>
     <ul class="ref-toc__list" data-tier="molecule">
-      <li><a href="#table-column" data-for="table-column"><span class="ref-toc__code">molecule-04</span><span class="ref-toc__name">TableColumn</span></a></li>
-      <li><a href="#table-row" data-for="table-row"><span class="ref-toc__code">molecule-05</span><span class="ref-toc__name">TableRow</span></a></li>
+      <li><a href="#table-column" data-for="table-column" title="molecule-04 TableColumn"><span class="ref-toc__code">molecule-04</span><span class="ref-toc__name">TableColumn</span></a></li>
+      <li><a href="#table-row" data-for="table-row" title="molecule-05 TableRow"><span class="ref-toc__code">molecule-05</span><span class="ref-toc__name">TableRow</span></a></li>
     </ul>
     <p class="ref-toc__group">Composites</p>
     <ul class="ref-toc__list" data-tier="composite">
-      <li><a href="#filter-field" data-for="filter-field"><span class="ref-toc__code">composite-04</span><span class="ref-toc__name">FilterField</span></a></li>
-      <li><a href="#candidate-info-block" data-for="candidate-info-block"><span class="ref-toc__code">composite-06</span><span class="ref-toc__name">CandidateInfoBlock</span></a></li>
-      <li><a href="#filter-panel" data-for="filter-panel"><span class="ref-toc__code">composite-07</span><span class="ref-toc__name">FilterPanel</span></a></li>
-      <li><a href="#candidate-card" data-for="candidate-card"><span class="ref-toc__code">composite-08</span><span class="ref-toc__name">CandidateCard</span></a></li>
+      <li><a href="#filter-field" data-for="filter-field" title="composite-04 FilterField"><span class="ref-toc__code">composite-04</span><span class="ref-toc__name">FilterField</span></a></li>
+      <li><a href="#candidate-info-block" data-for="candidate-info-block" title="composite-06 CandidateInfoBlock"><span class="ref-toc__code">composite-06</span><span class="ref-toc__name">CandidateInfoBlock</span></a></li>
+      <li><a href="#filter-panel" data-for="filter-panel" title="composite-07 FilterPanel"><span class="ref-toc__code">composite-07</span><span class="ref-toc__name">FilterPanel</span></a></li>
+      <li><a href="#candidate-card" data-for="candidate-card" title="composite-08 CandidateCard"><span class="ref-toc__code">composite-08</span><span class="ref-toc__name">CandidateCard</span></a></li>
     </ul>
     <p class="ref-toc__group">Layout</p>
     <ul class="ref-toc__list" data-tier="layout">
-      <li><a href="#pagination" data-for="pagination"><span class="ref-toc__code">layout-03</span><span class="ref-toc__name">Pagination</span></a></li>
-      <li><a href="#panel" data-for="panel"><span class="ref-toc__code">layout-05</span><span class="ref-toc__name">Panel</span></a></li>
-      <li><a href="#panel-section" data-for="panel-section"><span class="ref-toc__code">layout-06</span><span class="ref-toc__name">PanelSection</span></a></li>
-      <li><a href="#modal" data-for="modal"><span class="ref-toc__code">layout-07</span><span class="ref-toc__name">Modal</span></a></li>
+      <li><a href="#pagination" data-for="pagination" title="layout-03 Pagination"><span class="ref-toc__code">layout-03</span><span class="ref-toc__name">Pagination</span></a></li>
+      <li><a href="#panel" data-for="panel" title="layout-05 Panel"><span class="ref-toc__code">layout-05</span><span class="ref-toc__name">Panel</span></a></li>
+      <li><a href="#panel-section" data-for="panel-section" title="layout-06 PanelSection"><span class="ref-toc__code">layout-06</span><span class="ref-toc__name">PanelSection</span></a></li>
+      <li><a href="#modal" data-for="modal" title="layout-07 Modal"><span class="ref-toc__code">layout-07</span><span class="ref-toc__name">Modal</span></a></li>
     </ul>
     <p class="ref-toc__group">Organisms</p>
     <ul class="ref-toc__list" data-tier="organism">
-      <li><a href="#data-table" data-for="data-table"><span class="ref-toc__code">organism-01</span><span class="ref-toc__name">DataTable</span></a></li>
+      <li><a href="#data-table" data-for="data-table" title="organism-01 DataTable"><span class="ref-toc__code">organism-01</span><span class="ref-toc__name">DataTable</span></a></li>
     </ul>
     <p class="ref-toc__group">Composed samples</p>
     <ul class="ref-toc__list" data-tier="composed">
-      <li><a href="#composed" data-for="composed"><span class="ref-toc__code"></span><span class="ref-toc__name">composed · Composed samples</span></a></li>
-      <li><a href="#composed-01" data-for="composed-01"><span class="ref-toc__code">composed-01</span><span class="ref-toc__name">List page: table always in a white card</span></a></li>
-      <li><a href="#composed-02" data-for="composed-02"><span class="ref-toc__code">composed-02</span><span class="ref-toc__name">Slide-in detail panel (from the right)</span></a></li>
-      <li><a href="#composed-03" data-for="composed-03"><span class="ref-toc__code">composed-03</span><span class="ref-toc__name">Form section (in a white card)</span></a></li>
-      <li><a href="#composed-04" data-for="composed-04"><span class="ref-toc__code">composed-04</span><span class="ref-toc__name">Empty state & confirmation modal</span></a></li>
-      <li><a href="#composed-05" data-for="composed-05"><span class="ref-toc__code">composed-05</span><span class="ref-toc__name">Data table: every column & cell type in one screen</span></a></li>
+      <li><a href="#composed" data-for="composed" title=" composed · Composed samples"><span class="ref-toc__code"></span><span class="ref-toc__name">composed · Composed samples</span></a></li>
+      <li><a href="#composed-01" data-for="composed-01" title="composed-01 List page: table always in a white card"><span class="ref-toc__code">composed-01</span><span class="ref-toc__name">List page: table always in a white card</span></a></li>
+      <li><a href="#composed-02" data-for="composed-02" title="composed-02 Slide-in detail panel (from the right)"><span class="ref-toc__code">composed-02</span><span class="ref-toc__name">Slide-in detail panel (from the right)</span></a></li>
+      <li><a href="#composed-03" data-for="composed-03" title="composed-03 Form section (in a white card)"><span class="ref-toc__code">composed-03</span><span class="ref-toc__name">Form section (in a white card)</span></a></li>
+      <li><a href="#composed-04" data-for="composed-04" title="composed-04 Empty state & confirmation modal"><span class="ref-toc__code">composed-04</span><span class="ref-toc__name">Empty state & confirmation modal</span></a></li>
+      <li><a href="#composed-05" data-for="composed-05" title="composed-05 Data table: every column & cell type in one screen"><span class="ref-toc__code">composed-05</span><span class="ref-toc__name">Data table: every column & cell type in one screen</span></a></li>
     </ul>
   </div>
 </nav>
 <main class="ref-main">
+<p class="ref-stamp">REF v3.4.6 · generated 2026-08-04</p>
+<h1 class="ref-h">Component Reference Gallery</h1>
+<p class="ref-sub">Plain HTML + CSS, token-pure. Open directly in a browser. This is the visual truth for all components — every <code>catalog/components/&lt;code&gt;.md</code> links back here by anchor, so <b>section ids are a contract and never change</b>.<br /><b>Part 1 — Base components</b> (Assets → Atoms → Molecules → Composites → Layout → Organisms) is the default grounding tier. <b><a href="#composed">Part 2 — Composed samples</a></b> shows assembled screens; consult it only when the task needs that level of detail — <a href="#composed-05">composed-05</a> is the one to copy for any non-trivial table.</p>
 <h2 class="ref-grouphead" id="grp-assets">Assets</h2>
 
 <section class="ref-section" id="avatar" data-name="asset-01 — avatar">
@@ -758,6 +762,7 @@
   </div>
 </section>
 </main>
+</div>
 <a class="ref-top" href="#top" aria-label="Back to top">↑</a>
 
 
@@ -981,10 +986,27 @@
   }, { rootMargin: "0px 0px -75% 0px", threshold: 0 });
   document.querySelectorAll("section.ref-section[id]").forEach(function (s) { io2.observe(s); });
 
+  /* Collapse the rail. State persists, because a preference you have to re-set on every page
+     load is not a preference. */
+  var shell = document.getElementById("shell");
+  var toggle = document.getElementById("tocToggle");
+  function setCollapsed(on) {
+    shell.classList.toggle("is-collapsed", on);
+    toggle.setAttribute("aria-expanded", on ? "false" : "true");
+    toggle.firstElementChild.textContent = on ? "\u00bb" : "\u00ab";
+    toggle.title = (on ? "Expand" : "Collapse") + " the index (\u2318/Ctrl + \\)";
+    try { localStorage.setItem("dsTocCollapsed", on ? "1" : "0"); } catch (e) {}
+  }
+  try { if (localStorage.getItem("dsTocCollapsed") === "1") setCollapsed(true); } catch (e) {}
+  toggle.addEventListener("click", function () { setCollapsed(!shell.classList.contains("is-collapsed")); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "\\" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); setCollapsed(!shell.classList.contains("is-collapsed")); }
+  });
+
   /* "/" focuses the filter, the way every docs site people already use behaves */
   document.addEventListener("keydown", function (e) {
     if (e.key === "/" && document.activeElement !== input && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) {
-      e.preventDefault(); input.focus(); input.select();
+      e.preventDefault(); setCollapsed(false); input.focus(); input.select();
     }
   });
 })();

@@ -41,28 +41,58 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
 .ref-label { font-size: 11px; line-height: 16px; letter-spacing: 0.5px; color: var(--color-system-text-mute); }
 
 /* ---------------------------------------------------------------------------------------
-   Gallery navigation. Thirty-five sections in one scroll is complete but unusable: finding
-   TableColumn meant a Ctrl+F on a 200KB page. A sticky, grouped, filterable index turns the
-   same content into something you can move around in.
-   Anchors are untouched by design — CLAUDE.md and every catalog Reference: line point at
-   #<id>, so the ids are a contract. Only the ORDER and the chrome changed.
+   Gallery navigation.
+
+   v3.4.5 used `position: fixed` for the index. That was wrong in a way only a wide specimen
+   reveals: composed-05 is 1316px of table, so the page itself scrolls horizontally — and a
+   FIXED element does not move when it does. Scroll right and the index sits on top of the
+   content it is supposed to index. The page header had the same fault from the other side: it
+   lived outside the scrolling column entirely, so it rendered underneath the index at x=0.
+
+   The whole page is now one grid. The index is a real column that participates in layout, so
+   it can never overlap anything, and `min-width: 0` on the content column keeps a wide table
+   scrolling INSIDE its own `.es-table__scroll` instead of stretching the document.
    --------------------------------------------------------------------------------------- */
+.ref-shell {
+  display: grid;
+  grid-template-columns: 268px minmax(0, 1fr);
+  align-items: start;
+  transition: grid-template-columns .16s ease;
+}
+.ref-shell.is-collapsed { grid-template-columns: 48px minmax(0, 1fr); }
+
 .ref-toc {
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  width: 268px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   border-right: 1px solid var(--color-system-border-soft);
   background: var(--color-system-surface-soft);
-  padding: 20px 0 40px;
-  z-index: 20;
+  padding: 16px 0 40px;
+  min-width: 0;
 }
-.ref-toc__inner { padding: 0 16px; }
-.ref-toc__title { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--color-system-text-mute); margin: 0 0 10px; }
+.ref-toc__inner { padding: 0 12px; }
+.ref-toc__bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.ref-toc__title { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--color-system-text-mute); margin: 0; white-space: nowrap; }
+.ref-toc__toggle {
+  flex: none; width: 24px; height: 24px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--color-system-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-pure-white);
+  color: var(--color-system-text-mute);
+  cursor: pointer;
+  font-size: 14px; line-height: 20px;
+}
+.ref-toc__toggle:hover { color: var(--color-system-text-head); background: var(--color-neutral-muted); }
+.ref-toc__toggle:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+.ref-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
 .ref-toc__filter {
   width: 100%;
   padding: 8px 10px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   border: 1px solid var(--color-system-border-soft);
   border-radius: var(--radius-md);
   background: var(--color-neutral-pure-white);
@@ -70,40 +100,52 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
   color: var(--color-system-text-head);
 }
 .ref-toc__filter:focus { outline: none; border-color: var(--color-brand-brand); box-shadow: var(--shadow-State-Focus); }
-.ref-toc__group { font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--color-system-text-mute); margin: 16px 0 6px; }
+.ref-toc__group { font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--color-system-text-mute); margin: 14px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ref-toc__list { list-style: none; margin: 0; padding: 0; }
+
+/* ONE LINE PER ENTRY, always. A three-line wrap for composed-05 made the index taller than the
+   thing it indexes and destroyed the scannability that is the entire reason it exists.
+   The full name stays reachable as a title tooltip. */
 .ref-toc__list a {
   display: flex; align-items: baseline; gap: 8px;
   padding: 5px 8px; border-radius: var(--radius-md);
   text-decoration: none; color: var(--color-system-text-body);
   font-size: 14px; line-height: 20px;
+  white-space: nowrap; overflow: hidden; min-width: 0;
 }
 .ref-toc__list a:hover { background: var(--color-neutral-muted); color: var(--color-system-text-head); }
 .ref-toc__list a.is-current { background: var(--color-brand-brand-surface-soft); color: var(--color-brand-brand); font-weight: 700; }
-.ref-toc__code { font-size: 11px; line-height: 16px; color: var(--color-system-text-mute); flex: none; min-width: 62px; }
+/* The code is the identifier — truncating "composite-04" to "composite…" throws away the only
+   part that disambiguates it. Give it the width it needs; the NAME is what may ellipsis. */
+.ref-toc__code { font-size: 11px; line-height: 16px; color: var(--color-system-text-mute); flex: none; width: 74px; white-space: nowrap; }
 .ref-toc__list a.is-current .ref-toc__code { color: var(--color-brand-brand); }
-.ref-toc__name { min-width: 0; }
+.ref-toc__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ref-toc__group.is-hidden, .ref-toc__list li.is-hidden { display: none; }
 
-.ref-main { margin-left: 268px; padding: 0 8px 120px; }
+/* Collapsed: the rail keeps only the toggle, so the content column gets the width back. */
+.ref-shell.is-collapsed .ref-toc__inner { padding: 0 10px; }
+.ref-shell.is-collapsed .ref-toc__title,
+.ref-shell.is-collapsed .ref-toc__filter,
+.ref-shell.is-collapsed .ref-toc__group,
+.ref-shell.is-collapsed .ref-toc__list { display: none; }
+.ref-shell.is-collapsed .ref-toc__bar { justify-content: center; }
+
+.ref-main { min-width: 0; padding: 20px 24px 120px; }
 .ref-grouphead {
   font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
   color: var(--color-system-text-mute);
   margin: 44px 0 4px; padding-bottom: 8px;
   border-bottom: 1px solid var(--color-system-border-soft);
-  scroll-margin-top: 16px;
+  scroll-margin-top: 12px;
 }
-.ref-section { scroll-margin-top: 16px; position: relative; }
-/* the copyable per-section anchor sits in the gutter and only appears on hover, so it never
-   competes with the specimen it labels */
+.ref-section { scroll-margin-top: 12px; position: relative; }
 .ref-anchor {
-  position: absolute; left: -18px; top: 2px;
+  position: absolute; left: -16px; top: 2px;
   color: var(--color-system-text-mute); text-decoration: none;
   opacity: 0; pointer-events: none; transition: opacity .12s ease;
   font-size: 14px; line-height: 20px;
 }
-/* pointer-events travels WITH the opacity — law #27. visual-audit.py caught this exact link
-   the first time it ran against the new navigation, which is the whole point of the gate. */
+/* pointer-events travels WITH the opacity — law #27. */
 .ref-section:hover .ref-anchor,
 .ref-anchor:focus-visible { opacity: 1; pointer-events: auto; }
 
@@ -121,10 +163,10 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
 }
 .ref-top:hover { background: var(--color-system-surface-soft); }
 
-/* Narrow screens: the index collapses to a normal block at the top rather than eating half
-   the viewport. Nothing is hidden — a gallery you cannot see all of is the problem being
-   solved, not a trade to make somewhere else. */
+/* Narrow screens: the index becomes a normal block above the content. */
 @media (max-width: 900px) {
-  .ref-toc { position: static; width: auto; height: auto; bottom: auto; border-right: none; border-bottom: 1px solid var(--color-system-border-soft); max-height: 40vh; }
-  .ref-main { margin-left: 0; }
+  .ref-shell, .ref-shell.is-collapsed { grid-template-columns: minmax(0, 1fr); }
+  .ref-toc { position: static; height: auto; max-height: 42vh; border-right: none; border-bottom: 1px solid var(--color-system-border-soft); }
+  .ref-shell.is-collapsed .ref-toc { max-height: none; }
+  .ref-main { padding: 16px 12px 96px; }
 }

@@ -70,7 +70,11 @@ PROBE = """
     const p = el.parentElement;
     if (!p || p === document.body) continue;
     const ps = getComputedStyle(p), es = getComputedStyle(el);
-    if (ps.overflowX === 'auto' || ps.overflowX === 'scroll' || ps.display === 'contents') continue;
+    /* A parent that declares ANY non-visible overflow-x has taken responsibility for what
+       sticks out: `auto`/`scroll` scroll it, `hidden`/`clip` clip it (that is how
+       text-overflow: ellipsis works at all). Only `visible` overflow actually spills onto the
+       page, and only that is a layout fault. */
+    if (ps.overflowX !== 'visible' || ps.display === 'contents') continue;
     if (es.position === 'absolute' || es.position === 'fixed') continue;
     const a = R(el), c = R(p);
     if (a.width === 0 || c.width === 0) continue;
