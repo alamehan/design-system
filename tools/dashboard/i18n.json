@@ -53,6 +53,10 @@
     "adopt.scope.team": "Tim",
     "adopt.title": "Statistik adopsi",
     "adopt.unconfigured": "Belum ada repo yang terdaftar di laporan, jadi angka tim masih nol. Itu tugas pemelihara design system, bukan kamu.",
+    "adopt.clones": "Clone",
+    "adopt.cloners": "Cloner unik",
+    "adopt.clonedays": "Hari tercatat",
+    "adopt.clones.hint": "Diambil dari traffic GitHub: setiap clone repo design system, termasuk CI. Ini BUKAN jumlah proyek yang mengadopsi — itu angka sensus di ADOPTION.md.",
     "adopt.uninstalls": "Uninstall",
     "adopt.updates": "Update",
     "app.title": "Design System",
@@ -539,6 +543,10 @@
     "ver.rollback": "Roll back",
     "ver.rollback.hint": "Return to the previous design system version.",
     "ver.upToDate": "You are on the latest version.",
-    "ver.update": "Update now…"
+    "ver.update": "Update now…",
+    "adopt.clones": "Clones",
+    "adopt.cloners": "Unique cloners",
+    "adopt.clonedays": "Days on record",
+    "adopt.clones.hint": "From GitHub traffic: every clone of the design system repo, CI included. This is NOT the number of projects that adopted it — that is the census in ADOPTION.md."
   }
 }

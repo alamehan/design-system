@@ -31,6 +31,7 @@ let LOCKED = { install: false, revert: false, update: false, rollback: false, le
 /* The panel runs FROM ds-setup.cjs, so it cannot remove that file while it is serving.
    The copy is already safe in .git/ds-recovery/; the original goes on process exit. */
 let PENDING_SELF_DELETE = null;
+let LEDGER_SEEDED = 0;
 process.on("exit", () => {
   if (!PENDING_SELF_DELETE) return;
   try { fs.rmSync(PENDING_SELF_DELETE, { force: true }); } catch { /* best effort */ }
@@ -283,6 +284,7 @@ function maintainerEmail() { return process.env.DS_DESIGNER_EMAIL || (dsMeta().m
  * If the report has never been generated, org is null and the panel says so
  * rather than showing a zero that looks like real data. */
 function adoptionStats() {
+  if (!LEDGER_SEEDED) LEDGER_SEEDED = 1 + seedLedger();
   const blank = () => ({ install: 0, update: 0, uninstall: 0, request: 0, rollback: 0, adopt: 0 });
   const repo = blank(), mine = blank();
   const me = actorId();
@@ -309,7 +311,10 @@ function adoptionStats() {
          The comment at the top of this function already promised this behaviour ("rather than
          showing a zero that looks like real data"); it just checked whether `totals` existed
          instead of whether it meant anything. org stays null until it means something. */
-      org = configured ? raw.totals : null;
+      /* Clone traffic alone is enough to make the Team tab say something true, even with no
+         repo census configured — it is a real measurement, just a weaker one, and it is
+         labelled as clones rather than adoptions wherever it is shown. */
+      org = configured ? raw.totals : (raw.totals.clones ? { clones: raw.totals.clones } : null);
       generatedAt = raw.generatedAt || null;
       reportVersion = raw.dsVersion || null;
     }
@@ -358,25 +363,75 @@ function appendHistory(entry) {
   const target = historyTarget();
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.appendFileSync(target, line + "\n", "utf8");
+  /* and to the ledger, which outlives every uninstall */
+  try { fs.mkdirSync(path.dirname(LEDGER), { recursive: true }); fs.appendFileSync(LEDGER, line + "\n", "utf8"); } catch {}
   telemetry(entry);
 }
-function loadHistory() {
-  /* After an uninstall the log may have been archived out of the working tree. Counters that
-     reset to zero because the panel stopped looking would recreate the exact complaint this
-     release fixes, so follow the log to wherever it went. */
-  let raw = readIf(HISTORY);
-  if (!raw) {
-    try {
-      const dirs = fs.readdirSync(RECOVERY).filter((d) => d.startsWith("ds-")).sort().reverse();
-      for (const d of dirs) {
-        const f = path.join(RECOVERY, d, "history.jsonl");
-        if (fs.existsSync(f)) { raw = fs.readFileSync(f, "utf8"); break; }
-      }
-    } catch { /* no recovery dir */ }
-  }
-  if (!raw) return [];
-  return raw.split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean).reverse();
+/* THE LEDGER — why the counters kept resetting to zero.
+ *
+ * `.ds/history.jsonl` is committed team knowledge, so an uninstall archives it out of the
+ * working tree. The next install then creates a FRESH, empty `.ds/history.jsonl` — and this
+ * function read the working-tree log OR one archive, never the union. So install → uninstall →
+ * install showed "1 install, 0 uninstalls" no matter how many cycles had actually happened.
+ * The events were never lost; the reader just stopped looking at all of them.
+ *
+ * There is now a permanent, machine-local, append-only ledger at
+ * `.git/ds-recovery/ledger.jsonl`. Nothing removes it — not an uninstall, not an archive, not a
+ * submodule deinit. Every event is written to BOTH files, and the counters read the UNION of
+ * the working-tree log, the ledger, and every archive, de-duplicated by exact line. A count
+ * that can be reset by the thing it is counting is not a count. */
+const LEDGER = path.join(RECOVERY, "ledger.jsonl");
+
+function historySources() {
+  const out = [];
+  const push = (p) => { try { if (fs.existsSync(p)) out.push(fs.readFileSync(p, "utf8")); } catch {} };
+  push(abs(HISTORY));
+  push(LEDGER);
+  try {
+    for (const d of fs.readdirSync(RECOVERY)) {
+      if (!d.startsWith("ds-")) continue;
+      push(path.join(RECOVERY, d, "history.jsonl"));
+    }
+  } catch { /* no recovery dir yet */ }
+  return out;
 }
+
+function loadHistory() {
+  const seen = new Set();
+  const rows = [];
+  for (const raw of historySources()) {
+    for (const line of raw.split("\n")) {
+      const t = line.trim();
+      if (!t || seen.has(t)) continue;
+      seen.add(t);
+      try { rows.push(JSON.parse(t)); } catch { /* a torn line is not a reason to lose the rest */ }
+    }
+  }
+  /* newest first, and stable when two events share a timestamp */
+  rows.sort((a, b) => String(b.at || "").localeCompare(String(a.at || "")));
+  return rows;
+}
+
+/* One-time repair for anyone upgrading: fold every log the panel can still find into the
+   ledger, so history that predates the ledger is not stranded in an archive. */
+function seedLedger() {
+  try {
+    const known = new Set(
+      (fs.existsSync(LEDGER) ? fs.readFileSync(LEDGER, "utf8") : "").split("\n").map((l) => l.trim()).filter(Boolean));
+    const add = [];
+    for (const raw of historySources()) {
+      for (const line of raw.split("\n")) {
+        const t = line.trim();
+        if (t && !known.has(t)) { known.add(t); add.push(t); }
+      }
+    }
+    if (!add.length) return 0;
+    fs.mkdirSync(path.dirname(LEDGER), { recursive: true });
+    fs.appendFileSync(LEDGER, add.join("\n") + "\n", "utf8");
+    return add.length;
+  } catch { return 0; }
+}
+
 /* stable, non-identifying actor id so the adoption report can count distinct devs */
 function actorId() {
   if (process.env.DS_NO_ACTOR) return "anon";

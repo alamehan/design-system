@@ -4,6 +4,32 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
+## 3.4.7 — 2026-08-04
+
+**The gallery shipped a second copy of five sections, and the adoption counter was reading one log out of three.**
+
+### Fixed — 36 KB of duplicated markup outside the shell
+- The v3.4.5 regroup script reassembled the page on `src.rindex("</section>")`. The composed samples were authored as `<div class="ref-section">`, so everything after the last real `</section>` — **composed-01 through composed-05, 36 KB** — was re-appended verbatim *outside* `<main>` and rendered a second time at page level, full width, below the shell. Every gate passed: the anchors all existed (twice), every class resolved, nothing overflowed. Removed.
+- **`lint-reference.js` GATE 9** now fails on any duplicate `id` in a reference file, and on any `ref-section` sitting outside `<main>`. Duplicate ids are not cosmetic: `#composed-01` and `getElementById` both resolve to the **first** match, so an agent following a catalog `Reference:` link could silently have been reading a stale copy.
+
+### Fixed — the gallery shell
+- **A 24px document margin sat above and to the left of a full-height sticky rail.** The standalone per-component pages are documents and want that margin; the gallery is an application shell and does not. `body.ref-app { margin: 0 }`.
+- **The filter box and the collapse control scrolled out of reach.** The rail was one scrolling box, so the two controls you reach for while deep in the page left the screen exactly when they became useful. The rail is now a column with a pinned head; only the list scrolls.
+
+### Fixed — the adoption counter, properly this time
+- `.ds/history.jsonl` is committed team knowledge, so an uninstall archives it out of the working tree. The next install then creates a **fresh, empty** `.ds/history.jsonl` — and `loadHistory()` read the working-tree log **or** one archive, never the union. So install → uninstall → install reported "1 install, 0 uninstalls" no matter how many cycles had really happened. The events were never lost; the reader had stopped looking at all of them.
+- There is now a permanent, machine-local, append-only **ledger at `.git/ds-recovery/ledger.jsonl`**. Nothing removes it — not an uninstall, not an archive, not a submodule deinit. Every event is written to both files and the counters read the union of the working-tree log, the ledger and every archive, de-duplicated by exact line. Existing history found in any archive is folded into the ledger once, on first read after upgrading.
+- Locked in by three new e2e assertions, plus a standalone cycle test: three full install/update/uninstall rounds report 3/3/3, and still do after `.ds/` is deleted outright.
+
+### Added — clone traffic, so the team number can be true without a repo census
+`git submodule add` **is** a clone, and GitHub counts clones. `GET /repos/{owner}/{repo}/traffic/clones` therefore measures the install action at the source, with no telemetry of ours and nothing added to any consuming repo — the thing the census needs somebody to configure first.
+
+That endpoint only returns 14 days, which is presumably why it goes unused. But it is a *sliding* window and GitHub's figure for a closed day never changes, so **sampling it repeatedly and merging by date accumulates a permanent daily history**. `ship.js` now samples on every release; a fortnightly cron covers the gaps. A lossy endpoint becomes a durable record because of how it is read.
+
+- `src/scripts/clone-traffic.js` — merges into `.release/clone-traffic.json`. Overlapping samples correct a day rather than double-counting it (unit-tested). No token, no network, or a 403 → it **skips loudly and never overwrites the existing record**; a failed read must not destroy real history.
+- The panel's Team tab shows clones under their own labels the moment any data exists, with the caveat carried in the note: this counts **every clone including CI**, and is **not** the number of adopting projects. The census in `ADOPTION.md` remains the only thing that can answer that. A number presented as more precise than it is does more damage than no number — that mistake cost this repository four releases of a dashboard reading 0.
+- Requires a token with **push** access to the design system repo; GitHub restricts traffic data to people who could already read it in the Insights tab.
+
 ## 3.4.6 — 2026-08-04
 
 **Two files still survived the uninstall, and the gallery index covered the thing it was indexing.**

@@ -250,6 +250,23 @@ async function api(p, data) {
     ok(post.halfWired === false, "not reported as half-wired");
     ok(post.adoption && post.adoption.repo.install >= 1 && post.adoption.repo.uninstall >= 1,
       "adoption counts survive the uninstall (append-only, committed)");
+    /* v3.4.7: the log is archived out of the tree on uninstall, so a REINSTALL used to start a
+       fresh empty .ds/history.jsonl and the counters read only that — "1 install, 0 uninstalls"
+       forever, however many cycles had really happened. The permanent ledger in
+       .git/ds-recovery/ must make the counts cumulative across the whole cycle. */
+    ok(fs.existsSync(path.join(app, ".git", "ds-recovery", "ledger.jsonl")),
+      "the permanent ledger exists outside the working tree");
+    {
+      const ledger = fs.readFileSync(path.join(app, ".git", "ds-recovery", "ledger.jsonl"), "utf8")
+        .split("\n").filter(Boolean).map((l) => JSON.parse(l));
+      ok(ledger.some((e) => e.event === "install") && ledger.some((e) => e.event === "revert"),
+        "the ledger holds both the install and the uninstall");
+      /* wipe every in-tree trace and re-read: the counts must not move */
+      fs.rmSync(path.join(app, ".ds"), { recursive: true, force: true });
+      const after = await api("/api/state");
+      ok(after.adoption.repo.install >= 1 && after.adoption.repo.uninstall >= 1,
+        "counts survive a completely wiped .ds/ (they come from the ledger)");
+    }
     ok(fs.readFileSync(path.join(app, "tailwind.config.js"), "utf8").includes('prefix: "tw-"'), "dev's tailwind config intact");
 
     proc.kill();

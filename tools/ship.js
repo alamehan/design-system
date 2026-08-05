@@ -37,6 +37,7 @@ const steps = [
      older than the release. A developer opening the panel should never be told to
      run a script to see team numbers - that is the maintainer's job, and this is
      the maintainer's release command. */
+  ["Sample clone traffic (skips without a token)", "node src/scripts/clone-traffic.js"],
   ["Refresh adoption report", "node src/scripts/adoption-report.js"],
 ];
 

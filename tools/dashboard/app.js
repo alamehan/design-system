@@ -535,6 +535,17 @@ function adoptionCard() {
     ];
   }
 
+  /* Clone traffic: a real number that needs no cooperation from any consuming repo, shown
+     UNDER its own label so it is never mistaken for the adoption census. */
+  var cl = (a.org && a.org.clones) || null;
+  if (scope === "team" && cl && src.repos == null) {
+    cells = [
+      [cl.clones, "adopt.clones", "download"],
+      [cl.uniqueCloners, "adopt.cloners", "user-round"],
+      [cl.days, "adopt.clonedays", "clock"],
+    ];
+  }
+
   var tabs = [["team", "adopt.scope.team", !!a.org], ["repo", "adopt.scope.repo", true], ["me", "adopt.scope.me", !!a.hasActor]];
   var h = '<div class="card" data-tour="adoption"><div class="body">' +
     '<div class="adopthead"><h2>' + icon("activity") + esc(t("adopt.title")) + "</h2>" +
@@ -550,7 +561,9 @@ function adoptionCard() {
 
   var note;
   if (scope === "team") {
-    note = { ic: "clock", txt: t("adopt.org.hint") + (a.generatedAt ? " \u00b7 " + t("adopt.generated") + " " + fmtDate(a.generatedAt) : "") };
+    note = cl && src.repos == null
+      ? { ic: "info", txt: t("adopt.clones.hint") + (cl.since ? " \u00b7 " + cl.since + " \u2192 " + cl.until : "") }
+      : { ic: "clock", txt: t("adopt.org.hint") + (a.generatedAt ? " \u00b7 " + t("adopt.generated") + " " + fmtDate(a.generatedAt) : "") };
   } else if (scope === "me") {
     note = { ic: "shield-check", txt: t("adopt.me.hint") };
   } else {

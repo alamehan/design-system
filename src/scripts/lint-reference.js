@@ -274,6 +274,45 @@ if (fs.existsSync(galleryPath)) {
   else console.log(`\u2705 every referenced gallery anchor exists (${present.size} section ids, ${refs.size} referenced)`);
 }
 
+
+/* ------------------------------------------------------------------------
+ * GATE 9 — no duplicate id, and no showcase stranded outside the shell.
+ *
+ * The v3.4.6 gallery shipped FIVE duplicated sections. The regroup script spliced the page back
+ * together on `src.rindex("</section>")`, but the composed samples were authored as
+ * `<div class="ref-section">`, so everything after the last real `</section>` — 36 KB of markup —
+ * was re-appended verbatim OUTSIDE `<main>`. Every gate passed: the anchors all existed (twice),
+ * every class resolved, nothing overflowed, the type was on the ramp. It rendered as a second
+ * copy of composed-01…05 hanging off the bottom of the page at full width.
+ *
+ * Duplicate ids also break the thing the anchors exist for: `getElementById` and `#hash`
+ * navigation both resolve to the FIRST match, so an agent following
+ * `reference/gallery.html#composed-01` could silently be reading a stale copy.
+ * ---------------------------------------------------------------------- */
+let structural = 0;
+for (const f of htmlFiles(REF)) {
+  const html = fs.readFileSync(f, "utf8");
+  const rel = path.relative(REF, f);
+  const seen = new Map();
+  /* ids inside the inlined <symbol> sprite are namespaced tb-* and legitimately shared
+     across files, but must still be unique WITHIN a file — which they are; check everything. */
+  for (const m of html.matchAll(/\sid="([^"]+)"/g)) seen.set(m[1], (seen.get(m[1]) || 0) + 1);
+  for (const [id, n] of seen) {
+    if (n < 2) continue;
+    console.log(`  \u274c ${rel}: id="${id}" appears ${n} times \u2014 #${id} resolves to the first one only`);
+    structural++;
+  }
+  if (!html.includes('class="ref-shell"')) continue;
+  const main = html.indexOf("<main"), endMain = html.indexOf("</main>");
+  for (const m of html.matchAll(/class="ref-section" id="([^"]+)"/g)) {
+    if (m.index > main && m.index < endMain) continue;
+    console.log(`  \u274c ${rel}: section #${m[1]} sits outside <main> \u2014 it renders at page level, not in the content column`);
+    structural++;
+  }
+}
+if (structural) { violations += structural; console.log(`\u274c ${structural} structural fault(s) in reference HTML.`); }
+else console.log("\u2705 no duplicate ids, and every showcase sits inside the content column");
+
 if (violations) {
   console.log(`\n${violations} reference-tier violation(s). The reference must be token-pure, load every font it names, and draw every icon from the Tabler sprite.`);
   process.exit(1);

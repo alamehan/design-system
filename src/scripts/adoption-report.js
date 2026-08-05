@@ -175,6 +175,13 @@ function collect(name, url, man, hist) {
      tell apart from a real measurement of zero, and ship.js rewrites this file on every
      release — so every design system update looked to the adopter like their numbers had just
      been reset to nothing. A structural zero is not a measurement. */
+  /* Clone traffic is a SEPARATE, weaker signal than the census, and it travels under its own
+     name so the two can never be read as the same thing. It exists because it needs no
+     cooperation from any consuming repo: `git submodule add` is a clone, and GitHub counts
+     clones. See src/scripts/clone-traffic.js. */
+  const clone = readJson(path.join(DS, ".release", "clone-traffic.json")) || null;
+  const clones = clone && clone.summary && clone.days && clone.days.length ? clone.summary : null;
+
   const totals = configured ? {
     configured: true,
     repos: rows.length,
@@ -188,6 +195,7 @@ function collect(name, url, man, hist) {
     byLevel: byLevel,
     byVersion: byVersion,
   } : { configured: false };
+  if (clones) totals.clones = clones;
   fs.writeFileSync(path.join(DS, ".release", "adoption.json"),
     JSON.stringify({ generatedAt: new Date().toISOString(), dsVersion: meVersion, totals, rows }, null, 2) + "\n", "utf8");
 

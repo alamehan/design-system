@@ -21,6 +21,9 @@
    typeface from the thing it documents. */
 button, input, select, textarea { font: inherit; color: inherit; }
 
+/* The standalone per-component pages are documents and want a margin. The gallery is an
+   application shell — a 24px gutter above and to the left of a full-height sticky rail is not
+   breathing room, it is a gap the rail visibly fails to fill. */
 body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--color-system-text-head); background: var(--color-neutral-pure-white, #fff); }
 .ref-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
 .ref-col { display: flex; flex-direction: column; gap: 12px; margin: 12px 0; }
@@ -53,6 +56,8 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
    it can never overlap anything, and `min-width: 0` on the content column keeps a wide table
    scrolling INSIDE its own `.es-table__scroll` instead of stretching the document.
    --------------------------------------------------------------------------------------- */
+body.ref-app { margin: 0; }
+
 .ref-shell {
   display: grid;
   grid-template-columns: 268px minmax(0, 1fr);
@@ -65,14 +70,22 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   border-right: 1px solid var(--color-system-border-soft);
   background: var(--color-system-surface-soft);
-  padding: 16px 0 40px;
   min-width: 0;
 }
-.ref-toc__inner { padding: 0 12px; }
+/* The rail is a column with a PINNED head. It used to be one scrolling box, so the filter and
+   the collapse control — the two things you reach for while deep in the page — scrolled out of
+   reach exactly when you needed them. Only the list scrolls now. */
+.ref-toc { display: flex; flex-direction: column; padding: 0; }
+.ref-toc__head {
+  flex: none;
+  padding: 16px 12px 10px;
+  background: var(--color-system-surface-soft);
+  border-bottom: 1px solid var(--color-system-border-soft);
+}
+.ref-toc__scroll { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; padding: 8px 12px 40px; min-height: 0; }
 .ref-toc__bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
 .ref-toc__title { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--color-system-text-mute); margin: 0; white-space: nowrap; }
 .ref-toc__toggle {
@@ -92,7 +105,7 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
 .ref-toc__filter {
   width: 100%;
   padding: 8px 10px;
-  margin-bottom: 12px;
+  margin: 0;
   border: 1px solid var(--color-system-border-soft);
   border-radius: var(--radius-md);
   background: var(--color-neutral-pure-white);
@@ -100,7 +113,7 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
   color: var(--color-system-text-head);
 }
 .ref-toc__filter:focus { outline: none; border-color: var(--color-brand-brand); box-shadow: var(--shadow-State-Focus); }
-.ref-toc__group { font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--color-system-text-mute); margin: 14px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ref-toc__group { font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--color-system-text-mute); margin: 12px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ref-toc__list { list-style: none; margin: 0; padding: 0; }
 
 /* ONE LINE PER ENTRY, always. A three-line wrap for composed-05 made the index taller than the
@@ -123,7 +136,8 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
 .ref-toc__group.is-hidden, .ref-toc__list li.is-hidden { display: none; }
 
 /* Collapsed: the rail keeps only the toggle, so the content column gets the width back. */
-.ref-shell.is-collapsed .ref-toc__inner { padding: 0 10px; }
+.ref-shell.is-collapsed .ref-toc__head { padding: 16px 10px; border-bottom: none; }
+.ref-shell.is-collapsed .ref-toc__scroll { display: none; }
 .ref-shell.is-collapsed .ref-toc__title,
 .ref-shell.is-collapsed .ref-toc__filter,
 .ref-shell.is-collapsed .ref-toc__group,
@@ -166,7 +180,7 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
 /* Narrow screens: the index becomes a normal block above the content. */
 @media (max-width: 900px) {
   .ref-shell, .ref-shell.is-collapsed { grid-template-columns: minmax(0, 1fr); }
-  .ref-toc { position: static; height: auto; max-height: 42vh; border-right: none; border-bottom: 1px solid var(--color-system-border-soft); }
+  .ref-toc { position: static; height: auto; max-height: 46vh; border-right: none; border-bottom: 1px solid var(--color-system-border-soft); }
   .ref-shell.is-collapsed .ref-toc { max-height: none; }
   .ref-main { padding: 16px 12px 96px; }
 }

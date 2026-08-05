@@ -405,3 +405,59 @@ single-file artifact where nobody reads them, while the source keeps every one. 
 313 KB. The number did not move.
 
 A budget you raise whenever you reach it is a log of your own growth, not a limit.
+
+
+---
+
+## v3.4.7 — everything passed, and the page was wrong anyway
+
+The v3.4.5 regroup script split the gallery on `src.rindex("</section>")` and pasted the tail
+back on the end. Most showcases were `<section class="ref-section">`; the composed samples were
+`<div class="ref-section">`. So the tail after the last real `</section>` — five whole sections,
+36 KB — was appended a second time, outside `<main>`, and rendered at page level under the shell.
+
+Nine gates ran over that page and all nine went green. Every anchor referenced by the catalog
+existed. Every class resolved. Nothing overflowed, the type was on the ramp, Fustat everywhere,
+no ghost controls. **The gates were all asking whether the right things were present. None was
+asking whether anything was there twice.**
+
+Duplicate ids are not a tidiness problem. `#composed-01` and `getElementById` both return the
+first match, so the grounding chain the whole catalog is built on could have been resolving to a
+stale copy without anything anywhere reporting a fault.
+
+### The counter, third attempt
+
+Two releases were spent on this and both fixed a real bug that was not the bug.
+
+v3.4.5 stopped `adoption-report.js` writing structural zeros. v3.4.6 made the log follow its
+archive. Both correct. Neither addressed the actual mechanism: `.ds/history.jsonl` is committed
+team data, so an uninstall archives it — and the next INSTALL creates a fresh empty one. The
+reader took the working-tree log *or* one archive. Never the union. So the count reset on
+reinstall, which is precisely when somebody testing an uninstall would look at it.
+
+The events were never lost. Every one of them was on disk the whole time, in an archive
+directory the reader had stopped consulting the moment a newer, emptier file appeared.
+
+**A count that can be reset by the thing it counts is not a count.** There is now a ledger that
+nothing in the product is allowed to delete, and the reader takes the union of every source it
+can find.
+
+### On being asked to be cleverer
+
+The report was "however many times I install and uninstall, it goes back to 0 — can't you pull
+from the GitHub API or something to get how many installs (submodule clones) there are?"
+
+The instinct was right and the specific idea was better than what was there. `git submodule add`
+is a clone; GitHub already counts clones; `/traffic/clones` needs no cooperation from any
+consuming repo, which is exactly the dependency that had left the team numbers at zero for four
+releases.
+
+Its stated flaw is a 14-day window, which is why it is generally dismissed. But it slides, and a
+closed day's figure never changes — so reading it repeatedly and merging by date turns a
+fortnight of data into a permanent record. The endpoint did not need to be better. It needed to
+be read more than once.
+
+What it must never be is relabelled. It counts clones, CI included, not adopting projects, and
+it says so in the number's own caption. The four releases of a zeroed dashboard came from
+showing a figure that could not be told apart from a measurement; replacing it with a bigger
+figure that cannot be told apart from a census would be the same mistake with better numbers.
