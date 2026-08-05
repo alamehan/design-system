@@ -132,6 +132,12 @@ def dedupe(items):
 # which is exactly how a layout fault survives: the code path nobody looks at.
 VIEWPORTS = [(1280, 900, "desktop"), (820, 900, "narrow")]
 
+# A closed <details> has no layout, so every probe in this file would skip whatever is inside it
+# and report a clean pass over content it never measured. The derived tier (Part 3 of the
+# gallery) is closed by default, so the gate has to open every disclosure before it looks.
+# A gate that silently stops covering 28 sections is worse than one that was never written.
+EXPAND = "() => { let n = 0; for (const d of document.querySelectorAll('details')) if (!d.open) { d.open = true; n++; } return n; }"
+
 
 def main():
     files = sorted(p for p in REF.rglob("*.html"))
@@ -141,6 +147,7 @@ def main():
         page = browser.new_page(viewport={"width": 1280, "height": 900})
         for f in files:
             page.goto("file://" + str(f))
+            page.evaluate(EXPAND)
             page.wait_for_timeout(450)
             r = page.evaluate(PROBE, SCALE)
             rel = f.relative_to(ROOT)
@@ -170,6 +177,7 @@ def main():
             for w, h, label in VIEWPORTS[1:]:
                 page.set_viewport_size({"width": w, "height": h})
                 page.goto("file://" + str(gallery))
+                page.evaluate(EXPAND)
                 page.wait_for_timeout(500)
                 r = page.evaluate(PROBE, SCALE)
                 ov = dedupe(r["overflow"])
@@ -187,6 +195,7 @@ def main():
         print(f"\u274c {violations} visual fault group(s) across {len(files)} reference file(s).")
         sys.exit(1)
     print(f"\u2705 visual audit clean across {len(files)} reference file(s) at {len(VIEWPORTS)} viewport(s)  (ramp: {SCALE})")
+    print("   every <details> was opened first, so nothing was skipped for being collapsed.")
     print("   no overflow \u00b7 no invisible-but-clickable control \u00b7 no broken image \u00b7 "
           "Fustat everywhere \u00b7 type on the ramp")
     print("   This is a floor, not a verdict. Open gallery.html and look (HISTORY.md law #1).")

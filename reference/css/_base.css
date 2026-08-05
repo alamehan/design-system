@@ -210,3 +210,53 @@ body.ref-app { margin: 0; }
   border-radius: var(--radius-md);
   font-size: 12px; line-height: 16px;
 }
+
+/* Part 3 disclosure.
+   Placement is a louder signal than a caption: an unreviewed rendering sitting inline between
+   two reviewed tiers reads as reviewed no matter what its banner says. So the derived tier is
+   last and closed, and opening it is a deliberate act.
+   <details> is native — it works with JavaScript off, which the reference tier requires because
+   designers open these files by double-clicking them over file://. The script in gallery.html
+   only adds hash navigation and state memory on top. */
+.ref-disclose {
+  border: 1px solid var(--color-semantic-warning);
+  border-radius: var(--radius-md);
+  background: var(--color-semantic-warning-surface-soft);
+  margin: 12px 0 0;
+}
+.ref-disclose__summary {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 14px; line-height: 20px; font-weight: 700;
+  color: var(--color-system-text-head);
+  border-radius: var(--radius-md);
+}
+.ref-disclose__summary::-webkit-details-marker { display: none; }
+.ref-disclose__summary:hover { background: var(--color-system-surface-soft); }
+.ref-disclose__summary:focus-visible { outline: none; box-shadow: var(--shadow-State-Focus); }
+.ref-disclose__chev {
+  width: 16px; height: 16px; flex: none; display: block;
+  color: var(--color-system-text-mute);
+  transition: transform .15s ease;
+}
+.ref-disclose[open] > .ref-disclose__summary > .ref-disclose__chev { transform: rotate(90deg); }
+.ref-disclose[open] > .ref-disclose__summary { border-bottom: 1px solid var(--color-semantic-warning); border-radius: var(--radius-md) var(--radius-md) 0 0; }
+.ref-disclose__label { flex: 1 1 auto; min-width: 0; }
+.ref-disclose__badge {
+  flex: none;
+  font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  color: var(--color-system-text-head);
+  border: 1px solid var(--color-semantic-warning);
+  background: var(--color-neutral-pure-white);
+  border-radius: var(--radius-full);
+  padding: 1px 10px;
+}
+/* The body sits on the page surface so the sections inside read normally once opened;
+   only the frame stays amber. */
+.ref-disclose__body {
+  background: var(--color-neutral-pure-white);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  padding: 4px 14px 14px;
+}

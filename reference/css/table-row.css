@@ -41,6 +41,20 @@ tr.is-disabled > .es-cell * { pointer-events: none; }
   border-radius: var(--radius-md);
   padding: var(--space-sm);
 }
+/* A LABELLED row action is icon + text on one line, and it declares its own foreground.
+   Without the flex line `.es-ico { display: block }` puts the icon on its own row and the
+   label underneath it — the button rendered as a two-storey stack. Without the colour the
+   label inherits `.es-cell`'s text-head and sits black inside a brand border, which is the
+   same fault CLAUDE.md §5 legislates for the Danger button: a control that declares its own
+   border or background must declare its own foreground too. Gap follows atom-01 (sm), not
+   layout-11's btn-gap — btn-gap is the space BETWEEN action buttons, not inside one. */
+.es-cell__actionbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-brand-brand);
+  cursor: pointer;
+}
 
 /* v3.4.2 gallery polish */
 .es-cell__dot--brand { background: var(--color-brand-brand); }

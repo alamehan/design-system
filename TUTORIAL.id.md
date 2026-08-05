@@ -31,7 +31,7 @@ cd design-system-v3
 # 2. Jadikan repo git
 git init
 git add .
-git commit -m "feat: design system v3.0.0 — truth/reference/binding"
+git commit -m "feat: design system — truth/reference/binding"
 
 # 3. Buat repo kosong bernama `design-system` di git host kantor
 #    (HARUS di host/organisasi yang SAMA dengan portal-nuxt,
@@ -201,7 +201,7 @@ Buka dashboard seperti biasa (`node ds-setup.cjs`). Kalau di repo masih ada sisa
 
 ---
 
-## Catatan v3.3.0
+## Catatan rilis
 
 - **Reference tier sekarang jujur.** `reference/gallery.html` benar-benar render pakai
   **Fustat** (font-nya ditanam base64 supaya jalan meski file dibuka lewat `file://`)

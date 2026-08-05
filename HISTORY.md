@@ -645,3 +645,82 @@ And one small note on the other question that came with this one — *"do develo
 token too?"* No. Clone sampling moved into a scheduled workflow. The maintainer does not type
 the command either. **A step somebody has to remember is a step that eventually does not
 happen**, and the developer contract stays exactly one line with no credentials in it.
+
+---
+
+## v3.5.2 — fifteen green gates and a page that was wrong
+
+The author opened `gallery.html` and sent six screenshots. Four of them showed something broken.
+Every gate in the repository was green at the time, and had been for two releases.
+
+**A Panel rendered inside another Panel.** The subheader specimen sat inside the first
+specimen's `.ref-stage` — a 420px box with `overflow: hidden` containing an
+absolutely-positioned panel — so the second panel came out underneath the first one, half
+covered, at the wrong scale. The same splice had happened to CandidateCard and to FilterField.
+All three came from the v3.4.9 specimen additions, which inserted each new specimen before the
+`</div>` that closed the *previous* specimen instead of the one that ended the group.
+
+GATE 11 exists to catch exactly the family this belongs to, and it did not, because it counts
+`<div>` against `</div>` inside each showcase and both counts were right. **Balance is not
+placement.** A pair of tags in the wrong place is as balanced as a pair in the right one.
+
+**A stylesheet that was correct and loaded by nobody.** `css/info-block.css` defines nine
+classes; composite-01 uses all nine; the gallery linked forty-eight of forty-nine stylesheets
+and not that one. The section rendered as bare inline spans — `Emailraihan@elabram.com` with no
+gap, because `.es-iblock__content { flex-direction: column }` was never applied. GATE 4 passed
+it, correctly by its own definition: the class *does* resolve in `reference/css`. A browser is
+stricter — it applies the stylesheets the document actually links — and four
+`reference/components/*.html` files had the same fault, including `data-table.html`, which used
+the entire `es-cell*` family without `table-row.css`. Those files exist to be copied by AI
+agents told to open them.
+
+**A button that stacked.** `.es-cell__actionbtn` set a background, a border, a radius and
+padding, and no `display`. `.es-ico { display: block }` did the rest: the eye icon took its own
+line and "View" went underneath it. Its label was also black — inherited from `.es-cell` —
+inside a brand-coloured border, which is the Danger-button lesson from §5 arriving through a
+different door: **a control that declares its own border or background must declare its own
+foreground.**
+
+Three lessons, three gates: GATE 12 asks the browser's question about stylesheets, per
+document, and separately fails a stylesheet nothing loads. GATE 13 rejects gallery scaffolding
+nested inside a component root — chrome inside a specimen is always a splice in the wrong
+place, and it is also what an agent copies by mistake. GATE 14 balances the whole document
+rather than each showcase, which found six `</div>` sitting after `</main>` closing nothing.
+
+### On where an unreviewed thing is allowed to sit
+
+The same review asked for the derived tier to be separated out and hidden. v3.5.0 had built all
+28 renderings and marked each one with `data-derived="true"`, an amber banner, its own group and
+a caveat in every catalog entry. That marking was correct and it was not enough, because the
+group sat inline between two reviewed tiers — and **placement is a louder signal than a
+caption.** A reader scrolling the gallery meets the sections before the banner registers.
+
+So Part 3 comes last and is closed until somebody asks for it, and the caveat became a rule
+rather than a warning. "Safe to build on; expect the designer to adjust layout details" was
+true and told nobody how to behave, so it read as permission. What replaced it says what to do:
+ground on the spec, copy only where the rendering agrees with the spec, prefer a reviewed
+component wherever the spec is silent, and when the two disagree the spec wins. That sentence
+now lives in four places — the catalog line, the index header, `CLAUDE.md` §1b and the consumer
+profile — and `lint-docs.js` checks the four still agree, because three copies of a sentence is
+how "pending design review" survived in one file after every other had moved on.
+
+Collapsing it created a new problem immediately. `visual-audit.py` measures rendered geometry,
+and a closed `<details>` has none, so Part 3 would have dropped out of its coverage while it
+went on printing a clean pass over 39 files. It opens every disclosure before it probes now.
+**A gate that skips must never read as a gate that passed** — the same shape as the phantom
+visual gate of v3.4.4, except this one would have been created by an improvement.
+
+### The gate that was only checking a fifth of its own subject
+
+`lint-docs.js` was written in v3.4.8 for one reason: prose stating a fact about the repository
+with nothing checking the fact is still true. It computed fourteen numbers and compared three.
+
+So §7, the table titled *Current numbers*, went on advertising a 35-section gallery against 63,
+an 11-step release chain against 13, nine reference gates against fifteen, a 301 KB bundle
+against 318, and 269 i18n keys against 273 — while the gate written to prevent precisely that
+reported green on every release. It compares everything it derives now, and a row whose shape
+it can no longer find fails rather than warns, because a check that quietly stops covering
+something is the failure one step earlier.
+
+That is the fifth instance of this species recorded here, and the first where the thing at
+fault was the detector. A gate is a claim about the repository too.

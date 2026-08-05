@@ -1,8 +1,13 @@
 #!/usr/bin/env node
-/* lint-reference.js — token-purity lint for reference/css (conformance-lite).
- * Fails if any reference CSS hardcodes a hex color or rgb() literal.
- * _base.css (gallery scaffolding) is exempt from px checks but not from hex,
- * except an explicit whitelisted white fallback. */
+/* lint-reference.js — reference-tier integrity. Fourteen gates, each written after something
+ * shipped broken through a door nothing was watching. Every one has been negative-tested:
+ * a gate that has never been seen to fail is a green light of unknown wattage.
+ *
+ * GATE 1 — token purity.
+ * Fails if any reference CSS hardcodes a hex color or rgb() literal. `_base.css` (gallery
+ * scaffolding) is exempt from the px checks but not from hex, except one whitelisted white
+ * fallback. This gate was unnumbered until v3.5.2, which made `lint-docs.js` count thirteen
+ * gates in a file that ran fourteen — a small instance of exactly what these gates exist for. */
 const fs = require("fs");
 const path = require("path");
 
@@ -386,6 +391,192 @@ else console.log("\u2705 no duplicate ids, and every showcase sits inside the co
   }
   if (unbalanced) { violations += unbalanced; console.log(`\u274c ${unbalanced} unbalanced showcase(s).`); }
   else console.log("\u2705 every showcase closes every <div> it opens");
+}
+
+/* ------------------------------------------------------------------------
+ * GATE 12 — a stylesheet must be loaded by the page that needs it.
+ *
+ * GATE 4 asks whether a class resolves in `reference/css` — ANY file in it. That is the wrong
+ * question, because a browser only applies the stylesheets the document actually links. The
+ * gallery used every `es-iblock*` class in composite-01 and never linked `css/info-block.css`,
+ * so the whole InfoBlock section rendered as unstyled inline spans: label and value butted
+ * together on one line with no gap. Four `reference/components/*.html` files had the same fault
+ * — data-table.html used the entire `es-cell*` family without table-row.css, filter-panel.html
+ * used `es-ffield*` without filter-field.css.
+ *
+ * Every gate in the file passed. The rules existed, the classes were spelled correctly, nothing
+ * overflowed. The page simply never loaded the file the rules were in. So the question becomes
+ * per-document: does every gated class this file uses resolve in a stylesheet THIS FILE LINKS?
+ * ---------------------------------------------------------------------- */
+{
+  const sheetClasses = new Map();
+  for (const f of fs.readdirSync(DIR).filter((x) => x.endsWith(".css")))
+    sheetClasses.set(f, new Set((fs.readFileSync(path.join(DIR, f), "utf8").match(/\.[A-Za-z0-9_-]+/g) || []).map((c) => c.slice(1))));
+  const varClasses = new Set((fs.readFileSync(path.join(DS_ROOT, "dist", "variables.css"), "utf8")
+    .match(/^\.[A-Za-z0-9_-]+/gm) || []).map((c) => c.slice(1)));
+
+  let unlinked = 0;
+  const linkedSomewhere = new Set();
+  for (const f of htmlFiles(REF)) {
+    const html = fs.readFileSync(f, "utf8");
+    const rel = path.relative(REF, f);
+    const links = [...html.matchAll(/href="[^"]*?css\/([a-z0-9_-]+\.css)"/g)].map((m) => m[1]);
+    links.forEach((l) => linkedSomewhere.add(l));
+    const have = new Set(varClasses);
+    for (const l of links) for (const c of sheetClasses.get(l) || []) have.add(c);
+    for (const c of ((html.match(/<style>[\s\S]*?<\/style>/g) || []).join("\n").match(/\.[A-Za-z0-9_-]+/g) || []))
+      have.add(c.slice(1));
+    const missing = new Map();
+    for (const attr of html.match(/class="[^"]*"/g) || [])
+      for (const c of attr.slice(7, -1).split(/\s+/)) {
+        if (!c || !GATED_PREFIX.test(c) || have.has(c)) continue;
+        /* where does it actually live? naming the file is the whole fix */
+        const owner = [...sheetClasses].find(([, set]) => set.has(c));
+        missing.set(c, owner ? owner[0] : "(nowhere \u2014 see GATE 4)");
+      }
+    if (!missing.size) continue;
+    const bySheet = new Map();
+    for (const [c, sheet] of missing) {
+      if (!bySheet.has(sheet)) bySheet.set(sheet, []);
+      bySheet.get(sheet).push(c);
+    }
+    for (const [sheet, cls] of [...bySheet].sort()) {
+      console.log(`  \u274c ${rel} uses ${cls.length} class(es) from css/${sheet} and never links it` +
+        `  \u2014 e.g. .${cls.sort()[0]}`);
+      unlinked++;
+    }
+  }
+  /* the mirror: a stylesheet no document loads is a rule set nobody has ever seen render */
+  for (const f of [...sheetClasses.keys()].sort()) {
+    if (f.startsWith("_") || linkedSomewhere.has(f)) continue;
+    console.log(`  \u274c css/${f} is linked by no reference HTML at all \u2014 nothing it defines has ever rendered`);
+    unlinked++;
+  }
+  if (unlinked) {
+    violations += unlinked;
+    console.log(`\u274c ${unlinked} stylesheet link gap(s). Add the <link>, do not move the rule.`);
+  } else {
+    console.log("\u2705 every gated class resolves in a stylesheet its own page links");
+  }
+}
+
+
+/* ------------------------------------------------------------------------
+ * GATE 13 — gallery scaffolding may never sit inside a component root.
+ *
+ * The v3.4.9 specimen additions spliced `<p class="ref-label">…</p><specimen>` in before the
+ * wrong `</div>`: the one closing the PREVIOUS specimen rather than the one ending the group.
+ * So a second Panel rendered inside the first one's `overflow:hidden` stage and covered it, a
+ * CandidateCard rendered inside another CandidateCard, and a FilterField inside a FilterField.
+ *
+ * Every existing gate passed. Div balance was correct (GATE 11 counts pairs, not places), every
+ * class resolved, no id was duplicated, nothing overflowed, the type was on the ramp. Three
+ * sections shipped visibly broken behind eleven green checks, and the author found them by
+ * opening the page.
+ *
+ * `.ref-*` is gallery chrome and `.es-*` is a shipped component. Chrome inside a component is
+ * always a splice in the wrong place — and it is also what an agent copies by mistake, which is
+ * how `<span class="ref-label">Suggestions</span>` nearly shipped as part of QuickSuggest.
+ * ---------------------------------------------------------------------- */
+{
+  const SCAFFOLD = /^ref-(label|stage|row|col|sub|h|derived|note|anchor|grouphead)$/;
+  let nested = 0;
+  for (const f of htmlFiles(REF)) {
+    const html = fs.readFileSync(f, "utf8");
+    const rel = path.relative(REF, f);
+    const VOID = new Set(["br", "hr", "img", "input", "meta", "link", "use", "path", "source", "col"]);
+    const stack = [];
+    for (const m of html.matchAll(/<(\/?)([a-zA-Z][a-zA-Z0-9-]*)((?:"[^"]*"|[^">])*)>/g)) {
+      const [, close, tag, attrs] = m;
+      const name = tag.toLowerCase();
+      if (VOID.has(name) || /\/\s*$/.test(attrs)) continue;
+      if (close) {
+        for (let i = stack.length - 1; i >= 0; i--)
+          if (stack[i].name === name) { stack.length = i; break; }
+        continue;
+      }
+      const cls = (attrs.match(/\sclass="([^"]*)"/) || [, ""])[1].split(/\s+/).filter(Boolean);
+      if (cls.some((c) => SCAFFOLD.test(c))) {
+        const inside = stack.filter((e) => e.cls.some((c) => /^es-/.test(c)));
+        if (inside.length) {
+          const where = inside.map((e) => "." + e.cls.find((c) => /^es-/.test(c))).join(" < ");
+          const what = cls.find((c) => SCAFFOLD.test(c));
+          console.log(`  \u274c ${rel}: <${name} class="${what}"> sits inside ${where}` +
+            `  \u2014 spliced into the previous specimen instead of beside it`);
+          nested++;
+        }
+      }
+      stack.push({ name, cls });
+    }
+  }
+  if (nested) {
+    violations += nested;
+    console.log(`\u274c ${nested} misplaced scaffolding node(s).`);
+  } else {
+    console.log("\u2705 no gallery scaffolding is nested inside a component specimen");
+  }
+}
+
+
+/* ------------------------------------------------------------------------
+ * GATE 14 — the document as a whole must balance, not only its showcases.
+ *
+ * GATE 11 balances `<div>` inside each `<section class="ref-section">`. The gallery still
+ * carried SIX `</div>` after `</main>`, left behind by the v3.4.5 regroup splice, closing
+ * nothing. A browser drops an unmatched close tag in silence, so the page looked right and
+ * nobody editing the file could tell what those tags belonged to.
+ * ---------------------------------------------------------------------- */
+{
+  let unbalanced = 0;
+  for (const f of htmlFiles(REF)) {
+    const html = fs.readFileSync(f, "utf8");
+    const open = (html.match(/<div\b/g) || []).length;
+    const close = (html.match(/<\/div>/g) || []).length;
+    if (open === close) continue;
+    const rel = path.relative(REF, f);
+    console.log(`  \u274c ${rel}: ${open} <div> against ${close} </div>` +
+      ` \u2014 ${close > open ? (close - open) + " close tag(s) belong to nothing" : (open - close) + " element(s) never close"}`);
+    unbalanced++;
+  }
+  if (unbalanced) {
+    violations += unbalanced;
+    console.log(`\u274c ${unbalanced} unbalanced document(s).`);
+  } else {
+    console.log("\u2705 every reference document balances every <div> it opens");
+  }
+}
+
+/* ------------------------------------------------------------------------
+ * GATE 15 — reference/ states its version in exactly one place.
+ *
+ * `stamp-reference.js` rewrites every `REF vX.Y.Z · generated …` line from version.json, which
+ * is what makes HISTORY.md law #2 — no visual verdict unless the on-screen stamp matches the
+ * shipped build — enforceable at all. Eleven files in reference/pages/ also carried the version
+ * in their <title>, where nothing rewrote it: they read `E-Systems DS v3.4.2` while the stamp
+ * beside them read v3.5.1. Two version claims, one maintained.
+ *
+ * A second copy of a fact is a second thing to keep true. There is now one.
+ * ---------------------------------------------------------------------- */
+{
+  const meta = JSON.parse(fs.readFileSync(path.join(DS_ROOT, "version.json"), "utf8"));
+  const stamp = new RegExp("REF v" + meta.version.replace(/\./g, "\\.") + " \u00b7 generated ");
+  let stray = 0;
+  for (const f of htmlFiles(REF)) {
+    const rel = path.relative(REF, f);
+    fs.readFileSync(f, "utf8").split("\n").forEach((line, i) => {
+      if (stamp.test(line)) return;
+      const m = line.match(/\bv\d+\.\d+\.\d+\b/);
+      if (!m) return;
+      console.log(`  \u274c ${rel}:${i + 1} states ${m[0]} outside the REF stamp \u2014 nothing rewrites it, so it will go stale`);
+      stray++;
+    });
+  }
+  if (stray) {
+    violations += stray;
+    console.log(`\u274c ${stray} unmaintained version claim(s) in reference/.`);
+  } else {
+    console.log("\u2705 reference/ claims a version only through the single-sourced REF stamp");
+  }
 }
 
 if (violations) {

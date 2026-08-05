@@ -1,7 +1,9 @@
 # ARCHITECTURE — how the whole thing fits together
 
-> Regenerated for **v3.4.2** from the repository as it actually is, not from an
-> earlier draft. Every number here was counted, not remembered.
+> Regenerated for **v3.5.2** from the repository as it actually is, not from an
+> earlier draft. **This file states no counts of its own** — every number lives once, in
+> START-HERE §7, where `lint-docs.js` recomputes it on every release. A second copy of a
+> fact is a second thing to keep true, and this file spent four releases proving it.
 > The master diagram also lives standalone in [`system-map.mermaid`](./system-map.mermaid).
 
 ---
@@ -23,8 +25,8 @@ An AI coding agent then does the work that used to require a human translator.
 
 | Layer | Lives in | Contains | Who reads it |
 |---|---|---|---|
-| **Truth** | this repo — `src/` compiled to `dist/` + `catalog/` | 185 CSS variables, 86 dark overrides, 12 text styles, 76 component specs, 487 Tailwind colour keys | build scripts, AI agents |
-| **Reference** | this repo — `reference/` | 27 plain HTML+CSS files, 30 stylesheets, a browsable `gallery.html` | designers (visually), AI agents (structurally) |
+| **Truth** | this repo — `src/` compiled to `dist/` + `catalog/` | CSS variables, dark overrides, text styles, component specs, Tailwind colour keys | build scripts, AI agents |
+| **Reference** | this repo — `reference/` | plain HTML+CSS component files, per-component stylesheets, a browsable three-tier `gallery.html` | designers (visually), AI agents (structurally) |
 | **Binding** | **consumer repo** — `.ds/bindings.md` | maps each spec code to that repo's own component and utility classes | AI agents, and the developers who correct it |
 
 The Binding layer is the hinge. It is the only file that knows both worlds, it lives
@@ -78,13 +80,17 @@ node tools/ship.js
 flowchart TD
   A["1 build.js<br/>compile + validate every token ref"] --> B["2 split-catalog.js<br/>regenerate AI grounding"]
   B --> C["3 stamp-reference.js<br/>single-source the version stamp"]
-  C --> D["4 lint-reference.js<br/>token purity · fonts loaded · icons from sprite"]
-  D --> E["5 validate-pages.py<br/>page geometry + refs"]
-  E --> F["6 build-wizard.js<br/>bundle the panel into one file"]
-  F --> G["7 contract-check.js<br/>refuse breaking changes"]
-  G --> H{all green}
-  H -->|yes| I["commit · tag · push<br/>then --accept the new baseline"]
-  H -->|no| J["stop — nothing released"]
+  C --> D["4 lint-reference.js<br/>15 reference-integrity gates"]
+  D --> E["5 lint-typography.js<br/>rendered size = spec size"]
+  E --> F["6 visual-audit.py<br/>headless render, 2 viewports"]
+  F --> G["7 lint-docs.js<br/>documented numbers = repo numbers"]
+  G --> H["8 validate-pages.py<br/>page geometry + refs"]
+  H --> I["9 build-wizard.js<br/>bundle the panel into one file"]
+  I --> J["10 contract-check.js<br/>refuse breaking changes"]
+  J --> K["11-13 clone-traffic self-test · sample · adoption-report"]
+  K --> L{all green}
+  L -->|yes| M["commit · tag · push<br/>then --accept the new baseline"]
+  L -->|no| N["stop — nothing released"]
 ```
 
 Each gate exists because something once slipped past:
@@ -94,7 +100,10 @@ Each gate exists because something once slipped past:
 | `build.js` | a spec referencing a token that does not exist |
 | `split-catalog.js` | the AI catalog silently missing 24 of 76 specs (the v3.1 bug) |
 | `stamp-reference.js` | reference files claiming a version they were not built for |
-| `lint-reference.js` | hardcoded hex; **a font that is named but never loaded**; hand-drawn icons pretending to be Tabler |
+| `lint-reference.js` | hardcoded hex · **a font named but never loaded** · hand-drawn icons pretending to be Tabler · a class that resolves to nothing · **a stylesheet the page never links** · a dead anchor · a duplicate id · an undemonstrated rule · unbalanced markup · **scaffolding spliced inside a specimen** · **a second, unmaintained version claim** |
+| `lint-typography.js` | a rendered size that contradicts the spec's own `text-style` token |
+| `visual-audit.py` | overflow, ghost controls, broken images, the wrong typeface, a size off the ramp — and it opens every `<details>` first, so a collapsed tier is never silently skipped |
+| `lint-docs.js` | prose stating a fact about the repository that nothing recomputes |
 | `validate-pages.py` | page specs with no geometry |
 | `build-wizard.js` | a shipped panel that no longer matches its sources, or reaches the network |
 | `contract-check.js` | a token removed without a MAJOR bump and a deprecation alias |
@@ -117,7 +126,7 @@ flowchart TD
     NX["nuxt.config.js<br/>1 marked line — L1 only"]
     SUB["design-system/<br/>pinned read-only submodule"]
   end
-  PANEL["ds-setup.cjs<br/>panel v3.1.0"] -->|writes, all marked| CM & BD & GI & TW & NX
+  PANEL["ds-setup.cjs<br/>the panel"] -->|writes, all marked| CM & BD & GI & TW & NX
   PANEL -->|records| MF & HS
   PANEL -->|adds| SUB
   MF -->|drives| REV["exact uninstall · drift · restore · rollback"]
@@ -185,40 +194,45 @@ The chain is deliberately four hops with a router in the middle: an agent reads
 `TOKENS.md` being polluted with 24 spec bodies (fixed in v3.2.0) was so damaging —
 it silently became the agent's idea of the token vocabulary.
 
+**One hop carries a caveat.** Some `catalog/components/<code>.md` entries read
+`Reference (DERIVED — NOT design-reviewed · REFERENCE ONLY)`. Those renderings were generated
+from the spec JSON and never checked against Figma; they live in gallery **Part 3**, last and
+collapsed. An agent must ground on the spec, use the rendering only where it agrees with the
+spec, prefer a reviewed component wherever the spec is silent, and let the spec win on any
+disagreement — `CLAUDE.md` §1b, restated identically in four places and checked by
+`lint-docs.js` so the copies cannot drift.
+
 ---
 
 ## 8. Current numbers
 
-| | Count | Source of truth |
-|---|---|---|
-| CSS variables in `:root` | **185** | 147 colour · 20 space · 11 shadow · 4 radius · 3 stroke |
-| Dark-mode overrides | **86** | `.dark` class selector |
-| Text style classes | **12** | `.ts-*` |
-| Tailwind colour keys | **487** | `dist/tailwind.preset.js` |
-| Component specs | **76** | 64 components + 12 pages |
-| AI catalog files | **76** | one per spec, plus `INDEX.md` + `TOKENS.md` |
-| Reference components | **27 files / 25 of 52 codes** | see §9 |
-| Reference stylesheets | **30** | token-pure, lint-enforced |
-| Tabler icons in the reference sprite | **15** | MIT, inlined per file |
-| Lucide icons in the panel sprite | **48** | ISC, all of them used |
-| Panel bundle | **301 KB**, one file, zero dependencies | `tools/ds-setup.cjs` |
-| Panel i18n keys | **269 × 2 locales** | `tools/dashboard/i18n.json` |
-| End-to-end assertions | **99** | `tests/e2e.js` |
+**They are not here.** Every count in this repository lives once, in
+[START-HERE §7](../../START-HERE.md), and `src/scripts/lint-docs.js` recomputes each one from
+the repository on every release and stops the release if one has drifted.
+
+This section used to hold its own table. It said 25 of 52 reference codes, 15 Tabler icons,
+99 assertions and a 7-step release chain — all true when written, none of them true four
+releases later, and nothing anywhere was measuring the gap. That is the same species of fault
+as the visual-audit gate that existed only in a changelog. The fix is not a more careful table;
+it is one table, derived.
 
 ---
 
 ## 9. Known gaps, open on purpose
 
-- **Reference covers 25 of 52 component codes.** The remaining 27 need design
-  authoring against Figma sources. Generating them from spec JSON alone would produce
-  plausible-looking but unverified visual truth — the exact failure `HISTORY.md`
-  records twice, and now a third time in v3.2.0 where the reference *named* Fustat
-  without loading it.
+- **28 of 64 component specs have a rendering no designer has approved.** Every spec is now
+  drawn; what is missing is *review*, not coverage. Those 28 sit in gallery **Part 3**, last
+  and collapsed, marked `data-derived="true"`, and their catalog entries carry the full
+  reference-only rule. Approving one is deleting an attribute. The itemised list is in
+  START-HERE §8.
 - **Asset coverage:** avatars 1/41, icons-custom 35/94; illustrations and logos not
   exported. `build.js` writes an honest **Files:** coverage line into each catalog
   entry so no agent references a file that does not exist.
 - **`contract-check.js` has a baseline from v3.2.0 onward.** It protects releases
   going forward, not retroactively.
+- **The gates cover the failures already had.** v3.5.2 found four broken gallery sections
+  behind fifteen green gates, all of them by a person scrolling the page. `HISTORY.md` law #1
+  is a division of labour, not a warning about tooling: automate the floor, then go and look.
 
 ---
 

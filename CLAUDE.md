@@ -8,7 +8,7 @@ This file never references a specific consumer project. Repo-specific profile + 
 1. Read this file once per session.
 2. Read `catalog/TOKENS.md` once per session (token vocabulary — the ONLY tokens that exist).
 3. Scan `catalog/INDEX.md` to find the component(s) you need.
-4. Read ONLY the relevant `catalog/components/<code>.md` spec file(s) for the task at hand. **Every entry carries a `**Reference:**` line** — open that file and copy its structure and class names. It is the rendered, token-pure, spec-true implementation. If the line says `none yet`, no rendered implementation exists: compose from atoms (§2) and do not invent one.
+4. Read ONLY the relevant `catalog/components/<code>.md` spec file(s) for the task at hand. **Every entry carries a `**Reference:**` line** — open that file and copy its structure and class names. It is the rendered, token-pure, spec-true implementation. If the line says `none yet`, no rendered implementation exists: compose from atoms (§2) and do not invent one. If it says **DERIVED — NOT design-reviewed · REFERENCE ONLY**, read §1b before using it.
 5. If the consumer repo has a bindings file (e.g. `.ds/bindings.md`), read it to translate specs into that repo's components and utility classes.
 
 Do NOT read the full catalog or all spec files up front. Load per need.
@@ -18,6 +18,22 @@ Do NOT read the full catalog or all spec files up front. Load per need.
 - The catalog is the source of truth. If a component, variant, token, or class is not in the catalog, it does not exist. Never invent tokens, class names, or variants.
 - Specs win. When a consumer component and a spec disagree for NEW UI, follow the spec and record the discrepancy (see §4 bindings protocol).
 - Token gap = hard stop. If a needed color/spacing/radius/type token does not exist, STOP and ask the design system author. Do not approximate with a hardcoded value.
+
+## §1b Derived renderings — reference only
+
+Some components have a rendering that was **built from the spec JSON and never reviewed against Figma**. They are marked in three places that all say the same thing: `Reference (DERIVED — NOT design-reviewed · REFERENCE ONLY)` in the catalog entry, `data-derived="true"` plus an amber banner on the gallery section, and **Part 3 of `reference/gallery.html`, which sits last and is collapsed by default**.
+
+They are gate-clean — token-pure, on the type ramp, no duplicate ids, no overflow at either viewport — which makes them safe to *read*. It does not make them approved. Structure, tokens and typography come from the spec; **layout choices the spec does not state are guesses made by a script, not decisions made by the designer.**
+
+So, when the reference you need is derived:
+
+1. **Ground on the spec JSON first**, not on the rendering. The spec is reviewed; the rendering is not.
+2. **Use the rendering only where it agrees with the spec** — the anatomy slots, the token names, the text styles. That part is derived *from* the spec and is safe to copy.
+3. **Where the spec is silent, climb the ladder (§2) instead of copying.** A reviewed component that solves the same problem beats an unreviewed guess every time.
+4. **Where the rendering and the spec disagree, the spec wins**, and the difference is reported to the design system author — the same way §4 handles bindings drift.
+5. **Never describe UI built on a derived rendering as design-approved**, in a PR description, a commit message, or a reply. Say which parts came from a derived reference so a human can check them.
+
+A rendering leaves this tier when a designer approves it: `data-derived="true"` is deleted, the banner and the caveat disappear at the next build, and it becomes an ordinary reference. Until then, treating it as visual truth is the exact failure this repository has recorded twice — see `HISTORY.md`.
 
 ## §2 Escalation ladder (reuse before build)
 
@@ -51,11 +67,12 @@ Consumer repos may carry a bindings file (COMPONENT-MAP + TOKEN-MAP) that transl
 
 ## §5 Interaction & composition standards (defaults for NEW UI)
 
-**Two-tier reference** — `reference/gallery.html` has two parts:
+**Three-tier reference** — `reference/gallery.html` has three parts:
 - **Part 1 — Base components** is the default grounding tier. Use it for everyday tasks.
 - **Part 2 — Composed samples** shows assembled screens. Consult it ONLY when the requirement needs an assembled screen or more detail than a single component — do not load it by default.
   - `#composed-01` list page: table always in a white card · `#composed-02` slide-in detail panel · `#composed-03` form section in a card · `#composed-04` empty state + confirmation modal · `#composed-05` data table exercising EVERY TableColumn and TableRow type in one screen.
   - `#composed-05` is the reference to copy for any non-trivial table: it is the only place all ten header types and all ten cell types appear together, in the geometry they actually ship with.
+- **Part 3 — Derived, pending design review** is last and **collapsed by default**. Everything in it is `REFERENCE ONLY` — read §1b before you use one. Its section ids are still permanent anchors, so a catalog link into it always resolves.
 
 **Defaults** (apply unless the requirement explicitly says otherwise):
 - **Breadcrumb is opt-in.** Never render a breadcrumb by default — add one only when explicitly requested.
@@ -77,7 +94,7 @@ Consumer repos may carry a bindings file (COMPONENT-MAP + TOKEN-MAP) that transl
 - `docs/ARCHITECTURE.md` — the full system map (layers, release chain, consumer file map, live numbers). Read this before changing anything structural.
 - `dist/` — GENERATED (tailwind preset + CSS variables). Never hand-edit.
 - `catalog/` — GENERATED AI grounding (INDEX + TOKENS + per-component specs). Never hand-edit.
-- `reference/` — plain HTML+CSS reference implementations + `gallery.html` (open in a browser). Token-pure: CSS vars only, no hardcoded hex. Two tiers in gallery.html: Part 1 base components (default grounding) + Part 2 composed samples (assembled screens — consult per need, see §5).
+- `reference/` — plain HTML+CSS reference implementations + `gallery.html` (open in a browser). Token-pure: CSS vars only, no hardcoded hex. Three tiers in gallery.html: Part 1 base components (default grounding) + Part 2 composed samples (assembled screens — consult per need, see §5) + Part 3 derived, collapsed by default and REFERENCE ONLY (see §1b).
 - This folder is READ-ONLY inside consumer repos (git submodule, pinned commit). Authoring happens only in the design system repo itself.
 
 ## Versioning contract (author side)

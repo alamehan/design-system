@@ -31,7 +31,7 @@ Developers only ever receive **one file**: `tools/ds-setup.cjs`.
 
 ```bash
 cd design-system
-git init && git add -A && git commit -m "feat: design system v3.2.0"
+git init && git add -A && git commit -m "feat: design system"
 git remote add origin <YOUR-GIT-HOST>/design-system.git
 git push -u origin main
 ```
@@ -93,9 +93,10 @@ edit Figma → update src/foundations.json or src/components/*.json → node too
 Then commit, tag, and freeze the new baseline:
 
 ```bash
-git add -A && git commit -m "release: v3.3.0"
-git tag v3.3.0 && git push --follow-tags
-node src/scripts/contract-check.js --accept && git commit -am "chore: contract baseline v3.3.0"
+V=$(node -p "require('./version.json').version")
+git add -A && git commit -m "release: v$V"
+git tag "v$V" && git push --follow-tags
+node src/scripts/contract-check.js --accept && git commit -am "chore: contract baseline v$V"
 ```
 
 ### A4. Who has adopted it

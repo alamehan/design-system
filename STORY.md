@@ -119,7 +119,7 @@ markdown:
 | Nggak boleh ada token dihapus tanpa MAJOR + alias | `contract-check.js` |
 | Font yang disebut harus benar-benar dimuat | `lint-reference.js` |
 | Ikon harus dari sprite Tabler, bukan gambar tangan | `lint-reference.js` |
-| Panel harus lolos siklus hidupnya sendiri | `tests/e2e.js` — 84 pemeriksaan |
+| Panel harus lolos siklus hidupnya sendiri | `tests/e2e.js` — 103 pemeriksaan |
 | Uninstall harus presisi | `.ds/manifest.json` + `.git/ds-recovery/original/` (salinan pra-install, dibandingkan byte-per-byte saat revert) |
 
 Aturan yang cuma ditulis di dokumen cenderung kelanggar lagi dalam bentuk baru. Kalau
@@ -146,4 +146,4 @@ Design system ini masih jalan. Kalau ada yang aneh, kurang pas, atau bikin ribet
 bilang aja, kita iterasi lagi.
 
 **— Raihan Allaam** · UI/UX Designer · ITS Elabram
-*E-Systems Design System v3.3.0*
+*E-Systems Design System v3.5.2*

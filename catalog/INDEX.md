@@ -2,6 +2,8 @@
 
 **How to use (progressive disclosure):** scan this index to find the component you need, then read ONLY `catalog/components/<code>.md` for its full spec (tokens, variants, states, exact classes). Read `catalog/TOKENS.md` once per session for the token vocabulary. Never guess a token or class that is not in these files.
 
+**Before you copy a rendering:** an entry whose reference line reads `DERIVED — NOT design-reviewed · REFERENCE ONLY` was generated from its spec JSON and has never been checked against Figma. Ground on the spec, use the rendering only where it agrees with the spec, prefer a reviewed component wherever the spec is silent, and never treat it as design-approved. Full rule: `CLAUDE.md` §1b.
+
 ## asset (9)
 
 - **asset-01** Avatar _(foundation)_ — User profile picture asset. 41 variants: 20 male personas (ava-man-1 to ava-man-20), 20 female personas (ava-woman-1 to ava-woman-20), an… → `components/asset-01.md`

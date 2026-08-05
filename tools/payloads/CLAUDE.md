@@ -24,7 +24,8 @@
 4. **One scroll region per layout.** Never nest competing scroll containers.
 5. `design-system/` is a READ-ONLY pinned submodule. Never edit files inside it from this repo.
 6. When the bindings map is wrong/stale/missing an entry you resolved by inspecting the repo, update `.ds/bindings.md` in the same change set.
-7. Health check anytime: `node design-system/src/scripts/doctor.js` (read-only).
+7. **A `DERIVED — NOT design-reviewed · REFERENCE ONLY` reference is not visual truth.** Some catalog entries link to a rendering that was generated from the spec JSON and never checked against Figma (they sit in Part 3 of the gallery, collapsed). Ground on the spec, copy from the rendering only where it agrees with the spec, prefer a reviewed component wherever the spec is silent, and if the two disagree the spec wins — report the difference rather than following the picture. Never call UI built on one design-approved. Full rule: `design-system/CLAUDE.md` §1b.
+8. Health check anytime: `node design-system/src/scripts/doctor.js` (read-only).
 
 ## UI defaults (always apply to NEW UI)
 
@@ -32,7 +33,7 @@
 - Tables ALWAYS live inside a white card (card head with title/toolbar + table + footer) — never bare on the page.
 - Default 10 rows per page (5–10 ok); more = pagination; provide a rows-per-page control (presets 10/25/50 + custom numeric input, hard max 50).
 - Clicking a row/card/list item never navigates or opens a panel — every open/navigate/destructive action needs its own explicit control (view icon, kebab menu, button). Destructive actions always confirm via modal first.
-- The reference gallery has two tiers: ground on Part 1 (base components) by default; consult Part 2 (composed samples) ONLY when the task needs an assembled screen (list page, detail panel, form section, empty/confirm states).
+- The reference gallery has three tiers: ground on Part 1 (base components) by default; consult Part 2 (composed samples) ONLY when the task needs an assembled screen (list page, detail panel, form section, empty/confirm states); Part 3 (derived) is collapsed, unreviewed and reference-only — see golden rule 7.
 
 ## Git housekeeping
 

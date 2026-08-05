@@ -69,6 +69,23 @@ for (const [label, cmd] of steps) {
 
 console.log(bar);
 
+/* The delivery ZIP carries a second copy of ds-setup.cjs at portal-nuxt-package/ds-setup.cjs.
+   It is a build output, and until v3.5.2 nothing refreshed it — so a release could ship a panel
+   at one version beside a copy of that panel at another, with nothing anywhere reporting it.
+   START-HERE law #47: a second copy of a fact is a second thing to keep true. The release makes
+   it true rather than trusting anybody to remember. */
+{
+  const built = path.join(DS, "tools", "ds-setup.cjs");
+  const copy = path.resolve(DS, "..", "portal-nuxt-package", "ds-setup.cjs");
+  if (fs.existsSync(path.dirname(copy))) {
+    const same = fs.existsSync(copy) && fs.readFileSync(copy).equals(fs.readFileSync(built));
+    if (!same) {
+      fs.copyFileSync(built, copy);
+      console.log("\u21bb refreshed portal-nuxt-package/ds-setup.cjs from the new build");
+    }
+  }
+}
+
 /* the only thing left that a human must decide */
 const dirty = (() => {
   try { return execSync("git status --porcelain", { cwd: DS, encoding: "utf8" }).trim(); } catch { return ""; }

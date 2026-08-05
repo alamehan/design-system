@@ -35,6 +35,7 @@ for (const c of comps) (groups[c.code.split("-")[0]] = groups[c.code.split("-")[
 const order = ["asset", "atom", "layout", "composite", "panel", "page"];
 let idx = "# Catalog INDEX \u2014 E-Systems Design System\n\n";
 idx += "**How to use (progressive disclosure):** scan this index to find the component you need, then read ONLY `catalog/components/<code>.md` for its full spec (tokens, variants, states, exact classes). Read `catalog/TOKENS.md` once per session for the token vocabulary. Never guess a token or class that is not in these files.\n\n";
+idx += "**Before you copy a rendering:** an entry whose reference line reads `DERIVED \u2014 NOT design-reviewed \u00b7 REFERENCE ONLY` was generated from its spec JSON and has never been checked against Figma. Ground on the spec, use the rendering only where it agrees with the spec, prefer a reviewed component wherever the spec is silent, and never treat it as design-approved. Full rule: `CLAUDE.md` \u00a71b.\n\n";
 for (const g of order.concat(Object.keys(groups).filter((g) => !order.includes(g)))) {
   if (!groups[g]) continue;
   idx += `## ${g} (${groups[g].length})\n\n`;

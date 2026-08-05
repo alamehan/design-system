@@ -24,11 +24,29 @@ jobs:
       - name: Version stamps are single-sourced
         run: node src/scripts/stamp-reference.js --check
 
-      - name: Lint reference (token purity)
+      - name: Lint reference (15 integrity gates)
         run: node src/scripts/lint-reference.js
+
+      - name: Lint typography (rendered size = spec size)
+        run: node src/scripts/lint-typography.js
+
+      # CI ran eight of ship.js's thirteen steps until v3.5.2, so three gates existed and were
+      # only ever enforced on the maintainer's machine. A gate that CI does not run is a gate a
+      # pull request can walk past — the same shape as a gate that exists only in a changelog.
+      - name: Install Chromium for the visual audit
+        run: pip install playwright && playwright install --with-deps chromium
+
+      - name: Visual audit (headless Chromium, 2 viewports)
+        run: python3 src/scripts/visual-audit.py
+
+      - name: Lint docs (documented numbers = repo numbers)
+        run: node src/scripts/lint-docs.js
 
       - name: Validate page specs
         run: python3 src/scripts/validate-pages.py
+
+      - name: Clone-traffic merge self-test (offline)
+        run: node src/scripts/clone-traffic.js --self-test
 
       - name: Panel bundle is in sync with its sources
         run: node tools/build-wizard.js --check

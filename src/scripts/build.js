@@ -127,11 +127,18 @@ function refLine(d) {
   if (GALLERY_IDS.has(id)) out.push('`reference/gallery.html#' + id + '`');
   if (fs.existsSync(path.join(DS, 'reference', 'pages', id + '.html'))) out.push('`reference/pages/' + id + '.html`');
   /* A rendering built from spec JSON is real, usable and NOT the same thing as a design the
-     author has approved. Say which it is, every time, so an agent copying it knows what it has. */
+     author has approved. Say which it is, every time, AND say what an agent may do with it —
+     "expect the designer to adjust layout details" was true and did not tell anyone how to
+     behave, so it read as permission. The rule has to travel with the link. */
   if (out.length && GALLERY_DERIVED.has(id))
-    return '**Reference (DERIVED \u2014 pending design review):** ' + out.join(' \u00b7 ') +
-      '  \u2014 built from this spec\u2019s own tokens and anatomy, token-pure and gate-clean, but NOT yet checked against Figma. ' +
-      'Safe to build on; expect the designer to adjust layout details.';
+    return '**Reference (DERIVED \u2014 NOT design-reviewed \u00b7 REFERENCE ONLY):** ' + out.join(' \u00b7 ') +
+      '  \u2014 built from this spec\u2019s own tokens and anatomy: token-pure, on the type ramp and gate-clean, ' +
+      'but never checked against Figma, so its layout choices are guesses rather than decisions. ' +
+      '**Ground on the spec above first.** Copy from the rendering ONLY where it agrees with what this ' +
+      'spec actually states; where the spec is silent prefer a reviewed component from the escalation ' +
+      'ladder (CLAUDE.md \u00a72) over anything invented in it; where the two disagree the SPEC WINS and the ' +
+      'difference goes to the design system author. Never describe work built on this as design-approved. ' +
+      'In `reference/gallery.html` it lives in Part 3, closed by default.';
   if (!out.length) return '**Reference:** none yet \u2014 no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md \u00a72) and do NOT invent one.';
   return '**Reference:** ' + out.join(' \u00b7 ') + '  \u2014 copy the structure and class names from here; it is token-pure and spec-true.';
 }

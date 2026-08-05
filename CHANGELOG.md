@@ -4,7 +4,44 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
-## 3.5.1 — 2026-08-04 — the distribution contract, written down and bounded
+## 3.5.2 — 2026-08-05 — the gallery, read section by section
+
+Fifteen gates were green and four sections of `gallery.html` were visibly wrong. All four were found by a person scrolling the page, which is the whole of `HISTORY.md` law #1 in one sentence.
+
+### Fixed — three specimens had been spliced INSIDE the previous specimen
+The v3.4.9 specimen additions inserted `<p class="ref-label">…</p><specimen>` before the `</div>` that closes the **preceding** specimen rather than the one that ends the group. So `#panel` rendered its subheader stage inside the first stage's `overflow:hidden` box with an absolutely-positioned panel on top of it; `#candidate-card` rendered the `es-ccard--hoveractions` card inside the resting card; `#filter-field` rendered two FilterFields inside the first one.
+
+**Div balance stayed correct**, every class resolved, no id duplicated, nothing overflowed, the type was on the ramp. GATE 11 counts pairs; it cannot see that a pair is in the wrong place. **`lint-reference.js` GATE 13** now rejects any `.ref-*` scaffolding node nested inside an `.es-*` component root.
+
+### Fixed — a stylesheet that existed, was correct, and was linked by nothing
+`css/info-block.css` was the one file of 49 the gallery never linked, so composite-01 rendered as unstyled inline spans — label and value butted together with no gap, no icon column, no chip row. Four `reference/components/*.html` files had the same fault: `data-table.html` used the whole `es-cell*` family without `table-row.css`, `filter-panel.html` used `es-ffield*` without `filter-field.css`, `table-column.html` and `table-row.html` used `es-table__table` without `data-table.css`. Those are the files the catalog tells an AI agent to open and copy.
+
+GATE 4 asked whether a class resolves in `reference/css` — any file in it. A browser asks whether it resolves in a stylesheet **this document links**. **GATE 12** now asks the browser's question per document, and separately fails any stylesheet no document loads at all.
+
+### Fixed — a labelled row action rendered as a two-storey stack
+`.es-cell__actionbtn` had a background, a border, a radius and padding, and no `display`. `.es-ico { display: block }` therefore put the eye icon on its own line with "View" underneath it, and the label inherited `.es-cell`'s `text-head` so it sat black inside a brand border. Now `inline-flex`, gap per atom-01, and its own brand foreground — the same law `CLAUDE.md` §5 already states for the Danger button.
+
+### Fixed — gallery scaffolding baked into a component specimen
+`<span class="ref-label">Suggestions</span>` sat inside `.es-qsuggest`. composite-03's anatomy is root / chip-list / chip; it has no label. An agent copying that specimen would have shipped a label the spec does not define. Also removed: six `</div>` after `</main>` closing nothing, left by the v3.4.5 regroup splice (**GATE 14** now balances whole documents, not only showcases).
+
+### Changed — the derived tier is Part 3: last, collapsed, and reference-only
+Placement outranks a caption. Twenty-eight unreviewed renderings sat inline between two reviewed groups, each with its own amber banner, and the group still read as approved.
+
+- They now sit **after** Composed samples, inside a native `<details>` that is **closed by default**. `<details>` because the reference tier must work from a `file://` double-click with JavaScript off; the script only adds hash navigation into a closed disclosure and remembers the state.
+- Section ids are unchanged — the anchor contract holds, and a catalog link into Part 3 opens the disclosure and lands on its section.
+- The catalog line became **`Reference (DERIVED — NOT design-reviewed · REFERENCE ONLY)`** and now carries the rule, not just the warning: ground on the spec first · copy only where the rendering agrees with the spec · where the spec is silent prefer a reviewed component from the §2 ladder · where they disagree **the spec wins** and the difference goes to the author · never call the result design-approved.
+- The same rule is stated in **`CLAUDE.md` §1b**, at the top of the generated `catalog/INDEX.md`, in the consumer profile written into every adopting repo, and in the gallery itself. `lint-docs.js` checks all four carry the same label so the copies cannot drift apart.
+
+### Fixed — `visual-audit.py` would have stopped seeing 28 sections
+A closed `<details>` has no layout, so every probe would have skipped Part 3 and still printed a clean pass. It opens every disclosure before it measures and says so in its output. **A gate that skips must never read as a gate that passed.**
+
+### Fixed — `lint-docs.js` derived fourteen numbers and compared three
+Which is why START-HERE §7 still advertised a 35-section gallery (63), an 11-step release chain (13), 9 reference gates (15), a 301 KB bundle (318), and 269 i18n keys (273) — with the gate reporting green the whole time. It now compares every figure it derives, and a row whose shape it can no longer find is a failure rather than a warning. §8's known-gaps list, which still described the 28 as unrendered, was rewritten: they are rendered and *unreviewed*, which is a different and more useful thing to know.
+
+### Also
+- **GATE 15** — `reference/` may state a version only through the single-sourced `REF v… · generated …` stamp. Eleven pages carried the version in their `<title>` too, where nothing rewrote it: they read v3.4.2 beside a stamp reading v3.5.1.
+- The gallery's legacy `molecule-04` / `molecule-05` / `organism-01` labels now read `layout-10` / `layout-11` / `layout-09`, matching the codes the catalog gives an agent. Section ids are untouched.
+- Every new gate was negative-tested — the bug reintroduced, the gate watched to go red — before it was trusted.
 
 The developer contract was true but undocumented, and had one silent failure mode.
 
