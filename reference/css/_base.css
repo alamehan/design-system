@@ -58,6 +58,19 @@ body { margin: 24px; font-family: "Fustat", system-ui, sans-serif; color: var(--
    --------------------------------------------------------------------------------------- */
 body.ref-app { margin: 0; }
 
+/* Skip link. 35 index entries sit before the content in the tab order; without this a keyboard
+   user tabs through every one of them on every visit. Visible only when focused. */
+.ref-skip {
+  position: absolute; left: 8px; top: -48px; z-index: 40;
+  padding: 8px 12px;
+  background: var(--color-brand-brand); color: var(--color-neutral-pure-white);
+  border-radius: var(--radius-md); text-decoration: none;
+  font-size: 14px; line-height: 20px; font-weight: 700;
+  transition: top .12s ease;
+}
+.ref-skip:focus { top: 8px; }
+.ref-main:focus { outline: none; }
+
 .ref-shell {
   display: grid;
   grid-template-columns: 268px minmax(0, 1fr);
@@ -183,4 +196,17 @@ body.ref-app { margin: 0; }
   .ref-toc { position: static; height: auto; max-height: 46vh; border-right: none; border-bottom: 1px solid var(--color-system-border-soft); }
   .ref-shell.is-collapsed .ref-toc { max-height: none; }
   .ref-main { padding: 16px 12px 96px; }
+}
+
+/* Marks a specimen built from spec JSON that no designer has approved yet. It is loud on
+   purpose: an unreviewed rendering presented as reviewed is the failure this repo has twice
+   recorded, and the banner is what lets the designer see at a glance which pixels are theirs. */
+.ref-derived {
+  margin: 0 0 14px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--color-semantic-warning);
+  background: var(--color-semantic-warning-surface-soft);
+  color: var(--color-system-text-head);
+  border-radius: var(--radius-md);
+  font-size: 12px; line-height: 16px;
 }

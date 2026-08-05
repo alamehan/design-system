@@ -1,0 +1,15 @@
+/* composite-11 NotificationCard — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/composite-11-notification-card.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-ncard { border-bottom: var(--stroke-thin) solid var(--color-system-border-soft); background: var(--color-neutral-pure-white); }
+.es-ncard__header { display: flex; align-items: flex-start; gap: var(--space-md); padding: var(--space-lg); cursor: pointer; }
+.es-ncard__header:hover { background: var(--color-system-surface-soft); }
+.es-ncard__dot { flex: none; width: 8px; height: 8px; margin-top: 6px; border-radius: var(--radius-full); background: var(--color-brand-brand); }
+.es-ncard.is-read .es-ncard__dot { background: var(--color-system-border-strong); }
+.es-ncard__text { display: flex; flex-direction: column; gap: var(--space-3xs); min-width: 0; flex: 1 1 auto; }
+.es-ncard__title { color: var(--color-system-text-head); }
+.es-ncard__time { color: var(--color-system-text-mute); }
+.es-ncard__detail { padding: var(--space-none) var(--space-lg) var(--space-lg) calc(var(--space-lg) + 8px + var(--space-md)); color: var(--color-system-text-body); }
+.es-ncard:not(.is-expanded) .es-ncard__detail { display: none; }
+.es-ncard.is-expanded .es-ncard__header { background: var(--color-system-surface-soft); }

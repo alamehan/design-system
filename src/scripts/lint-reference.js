@@ -313,6 +313,81 @@ for (const f of htmlFiles(REF)) {
 if (structural) { violations += structural; console.log(`\u274c ${structural} structural fault(s) in reference HTML.`); }
 else console.log("\u2705 no duplicate ids, and every showcase sits inside the content column");
 
+
+/* ------------------------------------------------------------------------
+ * GATE 10 — every component rule must be demonstrated, or explicitly excused.
+ *
+ * GATE 4 catches a class used in HTML with no CSS behind it. This is its mirror: a CSS rule
+ * that no specimen ever renders. The gallery calls itself "the visual truth for all
+ * components", and a rule with no specimen is a claim with no evidence — nobody has seen it
+ * render, no gate has measured it, and an agent told to use it is copying from a description
+ * rather than from a rendering. Twenty-nine had quietly accumulated by v3.4.7.
+ *
+ * The only honest exemption is a class that CANNOT have a static specimen — a Vue
+ * <Transition> hook exists for the duration of a frame and nothing else. Those carry
+ * `runtime-only:` on the line above, with a reason. Exempting by name in this script would
+ * put the list where nobody editing the CSS would ever see it; putting the marker in the CSS
+ * means the justification sits next to the rule it excuses.
+ * ---------------------------------------------------------------------- */
+{
+  const htmlBlob = htmlFiles(REF).map((f) => fs.readFileSync(f, "utf8")).join("\n");
+  const shown = new Set();
+  for (const m of htmlBlob.matchAll(/class="([^"]*)"/g))
+    for (const c of m[1].split(/\s+/)) if (c) shown.add(c);
+
+  let orphan = 0, excused = 0;
+  for (const f of fs.readdirSync(DIR).filter((x) => x.endsWith(".css") && x !== "_fonts.css")) {
+    const lines = fs.readFileSync(path.join(DIR, f), "utf8").split("\n");
+    lines.forEach((line, i) => {
+      const m = line.match(/^\.((?:es|cp)-[A-Za-z0-9_-]+)/);
+      if (!m || shown.has(m[1])) return;
+      const prev = (lines[i - 1] || "") + (lines[i - 2] || "");
+      if (/runtime-only:/.test(prev)) { excused++; return; }
+      console.log(`  \u274c css/${f}:${i + 1}  .${m[1]} is defined but no specimen in reference/ ever renders it`);
+      console.log(`       Add a specimen, delete the rule, or mark it /* runtime-only: <why> */`);
+      orphan++;
+    });
+  }
+  if (orphan) { violations += orphan; console.log(`\u274c ${orphan} undemonstrated component rule(s).`); }
+  else console.log(`\u2705 every component rule has a specimen (${excused} runtime-only exemption(s), each with a stated reason)`);
+}
+
+
+/* ------------------------------------------------------------------------
+ * GATE 11 — every <div> in a showcase must be closed inside that showcase.
+ *
+ * Five sections of the gallery had shipped with one unclosed <div> each — panel, panel-section,
+ * modal, filter-field, candidate-card. The browser silently auto-closes at `</section>`, so the
+ * page LOOKED right and every other gate passed, including the headless render.
+ *
+ * It is a trap, not a cosmetic issue: anything appended to such a section lands INSIDE the
+ * unclosed element and inherits its width and layout. That is exactly what happened when the
+ * v3.4.8 specimens were added — a PanelSection specimen came out 108px wide inside a 964px
+ * parent, and only the overflow probe noticed.
+ *
+ * Markup that renders correctly by accident is markup nobody can safely edit.
+ * ---------------------------------------------------------------------- */
+{
+  let unbalanced = 0;
+  for (const f of htmlFiles(REF)) {
+    const html = fs.readFileSync(f, "utf8");
+    const rel = path.relative(REF, f);
+    for (const m of html.matchAll(/<section class="ref-section" id="([^"]+)"/g)) {
+      const end = html.indexOf("\n</section>", m.index);
+      if (end < 0) continue;
+      const sec = html.slice(m.index, end);
+      const open = (sec.match(/<div\b/g) || []).length;
+      const close = (sec.match(/<\/div>/g) || []).length;
+      if (open === close) continue;
+      console.log(`  \u274c ${rel}: section #${m[1]} has ${open} <div> and ${close} </div>` +
+        ` \u2014 anything appended to it lands inside the unclosed one`);
+      unbalanced++;
+    }
+  }
+  if (unbalanced) { violations += unbalanced; console.log(`\u274c ${unbalanced} unbalanced showcase(s).`); }
+  else console.log("\u2705 every showcase closes every <div> it opens");
+}
+
 if (violations) {
   console.log(`\n${violations} reference-tier violation(s). The reference must be token-pure, load every font it names, and draw every icon from the Tabler sprite.`);
   process.exit(1);

@@ -5,6 +5,41 @@
 
 This design system installs NOTHING into your repo. Total footprint: one read-only git submodule folder + (optionally) 2 lines. Each level is independent, reversible in one move, and verified by `doctor`.
 
+## Getting the panel
+
+**Public repo — one command, nothing else:**
+
+```bash
+curl -fsSL https://github.com/alamehan/design-system/raw/main/tools/ds-setup.cjs -o ds-setup.cjs && node ds-setup.cjs
+```
+
+**Private repo — still one command**, using credentials you already have from `gh auth login`:
+
+```bash
+gh api repos/alamehan/design-system/contents/tools/ds-setup.cjs -H "Accept: application/vnd.github.raw" > ds-setup.cjs && node ds-setup.cjs
+```
+
+> If the `curl` line appears to do nothing and no panel opens, the repository is private.
+> `-f` makes curl fail without writing a file, and `&&` then stops `node` from running — nothing
+> was created and nothing was broken. Use the `gh` line above.
+
+**That is the whole contract for a developer.** No token, no environment variable, no `npm install`,
+no build step, no second command — now or later.
+
+| Needed | Why | Panel behaviour if missing |
+|---|---|---|
+| **Node 16.7+** | `fs.cpSync`, used for every recovery copy | Refuses to start, names your version, links nodejs.org and the nvm one-liner |
+| **git** | the design system is added as a read-only submodule | Refuses to start, gives the install command for your OS |
+
+Both are checked before a single modern API is touched, in ES5 any Node can parse, and the panel
+exits with *"Nothing was changed in your repo."* rather than a stack trace. There is nothing else
+to install: the panel is one file with **zero npm dependencies** — it uses only Node built-ins
+(`fs`, `path`, `http`, `https`, `crypto`, `child_process`) and shells out to nothing but `git`.
+
+**The `DS_SCM_TOKEN` you may see in the maintainer docs is not part of this.** It exists only so the
+design system's own repo can read its clone statistics, it runs in GitHub Actions on a schedule,
+and no consuming repo, developer or CI job ever needs it.
+
 ## Level 0 — Reference-only (default, zero risk)
 
 ```bash

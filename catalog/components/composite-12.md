@@ -2,5 +2,5 @@
 Complete notification feed panel. Sticky header with title and mark-all-read action. Scrollable list of NotificationCard rows.
 **Props:** type=Default (def Default); notifications:array (def ); unreadCount:number (def 0); onMarkAllRead:function
 **Tokens:** neutral.pure-white, system.border-soft, stroke.thin, spacing.standard.sm, spacing.standard.lg, text-styles.bold.body-md, system.text-head  — class per token: see Token vocabulary
-**Reference:** none yet — no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md §2) and do NOT invent one.
+**Reference (DERIVED — pending design review):** `reference/gallery.html#notification-list`  — built from this spec’s own tokens and anatomy, token-pure and gate-clean, but NOT yet checked against Figma. Safe to build on; expect the designer to adjust layout details.
 **Spec:** `src/components/composite-12-notification-list.json`

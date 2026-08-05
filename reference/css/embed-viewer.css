@@ -1,0 +1,25 @@
+/* composite-14 EmbedViewer — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/composite-14-embed-viewer.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-embed { display: flex; flex-direction: column; border-radius: var(--radius-md); overflow: hidden; background: var(--color-component-embed-canvas); }
+.es-embed__topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--color-component-embed-topbar);
+  color: var(--color-component-embed-text);
+  border-bottom: var(--stroke-thin) solid var(--color-component-embed-separator);
+}
+.es-embed__title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.es-embed__meta { color: var(--color-component-embed-text-mute); flex: none; }
+.es-embed__canvas { background: var(--color-component-embed-canvas); min-height: 180px; display: flex; align-items: center; justify-content: center; color: var(--color-component-embed-text-mute); }
+.es-embed__controls {
+  display: flex; align-items: center; gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--color-component-embed-topbar);
+  color: var(--color-component-embed-text);
+  border-top: var(--stroke-thin) solid var(--color-component-embed-separator);
+}
+.es-embed__controls .es-iconbtn { color: var(--color-component-embed-text); }
+.es-embed__track { flex: 1 1 auto; height: 4px; border-radius: var(--radius-full); background: var(--color-component-embed-separator); position: relative; }
+.es-embed__fill { position: absolute; inset: 0 auto 0 0; width: 35%; border-radius: var(--radius-full); background: var(--color-brand-brand); }

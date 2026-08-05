@@ -461,3 +461,187 @@ What it must never be is relabelled. It counts clones, CI included, not adopting
 it says so in the number's own caption. The four releases of a zeroed dashboard came from
 showing a figure that could not be told apart from a measurement; replacing it with a bigger
 figure that cannot be told apart from a census would be the same mistake with better numbers.
+
+
+---
+
+## v3.4.8 — the release audit, and one species of bug
+
+The final sweep before release turned up four things. They looked unrelated — safety
+documentation, a missing config file, a stale numbers table, an unrendered media query — and
+they are all the same fault:
+
+**A written assertion about the repository, with nothing that checks it is still true.**
+
+- `SAFETY.md` said recovery lives in `.ds/.trash/`. It had moved three releases earlier.
+- `CLAUDE.md` and `contract-check.js` both required `.release/deprecations.json`. It had never
+  been created.
+- START-HERE §7, titled *Current numbers*, said 99 e2e assertions and a 9-step chain. There were
+  103 and 12.
+- `visual-audit.py` claimed to audit the reference. It audited it at one viewport.
+
+Add the two from earlier in the cycle — a "mandatory visual audit gate" that existed only in a
+changelog, and an `adoptionStats()` comment describing behaviour its own code did not implement
+— and that is six instances in one release. Not carelessness: every one of those sentences was
+accurate the day it was written. Documentation rots at exactly the speed the code moves, and
+nothing in this repository was measuring the gap.
+
+So `lint-docs.js` now recomputes every number START-HERE claims, checks the reference stamp
+against `version.json`, and refuses a release whose version has no changelog entry. It is a
+small script for a large lesson: **if a fact about the repo is worth writing down, it is worth
+deriving.**
+
+### A note on what was NOT done
+
+51 CSS classes are defined in `reference/css` and demonstrated by no specimen. The tempting
+move at release time is to delete them and report a tidier number. Three were removed — the ones
+whose consumers this cycle had deliberately deleted — and the other 48 were counted and left
+alone, because "no specimen uses it" and "nothing uses it" are different statements and only the
+first one was measured. A gap named honestly is worth more than a gap closed by guessing.
+
+### And the gate caught the auditor, again
+
+While adding a live specimen for `es-ccard--hoveractions`, a regex intended to duplicate one
+card matched to the end of the Layout and Organisms groups and spliced 12 KB of the page in
+twice. GATE 9 — written two hours earlier, for exactly this — failed the build on seven
+duplicate ids before the change could be seen, let alone shipped. The specimen was reverted and
+the gap written down instead.
+
+That is the second time this cycle a gate has caught the person who wrote it, doing the thing it
+was written to prevent. It remains the best argument for building them.
+
+
+---
+
+## v3.4.9 — what you find by drawing the thing
+
+v3.4.8 counted 29 CSS rules that no specimen rendered, wrote the number down, and left them. The
+reasoning at the time was defensible: deleting a rule because no specimen happens to use it is
+how a working variant disappears, and release week is the wrong week to guess.
+
+Writing the specimens instead found two bugs that counting never would have.
+
+**`.es-menu__triggerwrap` was not a positioning context.** It is `display: inline-flex` and
+nothing else, while `.es-menu__panel` is `position: absolute`. The wrapper's entire job is to be
+the thing the panel positions against, and it was not one — so all four placement modifiers
+resolved against whatever ancestor happened to be positioned, usually the page. The class had
+existed for the life of the file. No specimen had ever used it, so nothing rendered it, and a
+rule nothing renders is a rule nothing can disprove. The bug appeared in the first screenshot.
+
+**Eleven showcases had unbalanced markup.** One or two unclosed `<div>`s each, in `panel`,
+`modal`, `filter-field`, `candidate-card` and every composed sample. The browser auto-closes at
+`</section>`, so the page rendered correctly and every gate — the headless render included —
+passed. Markup that is right by accident reads exactly like markup that is right.
+
+It stopped being cosmetic the moment anything was appended: the first PanelSection specimen
+written this release landed *inside* an unclosed div and came out 108px wide in a 964px column.
+Only the overflow probe caught it, and only because a specimen had finally been added there.
+
+Both bugs share a shape with `.es-btn--Fill` from v3.4.3 and the phantom visual gate from
+v3.4.4: **something asserted and never exercised.** A CSS rule with no specimen, a gate that
+exists only in a changelog, a comment describing behaviour the code does not have, a documented
+number nothing recomputes. Four releases, four instances, one lesson — and the lesson is not
+"be careful". It is that anything a repository claims should be executed by something.
+
+So the count became a gate. GATE 10 requires every component rule to be demonstrated or to carry
+its exemption in the CSS beside itself; GATE 11 requires every showcase to close what it opens.
+The 29 are now 0, and cannot silently return.
+
+
+---
+
+## v3.4.10 — the last unlooked-at surface
+
+Eight releases of gates were built against the reference tier: token purity, fonts, icons, class
+resolution, asset existence, dead variables, the type ramp, anchors, duplicate ids, unbalanced
+markup, undemonstrated rules, overflow, ghost controls, documented numbers. Thirteen steps in the
+release chain, 103 assertions, two viewports.
+
+And START-HERE §8 had carried one line, unchanged, since v3.2.0:
+
+> The panel UI has never been visually verified by its builder.
+
+It was rendered. Two faults fell out in the first minute.
+
+`i-book-open` had a malformed elliptical arc — `a2 2 0 2 2H8`, the large-arc/sweep flag pair
+lost, `2` sitting where a `0` or `1` belongs. The browser rejects the whole path, logs an error,
+and draws nothing. The icon had been failing as an *absence*, which is the one failure mode that
+looks like nothing at all. And the fixed pill navigation covered the last 63px of every page,
+because `.col` had no bottom padding — visible only at one scroll position, at the very bottom,
+which is where nobody stops.
+
+Neither would have been caught by any gate in this repository, and that is the point. A missing
+icon has no signature: no class fails to resolve, no element overflows, no id duplicates. A strip
+of content under a floating bar is correct at every scroll position but one.
+
+The gates got the reference tier to a floor where a human eye adds little. The panel had no gates
+and no eye, and it kept two bugs for eight releases in plain sight. Law #1 — *a programmatic
+check is never a visual verdict* — was written after a fontless build shipped. It reads, at the
+end of this cycle, less like a warning about tooling and more like a division of labour:
+**automate the floor, then go and look at the ceiling.**
+
+
+---
+
+## v3.4.11 — "out of reach" is a claim too
+
+The audit closed with three gaps declared beyond reach: 38 specs with no rendered reference, a
+GitHub call that could not be made from an offline sandbox, and a video that does not exist.
+
+Two of the three turned out to be partly inside reach, and the reason they had looked otherwise
+is worth recording: **the gap had been measured, but never itemised.** "38 specs lack a
+reference" is a number. Listing the 38 showed that ten of them were not missing at all.
+
+`atom-12 FormControl` renders as checkbox, radio and switch. `atom-11 FormInputField` renders as
+input and textarea. Both were reported to every AI agent as `Reference: none yet`, because
+`refLine()` matched a spec id against a filename and those specs are umbrellas whose renderings
+ship under their variants' names. Five complete renderings, in the same directory, announced as
+absent. Nothing was missing except a lookup.
+
+The eight `asset-*` specs were worse than mislabelled — they were being given advice. The
+fallback line said *compose from atoms and do not invent one*, which is sensible for a
+NotificationCard and meaningless for a logo. An inventory of shipped SVG files is not a
+component, and pretending the same sentence serves both is how a catalog teaches an agent to do
+the wrong thing confidently.
+
+Twenty-eight remain, and they are now a list rather than a number: twelve composites, twelve
+panels, four layouts, each named. That is the difference between a gap somebody can pick up and a
+gap somebody can only feel bad about.
+
+The third — the live GitHub call — really is out of reach here, and the honest response was not
+to shrug at it but to shrink it. The parse step became a pure function tested against a verbatim
+sample of the documented payload, so what remains untested is exactly one network round trip
+instead of the whole path. **A dependency you cannot test is a reason to make the untestable part
+as small as possible, not a licence to leave it whole.**
+
+
+---
+
+## v3.5.0 — drawing the twenty-eight
+
+For four minor versions the answer to "why aren't these built?" was a principle: producing a
+rendering from spec JSON alone would create plausible-looking but unverified visual truth, and
+this repository has twice recorded what that costs.
+
+The principle is sound. Using it as a reason not to build was not.
+
+What the principle actually forbids is **presenting an unreviewed rendering as a reviewed one**.
+It says nothing against building one and saying plainly what it is. The whole risk lives in the
+labelling, and labelling is cheap: `data-derived="true"` on the section, an amber banner nobody
+can miss, a separate group in the index, and a catalog line that carries the caveat into every
+AI agent's context along with the link. Approving one later is deleting an attribute.
+
+So the choice was never "invent visual truth or leave 28 components undrawn". It was "leave them
+undrawn, or draw them and be exact about their status". Four releases were spent on the first
+option because the second had not been considered.
+
+The gates made this safe in a way it would not have been a month ago. Every one of the 28 is
+token-pure, sits on the type ramp, closes every div it opens, has no duplicate ids, demonstrates
+every rule it defines, and renders without overflow at two viewports — because eleven gates say
+so, not because anyone eyeballed 28 new sections. The tooling built to fix bugs turned out to be
+the thing that made new work cheap.
+
+And one small note on the other question that came with this one — *"do developers need the
+token too?"* No. Clone sampling moved into a scheduled workflow. The maintainer does not type
+the command either. **A step somebody has to remember is a step that eventually does not
+happen**, and the developer contract stays exactly one line with no credentials in it.

@@ -1,0 +1,8 @@
+{
+  "_comment": "Deprecation aliases. contract-check.js requires an entry here before a token, text style, spec code or enum value may be removed, and CLAUDE.md tells agents to consult it. It was referenced by both and had never been created \u2014 an empty file is the honest starting state, not a missing one.",
+  "schema": "ds-deprecations-v1",
+  "tokens": {},
+  "textStyles": {},
+  "specs": {},
+  "enums": {}
+}

@@ -1,0 +1,15 @@
+/* composite-13 DocumentGallery — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/composite-13-document-gallery.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-dgal { display: flex; flex-direction: column; gap: var(--space-lg); align-items: center; background: var(--color-system-surface-strong); padding: var(--space-xxl); border-radius: var(--radius-md); }
+.es-dgal__page {
+  width: 100%; max-width: 460px;
+  aspect-ratio: 1 / 1.414;
+  background: var(--color-neutral-pure-white);
+  box-shadow: var(--shadow-MD);
+  border-radius: var(--radius-none);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-system-text-mute);
+}
+.es-dgal__num { color: var(--color-system-text-mute); }

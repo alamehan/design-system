@@ -1,0 +1,7 @@
+/* composite-03 QuickSuggest — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/composite-03-quick-suggest.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-qsuggest { display: flex; flex-direction: column; gap: var(--space-xxs); }
+.es-qsuggest__list { display: flex; flex-wrap: wrap; gap: var(--space-xxs); }
+.es-qsuggest__chip { cursor: pointer; }

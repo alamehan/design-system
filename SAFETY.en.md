@@ -40,13 +40,18 @@ The marker on config lines rides *on the line itself*, so it survives Prettier, 
 The panel writes two small marked blocks so the repository treats its own state
 correctly. Both are reversible exactly like every other managed region.
 
-**`.gitignore`** ignores only machine-local recovery state:
+**`.gitignore`** now ignores only one thing:
 
 ```
-.ds/.trash/
-.ds/rollback-point.json
 ds-setup.cjs
 ```
+
+Recovery state used to live in the working tree at `.ds/.trash/` and
+`.ds/rollback-point.json`, hidden by this same block — which meant an uninstall stripped the
+block and left the files it had been hiding. Since v3.4.5 recovery state lives in
+**`.git/ds-recovery/`**, outside the working tree entirely: invisible to `git status`, never
+committed, and destroyed by nothing short of deleting the clone. It needs no ignore rule. The
+two legacy paths stay in the block only so an older install can be migrated cleanly.
 
 **`.gitattributes`** adds one line:
 
@@ -67,8 +72,10 @@ automatically. This gap existed silently until v3.3.0.
 | `.ds/bindings.md` | **commit** | team knowledge; every AI agent reads it |
 | `.ds/history.jsonl` | **commit** | the adoption report counts distinct developers from it |
 | `.ds/requests/` | **commit** | a reviewable record of what your team asked the designer for |
-| `.ds/.trash/` | **ignore** | local recovery copies; can be large, and are per-machine |
-| `.ds/rollback-point.json` | **ignore** | describes *your* last update, not the team's state |
+| `.git/ds-recovery/trash/` | **outside the tree** | a copy of every file the panel ever changed |
+| `.git/ds-recovery/original/` | **outside the tree** | a pristine copy of each file taken *before* the panel's first write; the uninstall restores from it byte-for-byte if its own strip leaves any drift |
+| `.git/ds-recovery/ledger.jsonl` | **outside the tree** | append-only event ledger. Nothing in the product deletes it, which is why the adoption counters stay cumulative across install/uninstall cycles |
+| `.git/ds-recovery/rollback-point.json` | **outside the tree** | describes *your* last update, not the team's state |
 | `ds-setup.cjs` | **ignore** | a 278 KB build artifact of the design system repo. Fetch it with one `curl`; it then self-updates from the submodule. |
 
 If you disagree with any of these, edit the block — the panel will report it as drift
@@ -109,11 +116,22 @@ Volatile events go to `.ds/history.jsonl` — append-only, one JSON object per l
 
 ## 4. Nothing is deleted
 
-Every destructive action copies the file to `.ds/.trash/<name>.<timestamp>` **first**, and the log prints where it went.
+Every destructive action copies the file to `.git/ds-recovery/trash/<name>.<timestamp>` **first**, and the log prints where it went.
 
 This applies to uninstall, restore-to-default, legacy cleanup, and panel self-update. If something goes wrong, the previous content is still on disk.
 
-`.ds/.trash/` and `.ds/history.jsonl` deliberately **survive uninstall**. Uninstall tells you so, in the plan, before you confirm.
+Two stronger guarantees on top of that:
+
+- **A pristine copy is taken before the panel's first write to any file**, into
+  `.git/ds-recovery/original/`. The uninstall strips its own markers, then compares the result
+  against that copy and restores it verbatim if a single byte differs — and says which in the
+  step log. It does not assume the removal was the exact inverse of the insertion; it checks.
+- **The event ledger is never deleted.** `.git/ds-recovery/ledger.jsonl` outlives uninstalls,
+  archives and submodule removal, so the adoption counters are cumulative across every cycle.
+
+Your own files are never swept up. An uninstall archives only artifacts the panel itself
+created; anything you put in `.ds/` yourself stays where it is, and a **committed**
+`.ds/history.jsonl` is left in place because it is team data, not the panel's to move.
 
 ---
 
@@ -156,7 +174,9 @@ node design-system/src/scripts/doctor.js        # read-only. Never writes a file
 node design-system/tests/e2e.js                 # drives the full lifecycle and asserts
 cat .ds/manifest.json                           # the receipt
 cat .ds/history.jsonl                           # every event, in order
-ls -la .ds/.trash/                              # every version ever replaced
+ls -la .git/ds-recovery/trash/                  # every version ever replaced
+ls -la .git/ds-recovery/original/               # each file exactly as it was pre-install
+cat .git/ds-recovery/ledger.jsonl               # the permanent event ledger
 git diff                                        # everything the panel did is plain git
 ```
 

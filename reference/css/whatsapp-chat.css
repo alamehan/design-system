@@ -1,0 +1,14 @@
+/* composite-15 WhatsAppChat — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/composite-15-whatsapp-chat.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-wchat { display: flex; flex-direction: column; border: var(--stroke-thin) solid var(--color-system-border-soft); border-radius: var(--radius-md); overflow: hidden; background: var(--color-neutral-pure-white); }
+.es-wchat__header { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-md) var(--space-lg); background: var(--color-system-surface-soft); border-bottom: var(--stroke-thin) solid var(--color-system-border-soft); }
+.es-wchat__who { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+.es-wchat__name { color: var(--color-system-text-head); }
+.es-wchat__status { color: var(--color-system-text-mute); }
+.es-wchat__messages { display: flex; flex-direction: column; gap: var(--space-sm); padding: var(--space-lg); background: var(--color-system-surface-strong); max-height: 280px; overflow-y: auto; }
+.es-wchat__bubble { max-width: 78%; padding: var(--space-sm) var(--space-md); border-radius: var(--radius-md); background: var(--color-neutral-pure-white); color: var(--color-system-text-head); box-shadow: var(--shadow-SM); }
+.es-wchat__bubble--out { align-self: flex-end; background: var(--color-semantic-success-surface-soft); }
+.es-wchat__time { display: block; color: var(--color-system-text-mute); text-align: right; }
+.es-wchat__input { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-md) var(--space-lg); border-top: var(--stroke-thin) solid var(--color-system-border-soft); }

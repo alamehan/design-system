@@ -1,0 +1,10 @@
+/* layout-04 ScrollBar — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/layout-04-scroll-bar.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-scrollbar { background: var(--color-system-border-soft); border-radius: var(--radius-full); position: relative; }
+.es-scrollbar--v { width: 8px; height: 100%; }
+.es-scrollbar--h { height: 8px; width: 100%; }
+.es-scrollbar__thumb { background: var(--color-neutral-pure-white); border-radius: var(--radius-full); box-shadow: var(--shadow-Smooth); position: absolute; }
+.es-scrollbar--v .es-scrollbar__thumb { left: 0; right: 0; top: 12%; height: 42%; }
+.es-scrollbar--h .es-scrollbar__thumb { top: 0; bottom: 0; left: 12%; width: 42%; }

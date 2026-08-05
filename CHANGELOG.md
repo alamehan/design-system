@@ -4,6 +4,127 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
+## 3.5.1 — 2026-08-04 — the distribution contract, written down and bounded
+
+The developer contract was true but undocumented, and had one silent failure mode.
+
+### Documented — what a developer actually needs
+One command, and **nothing else — no token, no environment variable, no `npm install`, no build step**. Verified rather than asserted: the panel is a single file with **zero npm dependencies**, requiring only Node built-ins (`fs`, `path`, `http`, `https`, `crypto`, `child_process`) and shelling out to nothing but `git`. Node 16.7+ and git are both checked in ES5 before any modern API is touched, and a missing one exits with *"Nothing was changed in your repo."* plus the install command for that OS.
+
+`SETUP.md` now states this explicitly, with a table of the two prerequisites and what happens when they are absent.
+
+### Fixed — the private-repo case failed silently
+`curl -fsSL` against a private repository writes no file and returns non-zero, so `&&` correctly stops `node` from running — nothing is created and nothing breaks, but with `-s` there is also no message. A developer sees a command that appears to do nothing. `SETUP.md` now names that symptom and gives the one-line `gh api … > ds-setup.cjs && node ds-setup.cjs` equivalent, which uses credentials the developer already has from `gh auth login` and stays a single command.
+
+### Clarified — `DS_SCM_TOKEN` is not part of the developer path
+It exists only so the design system's own repository can read its clone statistics, it runs in GitHub Actions on a schedule (v3.5.0), and no consuming repo, developer or CI job ever needs it. Said plainly in `SETUP.md`, because a token mentioned anywhere in a setup document will eventually be typed by somebody who did not need it.
+
+## 3.5.0 — 2026-08-04 — every spec now has a rendering
+
+Twenty-eight component specs had never been drawn: 12 composites, 12 panels, 4 layouts. They existed as JSON and nothing else, so an AI agent asked for an AppBar had a token list and no shape to copy.
+
+They are built. Each one derives from its own spec's `tokens.base` and `anatomy`, uses only tokens that resolve in `dist/variables.css`, and passes all eleven reference gates plus the headless visual audit at both viewports.
+
+### They are marked, loudly, because they are not reviewed
+Structure, tokens and typography follow the spec. Layout decisions the spec does not state — which side a slot sits on, how tall a thumbnail is — were made here. So:
+
+- Every gallery section carries `data-derived="true"` and a visible amber banner.
+- They sit in their own group, **Derived — pending design review**, not mixed into the reviewed tiers.
+- Every catalog entry reads **`Reference (DERIVED — pending design review)`** with the caveat inline, so an agent copying one knows exactly what it has.
+- Approving one is a one-line change: drop `data-derived="true"` and the marking disappears from the gallery, the ToC and the catalog at the next build.
+
+**An unreviewed rendering presented as reviewed is the failure this repository has recorded twice.** The marking is not a disclaimer, it is the mechanism that keeps the distinction visible.
+
+New: `composite-01…03, 05, 09…16`, `layout-01, 02, 04, 08`, `panel-01…12`, with 17 new stylesheets.
+
+### Added — clone sampling runs itself
+`.github/workflows/adoption.yml` samples clone traffic weekly and commits the merged record. The built-in `github.token` works where `administration: read` is permitted; otherwise a `DS_SCM_TOKEN` secret is picked up with no code change. **Maintainer-side only** — the contract for every developer consuming the design system is unchanged and remains one command with no token, ever.
+
+## 3.4.11 — 2026-08-04 — the last two reachable gaps
+
+The release audit ended with three items declared out of reach. Two of them were partly *inside* reach; only the third was genuinely not.
+
+### Fixed — two specs were reported as unimplemented while their implementations sat in the folder
+`refLine()` matched a spec's `id` against a filename. `atom-12 FormControl` renders as `checkbox.html`, `radio.html` and `switch.html`; `atom-11 FormInputField` renders as `input.html` and `textarea.html`. Both were therefore telling every AI agent `Reference: none yet` while five complete, token-pure renderings sat in the same directory. **A grounding gap created by a naming convention, not by missing work.** An explicit alias map closes it.
+
+### Fixed — asset specs were being given advice that makes no sense for an asset
+The eight `asset-*` specs are inventories of shipped SVGs — illustration sets, icon sets, the logo. They cannot have an HTML "reference component", and the fallback line told an agent to *"compose from atoms"*, which is meaningless for a logo. They now point at their asset directory, say plainly that they are an inventory, defer to the existing **Files:** coverage line, and instruct the reader never to invent a filename.
+
+Net effect: the reference gap drops from 38 specs to **28**, and the 28 are now a named, actionable list — 12 composites, 12 panels, 4 layouts — rather than a number.
+
+### Improved — the one path that cannot be tested against the live API is now tested against its contract
+`clone-traffic.js` could not exercise its GitHub call offline. The response-parsing step is now a pure `parseTraffic()` function checked against a verbatim sample of GitHub's documented `/traffic/clones` payload: ISO timestamps reduce to dates, counts survive as numbers, a malformed timestamp is dropped rather than counted as day zero, and an empty or error body yields nothing rather than throwing. Ten checks, run by `ship.js` on every release. The network round-trip itself still needs a real token — that is stated, not papered over.
+
+## 3.4.10 — 2026-08-04 — the panel's own visual verdict
+
+START-HERE §8 had carried this line since v3.2.0: *"The panel UI has never been visually verified by its builder."* It was rendered and looked at. It was hiding two faults.
+
+### Fixed — a malformed SVG arc, silently failing to draw
+`i-book-open` in `tools/dashboard/icons.svg` contained `a2 2 0 2 2H8` — an elliptical arc whose large-arc/sweep flag pair had been lost, leaving `2` where a `0` or `1` belongs. Every other arc in that path uses an explicit `00`/`01` pair. The browser rejects the whole `d` attribute, logs to console and draws nothing; nobody had opened the panel with the console visible. Repaired to `a2 2 0 002 2H8`, and every other arc in the file checked for the same fault.
+
+### Fixed — the pill navigation permanently covered the bottom of every page
+`.pillbar` is `position: fixed; bottom: 18px` and 45px tall, and `.col` had no bottom padding. The last ~63px of every view sat under it with no way to scroll clear — at the bottom of the Health view, the final rows of a table. Gutter added.
+
+### Also
+- START-HERE §8's reference-coverage figure said 25 of 52; it is 27 of 64, and `lint-docs.js` now derives it.
+
+Neither of these is structural, and no gate would have found either: the icon renders as an absence, and the covered strip only exists at one scroll position. **This is what HISTORY.md law #1 means in practice — a programmatic check is never a visual verdict.** The gates got the reference tier to a floor no human eye is needed for; the panel needed the eye.
+
+## 3.4.9 — 2026-08-04 — closing the audit findings
+
+v3.4.8 named two gaps and left them named. This closes them, and closing the first one uncovered two more bugs that had been invisible for the life of the file.
+
+### Closed — 29 component rules had no specimen
+The gallery calls itself the visual truth for all components. A CSS rule that no specimen renders is a claim with no evidence: nobody has seen it, no gate has measured it, and an agent told to use it is copying from a description rather than a rendering. Every one now has a live specimen:
+
+- **Avatar** with a real image (`es-avatar__img`) at all four sizes · **Button** full-width (`--block`) · **SplitButton** with a leading icon · **Radio** showing the real visually-hidden `<input>` that carries the form value
+- **DropdownMenu** — `es-menu__triggerwrap` and all four placements (`bottom-start` · `bottom-end` · `top-start` · `top-end`)
+- **FilterField** — `#options` checkbox list and `#suggestions` chips
+- **CandidateCard** — `es-ccard--hoveractions`, the hover-reveal density that had been described in prose since v3.4.3 and never shown
+- **Panel** sub-header · **PanelSection**'s five remaining variants · **Modal** sm / lg / fullscreen and the white browser body
+- **DataTable** `es-table__state` (empty · loading · error) · **TableColumn** inline `<select>` · **TableRow** currency, labelled action button, brand dot
+
+`es-table__foot` was a dead alias from markup deleted two releases ago — removed. The twelve Vue `<Transition>` hooks cannot have a static specimen and now carry `/* runtime-only: … */` in the CSS, next to the rule they excuse rather than in a list nobody editing the CSS would see.
+
+**`lint-reference.js` GATE 10** enforces it: every `es-`/`cp-` rule must be demonstrated or explicitly excused.
+
+### Found by demonstrating — `.es-menu__triggerwrap` was not a positioning context
+It was `display: inline-flex` and nothing else, while `.es-menu__panel` is `position: absolute`. The wrapper exists *to be* the panel's positioning context and was not one, so every placement modifier resolved against whatever ancestor happened to be positioned — in practice the page. No specimen had ever used the class, so nothing rendered it and nothing caught it. Writing the specimen found the bug in the first render.
+
+### Found by demonstrating — eleven showcases had unbalanced markup
+`panel`, `panel-section`, `modal`, `filter-field`, `candidate-card`, `candidate-info-block` and `composed-01`…`05` each shipped with one or two unclosed `<div>`s. The browser auto-closes at `</section>`, so the page looked right and every gate passed, the headless render included.
+
+It is a trap rather than a cosmetic flaw: anything appended to such a section lands *inside* the unclosed element and inherits its width. That is precisely what happened to the first PanelSection specimen written this release — 108px wide inside a 964px parent — and only the overflow probe noticed. **`lint-reference.js` GATE 11** now requires every showcase to close every `<div>` it opens.
+
+### Also
+- `clone-traffic.js`'s merge is exercised by a self-test (`--self-test`) so the date-merge path is verified without a network.
+- The 25-of-52 reference-coverage figure in START-HERE was stale; recomputed and now derived by `lint-docs.js`.
+
+## 3.4.8 — 2026-08-04 — release audit
+
+A full sweep before release. Four gaps, all of the same species: **prose asserting a fact about the repository, with nothing checking the fact was still true.** That pattern has now produced a phantom visual-audit gate (v3.4.2), a comment describing behaviour the code did not have (v3.4.5), and these.
+
+### Fixed — the safety documentation described a mechanism that no longer exists
+`SAFETY.en.md` / `SAFETY.id.md` still documented `.ds/.trash/` as the recovery location, listed it as git-ignored, said it survived uninstall, and told the reader to `ls -la .ds/.trash/` to find their files. Recovery moved to `.git/ds-recovery/` in v3.4.5. **This is the document a nervous developer reads before running an uninstall**, and it was pointing at an empty path. Both languages rewritten, including the two guarantees added since: the pre-install `original/` snapshot the revert verifies against, and the permanent ledger.
+
+### Fixed — a file two subsystems required had never been created
+`CLAUDE.md` §7 and `contract-check.js` both name `.release/deprecations.json` as the place a deprecation alias must be declared before a breaking removal is allowed. The file did not exist. Created, empty and schema'd — an empty ledger is an honest starting state; a missing one is a rule nobody can follow.
+
+### Added — `lint-docs.js`, so the numbers cannot drift again
+START-HERE.md §7 is titled "Current numbers" and claimed 99 e2e assertions against 103, and a 9-step release chain against 12. Nobody lied; the numbers were true when written and nothing recomputed them. Every figure in §7 is now derived from the repository and compared on every release, along with the reference stamp matching `version.json` and the changelog having an entry for the version being shipped. `--fix` rewrites the stale ones. The table also gained the rows it was missing (release steps, gate count, catalog-to-reference coverage).
+
+### Added — the narrow viewport had never been rendered
+`visual-audit.py` only ever loaded 1280×900, so the gallery's sub-900px branch — a whole media query — was shipped unlooked-at. It now runs a second pass at 820px. Clean: the index stacks above the content, nothing overflows, no page-level horizontal scroll.
+
+### Added — skip link
+35 index entries sit ahead of the content in the tab order. A keyboard user had to traverse all of them, on every visit, to reach the page. `.ref-skip` appears on focus and jumps to `<main>`.
+
+### Removed
+Three CSS rules whose only consumers were deleted earlier in this cycle: `.cp-empty__icon` (replaced by the real shipped illustration) and `.es-cell__replace` / `.es-col__replace` (the ReplaceMe specimens).
+
+### Known gap, stated rather than hidden
+51 component CSS classes are defined but never demonstrated in `reference/`. Most are legitimate variants and animation hooks a consumer may need; a few are probably dead. They were counted, not guessed at, and not deleted blindly at release time — deleting a rule because no specimen happens to use it is how a working variant disappears. `es-ccard--hoveractions` is the notable one: it is described in the gallery caption and carried as a `hoverActions` prop in the composite-08 spec, but has no live specimen. Worth adding next cycle.
+
 ## 3.4.7 — 2026-08-04
 
 **The gallery shipped a second copy of five sections, and the adoption counter was reading one log out of three.**

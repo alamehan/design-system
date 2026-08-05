@@ -1,0 +1,21 @@
+/* layout-01 AppBar — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/layout-01-app-bar.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-appbar {
+  display: flex; align-items: center; gap: var(--space-md);
+  padding: var(--space-lg) 32px;
+  background: var(--color-neutral-pure-white);
+  border-bottom: var(--stroke-thin) solid var(--color-system-border-soft);
+}
+.es-appbar__logo { display: inline-flex; align-items: center; gap: var(--space-sm); color: var(--color-system-text-head); flex: none; }
+.es-appbar__nav { display: flex; align-items: center; gap: var(--space-xs); margin-left: var(--space-xxl); flex: 1 1 auto; }
+.es-appbar__link {
+  padding: var(--space-sm) var(--space-md); border-radius: var(--radius-md);
+  color: var(--color-system-text-body); text-decoration: none; background: none; border: none; cursor: pointer;
+}
+.es-appbar__link:hover { background: var(--color-neutral-muted); color: var(--color-system-text-head); }
+.es-appbar__link.is-active { color: var(--color-brand-brand); background: var(--color-brand-brand-surface-soft); }
+.es-appbar__actions { display: flex; align-items: center; gap: var(--space-sm); flex: none; }
+.es-appbar__notif { position: relative; }
+.es-appbar__badge { position: absolute; top: 2px; right: 2px; width: 7px; height: 7px; border-radius: var(--radius-full); background: var(--color-semantic-error); }

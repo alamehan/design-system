@@ -73,7 +73,11 @@ a:hover { text-decoration: underline; }
 
 /* ---------------------------------------------------------------- shell */
 .main { display: flex; justify-content: center; padding: 40px 24px 128px; }
-.col { width: 100%; max-width: 880px; }
+/* The pill navigation is `position: fixed; bottom: 18px` and 45px tall, so without a matching
+   gutter the last ~63px of every page sits permanently under it — at the bottom of the Health
+   view that meant the final rows of a table could not be scrolled clear. Nobody had ever looked
+   at the panel's own bottom edge; the preview render for v3.4.9 is the first time it was seen. */
+.col { width: 100%; max-width: 880px; padding-bottom: 96px; }
 
 h1.page { font-size: 24px; font-weight: 700; letter-spacing: -0.025em; margin: 0 0 5px; }
 p.lead { color: var(--muted); margin: 0 0 24px; max-width: 62ch; }

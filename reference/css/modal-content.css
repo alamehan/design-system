@@ -1,0 +1,11 @@
+/* layout-08 ModalContent — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/layout-08-modal-content.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-mcontent { display: flex; flex-direction: column; gap: var(--space-lg); }
+.es-mcontent__alert { display: flex; align-items: flex-start; gap: var(--space-md); padding: var(--space-md) var(--space-lg); border-radius: var(--radius-md); background: var(--color-semantic-warning-surface-soft); color: var(--color-system-text-head); }
+.es-mcontent__alert img { width: 24px; height: 24px; flex: none; }
+.es-mcontent__body { display: flex; flex-direction: column; gap: var(--space-md); color: var(--color-system-text-body); }
+.es-mcontent--illustration .es-mcontent__body { align-items: center; text-align: center; }
+.es-mcontent--illustration img { width: 96px; height: auto; }
+.es-mcontent--form .es-mcontent__body { gap: var(--space-lg); }

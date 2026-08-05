@@ -1,0 +1,14 @@
+/* composite-01 InfoBlock — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/composite-01-info-block.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-iblock { display: flex; gap: var(--space-sm); align-items: flex-start; }
+.es-iblock__icon { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; color: var(--color-system-text-mute); }
+.es-iblock__icon svg { display: block; }
+.es-iblock__content { display: flex; flex-direction: column; gap: var(--space-3xs); min-width: 0; }
+.es-iblock__label { color: var(--color-system-text-mute); }
+.es-iblock__value { color: var(--color-system-text-head); }
+.es-iblock__chips { display: flex; flex-wrap: wrap; gap: var(--space-xxs); }
+.es-iblock--title .es-iblock__value { color: var(--color-system-text-head); }
+.es-iblock--rows { flex-direction: column; gap: var(--space-md); }
+.es-iblock--action { align-items: center; justify-content: space-between; width: 100%; }

@@ -1,0 +1,46 @@
+# Clone-traffic sampling, so nobody has to remember to run it.
+#
+# GitHub's /traffic/clones endpoint only keeps 14 days. It slides, and a closed day's figure
+# never changes, so sampling on a schedule and merging by date builds a permanent record —
+# see src/scripts/clone-traffic.js. Fortnightly would be the minimum; weekly leaves a margin.
+#
+# THIS IS MAINTAINER-SIDE ONLY. No developer consuming the design system ever runs it, needs a
+# token, or knows it exists. Their whole contract stays:
+#     curl -fsSL <raw>/tools/ds-setup.cjs -o ds-setup.cjs && node ds-setup.cjs
+name: adoption
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"      # every Monday 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  administration: read        # traffic data needs admin read
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+
+      - name: Sample clone traffic
+        env:
+          # The built-in token works when `administration: read` is granted above. If your org
+          # policy blocks that, add a PAT with push access as the secret DS_SCM_TOKEN and it is
+          # picked up automatically — no code change.
+          DS_SCM_TOKEN: ${{ secrets.DS_SCM_TOKEN || github.token }}
+        run: node src/scripts/clone-traffic.js
+
+      - name: Refresh the adoption report
+        run: node src/scripts/adoption-report.js || true
+
+      - name: Commit the record if it changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .release/clone-traffic.json .release/adoption.json ADOPTION.md 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "chore(adoption): sample clone traffic"
+          git push

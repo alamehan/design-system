@@ -40,13 +40,17 @@ Marker di baris config menempel *pada barisnya sendiri*, jadi tahan terhadap Pre
 Panel menulis dua blok bertanda kecil supaya repo memperlakukan state-nya sendiri
 dengan benar. Keduanya bisa dibatalkan persis seperti region managed lainnya.
 
-**`.gitignore`** hanya mengignore state pemulihan lokal:
+**`.gitignore`** sekarang mengignore satu hal saja:
 
 ```
-.ds/.trash/
-.ds/rollback-point.json
 ds-setup.cjs
 ```
+
+Dulu state pemulihan ada di working tree (`.ds/.trash/`, `.ds/rollback-point.json`), disembunyikan
+oleh blok yang sama ini — artinya uninstall mencabut bloknya lalu meninggalkan file yang tadinya
+disembunyikan. Sejak v3.4.5 state pemulihan ada di **`.git/ds-recovery/`**, di luar working tree:
+tidak terlihat `git status`, tidak pernah ter-commit, dan tidak hilang selama clone-nya masih ada.
+Dua path lama tetap disebut hanya supaya install versi lama bisa dimigrasikan dengan bersih.
 
 **`.gitattributes`** menambah satu baris:
 
@@ -67,7 +71,9 @@ menyimpan dua-duanya otomatis. Lubang ini diam-diam ada sampai v3.3.0.
 | `.ds/bindings.md` | **commit** | pengetahuan tim; dibaca tiap AI agent |
 | `.ds/history.jsonl` | **commit** | adoption report menghitung developer dari sini |
 | `.ds/requests/` | **commit** | catatan yang bisa direview soal apa yang tim minta ke desainer |
-| `.ds/.trash/` | **ignore** | salinan pemulihan lokal; bisa besar, dan sifatnya per-mesin |
+| `.git/ds-recovery/trash/` | **di luar tree** | salinan setiap file yang pernah panel ubah |
+| `.git/ds-recovery/original/` | **di luar tree** | salinan murni tiap file, diambil *sebelum* tulisan pertama panel; uninstall memulihkan dari sini byte-per-byte kalau strip-nya menyisakan selisih |
+| `.git/ds-recovery/ledger.jsonl` | **di luar tree** | ledger event append-only. Tidak ada yang menghapusnya, dan itu sebabnya angka adopsi tetap kumulatif lintas siklus install/uninstall |
 | `.ds/rollback-point.json` | **ignore** | menggambarkan update terakhir *kamu*, bukan state tim |
 | `ds-setup.cjs` | **ignore** | build artifact 278 KB dari repo design system. Ambil dengan satu `curl`; setelahnya dia update sendiri dari submodule. |
 
@@ -110,11 +116,18 @@ Event yang sering berubah masuk ke `.ds/history.jsonl` — append-only, satu obj
 
 ## 4. Tidak ada yang dihapus
 
-Setiap aksi destruktif **menyalin dulu** file-nya ke `.ds/.trash/<nama>.<timestamp>`, dan log-nya mencetak lokasinya.
+Setiap aksi destruktif **menyalin dulu** file-nya ke `.git/ds-recovery/trash/<nama>.<timestamp>`, dan log-nya mencetak lokasinya.
+
+Dua jaminan lebih kuat di atasnya: salinan murni tiap file diambil **sebelum** panel menulis
+pertama kali (ke `.git/ds-recovery/original/`), dan uninstall membandingkan hasil strip-nya dengan
+salinan itu lalu memulihkan verbatim kalau beda satu byte pun — dia tidak berasumsi, dia mengecek.
+Ledger event di `.git/ds-recovery/ledger.jsonl` juga tidak pernah dihapus apa pun.
 
 Berlaku untuk uninstall, restore ke default, pembersihan file lama, dan update panel. Kalau ada yang salah, isi sebelumnya masih ada di disk.
 
-`.ds/.trash/` dan `.ds/history.jsonl` sengaja **selamat dari uninstall**. Panel memberi tahu itu di rencana, sebelum kamu konfirmasi.
+File milikmu tidak pernah ikut tersapu: uninstall hanya mengarsipkan artefak buatan panel sendiri.
+Apa pun yang kamu taruh di `.ds/` tetap di tempatnya, dan `.ds/history.jsonl` yang **sudah
+ter-commit** dibiarkan karena itu data tim, bukan hak panel untuk memindahkannya.
 
 ---
 
@@ -157,7 +170,9 @@ node design-system/src/scripts/doctor.js        # read-only. Tidak pernah menuli
 node design-system/tests/e2e.js                 # menjalankan siklus penuh + assert
 cat .ds/manifest.json                           # struknya
 cat .ds/history.jsonl                           # setiap kejadian, berurutan
-ls -la .ds/.trash/                              # setiap versi yang pernah diganti
+ls -la .git/ds-recovery/trash/                  # setiap versi yang pernah diganti
+ls -la .git/ds-recovery/original/               # tiap file persis seperti sebelum install
+cat .git/ds-recovery/ledger.jsonl               # ledger event permanen
 git diff                                        # semua yang panel lakukan adalah git biasa
 ```
 

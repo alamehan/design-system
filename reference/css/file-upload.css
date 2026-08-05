@@ -1,0 +1,31 @@
+/* composite-05 FileUpload — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/composite-05-file-upload.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-upload { display: flex; flex-direction: column; gap: var(--space-sm); }
+.es-upload__label { display: flex; align-items: center; gap: var(--space-xxs); color: var(--color-system-text-head); }
+.es-upload__req { color: var(--color-semantic-error); }
+.es-upload__info { color: var(--color-system-text-mute); }
+.es-upload__dropzone {
+  border: var(--stroke-thin) dashed var(--color-system-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-system-surface-soft);
+  padding: var(--space-xxl);
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-sm);
+  color: var(--color-system-text-mute);
+  text-align: center;
+}
+.es-upload__dropzone:hover { border-color: var(--color-brand-brand); background: var(--color-brand-brand-surface-soft); }
+.es-upload__preview {
+  border: var(--stroke-thin) solid var(--color-system-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-pure-white);
+  padding: var(--space-md) var(--space-lg);
+  display: flex; align-items: center; gap: var(--space-md);
+}
+.es-upload__thumb { width: 40px; height: 40px; flex: none; border-radius: var(--radius-md); background: var(--color-system-surface-strong); display: inline-flex; align-items: center; justify-content: center; color: var(--color-system-text-mute); }
+.es-upload__meta { display: flex; flex-direction: column; gap: var(--space-3xs); min-width: 0; flex: 1 1 auto; }
+.es-upload__name { color: var(--color-system-text-head); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.es-upload__size { color: var(--color-system-text-mute); }
+.es-upload.is-error .es-upload__dropzone { border-color: var(--color-semantic-error); background: var(--color-semantic-error-surface-soft); }
+.es-upload__input { position: absolute; width: 1px; height: 1px; opacity: 0; }

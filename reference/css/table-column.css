@@ -70,11 +70,3 @@
 }
 .es-col__input::placeholder { color: var(--color-system-text-mute); }
 .es-col__select { cursor: pointer; color: var(--color-system-text-mute); }
-.es-col__replace {
-  background: var(--color-brand-brand-surface-soft);
-  border: var(--stroke-thin) solid var(--color-brand-brand);
-  border-radius: var(--radius-md);
-  color: var(--color-brand-brand);
-  padding: var(--space-sm);
-  text-align: center;
-}

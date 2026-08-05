@@ -128,6 +128,11 @@ def dedupe(items):
     return out
 
 
+# The gallery collapses its index below 900px. That branch had never been rendered by anything,
+# which is exactly how a layout fault survives: the code path nobody looks at.
+VIEWPORTS = [(1280, 900, "desktop"), (820, 900, "narrow")]
+
+
 def main():
     files = sorted(p for p in REF.rglob("*.html"))
     violations = 0
@@ -159,13 +164,29 @@ def main():
                     print(f"   {what}:")
                     for i in items:
                         print(f"     - {i}")
+        # second pass: the narrow branch, gallery only (the standalone pages are plain documents)
+        gallery = REF / "gallery.html"
+        if gallery.exists():
+            for w, h, label in VIEWPORTS[1:]:
+                page.set_viewport_size({"width": w, "height": h})
+                page.goto("file://" + str(gallery))
+                page.wait_for_timeout(500)
+                r = page.evaluate(PROBE, SCALE)
+                ov = dedupe(r["overflow"])
+                if ov or r["ghosts"]:
+                    violations += 1
+                    print(f"\n\u274c reference/gallery.html @ {w}px ({label})")
+                    for o in ov[:6]:
+                        print(f"     - {o['tag']}.{o['cls']} overflows by {o['over']}px")
+                    for gh in dedupe(r["ghosts"])[:4]:
+                        print(f"     - invisible but clickable: {gh}")
         browser.close()
 
     print()
     if violations:
         print(f"\u274c {violations} visual fault group(s) across {len(files)} reference file(s).")
         sys.exit(1)
-    print(f"\u2705 visual audit clean across {len(files)} reference file(s)  (ramp: {SCALE})")
+    print(f"\u2705 visual audit clean across {len(files)} reference file(s) at {len(VIEWPORTS)} viewport(s)  (ramp: {SCALE})")
     print("   no overflow \u00b7 no invisible-but-clickable control \u00b7 no broken image \u00b7 "
           "Fustat everywhere \u00b7 type on the ramp")
     print("   This is a floor, not a verdict. Open gallery.html and look (HISTORY.md law #1).")

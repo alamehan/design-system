@@ -91,7 +91,18 @@ function summarise(days) {
   };
 }
 
-module.exports = { mergeDays, summarise };
+/* The shape GitHub documents for /traffic/clones. Pulled out of main() so the parse path — the
+   one piece that cannot be exercised against the live API from an offline sandbox — is still
+   exercised against the documented contract rather than merely hoped about. */
+function parseTraffic(body) {
+  return ((body && body.clones) || []).map((c) => ({
+    date: String(c.timestamp || "").slice(0, 10),
+    count: Number(c.count) || 0,
+    uniques: Number(c.uniques) || 0,
+  })).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d.date));
+}
+
+module.exports = { mergeDays, summarise, parseTraffic };
 
 /* ------------------------------------------------------------------ fetch */
 async function main() {
@@ -136,11 +147,7 @@ async function main() {
   }
 
   const body = await res.json();
-  const incoming = (body.clones || []).map((c) => ({
-    date: String(c.timestamp).slice(0, 10),
-    count: c.count || 0,
-    uniques: c.uniques || 0,
-  }));
+  const incoming = parseTraffic(body);
 
   const before = store.days.length;
   store.repo = repo;
@@ -164,4 +171,41 @@ async function main() {
   }
 }
 
-if (require.main === module) main();
+/* --self-test exercises the merge without a network, so the one piece of logic that cannot be
+   verified against live GitHub in a sandbox is still verified against something. */
+function selfTest() {
+  const w1 = [{ date: "2026-07-01", count: 3, uniques: 2 }, { date: "2026-07-02", count: 5, uniques: 4 }];
+  const w2 = [{ date: "2026-07-02", count: 6, uniques: 5 }, { date: "2026-07-11", count: 2, uniques: 2 }];
+  const merged = mergeDays(mergeDays([], w1), w2);
+  const s = summarise(merged);
+  /* A verbatim sample of GitHub's documented /traffic/clones payload. */
+  const fixture = {
+    count: 173, uniques: 128,
+    clones: [
+      { timestamp: "2026-07-01T00:00:00Z", count: 3, uniques: 2 },
+      { timestamp: "2026-07-02T00:00:00Z", count: 5, uniques: 4 },
+      { timestamp: "bad-timestamp", count: 9, uniques: 9 },
+    ],
+  };
+  const parsed = parseTraffic(fixture);
+
+  const checks = [
+    ["a documented payload parses to day rows", parsed.length === 2],
+    ["the ISO timestamp becomes a plain date", parsed[0].date === "2026-07-01"],
+    ["counts and uniques survive as numbers", parsed[1].count === 5 && parsed[1].uniques === 4],
+    ["a malformed timestamp is dropped, not counted as day zero", !parsed.some((d) => d.date === "bad-")],
+    ["an empty or error body yields nothing rather than throwing",
+      parseTraffic({}).length === 0 && parseTraffic(null).length === 0],
+    ["overlapping samples correct a day, never double-count it", merged.find((d) => d.date === "2026-07-02").count === 6],
+    ["new days are added", merged.length === 3],
+    ["days stay in date order", merged.map((d) => d.date).join() === "2026-07-01,2026-07-02,2026-07-11"],
+    ["totals sum the merged record, not the samples", s.clones === 11 && s.uniqueCloners === 9],
+    ["the caveat travels with the number", /Not a count of distinct adopting projects/.test(s.note)],
+  ];
+  let bad = 0;
+  for (const [name, pass] of checks) { console.log((pass ? "  ok   " : "  FAIL ") + name); if (!pass) bad++; }
+  console.log(bad ? `\n\u274c ${bad} failed` : "\n\u2705 clone-traffic merge verified (" + checks.length + " checks)");
+  process.exit(bad ? 1 : 0);
+}
+
+if (require.main === module) { if (args.includes("--self-test")) selfTest(); else main(); }

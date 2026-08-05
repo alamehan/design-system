@@ -41,14 +41,6 @@ tr.is-disabled > .es-cell * { pointer-events: none; }
   border-radius: var(--radius-md);
   padding: var(--space-sm);
 }
-.es-cell__replace {
-  background: var(--color-brand-brand-surface-soft);
-  border: var(--stroke-thin) solid var(--color-brand-brand);
-  border-radius: var(--radius-md);
-  color: var(--color-brand-brand);
-  padding: var(--space-sm);
-  text-align: center;
-}
 
 /* v3.4.2 gallery polish */
 .es-cell__dot--brand { background: var(--color-brand-brand); }

@@ -1,0 +1,19 @@
+/* composite-16 InteractiveFlow — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/composite-16-interactive-flow.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-iflow {
+  background: var(--color-neutral-pure-white);
+  border: var(--stroke-thin) solid var(--color-system-border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2XL);
+  padding: var(--space-xl) var(--space-xxl);
+  display: flex; flex-direction: column; gap: var(--space-lg);
+}
+.es-iflow__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-md); }
+.es-iflow__steps { display: flex; align-items: center; gap: var(--space-xxs); }
+.es-iflow__step { width: 28px; height: 3px; border-radius: var(--radius-full); background: var(--color-system-border-soft); }
+.es-iflow__step.is-done { background: var(--color-brand-brand); }
+.es-iflow__step.is-current { background: var(--color-brand-brand); }
+.es-iflow__body { display: flex; flex-direction: column; gap: var(--space-md); color: var(--color-system-text-body); }
+.es-iflow__footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); }

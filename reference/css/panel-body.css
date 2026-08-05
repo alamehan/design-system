@@ -1,0 +1,13 @@
+/* panel-01…12 panel body content — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * All twelve are compositions of already-rendered components inside the layout-05 Panel
+ * shell, so they share one small layout vocabulary rather than twelve near-identical files. */
+.es-pbody { display: flex; flex-direction: column; gap: var(--space-lg); padding: var(--space-lg); }
+.es-pbody__section { display: flex; flex-direction: column; gap: var(--space-md); }
+.es-pbody__heading { color: var(--color-system-text-mute); }
+.es-pbody__row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); }
+.es-pbody__split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-lg); }
+.es-pbody__stage { display: flex; align-items: center; gap: var(--space-sm); }
+.es-pbody__stagedot { width: 10px; height: 10px; border-radius: var(--radius-full); background: var(--color-system-border-strong); flex: none; }
+.es-pbody__stage.is-done .es-pbody__stagedot { background: var(--color-semantic-success); }
+.es-pbody__stage.is-current .es-pbody__stagedot { background: var(--color-brand-brand); }
+.es-pbody__doc { background: var(--color-system-surface-strong); border-radius: var(--radius-md); min-height: 140px; display: flex; align-items: center; justify-content: center; color: var(--color-system-text-mute); }

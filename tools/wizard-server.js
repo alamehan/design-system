@@ -5,6 +5,37 @@ const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
+/* ============================================================ PREFLIGHT
+ * The distribution promise is exactly one line:
+ *
+ *     curl -fsSL <raw>/tools/ds-setup.cjs -o ds-setup.cjs && node ds-setup.cjs
+ *
+ * That promise breaks the moment a developer's machine is missing something and the panel
+ * answers with a stack trace, because the conclusion they draw is "the design system is
+ * broken", not "my Node is old". Everything this file needs is checked here, in ES5 that any
+ * Node can parse, before a single modern API is touched.
+ * ==================================================================== */
+(function preflight() {
+  var out = [];
+  var v = process.versions.node.split(".").map(Number);
+  /* fs.cpSync landed in 16.7 and is used for every recovery copy. */
+  if (v[0] < 16 || (v[0] === 16 && v[1] < 7)) {
+    out.push("Node " + process.versions.node + " is too old \u2014 this panel needs Node 16.7 or newer (18 LTS recommended).");
+    out.push("  Install from https://nodejs.org, or with nvm:  nvm install --lts && nvm use --lts");
+  }
+  try {
+    require("child_process").execSync("git --version", { stdio: "ignore" });
+  } catch (e) {
+    out.push("git is not on your PATH. The panel adds the design system as a git submodule, so it needs git.");
+    out.push("  macOS: xcode-select --install   \u00b7   Windows: https://git-scm.com   \u00b7   Linux: your package manager");
+  }
+  if (!out.length) return;
+  console.error("\n  Design System panel \u2014 cannot start\n");
+  for (var i = 0; i < out.length; i++) console.error("  " + out[i]);
+  console.error("\n  Nothing was changed in your repo.\n");
+  process.exit(1);
+})();
+
 const WIZARD_VERSION = /* @WIZARD_VERSION@ */;
 const BUILT_FOR_DS = /* @DS_VERSION@ */;
 
@@ -1554,12 +1585,35 @@ const server = http.createServer(async (req, res) => {
   return json(res, 404, { error: "not found" });
 });
 
-server.listen(PORT, "127.0.0.1", () => {
-  const url = "http://127.0.0.1:" + PORT + "/";
-  console.log("\n  E-Systems Design System — panel v" + WIZARD_VERSION);
-  console.log("  " + url + "   (127.0.0.1 only, Ctrl+C to stop)\n");
-  if (!NO_OPEN) {
-    const cmd = process.platform === "win32" ? 'start "" "' + url + '"' : process.platform === "darwin" ? 'open "' + url + '"' : 'xdg-open "' + url + '"';
-    exec(cmd, () => {});
-  }
-});
+/* A port that happens to be busy must not read as a broken tool. Walk a small range and say
+   which one was used; only give up — with an instruction — once ten are taken. */
+function listenFrom(port, attemptsLeft) {
+  server.once("error", (err) => {
+    if (err && err.code === "EADDRINUSE" && attemptsLeft > 0) {
+      console.log("  port " + port + " is busy, trying " + (port + 1) + "\u2026");
+      return listenFrom(port + 1, attemptsLeft - 1);
+    }
+    if (err && err.code === "EADDRINUSE") {
+      console.error("\n  Ports " + PORT + "\u2013" + port + " are all in use.");
+      console.error("  Pick one yourself:  node ds-setup.cjs --port 6100\n");
+      process.exit(1);
+    }
+    console.error("\n  Could not start the panel: " + (err && err.message) + "\n");
+    process.exit(1);
+  });
+  server.listen(port, "127.0.0.1", () => {
+    const url = "http://127.0.0.1:" + port + "/";
+    console.log("\n  E-Systems Design System — panel v" + WIZARD_VERSION);
+    console.log("  " + url + "   (127.0.0.1 only, Ctrl+C to stop)\n");
+    if (!STATE_IS_GIT) {
+      console.log("  Note: this folder is not a git repository. Move ds-setup.cjs to the root of");
+      console.log("  your frontend repo and run it again \u2014 the panel needs git to install anything.\n");
+    }
+    if (!NO_OPEN) {
+      const cmd = process.platform === "win32" ? 'start "" "' + url + '"' : process.platform === "darwin" ? 'open "' + url + '"' : 'xdg-open "' + url + '"';
+      exec(cmd, () => {});
+    }
+  });
+}
+const STATE_IS_GIT = sh("git rev-parse --is-inside-work-tree").ok;
+listenFrom(PORT, 10);

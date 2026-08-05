@@ -30,6 +30,7 @@ const steps = [
   ["Lint reference (integrity)", "node src/scripts/lint-reference.js"],
   ["Lint typography (spec conformance)", "node src/scripts/lint-typography.js"],
   ["Visual audit (headless Chromium)", "python3 src/scripts/visual-audit.py"],
+  ["Lint docs (numbers match the repo)", "node src/scripts/lint-docs.js"],
   ["Validate page specs", "python3 src/scripts/validate-pages.py"],
   ["Bundle dashboard", "node tools/build-wizard.js"],
   ["Contract check (regression gate)", "node src/scripts/contract-check.js"],
@@ -37,6 +38,7 @@ const steps = [
      older than the release. A developer opening the panel should never be told to
      run a script to see team numbers - that is the maintainer's job, and this is
      the maintainer's release command. */
+  ["Verify clone-traffic merge (offline self-test)", "node src/scripts/clone-traffic.js --self-test"],
   ["Sample clone traffic (skips without a token)", "node src/scripts/clone-traffic.js"],
   ["Refresh adoption report", "node src/scripts/adoption-report.js"],
 ];

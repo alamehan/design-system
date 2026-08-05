@@ -120,7 +120,7 @@ markdown:
 | Font yang disebut harus benar-benar dimuat | `lint-reference.js` |
 | Ikon harus dari sprite Tabler, bukan gambar tangan | `lint-reference.js` |
 | Panel harus lolos siklus hidupnya sendiri | `tests/e2e.js` — 84 pemeriksaan |
-| Uninstall harus presisi | `.ds/manifest.json` + `.ds/.trash/` |
+| Uninstall harus presisi | `.ds/manifest.json` + `.git/ds-recovery/original/` (salinan pra-install, dibandingkan byte-per-byte saat revert) |
 
 Aturan yang cuma ditulis di dokumen cenderung kelanggar lagi dalam bentuk baru. Kalau
 mau kepegang, harus ada yang nolak commit-nya.

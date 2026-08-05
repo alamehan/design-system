@@ -1,0 +1,18 @@
+/* composite-10 ConsentToast — DERIVED FROM SPEC, NOT FROM FIGMA.
+ * Source of truth: src/components/composite-10-consent-toast.json
+ * Token values come from the spec's own tokens.base. Layout decisions the spec does not state
+ * were made here and need the designer's eye before this counts as visual truth. */
+.es-ctoast {
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm) var(--space-lg);
+  display: flex; align-items: flex-start; gap: var(--space-lg);
+  border: var(--stroke-thin) solid var(--color-system-border-soft);
+  background: var(--color-neutral-pure-white);
+  box-shadow: var(--shadow-LG);
+}
+.es-ctoast__icon { flex: none; width: 24px; height: 24px; }
+.es-ctoast__icon img { width: 100%; height: 100%; }
+.es-ctoast__content { display: flex; flex-direction: column; gap: var(--space-3xs); min-width: 0; flex: 1 1 auto; }
+.es-ctoast__title { color: var(--color-system-text-head); }
+.es-ctoast__body { color: var(--color-system-text-body); }
+.es-ctoast__actions { display: flex; align-items: center; gap: var(--space-sm); flex: none; }

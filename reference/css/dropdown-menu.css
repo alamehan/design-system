@@ -2,7 +2,12 @@
    Source of truth: src/components/atom-15*.json · token-pure CSS (vars only). */
 
 .es-menu { position: relative; display: inline-flex; }
-.es-menu__triggerwrap { display: inline-flex; }
+/* The wrapper exists to BE the positioning context for .es-menu__panel (position: absolute).
+   It was `display: inline-flex` and nothing else, so every placement modifier resolved against
+   whichever ancestor happened to be positioned — usually the page. No specimen had ever used
+   this class, so nothing rendered it and nothing caught it. Demonstrating the rule found the
+   bug; that is the whole argument for GATE 10. */
+.es-menu__triggerwrap { display: inline-flex; position: relative; }
 .es-menu__panel {
   position: absolute;
   z-index: 1000;
@@ -45,9 +50,13 @@
 .es-menu__label { flex: 1; min-width: 0; }
 .es-menu__divider { border: none; border-top: var(--stroke-thin) solid var(--color-system-border-soft); margin: var(--space-xxs) 0; }
 .es-menu__group { color: var(--color-system-text-mute); padding: var(--space-sm) var(--space-md); }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-menu-enter-active,
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-menu-leave-active { transition: opacity 0.12s ease, transform 0.12s ease; }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-menu-enter,
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-menu-leave-to { opacity: 0; transform: translateY(calc(-1 * var(--space-xxs))); }
 
 /* v3.4.2 gallery polish */

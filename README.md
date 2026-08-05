@@ -36,7 +36,7 @@ Author: Raihan Allaam (@alamehan) — UI/UX Designer, ITS Elabram.
 
 **Author:** edit Figma → update `src/*.json` → **`node tools/ship.js`** (build · split · stamp · lint · validate · bundle · contract-check, in the only correct order) → commit + tag. CI re-runs every gate.
 
-**Consumer:** one command — `curl -fsSL <DS-REPO>/raw/main/tools/ds-setup.cjs -o ds-setup.cjs && node ds-setup.cjs`. See `SETUP.md` for the adoption ladder. Verify anytime with `node design-system/src/scripts/doctor.js` (read-only).
+**Consumer:** one command — `curl -fsSL <DS-REPO>/raw/main/tools/ds-setup.cjs -o ds-setup.cjs && node ds-setup.cjs`. No token, no npm install, no build step, ever; the panel has zero dependencies and needs only Node 16.7+ and git, both checked before it starts. Private repo? `SETUP.md` has the one-line `gh` equivalent. See `SETUP.md` for the adoption ladder. Verify anytime with `node design-system/src/scripts/doctor.js` (read-only).
 
 ## Versioning
 

@@ -77,18 +77,61 @@ function fileLine(fn,d){if(fn==='asset-06-icon-tabler.json'||fn==='asset-07-icon
  * agent grounding on catalog/components/<code>.md was never told that a pixel-accurate HTML+CSS
  * implementation of that exact component exists. The gallery calls itself "the visual truth for
  * all components"; that claim is only actionable if the catalog links to it. */
+const GALLERY_DERIVED = (() => {
+  const g = path.join(DS, 'reference', 'gallery.html');
+  if (!fs.existsSync(g)) return new Set();
+  return new Set([...fs.readFileSync(g, 'utf8').matchAll(/id="([^"]+)"[^>]*data-derived="true"/g)].map(m => m[1]));
+})();
 const GALLERY_IDS = (() => {
   const g = path.join(DS, 'reference', 'gallery.html');
   if (!fs.existsSync(g)) return new Set();
   return new Set([...fs.readFileSync(g, 'utf8').matchAll(/<(?:section|div) class="ref-section" id="([^"]+)"/g)].map(m => m[1]));
 })();
+/* Umbrella specs: their renderings ship under the names of their concrete variants, so an
+   id-for-filename lookup reports "none yet" while three complete renderings sit in the folder.
+   An agent asking for FormControl was being told nothing existed when checkbox, radio and
+   switch were all there — a grounding gap created by a naming convention, not by missing work. */
+const REF_ALIASES = {
+  "form-control": ["checkbox", "radio", "switch"],
+  "form-input-field": ["input", "textarea"],
+};
+/* Asset specs are inventories of shipped files, not components. Telling an agent to "compose
+   from atoms" when it asked about the Logo is worse than saying nothing. */
+const ASSET_DIRS = {
+  "option-menu": "src/assets/option-menus/",
+  "character-expression": "src/assets/character-expressions/",
+  "animated-illustration": "src/assets/animated-illustrations/",
+  "complex-illustration": "src/assets/complex-illustrations/",
+  "icon-tabler": "src/assets/icons-tabler/",
+  "icon-tabler-extended": "src/assets/icons-tabler-extended/",
+  "icon-custom": "src/assets/icons-custom/",
+  "logo": "src/assets/logos/",
+};
 function refLine(d) {
   const id = d.id;
   if (!id) return null;
+  if (ASSET_DIRS[id]) {
+    const dir = ASSET_DIRS[id];
+    const real = fs.existsSync(path.join(DS, dir));
+    return "**Reference:** this spec is an ASSET INVENTORY, not a component \u2014 the truth is the files in `" +
+      dir + "`" + (real ? "" : " (not exported yet)") +
+      ". See the **Files:** coverage line above and reference an asset by path; never invent a filename.";
+  }
   const out = [];
+  for (const alias of REF_ALIASES[id] || []) {
+    if (fs.existsSync(path.join(DS, "reference", "components", alias + ".html")))
+      out.push("`reference/components/" + alias + ".html`");
+    if (GALLERY_IDS.has(alias)) out.push("`reference/gallery.html#" + alias + "`");
+  }
   if (fs.existsSync(path.join(DS, 'reference', 'components', id + '.html'))) out.push('`reference/components/' + id + '.html`');
   if (GALLERY_IDS.has(id)) out.push('`reference/gallery.html#' + id + '`');
   if (fs.existsSync(path.join(DS, 'reference', 'pages', id + '.html'))) out.push('`reference/pages/' + id + '.html`');
+  /* A rendering built from spec JSON is real, usable and NOT the same thing as a design the
+     author has approved. Say which it is, every time, so an agent copying it knows what it has. */
+  if (out.length && GALLERY_DERIVED.has(id))
+    return '**Reference (DERIVED \u2014 pending design review):** ' + out.join(' \u00b7 ') +
+      '  \u2014 built from this spec\u2019s own tokens and anatomy, token-pure and gate-clean, but NOT yet checked against Figma. ' +
+      'Safe to build on; expect the designer to adjust layout details.';
   if (!out.length) return '**Reference:** none yet \u2014 no rendered implementation exists for this spec. Compose from atoms (CLAUDE.md \u00a72) and do NOT invent one.';
   return '**Reference:** ' + out.join(' \u00b7 ') + '  \u2014 copy the structure and class names from here; it is token-pure and spec-true.';
 }

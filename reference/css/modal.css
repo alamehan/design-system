@@ -47,7 +47,11 @@
   padding: var(--space-sm) var(--space-xxl);
   border-top: var(--stroke-thin) solid var(--color-system-border-soft);
 }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-modal-enter-active, .es-modal-leave-active { transition: opacity 0.22s ease; }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-modal-enter, .es-modal-leave-to { opacity: 0; }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-modal-enter-active .es-modal__dialog, .es-modal-leave-active .es-modal__dialog { transition: transform 0.22s ease; }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-modal-enter .es-modal__dialog, .es-modal-leave-to .es-modal__dialog { transform: translateY(12px) scale(0.98); }

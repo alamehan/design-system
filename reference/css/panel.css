@@ -55,7 +55,11 @@
   background: var(--color-neutral-pure-white);
   border-top: var(--stroke-thin) solid var(--color-system-border-soft);
 }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-panel-fade-enter-active, .es-panel-fade-leave-active { transition: opacity 0.2s ease; }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-panel-fade-enter, .es-panel-fade-leave-to { opacity: 0; }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-panel-slide-enter-active, .es-panel-slide-leave-active { transition: transform 0.25s ease; }
+/* runtime-only: Vue <Transition> hook — exists only mid-animation, no static specimen is possible */
 .es-panel-slide-enter, .es-panel-slide-leave-to { transform: translateX(100%); }
