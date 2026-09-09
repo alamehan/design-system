@@ -524,7 +524,12 @@ function telemetry(entry) {
 function detectState() {
   const isGit = sh("git rev-parse --is-inside-work-tree").ok;
   const gm = readIf(".gitmodules") || "";
-  const subRegistered = gm.includes(SUBMODULE_DIR);
+  const subInIndex = (function () {
+    const r = sh('git ls-files --stage -- "' + SUBMODULE_DIR + '"');
+    return r.ok && /160000/.test(r.out);
+  })();
+  const subInModules = gm.includes(SUBMODULE_DIR);
+  const subRegistered = subInModules && subInIndex;
   const subPopulated = existsNonEmptyDir(SUBMODULE_DIR);
   const tw = readIf("tailwind.config.js");
   const nx = nuxtConfigName(), nuxt = readIf(nx);
@@ -537,7 +542,7 @@ function detectState() {
   const dirty = (() => { const r = sh("git status --porcelain"); return r.ok ? r.out.length > 0 : false; })();
   const subCommit = subPopulated ? sh("git rev-parse --short HEAD", { cwd: abs(SUBMODULE_DIR) }).out : null;
   let level = "not-installed";
-  if (subRegistered && subPopulated) level = level1tw && level1css ? "1" : "0";
+  if ((subRegistered || subInModules) && subPopulated) level = level1tw && level1css ? "1" : "0";
 
   const manifest = loadManifest();
   const installed = level !== "not-installed";
@@ -584,11 +589,15 @@ function buildInstallPlan(cfg) {
   if (String(cfg.level) === "1" && String(cfg.accessCode || "").trim() !== LEVEL1_ACCESS_CODE)
     return { error: T("Level 1 butuh kode akses dari pemelihara design system. Minta kodenya, atau mulai dari Level 0.", "Level 1 needs an access code from the design system maintainer. Ask for it, or start with Level 0.") };
 
-  if (!st.subRegistered && !st.subPopulated)
-    steps.push({ title: T("Tambahkan design system sebagai submodule read-only", "Add the design system as a read-only submodule"), cmd: 'git submodule add "' + repoUrl + '" ' + SUBMODULE_DIR });
-  else if (st.subRegistered && !st.subPopulated)
-    steps.push({ title: T("Isi submodule yang sudah terdaftar", "Populate the registered submodule"), cmd: "git submodule update --init " + SUBMODULE_DIR });
-  else steps.push({ title: T("Submodule sudah ada", "Submodule already present"), skip: true });
+  if (!st.subPopulated) {
+    if (st.subRegistered) {
+      steps.push({ title: T("Isi submodule yang sudah terdaftar", "Populate the registered submodule"), cmd: "git submodule update --init " + SUBMODULE_DIR });
+    } else {
+      steps.push({ title: T("Tambahkan design system sebagai submodule read-only", "Add the design system as a read-only submodule"), cmd: 'git submodule add -f "' + repoUrl + '" ' + SUBMODULE_DIR });
+    }
+  } else {
+    steps.push({ title: T("Submodule sudah ada", "Submodule already present"), skip: true });
+  }
 
   steps.push({ title: T("Pastikan URL repo berisi design system yang benar", "Verify the URL really holds this design system"), verify: true });
 
@@ -907,7 +916,16 @@ async function execSteps(steps, ctx) {
       }
       if (s.doctor) { const d = runDoctor(); push(d.ok, d.output, { doctor: true }); continue; }
       if (s.cmd) {
-        const r = sh(s.cmd);
+        let r = sh(s.cmd);
+        if (!r.ok && s.cmd.includes("submodule update --init") && /pathspec.*did not match/i.test(r.out)) {
+          const repoUrl = (ctx.repoUrl || defaultRepoUrl()).trim();
+          const fixCmd = 'git submodule add -f "' + repoUrl + '" ' + SUBMODULE_DIR;
+          const fixR = sh(fixCmd);
+          if (fixR.ok) {
+            push(true, "re-added submodule (was missing from git index): " + (fixR.out || "done"), { cmd: fixCmd });
+            continue;
+          }
+        }
         if (!r.ok && s.soft) { push(true, "skipped \u2014 " + (r.out || "command not applicable here"), { cmd: s.cmd, soft: true }); continue; }
         push(r.ok, r.out || "done", { cmd: s.cmd });
         if (!r.ok) return { log, ok: false };
@@ -1313,7 +1331,7 @@ const server = http.createServer(async (req, res) => {
     const cfg = await body(req);
     const plan = buildInstallPlan(cfg);
     if (plan.error) return json(res, 400, plan);
-    const r = await execSteps(plan.steps);
+    const r = await execSteps(plan.steps, cfg);
     PROGRESS = { active: false, current: 0, total: 0, label: T("", "") };
     if (r.ok) { LOCKED.install = true; LOCKED.revert = false; }
     return json(res, 200, r);
