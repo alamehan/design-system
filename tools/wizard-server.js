@@ -680,7 +680,7 @@ function detectState() {
     rollback: (() => { try { return JSON.parse(readAbs(ROLLBACK_ABS)); } catch { return null; } })(),
     panelLatest, panelOutdated: !!(panelLatest && cmpVer(panelLatest, WIZARD_VERSION) > 0),
     prompts: level === "not-installed" ? [] : buildPromptSet(level),
-    skills: SKILLS.map((s) => ({ id: s.id, name: s.name, filename: s.filename, description: s.description, recommendedFor: s.recommendedFor })),
+    skills: SKILLS.map((s) => ({ id: s.id, name: s.name, tag: s.tag, filename: s.filename, description: s.description, recommendedFor: s.recommendedFor, icon: s.icon })),
     locked: LOCKED,
   };
 }
@@ -1311,23 +1311,27 @@ function buildPromptSet(level) {
 const SKILLS = [
   {
     id: "ux-standard",
-    name: "UX Standard",
+    name: { id: "UX Standard", en: "UX Standard" },
+    tag: { id: "Standar Perilaku UX", en: "UX Behavioral Standard" },
     filename: "E-SYSTEMS-UX-STANDARD.md",
     description: {
-      id: "Flow, state, recovery, aksesibilitas, dan consequential actions yang lebih baik.",
-      en: "Better flows, states, recovery, accessibility, and consequential actions.",
+      id: "Flow interaksi, feedback visual, state recovery, aksesibilitas keyboard, dan konfirmasi aksi berdampak besar.",
+      en: "Interaction flows, visual feedback, state recovery, keyboard accessibility, and consequential action guards.",
     },
     recommendedFor: ["feature", "migrate", "redesign", "review"],
+    icon: "shapes",
   },
   {
     id: "copywriting-standard",
-    name: "Copywriting Standard",
+    name: { id: "Copywriting Standard", en: "Copywriting Standard" },
+    tag: { id: "Standar Bahasa Produk", en: "Product Language Standard" },
     filename: "E-SYSTEMS-COPYWRITING-STANDARD.md",
     description: {
-      id: "Label, aksi, panduan, status, error, dan konfirmasi yang lebih jelas.",
-      en: "Clearer labels, actions, guidance, statuses, errors, and confirmations.",
+      id: "Label aksi lugas, pesan error solutif tanpa jargon, empty state komunikatif, dan konsistensi istilah produk.",
+      en: "Action-oriented button labels, solution-focused error copy without jargon, communicative empty states, and terminology consistency.",
     },
     recommendedFor: ["feature", "migrate", "redesign", "review"],
+    icon: "book-open",
   },
 ];
 

@@ -196,7 +196,16 @@ function applyI18n() {
   var btns = document.querySelectorAll(".langsw button");
   for (var j = 0; j < btns.length; j++) btns[j].classList.toggle("sel", btns[j].getAttribute("data-lang") === LANG);
 }
-function setLang(l) { LANG = l; localStorage.setItem("dsLang", l); applyI18n(); render(); }
+function setLang(l) {
+  LANG = l;
+  localStorage.setItem("dsLang", l);
+  applyI18n();
+  skillsDrawn = false;
+  renderSkills();
+  render();
+  var list = (S && S.prompts) || [];
+  list.forEach(function (p) { promptRefresh(p.id); });
+}
 
 function applyTheme() {
   if (THEME === "auto") document.documentElement.removeAttribute("data-theme");
@@ -1091,41 +1100,102 @@ function renderSkills() {
     if (pc) openId = pc.getAttribute("data-pc");
   }
 
-  var h = '<div class="skills-section">';
-  h += '<div class="skills-head"><h2>' + icon("sparkles") + esc(t("skills.title")) + '</h2></div>';
-  h += '<p class="skills-desc">' + esc(t("skills.hint")) + '</p>';
-  h += '<div class="skill-list">';
+  var selCount = 0;
+  skills.forEach(function (sk) { if (selectedSkills[sk.id]) selCount++; });
 
+  var h = '<div class="skills-section">';
+  h += '<div class="skills-box">';
+
+  /* Head */
+  h += '<div class="skills-head">';
+  h += '  <div class="skills-head-title">';
+  h += '    <div class="skills-head-icon">' + icon("sparkles") + '</div>';
+  h += '    <div class="skills-head-text">';
+  h += '      <div class="skills-head-line">';
+  h += '        <h2 data-i18n="skills.title">' + esc(t("skills.title")) + '</h2>';
+  if (selCount > 0) {
+    h += '      <span class="skills-counter on"><svg class="ic"><use href="#i-circle-check"/></svg><span>' + esc(t("skills.selectedBadge", { count: selCount, total: skills.length })) + '</span></span>';
+  } else {
+    h += '      <span class="skills-counter"><span>' + esc(t("skills.selectedBadge", { count: 0, total: skills.length })) + '</span></span>';
+  }
+  h += '      </div>';
+  h += '      <p class="skills-desc" data-i18n="skills.hint">' + esc(t("skills.hint")) + '</p>';
+  h += '    </div>';
+  h += '  </div>';
+  h += '</div>';
+
+  /* Cards Grid */
+  h += '<div class="skill-list">';
   skills.forEach(function (sk) {
-    var checked = selectedSkills[sk.id] ? ' checked' : '';
-    var sel = selectedSkills[sk.id] ? ' selected' : '';
-    var rec = sk.recommendedFor && sk.recommendedFor.indexOf(openId) >= 0;
-    h += '<div class="skill-card' + sel + '" data-skill="' + esc(sk.id) + '">';
-    h += '<label class="skill-toggle"><input type="checkbox" data-skid="' + esc(sk.id) + '"' + checked + '></label>';
-    h += '<div class="skill-info">';
-    h += '<div class="skill-name">' + esc(sk.name);
-    if (rec) h += '<span class="skill-badge">' + esc(t("skills.recommended")) + '</span>';
+    var isSel = !!selectedSkills[sk.id];
+    var checked = isSel ? ' checked' : '';
+    var selClass = isSel ? ' selected' : '';
+    var isRec = !openId || (sk.recommendedFor && sk.recommendedFor.indexOf(openId) >= 0);
+    var skIcon = sk.icon || (sk.id === "ux-standard" ? "shapes" : "book-open");
+
+    h += '<div class="skill-card' + selClass + '" data-skill="' + esc(sk.id) + '">';
+
+    /* Header of card */
+    h += '  <div class="skill-card-head">';
+    h += '    <label class="skill-check" title="' + esc(isSel ? t("skills.active") : t("act.adopt")) + '">';
+    h += '      <input type="checkbox" data-skid="' + esc(sk.id) + '"' + checked + '>';
+    h += '      <span class="skill-check-box">' + icon("check", "ic-chk") + '</span>';
+    h += '    </label>';
+    h += '    <div class="skill-icon-pill">' + icon(skIcon) + '</div>';
+    h += '    <div class="skill-meta">';
+    h += '      <div class="skill-title-row">';
+    h += '        <span class="skill-name">' + esc(tx(sk.name)) + '</span>';
+    if (isSel) {
+      h += '      <span class="skill-pill-badge active"><svg class="ic"><use href="#i-circle-check"/></svg><span>' + esc(t("skills.active")) + '</span></span>';
+    } else if (isRec) {
+      h += '      <span class="skill-pill-badge rec"><svg class="ic"><use href="#i-sparkles"/></svg><span>' + esc(t("skills.recommended")) + '</span></span>';
+    }
+    h += '      </div>';
+    if (sk.tag) {
+      h += '    <div class="skill-tag">' + esc(tx(sk.tag)) + '</div>';
+    }
+    h += '    </div>';
+    h += '  </div>';
+
+    /* File chip */
+    h += '  <div class="skill-fname-chip"><svg class="ic"><use href="#i-file-text"/></svg><code>' + esc(sk.filename) + '</code></div>';
+
+    /* Description */
+    h += '  <div class="skill-subdesc">' + esc(tx(sk.description)) + '</div>';
+
+    /* Actions */
+    h += '  <div class="skill-card-foot">';
+    h += '    <button class="skill-act-btn" data-skdl="' + esc(sk.id) + '" title="' + esc(t("skills.download")) + '"><svg class="ic"><use href="#i-download"/></svg><span>' + esc(t("skills.download")) + '</span></button>';
+    h += '    <button class="skill-act-btn ghost" data-skpv="' + esc(sk.id) + '" title="' + esc(t("skills.preview")) + '"><svg class="ic"><use href="#i-eye"/></svg><span>' + esc(t("skills.preview")) + '</span></button>';
+    h += '  </div>';
+
     h += '</div>';
-    h += '<div class="skill-fname">' + esc(sk.filename) + '</div>';
-    h += '<div class="skill-subdesc">' + esc(tx(sk.description)) + '</div>';
-    h += '<div class="skill-actions">';
-    h += '<button class="btn ghost" data-skdl="' + esc(sk.id) + '">' + icon("download") + '<span>' + esc(t("skills.download")) + '</span></button>';
-    h += '<button class="btn ghost" data-skpv="' + esc(sk.id) + '">' + icon("eye") + '<span>' + esc(t("skills.preview")) + '</span></button>';
-    h += '</div></div></div>';
   });
   h += '</div>';
 
-  /* download-all + hint */
-  var anySelected = skills.some(function (sk) { return selectedSkills[sk.id]; });
-  if (anySelected) {
-    h += '<div class="skills-foot"><button class="btn" id="btnDlSkills">' + icon("download") + '<span>' + esc(t("skills.downloadAll")) + '</span></button></div>';
+  /* Bottom Highlight Banner */
+  if (selCount > 0) {
+    h += '<div class="skills-highlight-banner active">';
+    h += '  <div class="skills-banner-body">';
+    h += '    <div class="skills-banner-icon"><svg class="ic"><use href="#i-sparkles"/></svg></div>';
+    h += '    <div class="skills-banner-txt">';
+    h += '      <b>' + esc(t("skills.selectedBadge", { count: selCount, total: skills.length })) + '</b> \u2014 ' + esc(t("skills.attachHint"));
+    h += '    </div>';
+    h += '  </div>';
+    h += '  <button class="btn primary btn-sm" id="btnDlSkills"><svg class="ic"><use href="#i-download"/></svg><span>' + esc(t("skills.downloadAll", { count: selCount })) + '</span></button>';
+    h += '</div>';
+  } else {
+    h += '<div class="skills-highlight-banner idle">';
+    h += '  <div class="skills-banner-body">';
+    h += '    <div class="skills-banner-icon"><svg class="ic"><use href="#i-info"/></svg></div>';
+    h += '    <div class="skills-banner-txt" data-i18n="skills.noneSelected">' + esc(t("skills.noneSelected")) + '</div>';
+    h += '  </div>';
+    h += '</div>';
   }
-  h += '<div class="skills-hint">' + icon("info") + '<span>' + esc(t("skills.attachHint")) + '</span></div>';
-  h += '</div>';
 
+  h += '</div></div>';
   panel.innerHTML = h;
 
-  /* download-all */
   if ($("btnDlSkills")) $("btnDlSkills").onclick = function () {
     skills.forEach(function (sk) { if (selectedSkills[sk.id]) downloadSkill(sk.id); });
   };
@@ -1147,11 +1217,11 @@ function downloadSkill(id) {
 function previewSkill(id) {
   var sk = ((S && S.skills) || []).filter(function (s) { return s.id === id; })[0];
   if (!sk) return;
-  modal({ title: sk.name, desc: sk.filename, wide: true, body: '<div class="empty">' + icon("loader") + '\u2026</div>', buttons: [] });
+  modal({ title: tx(sk.name), desc: sk.filename, wide: true, body: '<div class="empty">' + icon("loader") + '\u2026</div>', buttons: [] });
   api("/api/skill-content", { id: id }).then(function (r) {
     if (r.error) { $("mBody").innerHTML = '<div class="callout warn">' + icon("triangle-alert") + '<div>' + esc(tx(r.error)) + '</div></div>'; return; }
     modalSwap({
-      title: sk.name, desc: sk.filename, wide: true,
+      title: tx(sk.name), desc: sk.filename, wide: true,
       body: mdBlock(r.content || "", { full: true }),
       buttons: [
         { label: t("skills.download"), icon: "download", keepOpen: true, onClick: function () { downloadSkill(id); } },
@@ -1161,7 +1231,7 @@ function previewSkill(id) {
   });
 }
 
-/* Skill checkbox and button handlers — event delegation */
+/* Skill interactions — checkbox change, button clicks, and card clicks */
 document.addEventListener("change", function (e) {
   var cb = e.target;
   if (!cb.getAttribute || !cb.getAttribute("data-skid")) return;
@@ -1169,16 +1239,36 @@ document.addEventListener("change", function (e) {
   selectedSkills[id] = cb.checked;
   skillsDrawn = false;
   renderSkills();
-  /* refresh every prompt preview to show/hide the manifest */
-  var list = S && S.prompts || [];
+  var list = (S && S.prompts) || [];
   list.forEach(function (p) { promptRefresh(p.id); });
 });
+
 document.addEventListener("click", function (e) {
   var dl = e.target.closest ? e.target.closest("[data-skdl]") : null;
   if (dl) return downloadSkill(dl.getAttribute("data-skdl"));
   var pv = e.target.closest ? e.target.closest("[data-skpv]") : null;
   if (pv) return previewSkill(pv.getAttribute("data-skpv"));
+  
+  /* Clicking anywhere on the skill card (except interactive elements) toggles selection */
+  var card = e.target.closest ? e.target.closest(".skill-card") : null;
+  if (card && !e.target.closest("button") && !e.target.closest("a") && !e.target.closest("input") && !e.target.closest("label")) {
+    var skid = card.getAttribute("data-skill");
+    if (skid) {
+      selectedSkills[skid] = !selectedSkills[skid];
+      skillsDrawn = false;
+      renderSkills();
+      var list = (S && S.prompts) || [];
+      list.forEach(function (p) { promptRefresh(p.id); });
+    }
+  }
 });
+
+document.addEventListener("toggle", function (e) {
+  if (e.target && e.target.classList && e.target.classList.contains("pcard")) {
+    skillsDrawn = false;
+    renderSkills();
+  }
+}, true);
 
 /* =============================================================== SETUP */
 /* A comparison TABLE, not two cards.
