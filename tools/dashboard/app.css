@@ -532,7 +532,7 @@ pre.diff .h { color: var(--faint); }
 .skills-foot { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .skills-foot .btn { font-size: 12px; }
 .skills-hint { font-size: 11.5px; color: var(--muted); display: flex; align-items: flex-start; gap: 6px; margin-top: 10px; line-height: 1.45; }
-.skills-hint .ic { flex: none; color: var(--faint); width: 14px; height: 14px; margin-top: 1px; }
+.skills-hint > .ic { flex: none; color: var(--faint); width: 14px; height: 14px; margin-top: 1px; }
 
 .doclist { display: grid; grid-template-columns: repeat(auto-fill, minmax(212px, 1fr)); gap: 9px; }
 .doclist button, .doclist a {

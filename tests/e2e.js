@@ -371,10 +371,13 @@ async function api(p, data) {
        adoption reporting, the markdown renderer and the embedded Fustat/DM Mono
        payload are all real content, and every genuinely wasteful byte was already
        removed (unused icons dropped, bundle CSS minified, dictionary compacted).
+       Raised again in v3.6.0: two canonical skill files (UX Standard ~32 KB,
+       Copywriting Standard ~49 KB) are embedded so preview and download work
+       offline — the same contract as fonts and the bilingual tour.
        This number is a tripwire against accidental bloat - someone vendoring a
        library - not a target to nudge upward each release. If it fails, look for
        waste first and only then argue for a new number. */
-    const BUDGET_KB = 320;
+    const BUDGET_KB = 420;
     ok(bundle.length < BUDGET_KB * 1024,
       "bundle under " + BUDGET_KB + " KB (" + (bundle.length / 1024).toFixed(0) + " KB)");
 
