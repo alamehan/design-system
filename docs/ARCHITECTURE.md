@@ -1,6 +1,6 @@
 # ARCHITECTURE — how the whole thing fits together
 
-> Regenerated for **v3.5.2** from the repository as it actually is, not from an
+> Regenerated for **v3.6.0** from the repository as it actually is, not from an
 > earlier draft. **This file states no counts of its own** — every number lives once, in
 > START-HERE §7, where `lint-docs.js` recomputes it on every release. A second copy of a
 > fact is a second thing to keep true, and this file spent four releases proving it.
