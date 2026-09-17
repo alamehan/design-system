@@ -177,6 +177,14 @@ const PAYLOADS = {
   ".ds/bindings.md": "@@PAYLOAD_BINDINGS@@",
 };
 
+/* ---------------------------------------------------------- skill payloads */
+/* Canonical content is authored once in skills/*.md and injected by build-wizard.
+   The panel offers them as optional downloadable Additional Skills. */
+const SKILL_PAYLOADS = {
+  "ux-standard": "@@PAYLOAD_SKILL_UX@@",
+  "copywriting-standard": "@@PAYLOAD_SKILL_COPY@@",
+};
+
 /* Git housekeeping the panel owns, each as a marked block appended to whatever
    the repo already has.
    .ds/ is deliberately NOT ignored wholesale: manifest.json, bindings.md,
@@ -672,6 +680,7 @@ function detectState() {
     rollback: (() => { try { return JSON.parse(readAbs(ROLLBACK_ABS)); } catch { return null; } })(),
     panelLatest, panelOutdated: !!(panelLatest && cmpVer(panelLatest, WIZARD_VERSION) > 0),
     prompts: level === "not-installed" ? [] : buildPromptSet(level),
+    skills: SKILLS.map((s) => ({ id: s.id, name: s.name, filename: s.filename, description: s.description, recommendedFor: s.recommendedFor })),
     locked: LOCKED,
   };
 }
@@ -1296,6 +1305,32 @@ function buildPromptSet(level) {
   ];
 }
 
+/* ------------------------------------------------------------ skills */
+/* A small extensible registry. To add a third skill later: drop the .md in
+   skills/, add its build-wizard placeholder, and push one object here. */
+const SKILLS = [
+  {
+    id: "ux-standard",
+    name: "UX Standard",
+    filename: "E-SYSTEMS-UX-STANDARD.md",
+    description: {
+      id: "Flow, state, recovery, aksesibilitas, dan consequential actions yang lebih baik.",
+      en: "Better flows, states, recovery, accessibility, and consequential actions.",
+    },
+    recommendedFor: ["feature", "migrate", "redesign", "review"],
+  },
+  {
+    id: "copywriting-standard",
+    name: "Copywriting Standard",
+    filename: "E-SYSTEMS-COPYWRITING-STANDARD.md",
+    description: {
+      id: "Label, aksi, panduan, status, error, dan konfirmasi yang lebih jelas.",
+      en: "Clearer labels, actions, guidance, statuses, errors, and confirmations.",
+    },
+    recommendedFor: ["feature", "migrate", "redesign", "review"],
+  },
+];
+
 /* ------------------------------------------------------------- server */
 const args = process.argv.slice(2);
 const NO_OPEN = args.includes("--no-open");
@@ -1365,6 +1400,12 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "POST" && url === "/api/check-update") return json(res, 200, checkUpdate());
   if (req.method === "POST" && url === "/api/impact") return json(res, 200, impactReport());
   if (req.method === "POST" && url === "/api/doctor") return json(res, 200, runDoctor());
+  if (req.method === "POST" && url === "/api/skill-content") {
+    const b = await body(req);
+    const sk = SKILLS.filter((s) => s.id === b.id)[0];
+    if (!sk) return json(res, 400, { error: "unknown skill" });
+    return json(res, 200, { id: sk.id, filename: sk.filename, content: SKILL_PAYLOADS[sk.id] });
+  }
   if (req.method === "POST" && url === "/api/payload") {
     const b = await body(req);
     const f = b.file;

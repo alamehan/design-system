@@ -4,6 +4,36 @@ All notable changes to this design system. Semver: token/spec rename or removal 
 
 Architecture overview: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Safety guarantees: [`SAFETY.en.md`](./SAFETY.en.md).
 
+## 3.6.0 — 2026-09-17 — Additional Skills in AI Prompts
+
+The design system already answers *how E-Systems UI should look*. Two new optional standards answer the next two questions: *how should the experience behave?* and *how should E-Systems speak to the user?*
+
+### Added — Additional Skills
+
+The **AI Prompts** tab now offers two optional downloadable skills:
+
+- **UX Standard** (`E-SYSTEMS-UX-STANDARD.md`) — behavioral UX contract: flow, hierarchy, states, recovery, accessibility, consequential actions, and component suitability.
+- **Copywriting Standard** (`E-SYSTEMS-COPYWRITING-STANDARD.md`) — product-language contract: terminology, voice, labels, actions, guidance, errors, confirmations, statuses, and localization.
+
+Neither is injected into every prompt. When a skill is selected, the copied prompt receives only a small attachment manifest instructing the AI to read the attached file. The full standard content must be downloaded and attached to the AI session — this keeps prompt size small and avoids drift.
+
+Canonical source files live in `skills/` at the repo root. The build pipeline embeds them into `ds-setup.cjs` so preview and download work offline.
+
+### Implementation
+
+- **`skills/`** — new top-level directory with one authored `.md` per skill.
+- **`tools/wizard-server.js`** — extensible `SKILLS` registry, `/api/skill-content` endpoint, skills metadata in `/api/state`.
+- **`tools/build-wizard.js`** — reads `skills/*.md` and injects them as payloads, same pattern as `CLAUDE.md` and `bindings.md`.
+- **`tools/dashboard/app.js`** — `renderSkills()`, download-via-Blob, modal preview, prompt manifest injection.
+- **`tools/dashboard/app.css`** — `.skills-section` / `.skill-card` styles following existing visual language.
+- **`tools/dashboard/index.html`** — `#skillsPanel` container between prompt intro and prompt library.
+- **`tools/dashboard/i18n.json`** — bilingual keys (`skills.*`) for both ID and EN.
+- Tour text updated to mention Additional Skills.
+
+### Extensibility
+
+Adding a third skill later means: add the `.md` to `skills/`, add a build-wizard placeholder, and push one object to the `SKILLS` array. No UI redesign required.
+
 ## 3.5.2 — 2026-08-05 — the gallery, read section by section
 
 Fifteen gates were green and four sections of `gallery.html` were visibly wrong. All four were found by a person scrolling the page, which is the whole of `HISTORY.md` law #1 in one sentence.

@@ -9,6 +9,7 @@ var S = null;          /* latest /api/state */
 var OV = null;         /* latest /api/overview */
 var UPD = null;        /* latest update check */
 var PAGE = "home";
+var selectedSkills = {};  /* keyed by skill id -> boolean */
 
 /* ------------------------------------------------------------- helpers */
 function $(id) { return document.getElementById(id); }
@@ -982,6 +983,20 @@ function promptFilled(id) {
       if (v) txt = txt.split(ins[i].getAttribute("data-ph")).join(v);
     }
   }
+  /* Append the attachment manifest when Additional Skills are selected */
+  var skills = (S && S.skills) || [];
+  var active = skills.filter(function (sk) { return selectedSkills[sk.id]; });
+  if (active.length) {
+    txt += "\n\nADDITIONAL SKILLS\n\nI have attached:\n";
+    active.forEach(function (sk) {
+      if (sk.id === "ux-standard") txt += "- " + sk.filename + " \u2014 apply it as the behavioral UX contract.\n";
+      else if (sk.id === "copywriting-standard") txt += "- " + sk.filename + " \u2014 apply it as the product-language contract.\n";
+      else txt += "- " + sk.filename + "\n";
+    });
+    txt += "\nRead and apply the attached standards to the work; do not merely summarize them.\n";
+    txt += "Product/business truth remains authoritative.\n";
+    txt += "The Design System owns visual truth, the UX Standard owns behavioral UX, and the Copywriting Standard owns user-facing language.";
+  }
   return txt;
 }
 function promptRefresh(id) {
@@ -1011,10 +1026,12 @@ function renderPrompts() {
     intro.hidden = true;
     lib.innerHTML = '<div class="empty">' + icon("lock") + esc(t("prompts.locked")) + "</div>";
     promptsDrawn = false;
+    skillsDrawn = false;
+    $("skillsPanel").innerHTML = "";
     return;
   }
   var list = S.prompts || [];
-  if (!list.length) { intro.hidden = true; lib.innerHTML = '<div class="empty">' + icon("lock") + esc(t("prompts.locked")) + "</div>"; promptsDrawn = false; return; }
+  if (!list.length) { intro.hidden = true; lib.innerHTML = '<div class="empty">' + icon("lock") + esc(t("prompts.locked")) + "</div>"; promptsDrawn = false; skillsDrawn = false; $("skillsPanel").innerHTML = ""; return; }
   intro.hidden = false;
   if (promptsDrawn) return;
   promptsDrawn = true;
@@ -1052,7 +1069,116 @@ function renderPrompts() {
   });
   lib.innerHTML = h;
   list.forEach(function (p) { promptRefresh(p.id); });
+  renderSkills();
 }
+
+/* ======================================================== SKILLS panel */
+var skillsDrawn = false;
+
+function renderSkills() {
+  var panel = $("skillsPanel");
+  if (!panel) return;
+  var skills = (S && S.skills) || [];
+  if (!skills.length) { panel.innerHTML = ""; skillsDrawn = false; return; }
+  if (skillsDrawn) return;
+  skillsDrawn = true;
+
+  /* find which prompt card is open, for recommendations */
+  var openId = "";
+  var details = document.querySelectorAll(".pcard[open]");
+  if (details.length) {
+    var pc = details[0].querySelector("[data-pc]");
+    if (pc) openId = pc.getAttribute("data-pc");
+  }
+
+  var h = '<div class="skills-section">';
+  h += '<div class="skills-head"><h2>' + icon("sparkles") + esc(t("skills.title")) + '</h2></div>';
+  h += '<p class="skills-desc">' + esc(t("skills.hint")) + '</p>';
+  h += '<div class="skill-list">';
+
+  skills.forEach(function (sk) {
+    var checked = selectedSkills[sk.id] ? ' checked' : '';
+    var sel = selectedSkills[sk.id] ? ' selected' : '';
+    var rec = sk.recommendedFor && sk.recommendedFor.indexOf(openId) >= 0;
+    h += '<div class="skill-card' + sel + '" data-skill="' + esc(sk.id) + '">';
+    h += '<label class="skill-toggle"><input type="checkbox" data-skid="' + esc(sk.id) + '"' + checked + '></label>';
+    h += '<div class="skill-info">';
+    h += '<div class="skill-name">' + esc(sk.name);
+    if (rec) h += '<span class="skill-badge">' + esc(t("skills.recommended")) + '</span>';
+    h += '</div>';
+    h += '<div class="skill-fname">' + esc(sk.filename) + '</div>';
+    h += '<div class="skill-subdesc">' + esc(tx(sk.description)) + '</div>';
+    h += '<div class="skill-actions">';
+    h += '<button class="btn ghost" data-skdl="' + esc(sk.id) + '">' + icon("download") + '<span>' + esc(t("skills.download")) + '</span></button>';
+    h += '<button class="btn ghost" data-skpv="' + esc(sk.id) + '">' + icon("eye") + '<span>' + esc(t("skills.preview")) + '</span></button>';
+    h += '</div></div></div>';
+  });
+  h += '</div>';
+
+  /* download-all + hint */
+  var anySelected = skills.some(function (sk) { return selectedSkills[sk.id]; });
+  if (anySelected) {
+    h += '<div class="skills-foot"><button class="btn" id="btnDlSkills">' + icon("download") + '<span>' + esc(t("skills.downloadAll")) + '</span></button></div>';
+  }
+  h += '<div class="skills-hint">' + icon("info") + '<span>' + esc(t("skills.attachHint")) + '</span></div>';
+  h += '</div>';
+
+  panel.innerHTML = h;
+
+  /* download-all */
+  if ($("btnDlSkills")) $("btnDlSkills").onclick = function () {
+    skills.forEach(function (sk) { if (selectedSkills[sk.id]) downloadSkill(sk.id); });
+  };
+}
+
+function downloadSkill(id) {
+  api("/api/skill-content", { id: id }).then(function (r) {
+    if (r.error) return toast(tx(r.error), true);
+    var blob = new Blob([r.content], { type: "text/markdown;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = r.filename; a.style.display = "none";
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 200);
+    toast(r.filename);
+  });
+}
+
+function previewSkill(id) {
+  var sk = ((S && S.skills) || []).filter(function (s) { return s.id === id; })[0];
+  if (!sk) return;
+  modal({ title: sk.name, desc: sk.filename, wide: true, body: '<div class="empty">' + icon("loader") + '\u2026</div>', buttons: [] });
+  api("/api/skill-content", { id: id }).then(function (r) {
+    if (r.error) { $("mBody").innerHTML = '<div class="callout warn">' + icon("triangle-alert") + '<div>' + esc(tx(r.error)) + '</div></div>'; return; }
+    modalSwap({
+      title: sk.name, desc: sk.filename, wide: true,
+      body: mdBlock(r.content || "", { full: true }),
+      buttons: [
+        { label: t("skills.download"), icon: "download", keepOpen: true, onClick: function () { downloadSkill(id); } },
+        { label: t("act.close"), kind: "ghost" },
+      ],
+    });
+  });
+}
+
+/* Skill checkbox and button handlers — event delegation */
+document.addEventListener("change", function (e) {
+  var cb = e.target;
+  if (!cb.getAttribute || !cb.getAttribute("data-skid")) return;
+  var id = cb.getAttribute("data-skid");
+  selectedSkills[id] = cb.checked;
+  skillsDrawn = false;
+  renderSkills();
+  /* refresh every prompt preview to show/hide the manifest */
+  var list = S && S.prompts || [];
+  list.forEach(function (p) { promptRefresh(p.id); });
+});
+document.addEventListener("click", function (e) {
+  var dl = e.target.closest ? e.target.closest("[data-skdl]") : null;
+  if (dl) return downloadSkill(dl.getAttribute("data-skdl"));
+  var pv = e.target.closest ? e.target.closest("[data-skpv]") : null;
+  if (pv) return previewSkill(pv.getAttribute("data-skpv"));
+});
 
 /* =============================================================== SETUP */
 /* A comparison TABLE, not two cards.

@@ -147,9 +147,11 @@ const body = server
   .replace("/* @DS_VERSION@ */", JSON.stringify(meta.version))
   .replace('"@@PAYLOAD_CLAUDE@@"', JSON.stringify(fs.readFileSync(path.join(DS, "tools", "payloads", "CLAUDE.md"), "utf8")))
   .replace('"@@PAYLOAD_BINDINGS@@"', JSON.stringify(fs.readFileSync(path.join(DS, "tools", "payloads", "bindings.md"), "utf8")))
+  .replace('"@@PAYLOAD_SKILL_UX@@"', JSON.stringify(fs.readFileSync(path.join(DS, "skills", "E-SYSTEMS-UX-STANDARD.md"), "utf8")))
+  .replace('"@@PAYLOAD_SKILL_COPY@@"', JSON.stringify(fs.readFileSync(path.join(DS, "skills", "E-SYSTEMS-COPYWRITING-STANDARD.md"), "utf8")))
   .replace('"/* @UI_HTML@ */"', JSON.stringify(html));
 
-for (const bad of ["@@PAYLOAD_CLAUDE@@", "@@PAYLOAD_BINDINGS@@", "@WIZARD_VERSION@", "@UI_HTML@"]) {
+for (const bad of ["@@PAYLOAD_CLAUDE@@", "@@PAYLOAD_BINDINGS@@", "@@PAYLOAD_SKILL_UX@@", "@@PAYLOAD_SKILL_COPY@@", "@WIZARD_VERSION@", "@UI_HTML@"]) {
   if (body.includes(bad)) { console.error(`build-wizard: placeholder ${bad} was not replaced`); process.exit(1); }
 }
 

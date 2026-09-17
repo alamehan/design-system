@@ -24,6 +24,7 @@ Author: Raihan Allaam (@alamehan) — UI/UX Designer, ITS Elabram.
 - `src/components/*.json` — 76 component/page specs (EDIT HERE)
 - `src/assets/` — avatars, option-menus, characters, custom icons
 - `src/scripts/` — `build.js` (compile+validate) · `split-catalog.js` · `stamp-reference.js` · `lint-reference.js` · `contract-check.js` · `adoption-report.js` · `doctor.js`
+- `skills/` — optional AI skill files (UX Standard, Copywriting Standard) downloadable from the panel's AI Prompts tab
 - `tools/` — `dashboard/` (panel sources) · `build-wizard.js` · `ds-setup.cjs` (the ONE file developers run) · `ship.js`
 - `tests/e2e.js` — drives the panel through its whole lifecycle and asserts (103 checks)
 - `docs/` — `ARCHITECTURE.md` + `system-map.mermaid`
