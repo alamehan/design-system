@@ -109,7 +109,7 @@ function stripWholeLineComments(src) {
     out.push(line);
   }
   const stripped = out.join("\n").replace(/\n{3,}/g, "\n\n");
-  try { new Function(stripped.replace(/\/\* @WIZARD_VERSION@ \*\//, "0").replace(/\/\* @DS_VERSION@ \*\//, '"0"')); }
+  try { new Function(stripped); }
   catch (e) { console.log("  (comment strip skipped: " + e.message + ")"); return src; }
   return stripped;
 }
@@ -143,8 +143,8 @@ const banner =
 `;
 
 const body = server
-  .replace("/* @WIZARD_VERSION@ */", JSON.stringify(meta.wizardVersion))
-  .replace("/* @DS_VERSION@ */", JSON.stringify(meta.version))
+  .replace('"/* @WIZARD_VERSION@ */"', JSON.stringify(meta.wizardVersion))
+  .replace('"/* @DS_VERSION@ */"', JSON.stringify(meta.version))
   .replace('"@@PAYLOAD_CLAUDE@@"', JSON.stringify(fs.readFileSync(path.join(DS, "tools", "payloads", "CLAUDE.md"), "utf8")))
   .replace('"@@PAYLOAD_BINDINGS@@"', JSON.stringify(fs.readFileSync(path.join(DS, "tools", "payloads", "bindings.md"), "utf8")))
   .replace('"@@PAYLOAD_SKILL_UX@@"', JSON.stringify(fs.readFileSync(path.join(DS, "skills", "E-SYSTEMS-UX-STANDARD.md"), "utf8")))

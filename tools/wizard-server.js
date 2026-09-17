@@ -36,8 +36,8 @@ const path = require("path");
   process.exit(1);
 })();
 
-const WIZARD_VERSION = /* @WIZARD_VERSION@ */;
-const BUILT_FOR_DS = /* @DS_VERSION@ */;
+const WIZARD_VERSION = "/* @WIZARD_VERSION@ */";
+const BUILT_FOR_DS = "/* @DS_VERSION@ */";
 
 /* ---------------------------------------------------------------- config */
 const SUBMODULE_DIR = "design-system";
